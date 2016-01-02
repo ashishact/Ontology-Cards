@@ -1,7 +1,7 @@
 <div style="background-color: white" class="card" data-bind="event: { mouseenter: onMouseEnterCard, mouseleave: onMouseLeaveCard}" 
 style="display: flex; flex-direction: column;" >
 	<div style="min-height: 30px; overflow-y: auto">
-		<div class="content sc-editable" data-bind="sc_contenteditable:webreader" data-placeholder=""></div>
+		<div class="content sc-editable" data-bind="sc_contenteditable:bind_data.html" data-placeholder="No content available"></div>
 	</div>
 	<div class="removeBtn" style="position: absolute; top: 0px; right: 0px" data-bind="fadeVisible: isMouseEnterCard"></div>
 	<!-- <iframe id="if1" width="100%" height="254" style="visibility:visible" src="

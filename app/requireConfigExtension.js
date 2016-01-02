@@ -23,7 +23,8 @@ requirejs.config({
         'sc-oninject':'session/onInject',
         'sc-session':'session/session',
         'state':'session/state',
-        'detect':'../lib/htmlscrape/detect'
+        'detect':'../lib/htmlscrape/detect',
+        'card_props':'viewmodels/card_props'
 
     },
     shim: {

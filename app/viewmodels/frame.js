@@ -1,6 +1,6 @@
 
-define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'state', 'store', 'panzoom'],
-    function (http, app, ko, gridstack, _ , state, store, panzoom) {
+define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'state', 'store', 'panzoom', 'card_props'],
+    function (http, app, ko, gridstack, _ , state, store, panzoom, card_props) {
 
     var frame = function(){
         var self=this;
@@ -52,11 +52,12 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
 
                 'stop_edit_on_perfect_click',
                 'donnot_stop_edit_on_sc_editable',
+                'stop_edit_only_when_clicked_outside',
 
                 'perfect_click_max'
             ]
             this.frame_config = [
-                0, {w:2, h:2}, false,     true, true, true, false, true, true,     false,  true, true,  4
+                0, {w:2, h:2}, false,     true, true, true, false, true, true,     false,  true, true, true,  4
             ];
             this.get_fc_value = function(key){
                 for (var i = self.frame_config_map.length - 1; i >= 0; i--) {
@@ -186,10 +187,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 if(state.parsedHTMLRESULT){//temp get from somewhere else
                     var res = state.parsedHTMLRESULT;
                     var _view = self.activeView;
-                    self.activeView = 'views/webreader.html';
-                    self.actions.add_new_card({title:"Web Resources", volatile:true, parsedHTMLRESULT:res})
+                    self.activeView = 'views/cards/summary.html';
+                    var card_data = {title:"Web Resources", volatile:true, parsedHTMLRESULT:res, sctype:card_props.TYPE.SUMMARY};
+                    self.actions.add_new_card(card_data);
                     self.activeView = _view;
-
                 }
                 
                 
@@ -610,8 +611,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 };
                 this.add_new_card= function(card_data){// decides on config option what to do
                     var card_ = null;
-                    card_data.type = 'default';
-                    if(card_data.settings)card_data.type='settings';
 
                     if(self.get_fc_value('card_auto_position')==true){
                         self.auto_position = true;
@@ -794,16 +793,15 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     self.actions.remove_card(card);
                     console.log('comming');
                 }// should be before or other events will fire
-                else if(target.tagName == 'A'){
-                    
-                }
                 else{
                     if(card.TYPE.PARENT){
                         self.trigger_parent(card, target, dt, dx, dy);
                     }
                     else{
                         if(card.STATE.EDITING){
-                            self.maybe_stop_edit_card(card, target, dt, dx, dy);
+                            if(self.get_fc_value('stop_edit_only_when_clicked_outside') == true){
+                            }
+                            else self.maybe_stop_edit_card(card, target, dt, dx, dy);
                         }
                         else{
                             self.maybe_edit_card(card, target, dt, dx, dy);
@@ -1121,6 +1119,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                             self.goto_frameview(cmd[1]);
                         }
                     }
+                    //clear store
                     else if ("clear".indexOf(cmd[0]) === 0 && cmd.length > 1 && "store".indexOf(cmd[1]) === 0){
                         console.log('clearing store');
                         chrome.runtime.sendMessage(
@@ -1248,7 +1247,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             };
             // var ena = true;
             this.someKeyPressed = function(event){
-                if($(document.activeElement).hasClass('sc-editable') || document.activeElement.nodeName==='INPUT'){// editing something don't take the event
+                if(state.isany_card_being_edited){
+                    return;
+                }
+                if(document.activeElement.nodeName==='INPUT' || $(document.activeElement).hasClass('sc-editable')){// editing something don't take the event
                     if(event.target.id == 'focushere'){
                         self.show_search_bar(true);
                     }

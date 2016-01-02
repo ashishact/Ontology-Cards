@@ -1,27 +1,13 @@
-define(['durandal/app', 'knockout', 'jquery', 'lodash'], function (app, ko, $, _) {
+define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props'], function (app, ko, $, _, card_props) {
 
     var card = function(){
         var self=this;
         var __card = null;
-        this.bind_data = null;
-
-        this.SC_TYPE = {
-          article:1,
-          quote:2,
-          image:3,
-          simple_text:4,
-          simple_list:5,
-          json_editor:6,
-          person:7,
-          
-          list:8,
-          feed:9,
-          settings:10,
-          article_list:11,
-        };
-
-        this.ifcard_type = null;
         this.id = null;
+        this.sctype = 0;
+
+        this.bind_data = null;
+        this.ifcardsctype = null;
 
         //DEFAULT
         //observable
@@ -30,24 +16,10 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash'], function (app, ko, $, _
         this.abstract = ko.observable('');
         this.content = ko.observable('');
         //non - observable
-        this.webreader = '';
+        //this.webreader = '';
         this.created = Date.now();
 
-        //PROPS
-        this.PROPS = {
-          disp:{
-            align:{
-              left:1,
-              center:2,
-              right:3
-            },
-            border:{
-              rectangular:1,
-              circular:2
-            }
-          }
-        }
-
+        
         this.create_array_from_json = function(_prefix, _array, _obj){
             if(typeof(_prefix) != 'string')_prefix='';
 
@@ -62,12 +34,22 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash'], function (app, ko, $, _
                 }
             });
         };
-        this.create_card_type = function(_type){
-            self.ifcard_type = _type;
+        this.create_card_type = function(sctype, data){
+            self.ifcardsctype = sctype;
 
 
-            //SIMPLE PERSON
-            if(_type == self.SC_TYPE.person){
+            //SUMMARY
+            if(sctype == card_props.TYPE.SUMMARY){
+              if(data.html){
+                  return {
+                    html:ko.observable(data.html),
+                    title: ko.observable(data.title)
+                  }
+              }
+
+            }
+            //PERSON
+            if(sctype == card_props.TYPE.PERSON){
                 return {
                   name:'Sir Issac Newton',
                   image_src:'http://cdn.history.com/sites/2/2015/07/GettyImages-113494597-E.jpeg',
@@ -79,7 +61,7 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash'], function (app, ko, $, _
             }
 
             //QUOTE
-            else if(_type == self.SC_TYPE.quote){
+            else if(sctype == self.SCsctype.quote){
                 return {
                   quote:'All things are subject to interpretation whichever interpretation prevails at a given time is a function of power and not truth',
                   by:'Friedrich Nietzsche',
@@ -87,7 +69,7 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash'], function (app, ko, $, _
                 };
             }
             // ARTICLE
-            else if(_type == self.SC_TYPE.article){
+            else if(sctype == self.SCsctype.article){
                 return {
                   title:'I feel therefore I am',
                   image_src:'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTF9LI23PPlCpctgxPnWyekwQrmM8j8yos_UQdQYqQVdnev-pVa',
@@ -97,7 +79,7 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash'], function (app, ko, $, _
                 };
             }
             // IMAGE
-            else if(_type == self.SC_TYPE.image){
+            else if(sctype == self.SCsctype.image){
                 return {
                   title:'Everyday is New',
                   image_src:'https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTwag-mgoPpd_1GWyByONbIujrLs8vcgr_76a0nBGng569Pi5rm-w',
@@ -107,14 +89,14 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash'], function (app, ko, $, _
                 };
             }
 
-            else if(_type == self.SC_TYPE.simple_text){
+            else if(sctype == self.SCsctype.simple_text){
                 return {
                   title: 'I feel therefore I am'.toUpperCase(),
                   text: 'How exactly did consciousness become a problem? And why, after years off the table, is it a hot research subject now?'
                 };
             }
 
-            else if(_type == self.SC_TYPE.json_editor){
+            else if(sctype == self.SCsctype.json_editor){
                 var somejson = {
                     string:'text',
                     bool:false,
@@ -130,7 +112,7 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash'], function (app, ko, $, _
                 return ko.observableArray(_array);
             }
 
-            else if(_type == self.SC_TYPE.simple_list){
+            else if(sctype == self.SCsctype.simple_list){
                 var _array = [];
                 var _item = {
                   item_title: 'I feel therefore I am',
@@ -184,11 +166,15 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash'], function (app, ko, $, _
             __card = activationData;
 
             self.id = __card.id;
-            if(__card.card_data.title)self.title(__card.card_data.title);
+            self.sctype = __card.card_data.sctype;
 
-            if(__card.card_data.parsedHTMLRESULT){
-                var res = __card.card_data.parsedHTMLRESULT;
-                self.webreader = res._html;
+
+            if(self.sctype == card_props.TYPE.SUMMARY){
+                if(__card.card_data.parsedHTMLRESULT){
+                    var res = __card.card_data.parsedHTMLRESULT;
+                    self.bind_data = self.create_card_type(self.sctype, {html: res._html, title:res._title});
+                    console.log(self.bind_data.html());
+                }   
             }
 
             //If Settings
@@ -204,22 +190,13 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash'], function (app, ko, $, _
                 self.settingsVisible(true);
             }
 
-            var _mod = self.id%7;
-            self.bind_data = self.create_card_type(_mod+1);
-
-            // self.bind_data = self.create_card_type(self.SC_TYPE.person);
-            // self.bind_data = self.create_card_type(self.SC_TYPE.article);
-            // self.bind_data = self.create_card_type(self.SC_TYPE.quote);
-            // self.bind_data = self.create_card_type(self.SC_TYPE.image);
-            // self.bind_data = self.create_card_type(self.SC_TYPE.simple_text);
-            // self.bind_data = self.create_card_type(self.SC_TYPE.json_editor);
-            // self.bind_data = self.create_card_type(self.SC_TYPE.simple_list);
+            
             
         };
-        this.send_msg_to_background = function(_type, _msg){
+        this.send_msg_to_background = function(sctype, _msg){
             chrome.runtime.sendMessage(
                 {
-                    type:_type,
+                    type:sctype,
                     msg:_msg
                 }, 
                 function(response) {
@@ -236,9 +213,9 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash'], function (app, ko, $, _
                 if(id === self.id){
                     console.log('saving card data with id ', id);
 
-                    var _type = 'SAVE_REQ_FROM_CARD';
+                    var sctype = 'SAVE_REQ_FROM_CARD';
                     var _msg = {card_content:self.card_content()};
-                    self.send_msg_to_background(_type, _msg);
+                    self.send_msg_to_background(sctype, _msg);
                 }
             });
 
