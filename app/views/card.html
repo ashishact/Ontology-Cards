@@ -1,0 +1,213 @@
+<div class="ui card" style="overflow-y: auto; overflow-x: hidden; width:100%; height:100%;">
+	<!-- PERSON -->
+	<!-- ko if: ifcard_type == SC_TYPE.person -->
+
+		<!-- ko if:bind_data.image_src -->
+				<div class="image">
+					<img data-bind="attr:{ src:bind_data.image_src}">
+				</div>
+				
+		<!-- /ko -->
+	
+		<div class="content">
+			<!-- ko if:bind_data.name -->
+			    <a class="center aligned header" data-bind="text:bind_data.name"></a>
+			<!-- /ko -->
+			
+			<!-- ko if:bind_data.dob -->
+			    <div class="center aligned meta">
+			      	<span class="date">Date of birth <span data-bind="text:bind_data.dob"></span></span>
+			    </div>
+			<!-- /ko -->
+			
+			<!-- ko if:bind_data.abstract -->
+				<div class="ui divider scdivider"></div>
+			    <div class="center aligned description" data-bind="text:bind_data.abstract"></div>
+			<!-- /ko -->
+
+		</div>
+
+		<!-- ko if:bind_data.source_url -->
+			<div class="extra content">
+				<a target="_blank" data-bind="attr:{href:bind_data.source_url}">
+				<i class="external icon"></i>
+					find more...
+				</a>
+			</div>
+		<!-- /ko -->
+	<!-- /ko -->
+
+	<!-- QUOTE -->
+	<!-- ko if: ifcard_type == SC_TYPE.quote -->	
+		<div class="ui very padded  orange basic segment" style="height:100%; /*background-image: url('http://www.apnphotographyschool.com/wp-content/uploads/2013/10/blurred-backgrounds.jpg'); background-repeat:no-repeat; background-size:cover;*/">
+		  	<!-- ko if:bind_data.quote -->
+		  	    <h6 class="ui icon grey header">
+		  	      <i class="left quote icon"></i>
+		  	      <div class="content" data-bind="text:bind_data.quote"></div>
+		  	    </h6>
+		  	<!-- /ko -->
+
+	  		<!-- ko if:bind_data.by -->
+	  			<div class="ui divider"></div>
+				<h6 class="ui centered grey header" data-bind="text:bind_data.by" style="background: transparent"></h6>
+	  		<!-- /ko -->
+		</div>
+	<!-- /ko -->
+
+	<!-- ARTICLE -->
+	<!-- ko if: ifcard_type == SC_TYPE.article -->
+		<!-- ko if:bind_data.image_src -->
+
+			<div class="image">
+				<i class="ui right edit inverted outline icon absolutepos"></i>
+				<i class="ui left like inverted outline icon absolutepos"></i>
+				<img data-bind="attr:{ src:bind_data.image_src}">
+			</div>
+		<!-- /ko -->
+		
+		<div class="content">
+			<!-- ko if:bind_data.title -->
+			    <a class="center aligned header" data-bind="text:bind_data.title"></a>
+			<!-- /ko -->
+			
+			<!-- ko if:bind_data.by -->
+			    <div class="ui center aligned meta">
+			      	<a class="ui author">by <span data-bind="text:bind_data.by"></span></a>
+					<div class="ui divider scdivider"></div>
+			    </div>
+			<!-- /ko -->
+
+			<!-- ko if:bind_data.abstract -->
+			    <div class="ui center aligned description" data-bind="text:bind_data.abstract"></div>
+			<!-- /ko -->
+			
+		</div>
+		<div class="extra content">
+	    	<a class="right floated">More...</a>
+	  	</div>
+	<!-- /ko -->
+
+	<!-- IMAGE -->
+	<!-- ko if: ifcard_type == SC_TYPE.image -->
+		<!-- ko if:bind_data.image_src -->
+			<div class="ui basic segment" style="height:100%;width:100%; position: absolute; background-repeat:no-repeat; background-size:cover;" data-bind="style: {'backgroundImage': 'url('+ bind_data.image_src +')'}">
+			</div>
+		<!-- /ko -->
+	
+		<div class="ui basic very padded basic segment">
+			<!-- ko if:bind_data.title -->
+			<h4 class="ui centered inverted header" data-bind="text:bind_data.title"></h4>
+			<!-- /ko -->
+
+			<!-- ko if:bind_data.by -->
+			<h6 class="ui centered inverted grey header author" >by - <span data-bind="text:bind_data.by"></span></h6>
+			<!-- /ko -->
+
+			<!-- ko if:bind_data.abstract -->
+			<h5 class="ui centered inverted grey header" data-bind="text:bind_data.abstract"></h5>
+			<!-- /ko -->
+		</div>		
+	<!-- /ko -->
+
+
+	<!-- SIMPLE TEXT -->
+	<!-- ko if: ifcard_type == SC_TYPE.simple_text -->	
+		<div class="content">
+			<!-- ko if:bind_data.title -->
+			    <h4 class="header" data-bind="text:bind_data.title"></h4>
+			<!-- /ko -->
+			<!-- ko if:bind_data.text -->
+			    <div class="ui description" data-bind="text:bind_data.text"></div>
+			<!-- /ko -->
+		</div>
+	<!-- /ko -->
+
+
+	<!-- JSON EDITOR -->
+	<!-- ko if: ifcard_type == SC_TYPE.json_editor -->
+		<div class="ui padded basic segment">			
+			<div class="ui divided items" data-bind="foreach: {data: bind_data}">
+				  <div class="item">
+				    <div class="middle aligned content">
+
+						<div class="header" data-bind="text:$data.key"></div>
+						<!-- <div class="content" data-bind="text:$data.key"></div> -->
+				        
+
+				        <div class="right floated content">
+				        	<!-- ko if:typeof($data.value) === 'boolean' -->
+				          		<div class="ui checkbox">
+				          		  <input type="checkbox" name="example" data-bind="checked:$data.value">
+				          		  <label></label>
+				          		</div>
+				        	<!-- /ko -->
+				        	<!-- ko if:typeof($data.value) === 'string' || typeof($data.value) === 'number' -->
+				          		<div class="ui tiny input">
+				          		  <input type="text" data-bind="value:$data.value">
+				          		</div>
+				        	<!-- /ko -->
+				        </div>
+
+
+				    </div>
+				  </div>		 
+			</div>
+		</div>	
+	<!-- /ko -->
+
+
+
+	<!-- LIST -->
+	<!-- ko if: ifcard_type == SC_TYPE.simple_list -->
+		<div class="ui padded basic segment">	
+			<div class="ui centered header" data-bind="text:bind_data.title"></div>
+			<div class="ui divided list" data-bind="foreach: {data: bind_data.array}">
+			  <a class="item">
+			    <i class="outline edit icon"></i>
+			    <div class="content">
+			    	<!-- ko if:$data.item_title -->
+			      		<div class="ui  header" data-bind="text:$data.item_title"></div>
+			      	<!-- /ko -->
+			      	<!-- ko if:$data.item_abstract -->
+			      		<div class="ui description" data-bind="text:$data.item_abstract"></div>
+			      	<!-- /ko -->
+			    </div>
+			  </a>
+			</div>
+		</div>
+	<!-- /ko -->
+	  
+</div>
+
+
+
+<!-- CARDUI.CSS******************************************************************* -->
+
+<!-- 
+
+	<div style="display: flex; flex-direction: column;" class="card selectedcard" data-bind="event: { mouseenter: onMouseEnterCard, mouseleave: onMouseLeaveCard}">
+
+		<div style="min-height: 70px" class="sc_card_header">
+			<div class="title sc-editable" contenteditable="true"  data-placeholder="Title" data-bind="sc_contenteditable:title"></div>
+			<div class="removeBtn" style="position: absolute; top: 0px; right: 0px" data-bind="fadeVisible: isMouseEnterCard"></div>
+
+			<div class="content sc-editable" contenteditable="true" data-placeholder="subtitle" data-bind="sc_contenteditable:subtitle"></div>
+
+		</div>
+
+		<div style=" -webkit-flex:6; min-height: 100px; overflow-y:auto" class="sc_card_body">
+			<div data-bind="visible:settingsVisible, foreach: {data: settingsArray}">
+				<div style="display: flex">
+					<div data-bind="text:$data.map"></div>
+					<div data-bind="text:$data.config"></div>
+				</div>
+			</div>
+			<div class="content sc-editable" contenteditable="true" data-placeholder="contents" data-bind="sc_contenteditable:content"></div>
+		</div>
+
+		<div style="min-height: 30px" class="sc_card_footer">
+			<div class="content sc-editable" data-placeholder="">act</div>
+		</div>
+
+	</div>
+ -->

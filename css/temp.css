@@ -1,0 +1,186 @@
+html{
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+#SEMANTICCARDS-05041993 ::-webkit-scrollbar{
+    width:0px;
+    height: 2px
+    /*background-color:#cccccc;*/
+}
+#SEMANTICCARDS-05041993 ::-webkit-scrollbar-thumb{
+    background-color:#3CB03F;
+    /*border-radius:2px;*/
+}
+#SEMANTICCARDS-05041993 ::-webkit-scrollbar-thumb:hover{
+    background-color:#46BF49;
+    /*border:1px solid #333333;*/
+}
+#SEMANTICCARDS-05041993 ::-webkit-scrollbar-thumb:active{
+    background-color:#39A63D;
+    /*border:1px solid #333333;*/
+} 
+#SEMANTICCARDS-05041993 ::-webkit-scrollbar-track{
+    /*border:1px gray solid;*/
+    /*border-radius:2px;*/
+    /*-webkit-box-shadow:0 0 6px gray inset;*/
+} 
+#SEMANTICCARDS-05041993 {
+    /*background-color:DarkCyan;*/
+    /*background-image: linear-gradient(rgb(104, 153, 118), rgb(172, 218, 204));*/
+}
+#SEMANTICCARDS-05041993 .grid-stack {
+    /*YELLOWGREEN*/
+    /*background: YELLOWGREEN;*/
+}
+
+#SEMANTICCARDS-05041993 .grid-stack-item-content {
+    /*color: #2c3e50;*/
+    /*text-align: center;*/
+    background-color: transparent;
+    /*overflow-x: hidden;*/
+    /*overflow-y: hidden;*/
+}
+
+
+
+[contentEditable=true]:empty:not(:focus):before{content:attr(data-placeholder) }
+
+/*card ui css*/
+/*#SEMANTICCARDS-05041993 .card{
+    width: 100%;
+    height: 100%;
+}
+#SEMANTICCARDS-05041993 .card .content{
+    text-align: left;
+}*/
+/*#SEMANTICCARDS-05041993 ul.actions.inline{
+    position: absolute;
+    bottom: 0px;
+}*/
+
+/*.selectedcard{
+    border-radius: 2px 2px 2px 2px;
+    -moz-border-radius: 2px 2px 2px 2px;
+    -webkit-border-radius: 2px 2px 2px 2px;
+    border: 1px dashed  #bd3eb5;
+}*/
+
+#SEMANTICCARDS-05041993 #floatingSearchBar{
+    position: fixed;
+    bottom:3%;
+    left:30%;
+    width: 40%;
+    height: 5%
+}
+
+#SEMANTICCARDS-05041993 .fillall{
+    width:100%;
+    height:100%;
+}
+
+
+/* * Copyright (c) 2012 Thibaut Courouble
+ * Licensed under the MIT License
+   ================================================== */
+
+/*#SEMANTICCARDS-05041993 {
+    background: #f7f7f7;
+    color: #404040;
+    font-family: 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 20px;
+}*/
+
+
+/*
+#SEMANTICCARDS-05041993 #floatingSearchBar input {
+    font-family: 'HelveticaNeue', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    color: #555860;
+}
+
+#SEMANTICCARDS-05041993 #floatingSearchBar .search {
+    position: relative;
+    margin: 0 auto;
+    width: 300px;
+}
+
+#SEMANTICCARDS-05041993 #floatingSearchBar .search input {
+    height: 26px;
+    width: 100%;
+    padding: 0 12px 0 25px;
+    background: white url('chrome-extension://__MSG_@@extension_id__/css/search_icon.png') 8px 6px no-repeat;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #a8acbc #babdcc #c0c3d2;
+    border-radius: 13px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-box-shadow: inset 0 1px #e5e7ed, 0 1px 0 #fcfcfc;
+    -moz-box-shadow: inset 0 1px #e5e7ed, 0 1px 0 #fcfcfc;
+    -ms-box-shadow: inset 0 1px #e5e7ed, 0 1px 0 #fcfcfc;
+    -o-box-shadow: inset 0 1px #e5e7ed, 0 1px 0 #fcfcfc;
+    box-shadow: inset 0 1px #e5e7ed, 0 1px 0 #fcfcfc;
+}
+
+#SEMANTICCARDS-05041993 #floatingSearchBar .search input:focus {
+    outline: none;
+    border-color: #66b1ee;
+    -webkit-box-shadow: 0 0 2px rgba(85, 168, 236, 0.9);
+    -moz-box-shadow: 0 0 2px rgba(85, 168, 236, 0.9);
+    -ms-box-shadow: 0 0 2px rgba(85, 168, 236, 0.9);
+    -o-box-shadow: 0 0 2px rgba(85, 168, 236, 0.9);
+    box-shadow: 0 0 2px rgba(85, 168, 236, 0.9);
+}*/
+
+#SEMANTICCARDS-05041993 .removeBtn{
+    width: 16px;
+    height: 16px;
+    background-position-y: -32px;
+    cursor: pointer;
+    background-image: url('chrome-extension://__MSG_@@extension_id__/css/my-cardui-icons.png');
+    background-repeat: no-repeat;
+    background-size: 16px;
+}
+
+/*my semanics*/
+
+#SEMANTICCARDS-05041993 .ui.right.absolutepos{
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}
+
+#SEMANTICCARDS-05041993 .ui.left.absolutepos{
+    position: absolute;
+    left: 5px;
+    top: 5px;
+}
+
+#SEMANTICCARDS-05041993 .ui.divider.scdivider{
+    width: 50%;
+    left: 25%;
+    position: relative;
+}
+
+#SEMANTICCARDS-05041993 .ui.bg.fluid.image{
+    position: absolute;
+}
+
+#SEMANTICCARDS-05041993 .overbgimage{
+    z-index: 1;
+}
+
+#SEMANTICCARDS-05041993{
+    /*background-image: url('chrome-extension://__MSG_@@extension_id__/css/bg.jpg');
+    background-repeat:no-repeat;
+    background-size: cover;*/
+
+    background-color: darkcyan;
+}

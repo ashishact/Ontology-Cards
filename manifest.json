@@ -1,0 +1,51 @@
+{
+  "name": "semanticcards",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "See concept maps in websites",
+  "homepage_url": "http://extensionizr.com",
+  "web_accessible_resources": ["css/*", "app/*","app/views/*.html", "app/viewmodels/*.js", "lib/*"],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "default_locale": "en",
+  "background": {
+    "page": "app/background/background.html",
+    "persistent": true
+  },
+  "options_page": "app/option/option.html",
+  "browser_action": {
+    "default_icon": "icons/icon19.png",
+    "default_title": "Start semantic cards"
+  },
+  "permissions": [
+    "clipboardRead",
+    "clipboardWrite",
+    "contextMenus",
+    "tabs",
+    "https://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches":[
+        "<all_urls>"
+      ],
+      "css":[
+      // "lib/bootstrap/css/bootstrap-responsive.min.css",
+      "css/skeleton/normalize.css",
+      "css/skeleton/skeleton.css",
+      // "css/sui/grid.min.css",
+      "lib/gridstack/dist/gridstack.css",
+      "css/temp.css",
+      "css/breadcrumb.css"
+      ],
+      "js": [
+        "lib/require/require.js",
+        "app/requireConfigExtension.js"
+      ],
+      "run_at": "document_end"
+    }
+  ]
+}
