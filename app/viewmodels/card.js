@@ -48,6 +48,14 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props'], function 
               }
 
             }
+            else if(sctype == card_props.TYPE.QUOTE){
+              if(data.quote){
+                  return {
+                    quote:ko.observable(data.quote)
+                  }
+              }
+
+            }
             //PERSON
             if(sctype == card_props.TYPE.PERSON){
                 return {
@@ -176,6 +184,13 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props'], function 
                     console.log(self.bind_data.html());
                 }   
             }
+            else if(self.sctype == card_props.TYPE.QUOTE){
+                var _q = __card.card_data.quote;
+                if(_q){
+
+                    self.bind_data = self.create_card_type(self.sctype, {quote:_q});
+                }
+            }
 
             //If Settings
             if(__card.card_data.settings){
@@ -218,38 +233,6 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props'], function 
                     self.send_msg_to_background(sctype, _msg);
                 }
             });
-
-
-            $('.ui.search')
-              .search({
-                source: [
-                          { title: 'Andorra' },
-                          { title: 'United Arab Emirates' },
-                          { title: 'Afghanistan' },
-                          { title: 'Antigua' },
-                          { title: 'Anguilla' },
-                          { title: 'Albania' },
-                          { title: 'Armenia' },
-                          { title: 'Netherlands Antilles' },
-                          { title: 'Angola' },
-                          { title: 'Argentina' },
-                          { title: 'American Samoa' },
-                          { title: 'Austria' },
-                          { title: 'Australia' },
-                          { title: 'Aruba' },
-                          { title: 'Aland Islands' },
-                          { title: 'Azerbaijan' },
-                          { title: 'Bosnia' },
-                          { title: 'Barbados' },
-                          { title: 'Bangladesh' },
-                          { title: 'Belgium' },
-                          { title: 'Burkina Faso' },
-                          { title: 'Bulgaria' },
-                          { title: 'Bahrain' },
-                          { title: 'Burundi' }
-                          // etc
-                        ]
-              });
         };
 
         this.onMouseLeaveCard = function(){

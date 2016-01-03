@@ -1,1 +1,11 @@
-<h3 style="box-sizing: border-box; font-family: Roboto, sans-serif; font-weight: 400; line-height: 1.1; color: rgb(190, 55, 116); font-size: 30px; padding-top: 30px; padding-bottom: 30px; padding-left: 20px; font-stretch: inherit; width: 100%; text-transform: uppercase;"><span style="font-size: 30px; line-height: 1.1;">YOU ARE being followed</span><br></h3>
+<div style="background-color: white" class="card" data-bind="event: { mouseenter: onMouseEnterCard, mouseleave: onMouseLeaveCard}" 
+style="display: flex; flex-direction: column;" >
+	<div style="min-height: 30px; overflow-y: auto">
+		<div style="padding: 20px; background-color: white">
+
+			<h3 style="box-sizing: border-box; font-family: Roboto, sans-serif; font-weight: 400; line-height: 1.1; color: rgb(190, 55, 116); font-size: 30px; padding-top: 30px; padding-bottom: 30px; padding-left: 20px; font-stretch: inherit; width: 100%; text-transform: uppercase;"><span style="font-size: 30px; line-height: 1.1;" data-bind="sc_contenteditable:bind_data.quote" contenteditable="true">YOU ARE being followed</span><br></h3>
+		
+		</div>
+	</div>
+	<div class="removeBtn" style="position: absolute; top: 0px; right: 0px" data-bind="fadeVisible: isMouseEnterCard"></div>
+</div>

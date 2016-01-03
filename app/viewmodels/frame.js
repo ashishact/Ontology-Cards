@@ -24,7 +24,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
 
         //Viewmodels
             this.activeModel = "viewmodels/card";
-            this.activeView = "views/cards/card.html";
+            this.activeView = "views/ribbon.html";
             this._root = {max_card_id:0};// needs to be updated always
 
             //Frameview
@@ -189,13 +189,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     var _view = self.activeView;
                     self.activeView = 'views/cards/summary.html';
                     var card_data = {title:"Web Resources", volatile:true, parsedHTMLRESULT:res, sctype:card_props.TYPE.SUMMARY};
+                    //var card_data = {sctype:card_props.TYPE.QUOTE, quote:'This is a quote'};
                     self.actions.add_new_card(card_data);
                     self.activeView = _view;
                 }
                 
                 
-                //self.actions.load_all_from_store_to_frameview();// it does everything -> loads all cards
-                //console.log(self.navigation());
+                self.actions.load_all_from_store_to_frameview();// it does everything -> loads all cards
 
 
                 
@@ -266,6 +266,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 };
                 //@
                 this._update_view_model_strings = function(card_data){
+                    console.log("Loging card data",card_data);
                     if(card_data.model);//@im check if model is valid
                     if(card_data.view)self.activeView = card_data.view;//@im check if view is valid
                 }
@@ -1105,7 +1106,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                             }
                         }
                         else{
-                            card_ = self.actions.add_new_card({title:'Card'});
+                            card_ = self.actions.add_new_card({title:'Card', model:self.activeModel, view:self.activeView});
                         }
 
                         //self.start_editing_card(card_);
