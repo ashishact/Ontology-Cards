@@ -1,4 +1,4 @@
-define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props'], function (app, ko, $, _, card_props) {
+define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki', 'qwest'], function (app, ko, $, _, card_props, mediawiki, qwest) {
 
     var card = function(){
         var self=this;
@@ -8,6 +8,7 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props'], function 
 
         this.bind_data = null;
         this.ifcardsctype = null;
+        this.wikidata = ko.observable('');
 
         //DEFAULT
         //observable
@@ -40,7 +41,7 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props'], function 
 
             //SUMMARY
             if(sctype == card_props.TYPE.SUMMARY){
-              if(data.html){
+              if(data.html && data.title){
                   return {
                     html:ko.observable(data.html),
                     title: ko.observable(data.title)
@@ -182,7 +183,18 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props'], function 
                     var res = __card.card_data.parsedHTMLRESULT;
                     self.bind_data = self.create_card_type(self.sctype, {html: res._html, title:res._title});
                     console.log(self.bind_data.html());
-                }   
+                }
+                //Working
+	                // var callb = function(res) {
+	                //     self.bind_data.html(res);
+	                // }
+	                //mediawiki.WD("barack obama", callb);
+
+                // mediawiki.WD_i("unicorn", function(res) {
+                //     self.bind_data.html(res);
+                // });
+                
+                
             }
             else if(self.sctype == card_props.TYPE.QUOTE){
                 var _q = __card.card_data.quote;

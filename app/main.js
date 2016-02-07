@@ -1,6 +1,6 @@
 ﻿define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'gridstack'],  function (system, app, viewLocator, gridstack) {
     //>>excludeStart("build", true);
-    system.debug(true);
+    //system.debug(true);
     //>>excludeEnd("build");
 
     app.title = 'Semanticcards';

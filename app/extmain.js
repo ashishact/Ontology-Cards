@@ -1,7 +1,7 @@
     
     define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'gridstack', 'state'],  function (system, app, viewLocator, gridstack, state) {
         //>>excludeStart("build", true);
-        system.debug(true);
+        //system.debug(true);
         //>>excludeEnd("build");
 
         if(chrome.extension){

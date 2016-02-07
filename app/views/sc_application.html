@@ -1,3 +1,14 @@
-<div style="display: flex" id="SC-APPLICATION" data-bind="foreach: {data: frames, afterRender: afterFrameAdded}">
-    <div data-bind="compose:$data.viewModel"></div>
+<div style="display: flex" id="SC-APPLICATION" data-bind="foreach: {data: framesData, afterRender: afterFrameAdded}">
+    <div data-bind="compose:{model:$data.viewModel, activationData:$data}, style:{ backgroundColor: $data.bgColor}"></div>
+
+    <form  data-bind="submit:$root.searchSubmit" style="position: fixed; left:30%; width:40%; bottom:-50px;">
+    	<div>
+    	  <div>
+    	    <input style="width:100%; " id="focushere" type="text" placeholder="Command" autocomplete="off">
+    	    <i class="search icon"></i>
+    	  </div>
+    	</div>
+    </form>
+
 </div>
+

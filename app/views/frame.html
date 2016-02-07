@@ -1,33 +1,68 @@
-<!-- custombreadcrumbs -->
-<div style="margin:2px 2px 2px 10px; ">
-	<div class="custombreadcrumb flat" data-bind="foreach: {data: navigation}">
-		<a style="color:#777"  data-bind="text:$data.title, click:$root.clicked_on_breadcrumb, css: {active: $data.key == $root.frameview.key() }"></a>
-	</div>
+<!-- Line Folder -->
+
+<!-- <div style="height:2px; left:10px; right:10px; background-color:crimson; margin-bottom:2px; margin-top: 5px; margin-left: 10px; margin-right: 10px;">
+	<i style="position: absolute; right:50px; top:0px; cursor:pointer;" class="fa fa-chevron-circle-down fa-lg" data-bind="click:toggle_hide_frame"></i>
+	<i style="position: absolute; right:20px; top:0px; cursor:pointer;" class="fa fa-times-circle fa-lg" data-bind="click:close_frame"></i>
 </div>
+ -->
 
-<!-- ******************** -->
 
-<div  style="margin-top: 2px" >
-	<div  class="grid-stack" data-bind="foreach: {data: cards, afterRender: afterAddWidget},event:{mouseup:onPointerUp_background, mousedown:onPointerDown_background}">
-		<div class="grid-stack-item" data-bind="attr: {'data-gs-x': $data.x, 'data-gs-y': $data.y, 'data-gs-width': $data.width, 'data-gs-height': $data.height, 'data-gs-auto-position': $root.auto_position},  event:{mousedown:$root.onMouseDown, mouseup:$root.onMouseUp}">
+<div>
+	<!-- custombreadcrumbs -->
+	<div style="margin:2px 2px 2px 10px; ">
+		<div class="custombreadcrumb flat" data-bind="foreach: {data: navigation}">
+			<a style="color:#777"  data-bind="text:$data.title, click:$root.clicked_on_breadcrumb, css: {active: $data.key == $root.frameview.key() }"></a>
+		</div>
 
-			<div style="/*overflow-y: auto;*/border-radius: 5px;" class="grid-stack-item-content" >
-				<!-- <button data-bind="click: $root.remove_card">Remove</button> -->
-				<div style="width: 100%; height: 100%; background-color: white" data-bind="compose:{model:$root.activeModel, view:$root.activeView, activationData:$data}"></div>
+		<i style="
+		box-shadow: 0 0 8px 1px rgba(0, 0, 0, 0.35);
+		color: white;
+		background-color: #666;
+		border-radius: 50%;
+		position: relative;
+		float:right;
+		padding-right: 5px;
+		cursor:pointer;" class="fa fa-times-circle fa-lg flat" data-bind="click:close_frame"></i>
+		<i style="
+		box-shadow: 0 0 8px 1px rgba(0, 0, 0, 0.35);
+		color: white;
+		background-color: #666;
+		border-radius: 50%;
+		position: relative;
+		float:right;
+		padding-right: 5px;
+		cursor:pointer;" class="fa fa-chevron-circle-down fa-lg" data-bind="click:toggle_hide_frame"></i>
+
+	</div>
+
+	<!-- ******************** -->
+
+	<div  style="margin-top: 2px" >
+		<div  class="grid-stack" data-bind="foreach: {data: cards, afterRender: afterAddWidget},event:{mouseup:onPointerUp_background, mousedown:onPointerDown_background}">
+			<div class="grid-stack-item" data-bind="attr: {'data-gs-x': $data.x, 'data-gs-y': $data.y, 'data-gs-width': $data.width, 'data-gs-height': $data.height, 'data-gs-auto-position': $root.auto_position},  event:{mousedown:$root.onMouseDown, mouseup:$root.onMouseUp, mouseenter:$root.onMouseEnterCard, mouseleave:$root.onMouseLeaveCard}">
+				<div style="border-radius: 5px;" class="grid-stack-item-content" >
+					<!-- <button data-bind="click: $root.remove_card">Remove</button> -->
+					<div style="width: 100%; height: 100%; background-color: white;" data-bind="compose:{model:$root.activeModel, view:$root.activeView, activationData:$data}"></div>
+					
+				</div>
+
+				<div  style="position: absolute; top:0px; right:15px;" data-bind="fadeVisible:$data.isMouseHovered">
+					<i style="cursor:pointer; color:#777" class="removeCardBtn fa fa-times"></i>
+				</div>
+
 			</div>
 		</div>
-	</div>
 
 
-			
-	<form  class="ui search" data-bind="submit:searchSubmit" style="position: fixed; left:30%; width:40%; bottom:-50px;">
-		<div class="ui search">
-		  <div class="ui icon input">
-		    <input style="width:100%; " id="focushere" class="prompt" type="text" placeholder="Command" autocomplete="off">
-		    <i class="search icon"></i>
-		  </div>
+				
+		<!-- <form  data-bind="submit:searchSubmit" style="position: fixed; left:30%; width:40%; bottom:-50px;">
+			<div>
+			  <div>
+			    <input style="width:100%; " id="focushere" type="text" placeholder="Command" autocomplete="off">
+			    <i class="search icon"></i>
+			  </div>
+			</div>
+		</form> -->
+				
 		</div>
-	</form>
-			
-	</div>
-	
+</div>	

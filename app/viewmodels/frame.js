@@ -1,4 +1,3 @@
-
 define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'state', 'store', 'panzoom', 'card_props'],
     function (http, app, ko, gridstack, _ , state, store, panzoom, card_props) {
 
@@ -71,7 +70,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
 
             
         //Lifecycle Activity
-            this.activate = function (){        
+            // activationDat is currentFrame from sc_application 
+            // by doing currentFrame = self sc_application will be able to acess all the frame functions like "addNewCard"
+            this.activate = function (activationData){
+                activationData.frameModel = self;
             };
             this.bindingComplete = function (view) {
             };
@@ -168,6 +170,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     self.grid.add_widget(item);
                     var last_card = _.last(self.cards());
                     last_card.el = item;
+                    //last_card.isMouseHovered = ko.observable(false);
 
                     // ko.utils.domNodeDisposal.addDisposeCallback(item, function () {
                     //     self.grid.remove_widget(item);
@@ -186,12 +189,12 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
 
                 if(state.parsedHTMLRESULT){//temp get from somewhere else
                     var res = state.parsedHTMLRESULT;
-                    var _view = self.activeView;
+                    var _pview = self.activeView;
                     self.activeView = 'views/cards/summary.html';
-                    var card_data = {title:"Web Resources", volatile:true, parsedHTMLRESULT:res, sctype:card_props.TYPE.SUMMARY};
+                    var card_data = {title:"Web Resources", volatile:true, parsedHTMLRESULT:res, sctype:card_props.TYPE.SUMMARY, non_editable:true};
                     //var card_data = {sctype:card_props.TYPE.QUOTE, quote:'This is a quote'};
-                    self.actions.add_new_card(card_data);
-                    self.activeView = _view;
+                    var card_ = self.actions.add_new_card(card_data);
+                    self.activeView = _pview;
                 }
                 
                 
@@ -207,6 +210,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     self.someKeyUp(event);
                     return true;
                 });
+
+                self.show_search_bar(false);
             }
 
 
@@ -227,7 +232,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                         card_data:card_data,
                         TYPE:CARD_TYPE,
                         STATE:CARD_STATE,
-                        el:null
+                        el:null,
+                        isMouseHovered: ko.observable(false)
                     };
                     self.cards.push(newcard);
                     self.frameview.ids.push(newid);
@@ -242,6 +248,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     var CARD_STATE = me._create_card_state();
                     _card.STATE = CARD_STATE;
                     _card.el = null;
+                    _card.isMouseHovered = ko.observable(false);
+
                     me._update_view_model_strings(_card.card_data);// change view model type before binding
 
                     self.cards.push(_card);
@@ -388,6 +396,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 };
                 this._create_parent_card_type= function(){
                     return me._create_card_type(['EDITABLE' , 'MOVABLE', 'DRAGGABLE', 'PARENT']);
+                };
+                this._create_non_editable_card_type = function(){
+                    return me._create_card_type(['MOVABLE', 'DRAGGABLE' , 'EXPANDABLE']);
                 };
                 this._save_root= function(){
                     var _type = 'SAVE_ROOT';
@@ -580,10 +591,15 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     }
                     var CARD_TYPE = null;
                     if(card_data.parent){
-                        var CARD_TYPE = me._create_parent_card_type();
+                        CARD_TYPE = me._create_parent_card_type();
                     }
                     else{
-                        var CARD_TYPE = me._create_default_card_type();
+                        if(card_data.non_editable){
+                            CARD_TYPE = me._create_non_editable_card_type();
+                        }
+                        else {
+                            CARD_TYPE = me._create_default_card_type();
+                        }
                     }
 
                     if(card_data.volatile){
@@ -773,6 +789,14 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
 
                 return true; // bubble
             };
+            this.onMouseLeaveCard = function(card){
+                card.isMouseHovered(false);
+                return true;
+            };
+            this.onMouseEnterCard = function(card){
+                card.isMouseHovered(true);
+                return true;
+            };
             this.onPointerDown_background = function(i, e){
                 if($(e.target).hasClass('grid-stack')){
                     //$grid_stack.panzoom('enable');
@@ -789,8 +813,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             };
             
             this.left_click_on_card = function(card, target, dt, dx, dy){
-                
-                if($(target).hasClass('removeBtn')){
+                if($(target).hasClass('removeCardBtn')){
                     self.actions.remove_card(card);
                     console.log('comming');
                 }// should be before or other events will fire
@@ -799,14 +822,16 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                         self.trigger_parent(card, target, dt, dx, dy);
                     }
                     else{
-                        if(card.STATE.EDITING){
-                            if(self.get_fc_value('stop_edit_only_when_clicked_outside') == true){
+                        if(card.TYPE.EDITABLE){
+                            if(card.STATE.EDITING){
+                                if(self.get_fc_value('stop_edit_only_when_clicked_outside') == true){
+                                }
+                                else self.maybe_stop_edit_card(card, target, dt, dx, dy);
                             }
-                            else self.maybe_stop_edit_card(card, target, dt, dx, dy);
+                            else{
+                                self.maybe_edit_card(card, target, dt, dx, dy);
+                            }
                         }
-                        else{
-                            self.maybe_edit_card(card, target, dt, dx, dy);
-                        }                
                     }
                 }
             };
@@ -1058,7 +1083,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             this.focus_on_searchbar = function(){
                 if(self.searchbar){
                     self.searchbar.focus();
-                    self.show_search_bar(true);
+                    //self.show_search_bar(true);// focus but keep opacity low
 
                 }
                 else{
@@ -1238,6 +1263,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 else{
                     console.log("not a parent type");
                 }
+            };
+            this.toggle_hide_frame = function(data, event){
+                var jframe_content = $(event.target).parent().siblings();
+                jframe_content.slideToggle(100);
+            };
+            this.close_frame = function(data, event){
+
             };
         
        //Keyboard

@@ -24,7 +24,9 @@ requirejs.config({
         'sc-session':'session/session',
         'state':'session/state',
         'detect':'../lib/htmlscrape/detect',
-        'card_props':'viewmodels/card_props'
+        'card_props':'viewmodels/card_props',
+        'mediawiki':'data/mediawiki',
+        'qwest':'../lib/qwest/qwest.min',
 
     },
     shim: {

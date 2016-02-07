@@ -1,16 +1,19 @@
 define(['plugins/http', 'durandal/app', 'knockout', 'jquery'], function (http, app, ko, $) {
-    var sc_application = {// can hold multiple frames, every frame has same data just that they can have diff view
-        name: "Semanticcards",
-        description: "Sementic cards application",
-        frames: ko.observableArray([]),
+    var sc_application = function(){
+        var self = this;
+        this.name = "Semanticcards";
+        this.description = "Sementic cards application";
+        this.framesData = ko.observableArray([]);
+        this.currentFrame = null;
 
-        afterFrameAdded: function(items){
-
-        },
-        addFrame: function(frame){
-            this.frames.push(frame);
-        },
-        createNewBindings: function(){
+        this.afterFrameAdded = function(items, frameData){
+            //self.currentFrame = frameData.frameModel;
+            //console.log(self.currentFrame);
+        };
+        this.addFrame = function(frameData){
+            self.framesData.unshift(frameData);
+        };
+        this.createNewBindings = function(){
             sanitizeInnerHTML = function(el){
                 // var nodes = $(el).childNodes;
                 // for (var i = nodes.length - 1; i >= 0; i--) {
@@ -74,76 +77,126 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery'], function (http, a
             //     }
                 
             // };
-            
-        },
-        // initFeedEk: function($){
-        //     $.fn.FeedEk = function (opt) {
-        //         var def = $.extend({
-        //             MaxCount: 5,
-        //             ShowDesc: true,
-        //             ShowPubDate: true,
-        //             DescCharacterLimit: 0,
-        //             TitleLinkTarget: "_blank",
-        //             DateFormat: "",
-        //             DateFormatLang:"en"
-        //         }, opt);
+        };
+
+        this.searchSubmit = function(from_el){
+            var currentFrame = null;
+            if(self.framesData().length){
+                currentFrame = self.framesData()[0].frameModel;
+            }
+            if(!currentFrame)return;
+
+            var isCmd = true;
+            var commandline = $(from_el).find('#focushere')[0];
+            var cmd = commandline.value;
+            // commandline.value = '';
+            if(cmd[0]==' ')isCmd = false;
+            var cmd = cmd.replace(/\s+/g, " ").split(" ");
+            if(cmd[0] != ''){
+                if ("add".indexOf(cmd[0]) === 0 ){
+                    var card_ = null;
+                    if(cmd.length > 1){
+                        if('parent'.indexOf(cmd[1]) === 0){//parent
+                            if(cmd.length > 2){//parent with title
+                                var _title = cmd[2];
+                                for (var i = cmd.length - 1; i >= 3; i--) {
+                                    _title = _title + ' ' + cmd[i];
+                                };
+                                card_ = currentFrame.actions.add_new_card({parent:true, title:_title, model:currentFrame.activeModel, view:currentFrame.activeView});
+                            }
+                            else{// just parent
+                                card_ = currentFrame.actions.add_new_card({parent:true, title:'Parent', model:currentFrame.activeModel, view:currentFrame.activeView});
+                            }
+                        }
+                        else{//card with given title
+                            var _title = cmd[1];
+                            for (var i = cmd.length - 1; i >= 2; i--) {
+                                _title = _title + ' ' + cmd[i];
+                            };
+                            card_ = currentFrame.actions.add_new_card({title:_title, model:currentFrame.activeModel, view:currentFrame.activeView});
+                        }
+                    }
+                    else{
+                        card_ = currentFrame.actions.add_new_card({title:'Card', model:currentFrame.activeModel, view:currentFrame.activeView});
+                    }
+
+                    //currentFrame.start_editing_card(card_);
+
+                    // $(card_.el).find('.title').focus();
+                    // console.log('title', $.sc_find_rec(card_.el,'title'));
+
+                }
+                else if ("goto".indexOf(cmd[0]) === 0 ){
+                    if(cmd.length == 2 ){
+                        currentFrame.goto_frameview(cmd[1]);
+                    }
+                }
+                //clear store
+                else if ("clear".indexOf(cmd[0]) === 0 && cmd.length > 1 && "store".indexOf(cmd[1]) === 0){
+                    console.log('clearing store');
+                    chrome.runtime.sendMessage(
+                        {
+                            type:'STORE_REMOVEALL'
+                        }, 
+                        function(response) {
+                        }
+                    );
+                }
+                else if ("get".indexOf(cmd[0]) === 0 && cmd.length > 1 && "store".indexOf(cmd[1]) === 0 ){
+                    console.log('trying to get all in store');
+                    chrome.runtime.sendMessage(
+                        {
+                            type:'STORE_GETALL'
+                        }, 
+                        function(response) {
+                            console.log('got these from store', response);
+                        }
+                    );
+                }
                 
-        //         var id = $(this).attr("id"), i, s = "", dt;
-        //         $("#" + id).empty();
-        //         if (def.FeedUrl == undefined) return;       
-        //         $("#" + id).append('loading');
+                else if("set".indexOf(cmd[0].toLowerCase()) === 0){
+                    if(cmd.length>1){
+                        if("view".indexOf(cmd[1].toLowerCase()) ===0){
+                            if(cmd.length > 2){
+                                if("card".indexOf(cmd[2].toLowerCase()) ===0){
+                                    currentFrame.activeView = "views/card.html";
+                                    console.log('YOU have BOUND card', cmd[2]);
 
-        //         var YQLstr = 'SELECT channel.item FROM feednormalizer WHERE output="rss_2.0" AND url ="' + def.FeedUrl + '" LIMIT ' + def.MaxCount;
+                                }
+                                else if("ribbon".indexOf(cmd[2].toLowerCase()) ===0){
+                                    currentFrame.activeView = "views/ribbon.html";
+                                    console.log('YOU have BOUND  ribbon');
+                                }
+                                else{
+                                    currentFrame.activeView = "views/cards/" + cmd[2] + ".html";
+                                }
+                            }
+                        }
+                        else if("config".indexOf(cmd[0].toLowerCase()) ===0){
 
-        //         $.ajax({
-        //             url: "https://query.yahooapis.com/v1/public/yql?q=" + encodeURIComponent(YQLstr) + "&format=json&diagnostics=false&callback=?",
-        //             dataType: "json",
-        //             success: function (data) {
-        //                 $("#" + id).empty();
-        //                 if (!(data.query.results.rss instanceof Array)) {
-        //                     data.query.results.rss = [data.query.results.rss];
-        //                 }
-        //                 $.each(data.query.results.rss, function (e, itm) {
-        //                     s += '<li><div class="itemTitle"><a href="' + itm.channel.item.link + '" target="' + def.TitleLinkTarget + '" >' + itm.channel.item.title + '</a></div>';
-                            
-        //                     if (def.ShowPubDate){
-        //                         dt = new Date(itm.channel.item.pubDate);
-        //                         s += '<div class="itemDate">';
-        //                         if ($.trim(def.DateFormat).length > 0) {
-        //                             try {
-        //                                 moment.lang(def.DateFormatLang);
-        //                                 s += moment(dt).format(def.DateFormat);
-        //                             }
-        //                             catch (e){s += dt.toLocaleDateString();}                            
-        //                         }
-        //                         else {
-        //                             s += dt.toLocaleDateString();
-        //                         }
-        //                         s += '</div>';
-        //                     }
-        //                     if (def.ShowDesc) {
-        //                         s += '<div class="itemContent">';
-        //                          if (def.DescCharacterLimit > 0 && itm.channel.item.description.length > def.DescCharacterLimit) {
-        //                             s += itm.channel.item.description.substring(0, def.DescCharacterLimit) + '...';
-        //                         }
-        //                         else {
-        //                             s += itm.channel.item.description;
-        //                          }
-        //                          s += '</div>';
-        //                     }
-        //                 });
-        //                 $("#" + id).append('<ul class="feedEkList">' + s + '</ul>');
-        //             }
-        //         });
-        //     };
-        // },
-        activate: function(){
-            this.addFrame({viewModel:"viewmodels/frame"});
-            this.createNewBindings();
-            // this.initFeedEk($);
+                        }
+                    }
+                }
+                else if("settings".indexOf(cmd[0].toLowerCase()) === 0){
+                    console.log("settings config");
+                    currentFrame.actions.add_new_card({
+                        title:'Settings:Config',
+                        settings:{config:currentFrame.frame_config, config_map:currentFrame.frame_config_map},
+                        volatile:true
+                    });
+                    // console.log({config:currentFrame.frame_config, config_map:currentFrame.frame_config_map});
+                }
+            }
+        };
+
+        this.activate = function(){
+            self.addFrame({frameModel:null, viewModel:"viewmodels/frame", bgColor:'darkcyan'});
+            // self.addFrame({frameModel:null, viewModel:"viewmodels/frame", bgColor:'cadetblue'});
+            self.createNewBindings();
         }
 
-    }
 
-    return sc_application;
+
+    }
+    return new sc_application();
 });
