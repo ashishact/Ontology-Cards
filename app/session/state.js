@@ -69,6 +69,10 @@ define(['lodash'],  function (_) {
             isanykeyup:true,
             downkeycode:null,
             lastupkeycode:null,
+            
+            ctrl_down:false,
+            alt_down:false,
+            shift_down:false
         },
         movable_cards:[],
         resizable_cards:[],

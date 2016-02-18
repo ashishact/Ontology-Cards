@@ -4,28 +4,61 @@ html{
     margin: 0;
     padding: 0;
 }
+
 #SEMANTICCARDS-05041993 ::-webkit-scrollbar{
-    width:0px;
+    width:3px;
     height: 2px
-    /*background-color:#cccccc;*/
 }
+
 #SEMANTICCARDS-05041993 ::-webkit-scrollbar-thumb{
-    background-color:#3CB03F;
-    /*border-radius:2px;*/
+    background-color:white;
+    border-radius:2px;
+
+    -webkit-box-shadow: -2px 1px 2px 0px rgba(50, 50, 50, 0.60);
+    -moz-box-shadow:    -2px 1px 2px 0px rgba(50, 50, 50, 0.60);
+    box-shadow:         -2px 1px 2px 0px rgba(50, 50, 50, 0.60);
 }
 #SEMANTICCARDS-05041993 ::-webkit-scrollbar-thumb:hover{
-    background-color:#46BF49;
+    background-color:beige;
     /*border:1px solid #333333;*/
 }
 #SEMANTICCARDS-05041993 ::-webkit-scrollbar-thumb:active{
-    background-color:#39A63D;
+    background-color:bisque;
     /*border:1px solid #333333;*/
 } 
 #SEMANTICCARDS-05041993 ::-webkit-scrollbar-track{
     /*border:1px gray solid;*/
     /*border-radius:2px;*/
     /*-webkit-box-shadow:0 0 6px gray inset;*/
+}
+/***********************************************************************/
+/*Rest of the app*/
+#SEMANTICCARDS-05041993 #SC-APPLICATION ::-webkit-scrollbar{
+    width:1px;
+    height: 2px
+    /*background-color:#cccccc;*/
+}
+#SEMANTICCARDS-05041993 #SC-APPLICATION ::-webkit-scrollbar-thumb{
+    background-color:#3CB03F;
+    /*border-radius:2px;*/
+}
+#SEMANTICCARDS-05041993 #SC-APPLICATION ::-webkit-scrollbar-thumb:hover{
+    background-color:#46BF49;
+    /*border:1px solid #333333;*/
+}
+#SEMANTICCARDS-05041993 #SC-APPLICATION ::-webkit-scrollbar-thumb:active{
+    background-color:#39A63D;
+    /*border:1px solid #333333;*/
 } 
+#SEMANTICCARDS-05041993 #SC-APPLICATION ::-webkit-scrollbar-track{
+    /*border:1px gray solid;*/
+    /*border-radius:2px;*/
+    /*-webkit-box-shadow:0 0 6px gray inset;*/
+}
+
+/***********************************************************************/
+
+
 #SEMANTICCARDS-05041993 {
     /*background-color:DarkCyan;*/
     /*background-image: linear-gradient(rgb(104, 153, 118), rgb(172, 218, 204));*/

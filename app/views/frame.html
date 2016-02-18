@@ -11,7 +11,7 @@
 	<!-- custombreadcrumbs -->
 	<div style="margin:2px 2px 2px 10px; ">
 		<div class="custombreadcrumb flat" data-bind="foreach: {data: navigation}">
-			<a style="color:#777"  data-bind="text:$data.title, click:$root.clicked_on_breadcrumb, css: {active: $data.key == $root.frameview.key() }"></a>
+			<a style="color:#777"  data-bind="text:$data.key, click:$root.clicked_on_breadcrumb, css: {active: $data.key == $root.frameview.key() }"></a>
 		</div>
 
 		<i style="
@@ -22,7 +22,7 @@
 		position: relative;
 		float:right;
 		padding-right: 5px;
-		cursor:pointer;" class="fa fa-times-circle fa-lg flat" data-bind="click:close_frame"></i>
+		cursor:pointer;" class="fa fa-times-circle removeFrame" data-bind="click:close_frame"></i>
 		<i style="
 		box-shadow: 0 0 8px 1px rgba(0, 0, 0, 0.35);
 		color: white;
@@ -31,14 +31,14 @@
 		position: relative;
 		float:right;
 		padding-right: 5px;
-		cursor:pointer;" class="fa fa-chevron-circle-down fa-lg" data-bind="click:toggle_hide_frame"></i>
+		cursor:pointer;" class="fa fa-chevron-circle-down" data-bind="click:toggle_hide_frame"></i>
 
 	</div>
 
 	<!-- ******************** -->
 
-	<div  style="margin-top: 2px" >
-		<div  class="grid-stack" data-bind="foreach: {data: cards, afterRender: afterAddWidget},event:{mouseup:onPointerUp_background, mousedown:onPointerDown_background}">
+	<div  style="margin-top: 2px; padding-bottom: 10px;" >
+		<div  class="grid-stack" data-bind="foreach: {data: cards, afterRender: afterAddWidget},event:{mouseup:onPointerUp_background, mousedown:onPointerDown_background}, attr:{id:'gstack_'+frameID}">
 			<div class="grid-stack-item" data-bind="attr: {'data-gs-x': $data.x, 'data-gs-y': $data.y, 'data-gs-width': $data.width, 'data-gs-height': $data.height, 'data-gs-auto-position': $root.auto_position},  event:{mousedown:$root.onMouseDown, mouseup:$root.onMouseUp, mouseenter:$root.onMouseEnterCard, mouseleave:$root.onMouseLeaveCard}">
 				<div style="border-radius: 5px;" class="grid-stack-item-content" >
 					<!-- <button data-bind="click: $root.remove_card">Remove</button> -->
@@ -47,7 +47,7 @@
 				</div>
 
 				<div  style="position: absolute; top:0px; right:15px;" data-bind="fadeVisible:$data.isMouseHovered">
-					<i style="cursor:pointer; color:#777" class="removeCardBtn fa fa-times"></i>
+					<i style="cursor:pointer; color:#999" class="removeCardBtn fa fa-times"></i>
 				</div>
 
 			</div>

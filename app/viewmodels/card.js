@@ -49,14 +49,23 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
               }
 
             }
+            //QUOTE
             else if(sctype == card_props.TYPE.QUOTE){
               if(data.quote){
                   return {
                     quote:ko.observable(data.quote)
                   }
               }
-
             }
+            // SIMPLE_TEXT
+            else if(sctype === card_props.TYPE.SIMPLE_TEXT){
+                if(data.text){
+                    return{
+                        text:ko.observable(data.text)
+                    }
+                }
+            }
+
             //PERSON
             if(sctype == card_props.TYPE.PERSON){
                 return {
@@ -174,6 +183,7 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
         this.activate = function (activationData){
             __card = activationData;
 
+            
             self.id = __card.id;
             self.sctype = __card.card_data.sctype;
 
@@ -182,7 +192,7 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
                 if(__card.card_data.parsedHTMLRESULT){
                     var res = __card.card_data.parsedHTMLRESULT;
                     self.bind_data = self.create_card_type(self.sctype, {html: res._html, title:res._title});
-                    console.log(self.bind_data.html());
+                    //console.log(self.bind_data.html());
                 }
                 //Working
 	                // var callb = function(res) {
@@ -194,13 +204,21 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
                 //     self.bind_data.html(res);
                 // });
                 
-                
             }
             else if(self.sctype == card_props.TYPE.QUOTE){
                 var _q = __card.card_data.quote;
                 if(_q){
 
                     self.bind_data = self.create_card_type(self.sctype, {quote:_q});
+                }
+            }
+            else if(self.sctype == card_props.TYPE.SIMPLE_TEXT){
+                var _t = __card.card_data.title;
+                if(_t){
+                    self.bind_data = self.create_card_type(self.sctype, {text:_t});
+                    // $.get('http://numbersapi.com/random/trivia', function(d){
+                    //     self.bind_data.text(d);
+                    // })
                 }
             }
 

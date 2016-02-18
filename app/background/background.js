@@ -9,6 +9,11 @@ var frameviewkey_prefix = 'frameviewkey_';
 var _root = null;
 
 var frameviewIds = {'home':[]};//key, ids
+/*
+'home': [
+	
+]
+*/
 var cards = {};
 var card_contents = {};
 var cache_frame_config = null;
