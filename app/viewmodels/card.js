@@ -5,8 +5,9 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
         var __card = null;
         this.id = null;
         this.sctype = 0;
+        this.bind_data = {};
 
-        this.bind_data = null;
+
         this.ifcardsctype = null;
         this.wikidata = ko.observable('');
 
@@ -59,8 +60,9 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
             }
             // SIMPLE_TEXT
             else if(sctype === card_props.TYPE.SIMPLE_TEXT){
-                if(data.text){
+                if(data.title && data.text){
                     return{
+                        title:ko.observable(data.title),
                         text:ko.observable(data.text)
                     }
                 }
@@ -143,17 +145,17 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
 
                 return  {array: ko.observableArray(_array), title:'title'};
             }
-
         }
 
 
         // this.card_stored = ko.computed(function(){
         //   return {id:self.id, }
         // });
-
-        this.card_content = ko.computed(function() {
-            return {id:self.id, title:self.title(), subtitle:self.abstract(), content:self.content()};
-        }, this);
+        
+        this.card_content = {};
+        // this.card_content = ko.computed(function() {
+        //     return {id:self.id, title:self.title(), subtitle:self.abstract(), content:self.content()};
+        // }, this);
 
         this.isMouseEnterCard = ko.observable(false);// if mouse is over this card
 
@@ -162,23 +164,87 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
         this.settingsArray = ko.observableArray();
         this.settingsVisible = ko.observable(false);
 
-        this.update_card_content = function(card_content){
-            if(card_content.title)self.title(card_content.title);
-            if(card_content.abstract)self.subtitle(card_content.abstract);
-            if(card_content.content)self.content(card_content.content);
+        //bind_data has observables, card_content is just a json object used for storing content to database
+        this.update_card_content_from_bind_data = function(bind_data, card_content){
+            _.forIn(bind_data, function(value, key){
+                if(typeof(value) == 'function'){//ko observable
+                    card_content[key] = bind_data[key]();
+                }
+                else if(typeof(value) == 'object'){//could be arry or a hash
+                    if(value instanceof Array){
+                        card_content[key] = bind_data[key];
+                    }
+                    else{//hash object re iterate through it, as it might have ko observable inside it
+                        self.update_card_content_from_bind_data(bind_data[key], card_content[key]);  
+                    }
+                }
+                else{//string or number
+                    card_content[key] = bind_data[key];
+                }
+            });
+        };
+        this.update_bind_data_from_card_content = function(bind_data, card_content){
+            //console.log('bind_data is ', bind_data, 'card_content is ', card_content);
+            _.forIn(bind_data, function(value, key) {
+                if(card_content[key]){//if it exists
+                    if(typeof(value) == 'function'){//knockout observable
+                        bind_data[key](card_content[key]);//knockout observable
+                    }
+                    else if(typeof(value) == 'object'){//could be arry or a hash
+                        if(value instanceof Array){
+                            bind_data[key] = card_content[key];
+                        }
+                        else{//hash object re iterate through it
+                            self.update_bind_data_from_card_content(bind_data[key], card_content[key]);  
+                        }
+                    }
+                    else{//string or number
+                        bind_data[key] = card_content[key];
+                    }
+                }
+                else{
+                    console.log("raise warning why was it not saved?");
+                }
+                
+            });
+
+            // if(card_content.title)self.title(card_content.title);
+            // if(card_content.abstract)self.subtitle(card_content.abstract);
+            // if(card_content.content)self.content(card_content.content);
         };
         this.load_card_content_from_store = function(){
+            //console.log("id is ", self.id);
             chrome.runtime.sendMessage(
                 {
                     type:'LOAD_REQ_FROM_CARD',
                     msg:{id:self.id}
                 }, 
                 function(response) {
+                    //console.log('trying to load card_content as', response);
                     if(response.msg && response.msg.card_content){
-                        self.update_card_content(response.msg.card_content);
+                        self.update_bind_data_from_card_content(self.bind_data, response.msg.card_content);
+                        //console.log('card_content from store is here', response.msg.card_content);
+                    }
+                    else{
+                        self.load_card_content_from_wikimedia(self.bind_data.title());
                     }
                 }
             );
+        };
+        this.load_card_content_from_wikimedia = function(title){
+            var _callb = function(res) {
+                self.bind_data.text(res);
+                self.save_card_content_to_store();
+            }
+            
+            
+            if(/^[a-zA-Z\s]*$/.test(title)){
+                //mediawiki.WD(title, _callb);//works
+                //mediawiki.wikipedia_suggest(title, _callb);//works
+            }
+            mediawiki.WikiSum(title, _callb);
+
+
         };
         this.activate = function (activationData){
             __card = activationData;
@@ -186,6 +252,7 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
             
             self.id = __card.id;
             self.sctype = __card.card_data.sctype;
+            self.card_content.id = __card.id;// for saving in databse
 
 
             if(self.sctype == card_props.TYPE.SUMMARY){
@@ -214,11 +281,10 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
             }
             else if(self.sctype == card_props.TYPE.SIMPLE_TEXT){
                 var _t = __card.card_data.title;
-                if(_t){
-                    self.bind_data = self.create_card_type(self.sctype, {text:_t});
-                    // $.get('http://numbersapi.com/random/trivia', function(d){
-                    //     self.bind_data.text(d);
-                    // })
+                var _tx = __card.card_data.text;
+                if(_t && _tx){
+                    self.bind_data = self.create_card_type(self.sctype, {title:_t, text:_tx});
+                    
                 }
             }
 
@@ -233,15 +299,13 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
                     };
                 }
                 self.settingsVisible(true);
-            }
-
-            
+            }    
             
         };
-        this.send_msg_to_background = function(sctype, _msg){
+        this.send_msg_to_background = function(_type, _msg){
             chrome.runtime.sendMessage(
                 {
-                    type:sctype,
+                    type:_type,
                     msg:_msg
                 }, 
                 function(response) {
@@ -250,19 +314,25 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
         };
         this.attached =  function(view, parent){
             self.load_card_content_from_store();
-            self.title(self.title());// so that thee card_contenet variable updates id value
-            self.card_content.subscribe(function(newValue){
-            });
+            self.title(self.title());// so that the card_contenet variable updates id value
+            // self.card_content.subscribe(function(newValue){
+            // });
 
             app.on('editing:finished').then(function(id){
                 if(id === self.id){
-                    console.log('saving card data with id ', id);
-
-                    var sctype = 'SAVE_REQ_FROM_CARD';
-                    var _msg = {card_content:self.card_content()};
-                    self.send_msg_to_background(sctype, _msg);
+                    self.save_card_content_to_store();
                 }
             });
+        };
+        this.save_card_content_to_store = function(){
+            //first convert all ko.observable into json
+            self.update_card_content_from_bind_data(self.bind_data, self.card_content);
+
+            console.log('saving', self.bind_data.title(), self.card_content);
+
+            var _type = 'SAVE_REQ_FROM_CARD';
+            var _msg = {card_content:self.card_content};
+            self.send_msg_to_background(_type, _msg);
         };
 
         this.onMouseLeaveCard = function(){
@@ -272,7 +342,6 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
         this.onMouseEnterCard = function(){
             self.isMouseEnterCard(true);
             return true;
-            
         };
     };
 

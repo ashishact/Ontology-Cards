@@ -22,7 +22,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             $grid_stack = null;// jquery gridstack selector
             this.grid = null;// gridstack grid object
             this.manual_update = {manual:false, cardid:null};// store if card was updated by user or programatically by external data
-            this.auto_position = false;
+            this.auto_position = false;//used in knockout data-bind for auto position of cards
 
         //Viewmodels
             this.activeModel = "viewmodels/card";
@@ -34,9 +34,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             this.frameview = {};
             this.frameview.ids = [];//array of card ids
             this.frameview.key = ko.observable('home');
+            this.frameview.title = ko.observable('Semantic');
             this.frameview.cards = this.cards;
             //Cache
-            this.cache = {keyPrev1:null, keyPrev2:null, keyPrev3:null, cardsPrev1:[], cardsPrev2:[], cardsPrev3:[] };
+            this.cache = {keyPrev1:null, keyPrev2:null, keyPrev3:null, cardsPrev1:[], cardsPrev2:[], cardsPrev3:[] };            
 
         // Configs
             this.frame_config_map = [
@@ -59,7 +60,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 'perfect_click_max'
             ]
             this.frame_config = [
-                0, {w:2, h:2}, false,     true, true, true, false, true, true,     false,  true, true, true,  4
+                0, {w:2, h:2}, true,     true, true, true, false, true, true,     false,  true, true, true,  4
             ];
             this.get_fc_value = function(key){
                 for (var i = self.frame_config_map.length - 1; i >= 0; i--) {
@@ -80,9 +81,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 self.frameID = activationData.frameID; // get its unique to acess value from database 
                 self.appActions = activationData.appActions;// use functions within this object to call application functions
                 self.frameview.key(activationData.frameview_key);
+                self.frameview.title(activationData.title);
+
 
                 if(activationData.frameview_key != 'home'){// if the frmeview requested is not 'home' 
-                    self.navigation.push({key:activationData.frameview_key, title:'SomeTitle'});
+                    self.navigation.push({key:activationData.frameview_key, title:activationData.title});
                 }
                 
             };
@@ -155,6 +158,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                             self.manual_update.manual = true;
                             self.manual_update.cardid = card.id;
                         });
+
+                        //editing follows the same
                     }
 
                     $grid_stack = $('#'+'gstack_'+self.frameID);
@@ -195,7 +200,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 // };
      
             this.on_start = function(){
-                self.actions._load_root();
+                //self.actions._load_root();
                 self.actions._load_frame_config();
 
                 //if(state.parsedHTMLRESULT){//temp get from somewhere else
@@ -226,15 +231,15 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 window.addEventListener('keydown', function(event){
                     if(event.keyCode == 16){//shift
                         state.keyboard.shift_down = true;
-                        console.log('shift pressed');
+                        //console.log('shift pressed');
                     }
                     else if(event.keyCode == 17){//ctrl
                         state.keyboard.ctrl_down = true;
-                        console.log('ctrl pressed');
+                        //console.log('ctrl pressed');
                     }
                     else if(event.keyCode == 18){//alt
                         state.keyboard.alt_down = true;
-                        console.log('alt pressed');
+                        //console.log('alt pressed');
                     }
 
                     return true;
@@ -249,7 +254,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 var me = this;
                 //@
                 this._add_new_card_from_user_to_frameview = function(x, y, width, height, CARD_TYPE, card_data){
-                    var newid = self._root.max_card_id+1;
+                    // var newid = self._root.max_card_id+1;
+                    var newid = Date.now().toString(36) + '-' + (Math.random()).toString(36).split('.').pop();
                     var CARD_STATE = me._create_card_state();
                     me._update_view_model_strings(card_data);// change view model type before binding
                     var newcard = {
@@ -266,9 +272,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     };
                     self.cards.push(newcard);
                     self.frameview.ids.push(newid);
-                    self._root.max_card_id = newid;
 
-                    me._save_root();
+                    //self._root.max_card_id = newid;
+                    //me._save_root();
 
                     return newcard;
                 };
@@ -303,7 +309,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 };
                 //@
                 this._update_view_model_strings = function(card_data){
-                    console.log("Loging card data",card_data);
+                    //console.log("Loging card data",card_data);
                     if(card_data.model);//@im check if model is valid
                     if(card_data.view)self.activeView = card_data.view;//@im check if view is valid
                 }
@@ -326,7 +332,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                         TYPE:card.TYPE
                     };
                     var _type = 'UPDATE_CARD_FROM_FV_TO_STORE';
-                    var _msg = {frameview_key:self.frameview.key(), _card:_card};
+                    var _msg = {frameview_key:self.frameview.key(), _card:_card};//fv is necessary to keep track of which fv have changed
                     me._send_msg_to_background(_type, _msg);
                 };
                 //@
@@ -573,14 +579,14 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     //****************************
                     var _type = 'LOAD_ALL_FROM_STORE_TO_FV';
                     var _msg = {frameview_key:self.frameview.key()};
-                    console.log("LOADING FRAMEVIEW_KEY", self.frameview.key());
+                    console.log("LOADING FRAMEVIEW_KEY", self.frameview.title());
                     chrome.runtime.sendMessage(
                         {
                             type:_type,
                             msg:_msg
                         }, 
                         function(response) {
-                            console.log(response);
+                            //console.log(response);
                             if(response && response.msg && response.msg._cards){
                                 var _cards = response.msg._cards;
                                 var atleastonecardexist = false;
@@ -725,13 +731,16 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
 
                     var somestate = true;
                     if(state.isany_card_being_edited){
-                        self.stop_editing_all();
+                        self.stop_editing_all('CANCELED');
                         somestate = false;
                     }
 
                     if(somestate){
                         var curr_key = self.frameview.key();
+                        var curr_title = self.frameview.title();
                         var dest_key = curr_key;
+                        var dest_title = curr_title;
+
                         if(curr_key == 'home');
                         else{
                             var navs = self.navigation();
@@ -739,10 +748,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                                 if(navs[i].key == curr_key){
                                     if(i > 0){// i am beyond home
                                         dest_key = navs[i-1].key;
+                                        dest_title = navs[i-1].title;
                                     }
                                 }
                             };
-                            self.goto_frameview(dest_key);
+                            self.goto_frameview(dest_key, dest_title);
                         }
                     }
                 },
@@ -841,7 +851,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
 
             this.onPointerUp_background = function(i, e){
                 if($(e.target).hasClass('grid-stack')){
-                    self.stop_editing_all();
+                    self.stop_editing_all('EDITING_FINISHED');
                 }
                 //$grid_stack.panzoom('dissable');
                 return true;
@@ -883,7 +893,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 }
             };
             this.clicked_on_breadcrumb = function(nav){
-                self.goto_frameview(nav.key);// no need to check if you are already in the frameview it's done in goto_frameview
+                self.goto_frameview(nav.key, nav.title);// no need to check if you are already in the frameview it's done in goto_frameview
             }
             this.is_perfect_click = function(dx, dy, dt, off){
                 if(dx < off && dy < off) return true;//latter consider dt as well
@@ -936,7 +946,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             this.start_editing_card = function(card){
                 // if editing any
                 if(self.get_fc_value('edit_one_at_a_time') == true){// edit one at a time, lets see
-                    self.stop_editing_all();
+                    self.stop_editing_all('CANCELED');
                 }
 
                 // if should expand
@@ -990,10 +1000,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 }
 
                 if(stop_edit){// decided
-                    self.stop_editing_card(card);
+                    self.stop_editing_card(card, 'EDITING_FINISHED');
                 }
             };
-            this.stop_editing_card = function(card){
+            this.stop_editing_card = function(card, reason){
                 if(self.get_fc_value('expand_when_editing') == true){// may be it is expanded
                     self.restore_expand_if_done(card);
                 }
@@ -1020,13 +1030,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     }
                 }
                 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                if(!card.TYPE.VOLATILE)app.trigger('editing:finished', card.id);
+                if(!card.TYPE.VOLATILE && reason=='EDITING_FINISHED')app.trigger('editing:finished', card.id);
                 self.focus_on_searchbar();
             };
-            this.stop_editing_all = function(){
+            this.stop_editing_all = function(reason){
                 edcards = state.now_editing_cards;
                 for (var i = edcards.length - 1; i >= 0; i--) {
-                    self.stop_editing_card(edcards[i]);
+                    self.stop_editing_card(edcards[i], reason);
                 };
                 state.isany_card_being_edited = false;
             };
@@ -1102,7 +1112,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     if(self.searchbar.length)self.searchbar = self.searchbar[0];
 
                     self.searchbar.addEventListener("blur", function(){
-                          console.log("disable");
+                          //console.log("disable");
                           self.show_search_bar(false);
                     });
                 }
@@ -1177,7 +1187,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     }
                     else if ("goto".indexOf(cmd[0]) === 0 ){
                         if(cmd.length == 2 ){
-                            self.goto_frameview(cmd[1]);
+                            self.goto_frameview(cmd[1], 'Semantics');
                         }
                     }
                     //clear store
@@ -1239,12 +1249,12 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             };
         
         //Frameview
-            this.goto_frameview = function(frameview_key, card){
+            this.goto_frameview = function(frameview_key, title){
                 if(self.frameview.key() === frameview_key){
                     console.log("you are already in frame " + frameview_key);
                     return;
                 }
-                if(state.isany_card_being_edited)self.stop_editing_all();
+                if(state.isany_card_being_edited)self.stop_editing_all('CANCELED');
 
                 //first
                 //self.actions.cacheIt();
@@ -1253,6 +1263,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
 
                 //new
                 self.frameview.key(frameview_key);
+                self.frameview.title(title);
 
                 
                 self.actions.remove_frameview_from_frame();
@@ -1264,6 +1275,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 //     self.actions.load_all_from_store_to_frameview();
                 // });
             };
+            this.reload_frameview = function(){//just reload this frameview/ its being changed somewhere
+                console.log('forcefully reloading this frame, key: -', self.frameview.key());
+                self.actions.remove_frameview_from_frame();
+                self.actions.load_all_from_store_to_frameview();
+            };
             this.trigger_parent = function(card, target, dt, dx, dy){
                 if(card.TYPE.PARENT){
                     if(true && self.is_perfect_click(dx, dy, 0, 10)){
@@ -1273,7 +1289,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                         var _nav = self.navigation();
                         
                         if(state.keyboard.ctrl_down){//add new frame on Alt key pressed
-                            self.open_in_new_frame(_fv_key);
+                            self.open_in_new_frame(_fv_key, card);
                             return;
                         }
 
@@ -1309,18 +1325,18 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
 
 
                         //Triggering Parent
-                        self.goto_frameview(_fv_key, card);
+                        self.goto_frameview(_fv_key, card.card_data.title);
                     }
                 }
                 else{
                     console.log("@im , not a parent type");
                 }
             };
-            this.open_in_new_frame = function(frameview_key){
-                self.appActions.loadFrameViewInNewFrame(frameview_key);
+            this.open_in_new_frame = function(frameview_key, card){
+                self.appActions.loadFrameViewInNewFrame(frameview_key, card);
             };
             this.toggle_hide_frame = function(data, event){
-                var $frame_content = $(event.target).parent().siblings();
+                var $frame_content = $(event.target).parent().parent().siblings();
                 $frame_content.slideToggle(100);
             };
             this.close_frame = function(data, event){

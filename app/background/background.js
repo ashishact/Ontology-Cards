@@ -18,15 +18,15 @@ var cards = {};
 var card_contents = {};
 var cache_frame_config = null;
 
-
+var tabIdOfSender = null;
 
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
 		// console.log(sender.tab ?
 		// 	"from a content script:" + sender.tab.url :
 		// 	"from the extension");
-
-//*******************************************************
+		tabIdOfSender = sender.tab.id;
+	//*******************************************************
 		if(request.type == 'LOAD_ALL_FROM_STORE_TO_FV'){
 			console.log("logging request.msg.frameview_key", request.msg.frameview_key);
 			var _cards = get_frameview_full(request.msg.frameview_key);
@@ -35,12 +35,15 @@ chrome.runtime.onMessage.addListener(
 		else if(request.type == 'SAVE_NEW_CARD_FROM_FV_TO_STORE'){
 			save_new_card_from_frameview_to_store(request.msg.frameview_key, request.msg._card);
 			// sendResponse({type:'REPLYOF_SAVE_CARD_FROM_FV_TO_STORE', msg:frameview_full});
+			frameview_has_changed(request.msg.frameview_key, sender.tab);//let other tab know that this frameview has changed
 		}
 		else if(request.type == 'UPDATE_CARD_FROM_FV_TO_STORE'){
 			update_card_from_frameview_to_store(request.msg.frameview_key, request.msg._card);
+			frameview_has_changed(request.msg.frameview_key, sender.tab);//let other tab know that this frameview has changed
 		}
 		else if(request.type == 'REMOVE_CARD_FROM_STORE'){
 			remove_card_from_store(request.msg.frameview_key, request.msg.id);
+			frameview_has_changed(request.msg.frameview_key, sender.tab);//let other tab know that this frameview has changed
 		}
 
 		else if(request.type == 'LOAD_FRAME_CONFIG_FROM_STORE'){
@@ -76,14 +79,24 @@ chrome.runtime.onMessage.addListener(
 		else if(request.type == 'STORE_REMOVEALL'){
 			store.removeAll();
 		}
+
+		//***************************************
 	
 
 });
+
+chrome.tabs.onActivated.addListener(
+	function(activeInfo){
+		//console.log(activeInfo);
+		sendMSG_to_tab_byId(activeInfo.tabId, {_type:'UPDATE_CHANGED_FRAMES_NOW'});
+	}
+);
 function sendMSG_to_tab(tab, _msg){
-	chrome.tabs.sendMessage(tab.id, _msg, function(response) {
-		console.log(response);
-	});
+	chrome.tabs.sendMessage(tab.id, _msg);
 }
+function sendMSG_to_tab_byId(tabId, _msg){
+	chrome.tabs.sendMessage(tabId, _msg);
+};
 
 function toggleMSG(_msg){
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -104,6 +117,15 @@ function sendMSGToAll(_msg, except){
 }
 
 
+function frameview_has_changed(frameview_key, tab){
+	var msg = {_type:'FRAMEVIEW_HAS_CHANGED', frameview_key:frameview_key};
+	sendMSGToAll(msg, tab);
+}
+
+function frameview_was_removed(frameview_key, tab){
+	var msg = {_type:'FRAMEVIEW_WAS_REMOVED', frameview_key:frameview_key};
+	sendMSGToAll(msg, tab);
+}
 
 //**********************************************
 
@@ -206,7 +228,7 @@ function remove_card_from_store(frameview_key, id){
 	var ids = frameviewIds[frameview_key];
 
 	if(cards[id].TYPE && cards[id].TYPE.PARENT){// if parent there is a frameview associated with this// remove that
-		var childFrameview_key = frameviewkey_prefix+id.toString();
+		var childFrameview_key = frameviewkey_prefix+id.toString();//id is already a string
 		remove_frameview_from_store(childFrameview_key);
 	}
 
@@ -228,6 +250,9 @@ function remove_frameview_from_store(frameview_key){
 	for (var i = ids.length - 1; i >= 0; i--) {
 		remove_card_from_store(frameview_key, ids[i]);
 	};
+
+	// remove frame from every tab
+	frameview_was_removed(frameview_key,{id:null});//id is null so that message is send to all tabs / no tab is left
 }
 
 
@@ -243,7 +268,7 @@ function load_content_req_from_card(_id){
 
 function save_content_req_from_card(_content){
 	card_contents[_content.id] = _content;
-	if(true) {
+	if(true) {// check when to save and when to not //@todo
 		store.save_card_content(_content);
 	}
 }

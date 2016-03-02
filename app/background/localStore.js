@@ -5,7 +5,7 @@ define(['store', 'lodash'],  function (store, _) {
         this.card_prefix = "sc_card_";
         this.card_content_prefix = "sc_content_";
         this.store = store;
-        store.clear();
+        //store.clear();
         console.log(store.getAll());
         //************************************
         this.getAll = function(){

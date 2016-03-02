@@ -1,16 +1,2 @@
-<div id="SC-APPLICATION" data-bind="foreach: {data: framesData, afterRender: afterFrameAdded}">
-    <div class="SC-APPLICATION" data-bind="compose:{model:$data.viewModel, activationData:$data}, style:{ backgroundColor: $data.bgColor}, click:$root.frameClicked"></div>
-
-</div>
-
-<div>
-	<form  data-bind="submit:searchSubmit" style="position: fixed; left:30%; width:40%; bottom:-50px;">
-		<div>
-		  <div>
-		    <input style="width:100%; " id="focushere" type="text" placeholder="Command" autocomplete="off">
-		    <i class="search icon"></i>
-		  </div>
-		</div>
-	</form>
-
-</div>
+<div id="SC-APPLICATION" data-bind="compose:{model:frameholderViewModel}, visible:frameholderShown"></div>
+<div id="SC-POPUP" style="width: 100%; height: 100%; position: relative; background-color: white;" data-bind="compose:{model:popupViewModel}, visible:popupShown"></div>

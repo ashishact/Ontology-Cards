@@ -2,7 +2,7 @@
 // Session runs before Durandal app starts
 // it loads the iframe and starts the knockout app
 // 
-define(['text!frameindex.html', 'jquery', 'detect', 'jquery-ui'],  function (frameindextext, $, detect, jqueryui) {
+define(['durandal/app' , 'text!frameindex.html', 'jquery', 'detect', 'state'],  function (app, frameindextext, $, detect, state) {
 	var session = function(){
 		self = this;
 		
@@ -11,10 +11,11 @@ define(['text!frameindex.html', 'jquery', 'detect', 'jquery-ui'],  function (fra
 		
 		this.SEMANTICCARDS_ID = "SEMANTICCARDS-05041993";
 		this.visibleElement = null;
-				
-		this.show = function(){
-	          
-	
+
+		this.scrollTop = 0;
+		this.sc_ui = null;//ui wrapper for sc application
+		
+		this.init_ui = function(viewModelString){
 	        //  containers
 	        var _html = document.getElementsByTagName('html')[0],
 	            _body = document.getElementsByTagName('body')[0];
@@ -22,100 +23,107 @@ define(['text!frameindex.html', 'jquery', 'detect', 'jquery-ui'],  function (fra
 	        //  check containers
 	        if (_html) {}else { console.log('page is missing html element'); return; }
 	        if (_body) {}else { console.log('page is missing body element'); return; }
-	        
-
-
-	        if(!self.alreadyParsed){
-	        	self.detect_init();
-	        	self.alreadyParsed = true;
-	        }
-	        
-	        
-			// var children = _body.children;
-			// for (var i = 0, ii = children.length; i < ii; i++) {
-			// 	var el = children[i];
-			// 	el.style.originaldisplay = el.style.display;
-			// 	if(el.style.originaldisplay == 'none')console.log(el);
-			// 	el.style.display = 'none';				
-			// };
-
+			
 			self.visibleElement = $("body > :visible");
-			// self.visibleElement.hide("slow");
-			self.visibleElement.fadeOut(300);
 
-	
-	        //  frame exists?
-	        var frame_exist = document.getElementById(self.SEMANTICCARDS_ID);
-	        if (frame_exist) { 
-	        	// if(frame_exist.style.display==='none')frame_exist.style.display='block';
-	        	// $(frame_exist).show('slide', { direction: 'up', duration: 300});
-	        	$(frame_exist).fadeIn(300);
-	        	return;
-	        }
+	        self.detect_init();// get text from html
 
-	
-	        //  create frame
-	        var _frame = document.createElement('div');
-	            _frame.innerHTML = frameindextext;
+        	self.sc_ui = document.createElement('div');
+        	self.sc_ui.innerHTML = frameindextext;
 
-	
-	             
-	        //  frame attributes
-	        _frame.setAttribute('id', self.SEMANTICCARDS_ID);
-	        //  set frame style
-	        _frame.style.position = 'fixed';
-	        _frame.style.width =    '100%';
-	        _frame.style.height =   '100%';
-	        _frame.style.top =      '0px';
-	        _frame.style.left =     '0px';
-	        _frame.style.zIndex=    '10000';
-	        _frame.style.overflowY = 'auto';
-	        
-	        
-	
-	        //  insert frame
-	        _body.appendChild(_frame);
-	        // $(_frame).hide();// immediatly
-	        // $(_frame).fadeIn(100);
-	        // _body.style.overflow = 'hidden';
+        	self.sc_ui.setAttribute('id', self.SEMANTICCARDS_ID);
+        	
+        	//  set frame style
+        	// self.sc_ui.style.position = 'fixed';
+        	self.sc_ui.style.overflowY = 'auto';
+        	self.sc_ui.style.overflowX = 'none';
+        	self.sc_ui.style.fontSize = '16px';
+
+        	// self.sc_ui.style.zIndex=    '1000000000';
+        	// self.sc_ui.style.width =    '310px';
+        	// self.sc_ui.style.height =   '540px';
+        	// self.sc_ui.style.top =      '10px';
+        	// self.sc_ui.style.left =     '';
+        	// self.sc_ui.style.bottom =    '';
+        	// self.sc_ui.style.right =    '10px';
+        	
+        	//  insert frame
+        	_body.appendChild(self.sc_ui);
+        	$(self.sc_ui).fadeIn(300);
 
 	        require(['extmain'], function(extmain){
-	        	transferParsedHTMLRESULT(self.parsedHTMLRESULT);
-	        	delete self.parsedHTMLRESULT;
+	        	if(self.parsedHTMLRESULT){
+	        		state.parsedHTMLRESULT = self.parsedHTMLRESULT;
+		        	delete self.parsedHTMLRESULT;
+	        	}
 	        });
+			
+		}
+		this.show_frame = function(){
+	        self.scrollTop = $(window).scrollTop();
+			
+			if(!self.sc_ui){// not started even once
+				self.init_ui();
+			}
 
+			self.sc_ui.style.width =    '100%';
+        	self.sc_ui.style.height =   '100%';
+        	self.sc_ui.style.top =      '0px';
+        	self.sc_ui.style.left =     '0px';
+        	self.sc_ui.style.bottom =    '';
+        	self.sc_ui.style.right =    '';
+
+			self.visibleElement.fadeOut(300);
+			// state.viewModelString = 'frameholder';
+
+			app.trigger('viewModelString:show', 'frameholder');
+	        $(self.sc_ui).fadeIn(300);
 		};
 		
-		this.hide = function(){
-			var _log = function (_message) { if (console && console.log) { console.log('whil inject : ' + _message); } };
-	   
-	        //  containers
-	        var _html = document.getElementsByTagName('html')[0],
-	            _body = document.getElementsByTagName('body')[0];
-	
-	        //  check containers
-	        if (_body) {}else { _log('page is missing body element'); return; }
-	        if (_html) {}else { _log('page is missing html element'); return; }
-	        
-	  //       var children = _body.children;
-			// for (var i = 0, ii = children.length; i < ii; i++) {
-			// 	self.showElement(children[i]);
-			// };
+		this.hide_frame = function(){
+			if(!self.sc_ui){// not started even once
+				self.init_ui();
+			}
 
-			// self.visibleElement.show('slow');
-			self.visibleElement.fadeIn(200);
-	        
-	        
-			var frame_exist = document.getElementById(self.SEMANTICCARDS_ID);
-	        if (frame_exist) { 
-	        	// frame_exist.style.display='none';
-	        	// $(frame_exist).hide('slide', { direction: 'up', duration: 300 });
-	        	$(frame_exist).fadeOut(300);
-	        	return true;
-	        }
-	        else{
-	        	return false;
-	        }
+			self.visibleElement.fadeIn(200, function(){$(window).scrollTop(self.scrollTop);});
+	        $(self.sc_ui).fadeOut(300);
+		};
+
+		this.show_popup = function(){
+			console.log('Showing popup');
+
+			if(!self.sc_ui){// not started even once
+				self.init_ui();
+			}
+
+			// self.sc_ui.style.width =    '25%';
+	  //   	self.sc_ui.style.height =   '80%';
+	  //   	self.sc_ui.style.bottom =   '2%';
+	  //   	self.sc_ui.style.right =    '5%';
+	  //   	self.sc_ui.style.top =      '';
+	  //   	self.sc_ui.style.left =     '';
+
+	  		self.sc_ui.style.width =    '310px';
+	    	self.sc_ui.style.height =   '540px';
+	    	self.sc_ui.style.right =    '';
+	    	self.sc_ui.style.bottom =   '';
+	    	self.sc_ui.style.top =      '10px';
+	    	self.sc_ui.style.left =     '10px';
+
+
+			// state.viewModelString = 'popup';
+			app.trigger('viewModelString:show', 'popup');
+	        $(self.sc_ui).fadeIn(100);
+
+		};
+		this.hide_popup = function(){
+			console.log('Hiding popup');
+
+			if(!self.sc_ui){// not started even once
+				self.init_ui();
+			}
+
+			$(self.sc_ui).fadeOut(100);
 		};
 
 		this.detect_init = function(){

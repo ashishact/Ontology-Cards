@@ -1,0 +1,15 @@
+<div id="SC-FRAMEHOLDER" data-bind="foreach: {data: framesData, afterRender: afterFrameAdded}">
+    <div class="SC-APPLICATION" data-bind="compose:{model:$data.viewModel, activationData:$data}, style:{ backgroundColor: $data.bgColor}, click:$root.frameClicked"></div>
+
+</div>
+
+<div>
+	<form  data-bind="submit:searchSubmit" style="position: fixed; left:30%; width:40%; bottom:5%;">
+		<div>
+		  <div>
+		    <input style="width:100%; " id="focushere" type="text" placeholder="Command" autocomplete="off">
+		  </div>
+		</div>
+	</form>
+
+</div>

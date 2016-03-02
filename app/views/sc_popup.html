@@ -1,0 +1,39 @@
+<div id="SC-POPUP-CONTENT" style="padding: 10px; width: 100%; height: 100%; background-color: white; box-sizing: border-box; ">
+	<div style='width:100%; height: 40px; background-color: bisque' id='DDrag'></div>
+	
+	<div id='chatElements'>
+		
+	</div>
+
+	<ul id='inputSuggestions' data-bind="foreach: {data:inputSuggestions}" style="top:auto; position:absolute;  bottom:60px; margin-bottom: 7px; overflow-x: none; overflow-y: auto; max-height: 70%; width: 95%; box-sizing: border-box; font-size: 10px; text-align: left; list-style-type:none;">
+
+		<li style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(227, 227, 227); margin-bottom: 0px; padding: 5px 45px 5px 8px; font-family: 'Open Sans', sans-serif; overflow: hidden; white-space: nowrap; ">
+			<!-- ko if: $data.thumb_source -->
+				<span data-bind="style: {'backgroundImage': 'url('+ $data.thumb_source +')'}"
+
+				 style="margin-right: 12px; position: relative; width: 50px; height: 50px; border-radius: 2px; display: inline-block; vertical-align: middle; background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;">
+				</span>
+			<!-- /ko -->
+			
+			<!-- ko if: !$data.thumb_source -->
+				<span 
+				 style="margin-right: 12px; position: relative; width: 42px; height: 42px; border-radius: 2px; display: inline-block; vertical-align: middle; background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;">
+				</span>
+			<!-- /ko -->
+				<span style="display: inline-block; max-width: 77%; vertical-align: middle;" >
+					<div data-bind="text:$data.title" style="overflow: hidden; text-overflow: ellipsis; font-size: 16px; display: block; vertical-align: middle; white-space: normal;">...</div>
+					<div style="overflow: hidden; text-overflow: ellipsis; display: block; vertical-align: bottom; white-space: normal;" data-bind="text:$data.desc"></div>
+				</span>
+			<!-- <div style="top: 25.8px; background-image: url('img/sprite.609db4c4.svg');"></div> -->
+		</li>
+
+	</ul>
+	
+	
+
+
+	
+	<input data-bind='event:{keyup:onKeyUpInput}' style="position: absolute; width:90%; height:30px; left:5%; bottom:0px; " id="" type="text" placeholder="Command" autocomplete="off" autofocus>
+	
+</div>
+

@@ -5,7 +5,7 @@ define(['jquery','qwest'], function ($, qwest) {
         // 1. API'S URL:
         // 1a.Parts of the url:
         this.wd = "http://www.wikidata.org/w/api.php?";
-        this.wp = "http://en.wikipedia.org/w/api.php?"; // list of iso-code = ? ----------------<
+        this.wp = "https://en.wikipedia.org/w/api.php?"; // list of iso-code = ? ----------------<
         this.aw = "action=wbgetentities" ; // rather wdpoint
         this.aq = "action=query" ; // ?rather wppage
         this.ts = "&sites=enwiki" ; // wd only&required. // list of wiki-code = ? --------------<
@@ -29,8 +29,10 @@ define(['jquery','qwest'], function ($, qwest) {
         this.urlwd = this.wd+this.aw+this.ts+this.t+this.i+this.l+this.ps    +this.c+this.f; // typical wd query
         this.url   = this.wp+this.aq   +this.t+this.i     +this.p+this.r+this.c+this.f; // typical wp query
         // Examples print in console:
-        console.log("1. WD: "+this.urlwd);
-        console.log("2. WP: "+this.url);
+        
+        //@me
+        //console.log("1. WD: "+this.urlwd);
+        //console.log("2. WP: "+this.url);
 
         //1c. DOM injection:
         //$("body").html('<a href="'+url+'">Link</a>.<br />'+ url); //publish the url.
@@ -40,6 +42,8 @@ define(['jquery','qwest'], function ($, qwest) {
         /* 2. TEMPLATING ***************************************** */
         // 2a. Single query :
         this.WD = function(item, callback) {
+            var _proto = window.location.protocol;// not needed use https only
+
             var url = self.wp+self.aq+self.t+ item +self.p+self.r+self.f;
             //url = "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=Stack%20Overflow";
             console.log("URL", url);
@@ -47,8 +51,24 @@ define(['jquery','qwest'], function ($, qwest) {
             .then(function(xhr, response) {
                     var item_id = Object.keys(response.query.pages)[0]; // THIS DO THE TRICK !
                     extract = response.query.pages[item_id].extract;
-                    result = "<b>⇒</b> " + extract;
+                    // result = "<b>⇒</b> " + extract;
+                    result = "<div style='text-align: center'><i class='fa fa-wikipedia-w'></i></div> <br>" +extract;
                     callback(result);
+            });
+        };
+        this.WikiSum = function(query, callback) {
+            var url = self.wp+self.aq+self.t+ query +self.p+self.r+self.f;
+            
+            $.getJSON( url ,function(data) {
+                $.each(data.query.pages, function(i, json) {
+                    // if(i==0){//only first one
+                        if(json.extract){
+                            console.log(json.extract.toString());
+                            callback(json.extract.toString());
+                        }
+                            
+                    // }
+                });
             });
         };
         this.WD_i = function (item, callback) {
@@ -66,6 +86,36 @@ define(['jquery','qwest'], function ($, qwest) {
                 });
             });
         };
+
+        this.wikipedia_suggest = function(query, callback){
+            var words = query.split(' ');
+            var searchq = '';
+            for (var i = 0; i < words.length; i++) {
+                if(i == words.length-1){
+                    searchq = searchq + words[i];
+                }
+                else searchq = searchq + words[i]+'%20';
+            };
+            var _url = 'https://en.wikipedia.org/w/api.php?action=query&format=json&version=2&generator=prefixsearch&gpssearch=' + searchq + '&gpslimit=10&prop=pageimages%7Cpageterms&piprop=thumbnail&pithumbsize=50&pilimit=10&redirects=&wbptterms=description'
+            
+            // qwest.get(_url,{})
+            // .then(function(xhr, response) {
+            //     console.log("suggest response", response);
+            // });
+
+            $.getJSON(_url ,function(data) {
+                if(callback){
+                    callback(data);
+                }
+                else{
+                    $.each(data.query.pages, function(i, item) {
+                        console.log(item);
+                    });
+                }
+            });
+
+        };
+        //https://www.wikidata.org/w/api.php?action=wbsearchentities&search=ch&format=json&language=en&type=item&continue=0
 
     };
     var mediawiki = new createapi();

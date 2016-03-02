@@ -17,6 +17,7 @@ requirejs.config({
         'jquery-ui/mouse':'../lib/jquery-ui/ui/mouse',
         'jquery-ui/draggable':'../lib/jquery-ui/ui/draggable',
         'jquery-ui/resizable':'../lib/jquery-ui/ui/resizable',
+        'xml2json':'../lib/jqueryplugins/xml2json',
         'store':'../lib/store/store.min',
         'sc-localstore':'session/sc_localStore',
         'extmain':'extmain',
@@ -26,6 +27,7 @@ requirejs.config({
         'detect':'../lib/htmlscrape/detect',
         'card_props':'viewmodels/card_props',
         'mediawiki':'data/mediawiki',
+        'searchapi':'data/searchapi',
         'qwest':'../lib/qwest/qwest.min',
 
     },
@@ -53,6 +55,11 @@ require.load = function (context, moduleName, url) {
 require(['sc-oninject'], function(oninject){
 	oninject.start();
 });
+
+//Personal work
+var _elm = document.getElementById('feed-main-what_to_watch');
+if(_elm)_elm.parentNode.removeChild(_elm);
+
 
 
 

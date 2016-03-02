@@ -26,7 +26,12 @@ requirejs.config({
 
 
 require(['background'], function(oninject){
-    
+    var iframe = document.body.appendChild(document.createElement('iframe'));
+    iframe.src = 'http://www.factbites.com';
+    iframe.onload = function() {
+      //console.log(iframe.contentDocument.innerHTML);
+      console.log('loaded');
+    };
 });
 
 
