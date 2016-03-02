@@ -147,7 +147,7 @@ define(['durandal/app' , 'text!frameindex.html', 'jquery', 'detect', 'state'],  
 		        'jQuery': $
 			};
 		    //  create
-		    $detect = initClearlyComponent__detect($detect);
+		    $detect = htmlscrape_detect($detect);
 		    $detect.start();
 
 		}
