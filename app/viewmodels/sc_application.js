@@ -1,6 +1,8 @@
 define(['durandal/app', 'knockout', 'jquery', 'state'], function (app, ko, $, state) {
     var sc_application = function(){
     	var self = this;
+
+    //with popup and frame holder
         this.frameholderViewModel = ko.observable('');
     	this.popupViewModel = ko.observable('viewmodels/sc_popup');
 

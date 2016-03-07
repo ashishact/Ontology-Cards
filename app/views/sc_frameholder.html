@@ -1,4 +1,4 @@
-<div id="SC-FRAMEHOLDER" data-bind="foreach: {data: framesData, afterRender: afterFrameAdded}">
+<div style="width:100%; height:100%; overflow-y: auto;" id="SC-FRAMEHOLDER" data-bind="foreach: {data: framesData, afterRender: afterFrameAdded}">
     <div class="SC-APPLICATION" data-bind="compose:{model:$data.viewModel, activationData:$data}, style:{ backgroundColor: $data.bgColor}, click:$root.frameClicked"></div>
 
 </div>

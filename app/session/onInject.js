@@ -30,7 +30,7 @@ define(['sc-session'], function (session){
 					console.log("time dif,", Math.abs(self.keyUpTime - self.keyDownTime));
 					if (Math.abs(self.keyUpTime - self.keyDownTime) < 300) {//1 second
 
-						self.toggleSession('popup');
+						self.toggleSession('frameholder');
 					}
 					self.isKeyDown = false;
 				}

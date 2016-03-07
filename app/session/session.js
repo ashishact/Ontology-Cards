@@ -2,7 +2,7 @@
 // Session runs before Durandal app starts
 // it loads the iframe and starts the knockout app
 // 
-define(['durandal/app' , 'text!frameindex.html', 'jquery', 'detect', 'state'],  function (app, frameindextext, $, detect, state) {
+define(['durandal/app', 'jquery', 'detect', 'state'],  function (app, $, detect, state) {
 	var session = function(){
 		self = this;
 		
@@ -29,23 +29,16 @@ define(['durandal/app' , 'text!frameindex.html', 'jquery', 'detect', 'state'],  
 	        self.detect_init();// get text from html
 
         	self.sc_ui = document.createElement('div');
-        	self.sc_ui.innerHTML = frameindextext;
+        	self.sc_ui.innerHTML = "<div style='width: 100%; height: 100%;' id='applicationHost'></div>";
 
         	self.sc_ui.setAttribute('id', self.SEMANTICCARDS_ID);
         	
+        	//already in css file
         	//  set frame style
         	// self.sc_ui.style.position = 'fixed';
-        	self.sc_ui.style.overflowY = 'auto';
-        	self.sc_ui.style.overflowX = 'none';
-        	self.sc_ui.style.fontSize = '16px';
-
-        	// self.sc_ui.style.zIndex=    '1000000000';
-        	// self.sc_ui.style.width =    '310px';
-        	// self.sc_ui.style.height =   '540px';
-        	// self.sc_ui.style.top =      '10px';
-        	// self.sc_ui.style.left =     '';
-        	// self.sc_ui.style.bottom =    '';
-        	// self.sc_ui.style.right =    '10px';
+        	// self.sc_ui.style.overflowY = 'auto';
+        	// self.sc_ui.style.overflowX = 'none';
+        	// self.sc_ui.style.fontSize = '16px';
         	
         	//  insert frame
         	_body.appendChild(self.sc_ui);
@@ -66,17 +59,9 @@ define(['durandal/app' , 'text!frameindex.html', 'jquery', 'detect', 'state'],  
 				self.init_ui();
 			}
 
-			self.sc_ui.style.width =    '100%';
-        	self.sc_ui.style.height =   '100%';
-        	self.sc_ui.style.top =      '0px';
-        	self.sc_ui.style.left =     '0px';
-        	self.sc_ui.style.bottom =    '';
-        	self.sc_ui.style.right =    '';
-
 			self.visibleElement.fadeOut(300);
-			// state.viewModelString = 'frameholder';
 
-			app.trigger('viewModelString:show', 'frameholder');
+			// app.trigger('viewModelString:show', 'frameholder');
 	        $(self.sc_ui).fadeIn(300);
 		};
 		
@@ -89,42 +74,35 @@ define(['durandal/app' , 'text!frameindex.html', 'jquery', 'detect', 'state'],  
 	        $(self.sc_ui).fadeOut(300);
 		};
 
-		this.show_popup = function(){
-			console.log('Showing popup');
+		// this.show_popup = function(){
+		// 	console.log('Showing popup');
 
-			if(!self.sc_ui){// not started even once
-				self.init_ui();
-			}
+		// 	if(!self.sc_ui){// not started even once
+		// 		self.init_ui();
+		// 	}
 
-			// self.sc_ui.style.width =    '25%';
-	  //   	self.sc_ui.style.height =   '80%';
-	  //   	self.sc_ui.style.bottom =   '2%';
-	  //   	self.sc_ui.style.right =    '5%';
-	  //   	self.sc_ui.style.top =      '';
-	  //   	self.sc_ui.style.left =     '';
-
-	  		self.sc_ui.style.width =    '310px';
-	    	self.sc_ui.style.height =   '540px';
-	    	self.sc_ui.style.right =    '';
-	    	self.sc_ui.style.bottom =   '';
-	    	self.sc_ui.style.top =      '10px';
-	    	self.sc_ui.style.left =     '10px';
+	 //  		self.sc_ui.style.width =    '310px';
+	 //    	self.sc_ui.style.height =   '540px';
+	 //    	self.sc_ui.style.right =    '';
+	 //    	self.sc_ui.style.bottom =   '';
+	 //    	self.sc_ui.style.top =      '10px';
+	 //    	self.sc_ui.style.left =     '10px';
 
 
-			// state.viewModelString = 'popup';
-			app.trigger('viewModelString:show', 'popup');
-	        $(self.sc_ui).fadeIn(100);
+		// 	// state.viewModelString = 'popup';
+		// 	app.trigger('viewModelString:show', 'popup');
+	 //        $(self.sc_ui).fadeIn(100);
 
-		};
-		this.hide_popup = function(){
-			console.log('Hiding popup');
+		// };
+		// this.hide_popup = function(){
+		// 	console.log('Hiding popup');
 
-			if(!self.sc_ui){// not started even once
-				self.init_ui();
-			}
+		// 	if(!self.sc_ui){// not started even once
+		// 		self.init_ui();
+		// 	}
 
-			$(self.sc_ui).fadeOut(100);
-		};
+		// 	$(self.sc_ui).fadeOut(100);
+		// };
 
 		this.detect_init = function(){
 			var $detect = {
