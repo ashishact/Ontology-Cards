@@ -1,15 +1,49 @@
-<div style="width:100%; height:100%; overflow-y: auto;" id="SC-FRAMEHOLDER" data-bind="foreach: {data: framesData, afterRender: afterFrameAdded}">
+<div spellcheck=false style="width:100%; height:100%; overflow-y: auto;" id="SC-FRAMEHOLDER" data-bind="foreach: {data: framesData, afterRender: afterFrameAdded}">
     <div class="SC-APPLICATION" data-bind="compose:{model:$data.viewModel, activationData:$data}, style:{ backgroundColor: $data.bgColor}, click:$root.frameClicked"></div>
 
 </div>
 
 <div>
-	<form  data-bind="submit:searchSubmit" style="position: fixed; left:30%; width:40%; bottom:5%;">
-		<div>
-		  <div>
-		    <input style="width:100%; " id="focushere" type="text" placeholder="Command" autocomplete="off">
-		  </div>
-		</div>
+	<form id="commandForm" data-bind="submit:searchSubmit" style="position: fixed; left:30%; width:40%; bottom:2%; margin: 0px;
+/*border-color: rgb(0, 139,139);  
+border-style: solid;
+border-width: 2px;*/
+border-radius: 4px;
+-webkit-box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.65);
+-moz-box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.65);
+box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.65);
+">
+		
+		<ul id='commandSuggestions' data-bind="foreach: {data:commandSuggestions}" style="background-color: white; margin: 0px; overflow-x: none; overflow-y:auto;position: relative; max-height: 500px; width: 100%; box-sizing: border-box; border-radius: 4px; font-size: 10px; text-align: left; list-style-type:none;">
+
+			<li style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(227, 227, 227); margin-bottom: 0px; padding: 5px 8px 5px 8px; font-family: 'Open Sans', sans-serif; color: rgb(144, 115, 84); overflow: hidden; white-space: nowrap; ">
+					<span style="display: inline-block; max-width: 77%; vertical-align: middle;" >
+						<div data-bind="text:$data.title" style="overflow: hidden; text-overflow: ellipsis; font-size: 16px; color: rgb(100, 70, 50); display: block; vertical-align: middle; white-space: normal;">...</div>
+						<!-- ko if: $data.desc -->
+							<div style="overflow: hidden; text-overflow: ellipsis; display: block; vertical-align: bottom; font-size: 12px; color: rgb(144, 115, 84); white-space: normal;" data-bind="text:$data.desc"></div>
+						<!-- /ko -->
+					</span>
+
+				<!-- ko if: $data.thumb_source -->
+					<span data-bind="style: {'backgroundImage': 'url('+ $data.thumb_source +')'}"
+
+					 style="margin-right: 12px; position: relative; float: right; width: 50px; height: 50px; border-radius: 2px; display: inline-block; vertical-align: middle; background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;">
+					</span>
+				<!-- /ko -->
+				
+				<!-- ko if: !$data.thumb_source -->
+					<!-- <span 
+					 style="margin-right: 12px; position: relative; float: right; width: 42px; height: 42px; border-radius: 2px; display: inline-block; vertical-align: middle; background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;">
+					</span> -->
+				<!-- /ko -->
+			</li>
+
+		</ul>
+
+	  <!-- 	<div style="width:100%;" id="commandSuggestions" data-bind="foreach: {data:commandSuggestions}">
+	  		<div style="width:100%;">Do this</div>
+	  	</div> -->
+	    <input style="width:100%; background-color: white; margin: 0px;" id="commandInput" type="text" placeholder="Command" autocomplete="off">
 	</form>
 
 </div>

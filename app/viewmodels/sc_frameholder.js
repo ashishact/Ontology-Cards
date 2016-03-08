@@ -1,4 +1,4 @@
-define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props'], function (http, app, ko, $, card_props) {
+define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'state', 'mediawiki', 'searchapi'], function (http, app, ko, $, card_props, state, mediawiki, searchapi) {
     var sc_frameholder = function(){
         var self = this;
         this.name = "Semanticcards";
@@ -6,9 +6,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props'], fun
         this.framesData = ko.observableArray([]);
         this.currentFrame = null;
 
+        $commandForm = null;// focus element to focus and get cmd value
+        $commandForm = null;
+        this.commandSuggestions = ko.observableArray([]);
+
         this.frameviews_to_update_when_tab_focused = [];//fv_key1, fv_key2, //when this tab is focused these frameview should be updated, because they have changed somewhere
                                                         // it has frameview_key collection
-        this.cssColorNames = ['burlywood', 'darkseagreen',  'bisque', 'cadetblue', 'aquamarine','coral', 'chocolate', 'darkcyan', 'salmon', 'darkslategray', 'dimgrey', 'hotpink', 'indianred', 'khaki', 'lavenderblush', 'lightblue', 'lightcoral', 'lightgreen', 'lightpink', 'lightsalmon', 'lightseagreen', 'mediumaquamarine', 'mediumvioletred', 'palegoldenrod', 'palegreen', 'sandybrown', 'tomato' ];
+        this.cssColorNames = ['darkseagreen','burlywood',   'bisque', 'cadetblue', 'aquamarine','coral', 'chocolate', 'darkcyan', 'salmon', 'darkslategray', 'dimgrey', 'hotpink', 'indianred', 'khaki', 'lavenderblush', 'lightblue', 'lightcoral', 'lightgreen', 'lightpink', 'lightsalmon', 'lightseagreen', 'mediumaquamarine', 'mediumvioletred', 'palegoldenrod', 'palegreen', 'sandybrown', 'tomato' ];
         this.currentColorId = 0;
         /*['aliceblue',
                             'antiquewhite',
@@ -257,7 +261,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props'], fun
                 // };
 
 
-
+            //Escape
                 //  escape html
                 //  ===========
                     var _escape_html = function (_string)
@@ -352,6 +356,26 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props'], fun
             // };
         };
 
+    //Search
+        this.focus_on_command_input = function(event){// !!! event can be null here
+            if($commandForm && $commandInput){
+
+                if(event && !state.keyboard.ctrl_down){
+                    var _schar = String.fromCharCode(event.which);
+                    if(_schar.match(/^[a-zA-Z0-9 ]+/)){
+                        $commandForm.show(100);
+                        $commandInput.val(_schar.toLowerCase());
+                        $commandInput.focus();
+                    }
+                }
+                
+            }
+            else {
+                console.log('@im - how can $commandForm & $commandInput not exist');
+                $commandForm = $('#commandForm');
+                $commandInput = $('#commandInput');
+            }
+        };
         this.searchSubmit = function(from_el){
             var currentFrame = null;
             if(self.framesData().length){
@@ -365,18 +389,18 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props'], fun
             if(!currentFrame)return;
 
             var isCmd = true;// wheather its a command or search query
-            var commandline = $(from_el).find('#focushere')[0];
-            var cmd = commandline.value;
+            if(!$commandInput) $commandInput = $('#commandInput');
+            var cmd = $commandInput.val();
             // commandline.value = '';
             if(cmd[0]==' ')isCmd = false;
 
             if(isCmd){
                 var cmd = cmd.replace(/\s+/g, " ").split(" ");
                 if(cmd[0] != ''){
-                    if ("add".indexOf(cmd[0]) === 0 ){
+                    if ("add".indexOf(cmd[0].toLowerCase()) === 0 ){
                         var card_ = null;
                         if(cmd.length > 1){
-                            if('parent'.indexOf(cmd[1]) === 0){//parent
+                            if('parent'.indexOf(cmd[1].toLowerCase()) === 0){//parent
                                 if(cmd.length > 2){//parent with title
                                     var _title = cmd[2];
                                     for (var i = cmd.length - 1; i >= 3; i--) {
@@ -404,7 +428,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props'], fun
                                     card_ = currentFrame.actions.add_new_card(_card_data);
                                 }
                             }
-                            else if('frame'.indexOf(cmd[1]) === 0){//new frame
+                            else if('frame'.indexOf(cmd[1].toLowerCase()) === 0){//new frame
                                 console.log("adding frame");
                                 if(cmd.length > 2){//frame with frameview_key
                                     var _fv_key = cmd[2];
@@ -446,13 +470,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props'], fun
                         // console.log('title', $.sc_find_rec(card_.el,'title'));
 
                     }
-                    else if ("goto".indexOf(cmd[0]) === 0 ){
+                    else if ("goto".indexOf(cmd[0].toLowerCase()) === 0 ){
                         if(cmd.length == 2 ){
                             currentFrame.goto_frameview(cmd[1]);
                         }
                     }
                     //clear store
-                    else if ("clear".indexOf(cmd[0]) === 0 && cmd.length > 1 && "store".indexOf(cmd[1]) === 0){
+                    else if ("clear".indexOf(cmd[0].toLowerCase()) === 0 && cmd.length > 1 && "store".indexOf(cmd[1]) === 0){
                         console.log('clearing store');
                         chrome.runtime.sendMessage(
                             {
@@ -462,7 +486,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props'], fun
                             }
                         );
                     }
-                    else if ("get".indexOf(cmd[0]) === 0 && cmd.length > 1 && "store".indexOf(cmd[1]) === 0 ){
+                    else if ("get".indexOf(cmd[0].toLowerCase()) === 0 && cmd.length > 1 && "store".indexOf(cmd[1]) === 0 ){
                         console.log('trying to get all in store');
                         chrome.runtime.sendMessage(
                             {
@@ -505,6 +529,39 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props'], fun
                             volatile:true
                         });
                         // console.log({config:currentFrame.frame_config, config_map:currentFrame.frame_config_map});
+                    }
+                    else if(cmd[0].indexOf('http') === 0){// some url is given
+                        if(cmd[0].indexOf('youtube.com') > 1){// an youtube url
+                            var lnk = cmd[0].split('v=');
+                            if(lnk.length>1){
+                                var embed_url = "<iframe width=\"680\" height=\"380\" src=\"https://www.youtube.com/embed/"+ lnk[1].replace('&', '?') +"\" frameborder=\"0\" allowfullscreen></iframe>";
+                                var _card_data={
+                                    title:'Untitled',
+                                    text:embed_url,
+                                    model:currentFrame.activeModel,
+                                    view:currentFrame.activeView,
+                                    sctype:card_props.TYPE.SIMPLE_TEXT,
+                                    non_resizable: true,
+                                    default_size:{w:6, h:6}
+                                }
+                                card_ = currentFrame.actions.add_new_card(_card_data);
+                                $commandInput.val('');
+                            }
+                        }//youtube
+                        else if(cmd[0].match(/\.(jpg|png|gif)$/)) {
+                            var img_url = "<img src=\""+  cmd[0] +"\" alt=\"Image\" style=\" \">";
+                            console.log('image found');
+                            var _card_data={
+                                title:'Untitled',
+                                text:img_url,
+                                model:currentFrame.activeModel,
+                                view:currentFrame.activeView,
+                                sctype:card_props.TYPE.SIMPLE_TEXT,
+                                default_size:{w:3, h:3}
+                            }
+                            card_ = currentFrame.actions.add_new_card(_card_data);
+                            $commandInput.val('');
+                        }
                     }
                 }
             }// end if(isCmd)
@@ -549,6 +606,51 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props'], fun
                     self.update_changed_frames_now();
                 }
             });
+
+            $commandForm = $('#commandForm');
+            if(!$commandForm){
+                setTimeout(function(){
+                    $commandForm = $('#commandForm');
+                },1000);
+            }
+            $commandInput = $('#commandInput');
+            if(!$commandInput){
+                setTimeout(function(){
+                    $commandInput = $('#commandInput');
+                },1000);
+            }
+            // hide whenever out of focus
+            // $commandInput.blur(function(){
+            //     $commandForm.hide(100);
+            // });
+
+            // $(document).keypress(function(e) {
+            //     self.someKeyPressed(e);
+            //     return true;
+            // });
+            $(document).keyup(function(event) {
+                self.someKeyUp(event);
+                return true;
+            });
+            //because keydown event was not being fired in in document event listener
+            window.addEventListener('keydown', function(event){
+                if(event.keyCode == 16){//shift
+                    state.keyboard.shift_down = true;
+                    //console.log('shift pressed');
+                }
+                else if(event.keyCode == 17){//ctrl
+                    state.keyboard.ctrl_down = true;
+                    //console.log('ctrl pressed');
+                }
+                else if(event.keyCode == 18){//alt
+                    state.keyboard.alt_down = true;
+                    //console.log('alt pressed');
+                }
+
+                return true;
+            });
+
+
         };
 
         this.update_changed_frames_now = function(){//every time this tab is active this is called
@@ -582,7 +684,202 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props'], fun
             loadFrameViewInNewFrame : function(frameview_key, card){
                 self.addFrame({frameview_key:frameview_key, title:card.card_data.title, bgColor:'cadetblue'});
             },
+            hideCommandForm : function(){
+                $commandForm.hide(100);
+            }
         };
+
+        this.keyUpTimeOutVar = null;// used bellow
+        minTimeIntervalForQuery = 250; // ms
+        this.commandSuggest = function(event){
+
+            var str = $commandInput.val();
+            var _callb = function(json){
+                if(json.query && json.query.pages){
+                    self.commandSuggestions.removeAll();//clear suggestions
+                    $.each(json.query.pages, function(i,item){
+                        // console.log(item);
+
+                        var bind_data = {};
+                        bind_data.title = item.title;
+                        if(item.thumbnail && item.thumbnail.source)bind_data.thumb_source = item.thumbnail.source;
+                        if(item.terms && item.terms.description && item.terms.description.length){
+                            bind_data.desc = item.terms.description[0];
+                        }else bind_data.desc = '';
+                        
+                        if(bind_data.title)self.commandSuggestions.unshift(bind_data);
+                    });
+
+                }
+            }
+            if(str.length){//atleast one character exist
+                if(event.keyCode == 13 || event.which == 13){// enter pressed
+
+                    var tokens = str.replace(/\s+/g, " ").split(" ");
+                    if(tokens[0]=='w'){//wikipedia search & enter
+
+                    }
+                    else if(tokens[0]=='d'){//'d ' -> duckDuckGo
+                        // send all tokens except the first
+                        var _query = tokens.slice();//clone
+                        _query.splice(0,1);
+                        searchapi.searchDuckDuckGo(_query, function(json){
+                            if(!json.RelatedTopics.length)return; // if no result go back
+                            self.commandSuggestions.removeAll();//clear suggestions
+
+                            var bind_data = {};
+                            $.each(json.RelatedTopics, function(i, item){
+                                if(item.hasOwnProperty('Name')){
+                                    $.each(item.Topics, function(j, childItem){
+                                        bind_data = {};
+                                        var _tok = childItem.FirstURL.split('/');
+                                        if(_tok){
+                                            _tok = _tok[_tok.length-1]; //get the last value
+                                            _tok = _tok.split('%2').join(' ').split('2%').join(' ').split('_').join(' ').split('%').join(' ');
+                                        }
+                                        bind_data.title = _tok;
+                                        bind_data.desc = childItem.Text;
+                                        self.commandSuggestions.unshift(bind_data);
+                                    });
+                                }
+                                else {
+                                    bind_data = {};
+                                    var _tok = item.FirstURL.split('/');
+                                    if(_tok){
+                                        _tok = _tok[_tok.length-1]; //get the last value
+                                        _tok = _tok.split('%2').join(' ').split('2%').join(' ').split('_').join(' ').split('%').join(' ');
+                                    }
+                                    bind_data.title = _tok;
+                                    bind_data.desc = item.Text;
+                                    self.commandSuggestions.unshift(bind_data);
+                                }
+
+                            });
+                        });
+                    }
+                    else if(tokens[0] == 'g'){// 'g ' for google suggests
+                    // else if(false){// 'g ' for google suggests
+                        var _query = tokens.slice();// clone
+                        _query.splice(0,1);// take the last one
+                        searchapi.getGoogleSuggestion(_query, function(json){
+                            $.each(json.CompleteSuggestion, function(i, item){
+                                // console.log(item.suggestion.data);
+                            });
+                        });
+
+                    }
+                    //umbel, http only
+                    // it has more tpes of query , check each one of them
+                    // see that you take care of mixed content warning
+                    
+                    else if(tokens[0] == 'u'){// 'u ' for umbel search
+                        var _query = tokens.slice();// clone
+                        _query.splice(0,1);// take the last one
+                        searchapi.searchUmbelConcept(_query, function(json){
+                            var bind_data = {};
+                            $.each(json.results, function(i, item){
+                                var _tok = item._id.split('/');
+                                if(_tok){
+                                    _tok = _tok[_tok.length-1]; //get the last value
+                                    _tok = _tok.split(/(?=[A-Z])/).join(' ');// separate word based on Capital leters
+                                }
+                                bind_data.title = _tok;
+                                bind_data.desc = item.description;
+                                self.commandSuggestions.unshift(bind_data);
+                            });
+                        });
+
+                    }
+                    
+                }//enter pressed
+
+                //realtime suggestions
+                clearTimeout(self.keyUpTimeOutVar);
+                self.keyUpTimeOutVar = setTimeout(function(){
+                    if(str.length > 3){// 2 for 'w ' 2 for text
+                        
+                        if(str.indexOf('w ')==0){//'w ' -> wikipedia
+                            var query = str;
+                            if(str.slice)query = str.slice(2,str.length-1);
+                            else if(str.substr)query = str.substr(2,str.length-1);
+                            mediawiki.wikipedia_suggest(query, _callb);
+                        }
+
+                        else if(str.indexOf('g ')==0){//'g ' -> google suggestions
+                            var query = str;
+                            if(str.slice)query = str.slice(2,str.length-1);
+                            else if(str.substr)query = str.substr(2,str.length-1);
+
+                            searchapi.getGoogleSuggestion(query, function(json){
+                                self.commandSuggestions.removeAll();//clear suggestions
+                                var bind_data = {};
+                                $.each(json.CompleteSuggestion, function(i, item){
+                                    bind_data.title = item.suggestion.data;
+                                    bind_data.desc = '';
+                                    if(bind_data.title)self.commandSuggestions.unshift(bind_data);
+                                    
+                                });
+                                
+                            });
+                        }
+                        
+                    }
+                }, minTimeIntervalForQuery);
+
+
+            }// at least one char
+            else{
+                self.commandSuggestions.removeAll();
+            }
+
+        };
+        this.someKeyUp = function(event){
+            if(event.keyCode == 27){// ESC
+                // get the current frame
+                var _cf = self.framesData()[0].frameModel;
+                if(_cf ){
+                    _cf.state_manager.rollback();
+                }
+                $commandForm.show(100);
+                $commandInput.focus();
+            }
+                    
+
+            if(event.keyCode == 16){//shift
+                state.keyboard.shift_down = false;
+                // console.log('shift pressed up');
+            }
+            else if(event.keyCode == 17){//ctrl
+                state.keyboard.ctrl_down = false;
+                // console.log('ctrl pressed up');
+            }
+            else if(event.keyCode == 18){//alt
+                state.keyboard.alt_down = false;
+                // console.log('alt pressed up');
+            }
+
+            //************************************
+            if(state.isany_card_being_edited){
+                return true;
+            }
+            if(document.activeElement.nodeName==='INPUT' || $(document.activeElement).hasClass('sc-editable')){// editing something don't take the event
+                // event is for other input elements 
+            // or for sc-editable elements 
+            // or commandForm is already in focus
+                if(event.target.id == 'commandInput'){
+                    self.commandSuggest(event);
+                }
+                    
+                return true;
+            }
+
+            // but if no such element is being focused now
+            // no where this key event is used so use it for command
+            self.focus_on_command_input(event);
+
+            return true;
+        };
+  
         
         
 

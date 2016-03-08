@@ -111,6 +111,7 @@
   height: 20px;
   right: 10px;
   bottom: 0;
+  font-size: 0px;/*@me- hide handle*/
 }
 .grid-stack > .grid-stack-item > .ui-resizable-s {
   cursor: s-resize;
@@ -125,6 +126,7 @@
   height: 20px;
   left: 10px;
   bottom: 0;
+  font-size: 0px;/*@me- hide handle*/
 }
 .grid-stack > .grid-stack-item > .ui-resizable-w {
   cursor: w-resize;

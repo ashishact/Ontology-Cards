@@ -1,18 +1,19 @@
     
     define(['durandal/system', 'durandal/app', 'durandal/viewLocator', 'gridstack', 'state'],  function (system, app, viewLocator, gridstack, state) {
-        //>>excludeStart("build", true);
-        //system.debug(true);
-        //>>excludeEnd("build");
+        // >>excludeStart("build", true);
+        // system.debug(true);
+        // >>excludeEnd("build");
 
-        if(chrome.extension){
-            if(document.title.length){
-                app.title = document.title + " @Semanticcards"
-            }
-            // document.getElementById('SEMANTICCARDS-05041993').style.backgroundColor='#1b1b1b';
+        
+        if(document.title.length){
+            app.title = document.title + " @Semanticcards"
         }
         else{
-            //app.title = 'Semanticcards';
+            app.title = 'Semanticcards';
         }
+            // document.getElementById('SEMANTICCARDS-05041993').style.backgroundColor='#1b1b1b';
+        
+        
     
 
         // app.configurePlugins({

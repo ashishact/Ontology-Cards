@@ -70,7 +70,9 @@ define(['durandal/app', 'jquery', 'detect', 'state'],  function (app, $, detect,
 				self.init_ui();
 			}
 
-			self.visibleElement.fadeIn(200, function(){$(window).scrollTop(self.scrollTop);});
+			// self.visibleElement.fadeIn(200, function(){$(window).scrollTop(self.scrollTop);});
+			self.visibleElement.show();
+			$(window).scrollTop(self.scrollTop);
 	        $(self.sc_ui).fadeOut(300);
 		};
 

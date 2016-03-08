@@ -13,7 +13,7 @@
 	-webkit-box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.50);
 	-moz-box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.50);
 	box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.50);">
-		<div style="margin-left: 10px; " class="custombreadcrumb flat" data-bind="foreach: {data: navigation}">
+		<div style="margin-left: 10px; margin-top: 9px; " class="custombreadcrumb flat" data-bind="foreach: {data: navigation}">
 			<a style="color:#777"  data-bind="text:$data.title, click:$root.clicked_on_breadcrumb, css: {active: $data.key == $root.frameview.key() }"></a>
 		</div>
 		<div style="float:right; position: relative; padding-top: 5px;">
@@ -47,7 +47,7 @@
 			<div class="grid-stack-item" data-bind="attr: {'data-gs-x': $data.x, 'data-gs-y': $data.y, 'data-gs-width': $data.width, 'data-gs-height': $data.height, 'data-gs-auto-position': $root.auto_position},  event:{mousedown:$root.onMouseDown, mouseup:$root.onMouseUp, mouseenter:$root.onMouseEnterCard, mouseleave:$root.onMouseLeaveCard}">
 				<div style="border-radius: 5px;" class="grid-stack-item-content" >
 					<!-- <button data-bind="click: $root.remove_card">Remove</button> -->
-					<div style="width: 100%; height: 100%; background-color: white;" data-bind="compose:{model:$root.activeModel, view:$root.activeView, activationData:$data}"></div>
+					<div style="width: 100%; height: 100%; background-color: white;" data-bind="compose:{model:$root.activeModel, view:$root.activeView, activationData:$data}, attr:{id:'card_'+ $data.id}"></div>
 					
 				</div>
 

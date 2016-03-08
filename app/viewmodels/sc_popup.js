@@ -158,7 +158,6 @@ define(['knockout', 'jquery', 'mediawiki', 'searchapi'], function (ko, $, mediaw
 
 
     		}
-    		// self.lastKeyUpTimeStamp = event.timeStamp;
     	}
 
 

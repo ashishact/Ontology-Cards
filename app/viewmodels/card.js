@@ -165,20 +165,24 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
         this.settingsVisible = ko.observable(false);
 
         //bind_data has observables, card_content is just a json object used for storing content to database
+        this.any_data_changed = true;
         this.update_card_content_from_bind_data = function(bind_data, card_content){
             _.forIn(bind_data, function(value, key){
                 if(typeof(value) == 'function'){//ko observable
+                    if(card_content[key] !== bind_data[key]()) self.any_data_changed = true;// checking if any data has changed from the previous values
                     card_content[key] = bind_data[key]();
                 }
                 else if(typeof(value) == 'object'){//could be arry or a hash
                     if(value instanceof Array){
+                        if(card_content[key] !== bind_data[key]) self.any_data_changed = true;// checking if any data has changed from the previous values
                         card_content[key] = bind_data[key];
                     }
                     else{//hash object re iterate through it, as it might have ko observable inside it
-                        self.update_card_content_from_bind_data(bind_data[key], card_content[key]);  
+                        self.update_card_content_from_bind_data(bind_data[key], card_content[key], any_data_changed);  
                     }
                 }
                 else{//string or number
+                    if(card_content[key] !== bind_data[key] ) self.any_data_changed = true;// checking if any data has changed from the previous values
                     card_content[key] = bind_data[key];
                 }
             });
@@ -226,7 +230,7 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
                         //console.log('card_content from store is here', response.msg.card_content);
                     }
                     else{
-                        self.load_card_content_from_wikimedia(self.bind_data.title());
+                        //self.load_card_content_from_wikimedia(self.bind_data.title());
                     }
                 }
             );
@@ -327,12 +331,19 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
         this.save_card_content_to_store = function(){
             //first convert all ko.observable into json
             self.update_card_content_from_bind_data(self.bind_data, self.card_content);
+            
+            if(self.any_data_changed){
+                console.log('data actually changed');
+                console.log('saving', self.bind_data.title(), self.card_content);
+                
+                var _type = 'SAVE_REQ_FROM_CARD';
+                var _msg = {card_content:self.card_content};
+                self.send_msg_to_background(_type, _msg);
+                
+                self.any_data_changed = false;  
+            }
 
-            console.log('saving', self.bind_data.title(), self.card_content);
-
-            var _type = 'SAVE_REQ_FROM_CARD';
-            var _msg = {card_content:self.card_content};
-            self.send_msg_to_background(_type, _msg);
+            else console.log('no data changed');
         };
 
         this.onMouseLeaveCard = function(){

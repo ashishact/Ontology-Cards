@@ -14,8 +14,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
 
             //Non - Observable
                     // @cbc //both are same
-            $focushere = null;// focus element to focus and get cmd value
-            this.searchbar = null; // complete searchbar element to blur and show when nessary
+            //this.searchbar = null; // complete searchbar element to blur and show when nessary
             $panzoom = null;
 
             //Gridstack
@@ -60,7 +59,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 'perfect_click_max'
             ]
             this.frame_config = [
-                0, {w:2, h:2}, true,     true, true, true, false, true, true,     false,  true, true, true,  4
+                0, {w:2, h:2}, false,     true, true, true, false, true, true,     false,  true, true, true,  4
             ];
             this.get_fc_value = function(key){
                 for (var i = self.frame_config_map.length - 1; i >= 0; i--) {
@@ -93,7 +92,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             };
             this.attached = function(view, parent){
                 self.on_start();
-                $focushere = $('#focushere');
             };
             this.afterAddWidget = function (items){
                 if (self.grid === null) {
@@ -105,6 +103,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                             handles: 'se, sw'
                         }
                     };
+                    //@rem - to update css when changing to gridstack.min version
+
                     self.grid = $(items[1].parentNode).gridstack(//@more work -> index
                         opt
                     ).data('gridstack');
@@ -114,27 +114,29 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     }
                     if(self.grid){
                         $('#'+'gstack_'+self.frameID).on('change', function (event,items) {
+                            console.log('changing');
                             _.forEach(items, function (i) {
 
                                 var data = ko.dataFor(i.el[0]);
                                 var valueChanged = false;
-                                if(self.manual_update.manual === true && data.id === self.manual_update.cardid){
                                     valueChanged = data.x !== i.x || data.y !== i.y  || data.width !== i.width || data.height !== i.height ;
-                                }
-                                if (data.x !== i.x) {//try using this as observable instead
-                                    data.x = i.x;
-                                }
+                                
+                                    if (data.x !== i.x) {//try using this as observable instead
+                                        data.x = i.x;
+                                    }
 
-                                if (data.y !== i.y) {
-                                    data.y = i.y;
-                                }
+                                    if (data.y !== i.y) {
+                                        data.y = i.y;
+                                    }
 
-                                if (data.width !== i.width) {
-                                    data.width = i.width;
-                                }
+                                    if (data.width !== i.width) {
+                                        data.width = i.width;
+                                    }
 
-                                if (data.height !== i.height) {
-                                    data.height = i.height;
+                                    if (data.height !== i.height) {
+                                        data.height = i.height;
+                                    }
+                                if(self.manual_update.manual === true && data.id === self.manual_update.cardid){
                                 }
 
                                 if(self.manual_update.manual === true && data.id === self.manual_update.cardid){
@@ -186,6 +188,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     self.grid.add_widget(item);
                     var last_card = _.last(self.cards());
                     last_card.el = item;
+                    if(last_card.card_data.non_resizable) $(last_card.el).attr('data-gs-no-resize',true);
                     //last_card.isMouseHovered = ko.observable(false);
 
                     // ko.utils.domNodeDisposal.addDisposeCallback(item, function () {
@@ -219,31 +222,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
 
 
                 
-                $(document).keypress(function(e) {
-                    self.someKeyPressed(e);
-                    return true;
-                });
-                $(document).keyup(function(event) {
-                    self.someKeyUp(event);
-                    return true;
-                });
-                //because keydown event was not being fired in in document event listener
-                window.addEventListener('keydown', function(event){
-                    if(event.keyCode == 16){//shift
-                        state.keyboard.shift_down = true;
-                        //console.log('shift pressed');
-                    }
-                    else if(event.keyCode == 17){//ctrl
-                        state.keyboard.ctrl_down = true;
-                        //console.log('ctrl pressed');
-                    }
-                    else if(event.keyCode == 18){//alt
-                        state.keyboard.alt_down = true;
-                        //console.log('alt pressed');
-                    }
-
-                    return true;
-                });
+                
 
                 self.show_search_bar(false);
             }
@@ -286,9 +265,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     _card.isMouseHovered = ko.observable(false);
 
                     me._update_view_model_strings(_card.card_data);// change view model type before binding
-
-                    self.cards.push(_card);
+                    self.cards.push(_card);// by pushing ko creates new card
                     self.frameview.ids.push(_card.id);
+
+                    //Somehow card positions are not correct
+                    //me._update_card_in_frameview(_card, _card.x, _card.y, _card.width, _card.height);
                 };
                 //@
                 this._save_new_card_from_frameview_to_store = function(card){
@@ -370,8 +351,14 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 this._update_card_in_frameview= function(card, x, y, w, h){
                     self.grid.update(card.el, x, y, w, h);
                 };
-
-
+                this._update_all_card_in_frameview = function(){
+                    console.log('sorting out messed up cards');
+                    var allcards_ = self.cards();
+                    for (var i = allcards_.length - 1; i >= 0; i--) {
+                        var c = allcards_[i];
+                        me._update_card_in_frameview(c, c.x, c.y, c.width, c.height);
+                    };
+                };
                
                 this._card_set_movable= function(card, opt){// opt = true, false
                     self.grid.movable(card.el, opt);
@@ -462,6 +449,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                         }
                     );
                 };
+                this.save_frame_config = function(){
+                    var _type = 'SAVE_FRAME_CONFIG_TO_STORE';
+                    var _msg = {frame_config:self.frame_config};
+                    me._send_msg_to_background(_type, _msg);
+                };
                 this._load_frame_config = function(){
                     var _type = 'LOAD_FRAME_CONFIG_FROM_STORE';
                     chrome.runtime.sendMessage(
@@ -499,11 +491,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
 
                     return _card;
                 };
-                this.save_frame_config = function(){
-                    var _type = 'SAVE_FRAME_CONFIG_TO_STORE';
-                    var _msg = {frame_config:self.frame_config};
-                    me._send_msg_to_background(_type, _msg);
-                };
+                
                 this.cacheIt = function(){
                     var _ca = self.cache;
                     if(_ca.keyPrev2){
@@ -601,9 +589,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                                     //me.add_new_card({title:'No cards exist', volatile:true});
                                 }
 
-                                // for (var i = _cards.length - 1; i >= 0; i--) {
-                                //     me._add_card_from_store_to_frameview(_cards[i]);
-                                // };
+                                //card positions are messed up sort it out
+                                setTimeout(function(){
+                                    me._update_all_card_in_frameview();
+                                }, 2000);
+                                
                             };
 
                         }
@@ -651,6 +641,12 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     card_ = me._add_new_card_from_user_to_frameview(0,0,size.w,size.h, CARD_TYPE, card_data);
                     if(!card_.TYPE.VOLATILE) me._save_new_card_from_frameview_to_store(card_);
 
+                    //After card created
+                    // some initialisation can only be done after card is created so:)
+                    if(card_data.non_resizable){// most of the cards are resizable so this is specia
+                        me._card_set_resizable(card_ , false);
+                    }
+
                     return card_;
                 };
                 this.add_new_card_top_left= function(card_data){
@@ -671,11 +667,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     var card_ = null;
 
                     if(self.get_fc_value('card_auto_position')==true){
+                        console.log('auto p true');
                         self.auto_position = true;
                         card_ = me.add_new_card_autoposition(card_data);
                         self.auto_position = false;// set default to false so that stored card from store are positioned in their given position and not in 0,0
                     }
                     else{
+                        console.log('auto p false');
                         card_ = me.add_new_card_autoposition(card_data);
                     }
                     return card_;
@@ -854,6 +852,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     self.stop_editing_all('EDITING_FINISHED');
                 }
                 //$grid_stack.panzoom('dissable');
+                self.appActions.hideCommandForm();// remove searchbar and suggestion when clicked on background
                 return true;
             };
             
@@ -943,6 +942,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     self.start_editing_card(card);// have to edit no matter what/ even if that means stop others  
                 }
             };
+            
             this.start_editing_card = function(card){
                 // if editing any
                 if(self.get_fc_value('edit_one_at_a_time') == true){// edit one at a time, lets see
@@ -1031,7 +1031,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 }
                 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                 if(!card.TYPE.VOLATILE && reason=='EDITING_FINISHED')app.trigger('editing:finished', card.id);
-                self.focus_on_searchbar();
+
             };
             this.stop_editing_all = function(reason){
                 edcards = state.now_editing_cards;
@@ -1048,33 +1048,43 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 //Decide if content is not fitting properly or not
                 var _should_expand = false;
                 var card_px = $(window).width()/12;//12 is defined in gridstack
-                var aspect_ratio = 1.5;
-                // var sizeY = card.sc_signal();
-                var sizeY = 300;
-                console.log(sizeY);
+                // var aspect_ratio = 1.5;
+
+                var card_parent_el = $('#card_'+card.id);
+                var content_size = {w:0, h:0};
+                card_parent_el.children().each(function(i, el){
+                    content_size.h+= $(el).outerHeight(true);// true to include margin// this el has margin of 20 on both side
+                    // content_size.w+= $(el).width();
+                });
+                console.log('parent:', card_parent_el.height());
+                console.log('child: ', content_size.h);
+            
                 var h = card.height;
                 var w =card.width;
-                if(sizeY){
-                    var dh = Math.round( (sizeY/card_px) - card.height);
-                    dh = 1;
-                    console.log('dh',dh);
-                    if(dh > 0){// only expand, don't contract
-                        // var area = (h+dh) * w;
-                        // h = Math.round( Math.sqrt(area/1.5));
-                        // w = Math.round( area/h );
+                
+                var dh = Math.ceil( (content_size.h/card_px) - card.height);
 
-                        h = h+dh;
-                        w = w+dh;
-                       
-                        if(h && w)                    
-                        _should_expand = true;
-                    }
+                // var dh = 0;
+                // if(h<4) dh = Math.ceil( (content_size.h/card_px) - card.height);// for small h dh ceil is good
+                // else dh = Math.round( (content_size.h/card_px) - card.height);
+                
+                // var dw = Math.ceil( (content_size.w/card_px) - card.width);
+                
+                console.log('h', h, 'dh',dh);
+                if(dh > 0){// only expand, don't contract
+                    // var area = (h+dh) * w;
+                    // h = Math.round( Math.sqrt(area/1.5));
+                    // w = Math.round( area/h );
+
+                    h = h+dh;
+                    w = w+1;
+                   
+                    if(h>1 && w>1)_should_expand = true;
                 }
-
 
                 //After decision expand
                 if(_should_expand){
-                    console.log("trying");
+                    console.log("trying to expand");
                     self.actions.expand_card(card, card.x, card.y, w, h);
                     card.STATE.EXPANDED = true;
 
@@ -1106,44 +1116,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             }
 
         //Search
-            this.show_search_bar = function(opt){
-                if(!self.searchbar){
-                    self.searchbar = $('#focushere');
-                    if(self.searchbar.length)self.searchbar = self.searchbar[0];
-
-                    self.searchbar.addEventListener("blur", function(){
-                          //console.log("disable");
-                          self.show_search_bar(false);
-                    });
-                }
-                if(self.searchbar.style){
-                    if(opt){
-                        self.searchbar.style.opacity = '1';
-                    }
-                    else{
-                        self.searchbar.style.opacity = '0.25';
-                    }
-                }
-            }
-            this.focus_on_searchbar = function(){
-                if(self.searchbar){
-                    self.searchbar.focus();
-                    //self.show_search_bar(true);// focus but keep opacity low
-
-                }
-                else{
-                  self.searchbar = $('#focushere');
-                  if(self.searchbar.length)self.searchbar = self.searchbar[0];
-                  self.searchbar.focus();
-                  self.show_search_bar(true);
-
-                  // self.searchbar.addEventListener("blur", function(){
-                  //       console.log("disable");
-                  //       self.show_search_bar(false);
-                  // });
-
-                }
-            };
             this.searchSubmit = function(from_el){
                 var isCmd = true;
                 var commandline = $(from_el).find('#focushere')[0];
@@ -1344,60 +1316,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             };
         
        //Keyboard
-            this.someKeyUp = function(event){
-                if(event.keyCode == 27){// ESC
-                    self.state_manager.rollback();
-                }
-
-                if(event.keyCode == 16){//shift
-                    state.keyboard.shift_down = false;
-                    // console.log('shift pressed up');
-                }
-                else if(event.keyCode == 17){//ctrl
-                    state.keyboard.ctrl_down = false;
-                    // console.log('ctrl pressed up');
-                }
-                else if(event.keyCode == 18){//alt
-                    state.keyboard.alt_down = false;
-                    // console.log('alt pressed up');
-                }
-            };
-            // var ena = true;
-            this.someKeyPressed = function(event){
             
 
-                if(state.isany_card_being_edited){
-                    return;
-                }
-                if(document.activeElement.nodeName==='INPUT' || $(document.activeElement).hasClass('sc-editable')){// editing something don't take the event
-                    if(event.target.id == 'focushere'){
-                        self.show_search_bar(true);
-                    }
-                    return;
-                }
-                // if(event.keyCode ==32){//SPACE+CTRL
-                //     if(ena == true){
-                //         self.grid.disable();
-                //         $grid_stack.panzoom('enable');
-                //         ena= false;
-                //     }
-                //     else {
-                //         self.grid.enable();
-                //         $grid_stack.panzoom("resetZoom");
-                //         $grid_stack.panzoom('disable');
-                //         ena = true;
-                //     }
-                // }
-                if($focushere){// $focushere is an element
-                    // $focushere.focus();
-                    $focushere.select();
-                }
-                return true;
-            };
-
-        // app.on('remove:card').then(function(carddata){
-        //     console.log("here is your cards",carddata);
-        // });
     };
 
     return frame;
