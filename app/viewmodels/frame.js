@@ -119,6 +119,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
 
                                 var data = ko.dataFor(i.el[0]);
                                 var valueChanged = false;
+                                if(self.manual_update.manual === true && data.id === self.manual_update.cardid){
                                     valueChanged = data.x !== i.x || data.y !== i.y  || data.width !== i.width || data.height !== i.height ;
                                 
                                     if (data.x !== i.x) {//try using this as observable instead
@@ -136,7 +137,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                                     if (data.height !== i.height) {
                                         data.height = i.height;
                                     }
-                                if(self.manual_update.manual === true && data.id === self.manual_update.cardid){
                                 }
 
                                 if(self.manual_update.manual === true && data.id === self.manual_update.cardid){
