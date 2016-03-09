@@ -9,18 +9,6 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
 
 
         this.ifcardsctype = null;
-        this.wikidata = ko.observable('');
-
-        //DEFAULT
-        //observable
-        this.title = ko.observable('');
-        this.label = ko.observable('');
-        this.abstract = ko.observable('');
-        this.content = ko.observable('');
-        //non - observable
-        //this.webreader = '';
-        this.created = Date.now();
-
         
         this.create_array_from_json = function(_prefix, _array, _obj){
             if(typeof(_prefix) != 'string')_prefix='';
@@ -148,95 +136,22 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
         }
 
 
-        // this.card_stored = ko.computed(function(){
-        //   return {id:self.id, }
-        // });
-        
-        this.card_content = {};
-        // this.card_content = ko.computed(function() {
-        //     return {id:self.id, title:self.title(), subtitle:self.abstract(), content:self.content()};
-        // }, this);
-
-        this.isMouseEnterCard = ko.observable(false);// if mouse is over this card
-
-
         //Settings
         this.settingsArray = ko.observableArray();
         this.settingsVisible = ko.observable(false);
 
-        //bind_data has observables, card_content is just a json object used for storing content to database
-        this.any_data_changed = true;
-        this.update_card_content_from_bind_data = function(bind_data, card_content){
-            _.forIn(bind_data, function(value, key){
-                if(typeof(value) == 'function'){//ko observable
-                    if(card_content[key] !== bind_data[key]()) self.any_data_changed = true;// checking if any data has changed from the previous values
-                    card_content[key] = bind_data[key]();
-                }
-                else if(typeof(value) == 'object'){//could be arry or a hash
-                    if(value instanceof Array){
-                        if(card_content[key] !== bind_data[key]) self.any_data_changed = true;// checking if any data has changed from the previous values
-                        card_content[key] = bind_data[key];
-                    }
-                    else{//hash object re iterate through it, as it might have ko observable inside it
-                        self.update_card_content_from_bind_data(bind_data[key], card_content[key], any_data_changed);  
-                    }
-                }
-                else{//string or number
-                    if(card_content[key] !== bind_data[key] ) self.any_data_changed = true;// checking if any data has changed from the previous values
-                    card_content[key] = bind_data[key];
-                }
-            });
-        };
-        this.update_bind_data_from_card_content = function(bind_data, card_content){
-            //console.log('bind_data is ', bind_data, 'card_content is ', card_content);
-            _.forIn(bind_data, function(value, key) {
-                if(card_content[key]){//if it exists
-                    if(typeof(value) == 'function'){//knockout observable
-                        bind_data[key](card_content[key]);//knockout observable
-                    }
-                    else if(typeof(value) == 'object'){//could be arry or a hash
-                        if(value instanceof Array){
-                            bind_data[key] = card_content[key];
-                        }
-                        else{//hash object re iterate through it
-                            self.update_bind_data_from_card_content(bind_data[key], card_content[key]);  
-                        }
-                    }
-                    else{//string or number
-                        bind_data[key] = card_content[key];
-                    }
-                }
-                else{
-                    console.log("raise warning why was it not saved?");
-                }
-                
-            });
-
-            // if(card_content.title)self.title(card_content.title);
-            // if(card_content.abstract)self.subtitle(card_content.abstract);
-            // if(card_content.content)self.content(card_content.content);
-        };
-        this.load_card_content_from_store = function(){
-            //console.log("id is ", self.id);
-            chrome.runtime.sendMessage(
-                {
-                    type:'LOAD_REQ_FROM_CARD',
-                    msg:{id:self.id}
-                }
-            );
-        };
+        
         this.load_card_content_from_wikimedia = function(title){
-            var _callb = function(res) {
-                self.bind_data.text(res);
-                self.save_card_content_to_store();
-            }
+            // var _callb = function(res) {
+            //     self.bind_data.text(res);
+            // }
             
             
-            if(/^[a-zA-Z\s]*$/.test(title)){
-                //mediawiki.WD(title, _callb);//works
-                //mediawiki.wikipedia_suggest(title, _callb);//works
-            }
-            mediawiki.WikiSum(title, _callb);
+            // if(/^[a-zA-Z\s]*$/.test(title)){
+            //     //mediawiki.WD(title, _callb);//works
+            //     //mediawiki.wikipedia_suggest(title, _callb);//works
+            // }
+            // mediawiki.WikiSum(title, _callb);
 
 
         };
@@ -246,8 +161,6 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
             
             self.id = __card.id;
             self.sctype = __card.card_data.sctype;
-            self.card_content.id = __card.id;// for saving in databse
-
 
             if(self.sctype == card_props.TYPE.SUMMARY){
                 if(__card.card_data.parsedHTMLRESULT){
@@ -274,8 +187,8 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
                 }
             }
             else if(self.sctype == card_props.TYPE.SIMPLE_TEXT){
-                var _t = __card.card_data.title;
-                var _tx = __card.card_data.text;
+                var _t = __card.card_data.card_content.title;
+                var _tx = __card.card_data.card_content.text;
                 if(_t && _tx){
                     self.bind_data = self.create_card_type(self.sctype, {title:_t, text:_tx});
                     
@@ -293,74 +206,17 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
                     };
                 }
                 self.settingsVisible(true);
-            }    
-            
-        };
-        this.init_chrome_message_listener = function(){
-            chrome.runtime.onMessage.addListener(
-                function(request) {
-                    if(request.type === 'REPLYOF_LOAD_REQ_FROM_CARD'){
-                        if(request.msg && request.msg.card_content){
-                            if(request.msg.card_content.id === self.id){// this message can be for any card// very bad implementation as there are lots of card each of them will have a event listener
-                                self.update_bind_data_from_card_content(self.bind_data, request.msg.card_content);
-                            }
-                        }
-                        else{
-                            //self.load_card_content_from_wikimedia(self.bind_data.title());
-                        }
-                                
-                    }
-                }
-            );
-        };
-        this.send_msg_to_background = function(_type, _msg){
-            chrome.runtime.sendMessage(
-                {
-                    type:_type,
-                    msg:_msg
-                }
-            );
-        };
-        this.attached =  function(view, parent){
-            self.init_chrome_message_listener();
-
-            self.load_card_content_from_store();
-            self.title(self.title());// so that the card_contenet variable updates id value
-            // self.card_content.subscribe(function(newValue){
-            // });
-
-            app.on('editing:finished').then(function(id){
-                if(id === self.id){
-                    self.save_card_content_to_store();
-                }
-            });
-        };
-        this.save_card_content_to_store = function(){
-            //first convert all ko.observable into json
-            self.update_card_content_from_bind_data(self.bind_data, self.card_content);
-            
-            if(self.any_data_changed){
-                console.log('data actually changed');
-                console.log('saving', self.bind_data.title(), self.card_content);
-                
-                var _type = 'SAVE_REQ_FROM_CARD';
-                var _msg = {card_content:self.card_content};
-                self.send_msg_to_background(_type, _msg);
-                
-                self.any_data_changed = false;  
             }
 
-            else console.log('no data changed');
+            __card.bind_data = self.bind_data;// for reference in frame.js
+            
+            // self.update_bind_data_from_card_content(self.bind_data, __card.card_data.card_content);
+            //^above is required if card_content comes from some other source after activation is complete
+        };
+        
+        this.attached =  function(view, parent){
         };
 
-        this.onMouseLeaveCard = function(){
-            self.isMouseEnterCard(false);
-            return true;
-        };
-        this.onMouseEnterCard = function(){
-            self.isMouseEnterCard(true);
-            return true;
-        };
     };
 
     return card;

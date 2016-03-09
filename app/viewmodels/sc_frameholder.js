@@ -406,10 +406,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                                     for (var i = cmd.length - 1; i >= 3; i--) {
                                         _title = _title + ' ' + cmd[i];
                                     };
+                                    var _card_content = {
+                                        title:_title,
+                                        text:self.getRandomText()
+                                    }
                                     var _card_data = {
                                         parent:true,
-                                        title:_title,
-                                        text:self.getRandomText(),
+                                        card_content: _card_content,
                                         model:currentFrame.activeModel,
                                         view:currentFrame.activeView,
                                         sctype:card_props.TYPE.SIMPLE_TEXT 
@@ -417,13 +420,16 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                                     card_ = currentFrame.actions.add_new_card(_card_data);
                                 }
                                 else{// just parent
+                                    var _card_content = {
+                                        title:'Parent',
+                                        text:self.getRandomText()
+                                    }
                                     var _card_data = {
                                         parent:true,
-                                        title:'Parent',
-                                        text:self.getRandomText(),
+                                        card_content: _card_content,
                                         model:currentFrame.activeModel,
                                         view:currentFrame.activeView,
-                                        sctype:card_props.TYPE.SIMPLE_TEXT
+                                        sctype:card_props.TYPE.SIMPLE_TEXT 
                                     }
                                     card_ = currentFrame.actions.add_new_card(_card_data);
                                 }
@@ -443,23 +449,30 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                                 for (var i = cmd.length - 1; i >= 2; i--) {
                                     _title = _title + ' ' + cmd[i];
                                 };
-                                var _card_data={
+
+                                var _card_content = {
                                     title:_title,
-                                    text:self.getRandomText(),
+                                    text:self.getRandomText()
+                                }
+                                var _card_data = {
+                                    card_content: _card_content,
                                     model:currentFrame.activeModel,
                                     view:currentFrame.activeView,
-                                    sctype:card_props.TYPE.SIMPLE_TEXT
+                                    sctype:card_props.TYPE.SIMPLE_TEXT 
                                 }
                                 card_ = currentFrame.actions.add_new_card(_card_data);
                             }
                         }
                         else{
-                            var _card_data={
+                            var _card_content = {
                                 title:'Card',
-                                text:self.getRandomText(),
+                                text:self.getRandomText()
+                            }
+                            var _card_data = {
+                                card_content: _card_content,
                                 model:currentFrame.activeModel,
                                 view:currentFrame.activeView,
-                                sctype:card_props.TYPE.SIMPLE_TEXT
+                                sctype:card_props.TYPE.SIMPLE_TEXT 
                             }
                             card_ = currentFrame.actions.add_new_card(_card_data);
                         }
@@ -534,9 +547,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         if(cmd.length>1){
                             var img_url = "<img src=\""+  cmd[1] +"\" alt=\"Image\" style=\" \">";
                             console.log('image found');
-                            var _card_data={
+
+                            var _card_content = {
                                 title:'Untitled',
                                 text:img_url,
+                            }
+                            var _card_data = {
+                                card_content: _card_content,
                                 model:currentFrame.activeModel,
                                 view:currentFrame.activeView,
                                 sctype:card_props.TYPE.SIMPLE_TEXT,
@@ -551,15 +568,20 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                             var lnk = cmd[0].split('v=');
                             if(lnk.length>1){
                                 var embed_url = "<iframe width=\"680\" height=\"380\" src=\"https://www.youtube.com/embed/"+ lnk[1].replace('&', '?') +"\" frameborder=\"0\" allowfullscreen></iframe>";
-                                var _card_data={
+                                
+                                var _card_content = {
                                     title:'Untitled',
                                     text:embed_url,
+                                }
+                                var _card_data = {
+                                    card_content: _card_content,
                                     model:currentFrame.activeModel,
                                     view:currentFrame.activeView,
                                     sctype:card_props.TYPE.SIMPLE_TEXT,
                                     non_resizable: true,
                                     default_size:{w:6, h:6}
                                 }
+
                                 card_ = currentFrame.actions.add_new_card(_card_data);
                                 $commandInput.val('');
                             }
@@ -567,9 +589,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         else if(cmd[0].match(/\.(jpg|png|gif|JPG)$/)) {
                             var img_url = "<img src=\""+  cmd[0] +"\" alt=\"Image\" style=\" \">";
                             console.log('image found');
-                            var _card_data={
+                            
+                            var _card_content = {
                                 title:'Untitled',
                                 text:img_url,
+                            }
+                            var _card_data = {
+                                card_content: _card_content,
                                 model:currentFrame.activeModel,
                                 view:currentFrame.activeView,
                                 sctype:card_props.TYPE.SIMPLE_TEXT,
@@ -585,6 +611,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 var searchStr = cmd.replace(/\s+/g, " ");
                 console.log("Search for", searchStr);
             }
+
+            // as enter was pressed, remove all characters
+            $commandInput.val('');
         };
 
         this.activate = function(){
@@ -698,7 +727,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
         // functions to be used in frame.js
         this.appActions = {
             loadFrameViewInNewFrame : function(frameview_key, card){
-                self.addFrame({frameview_key:frameview_key, title:card.card_data.title, bgColor:'cadetblue'});
+                self.addFrame({frameview_key:frameview_key, title:card.card_data.card_content.title, bgColor:'cadetblue'});
             },
             hideCommandForm : function(){
                 $commandForm.hide(100);
