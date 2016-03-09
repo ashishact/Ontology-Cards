@@ -222,16 +222,6 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
                 {
                     type:'LOAD_REQ_FROM_CARD',
                     msg:{id:self.id}
-                }, 
-                function(response) {
-                    //console.log('trying to load card_content as', response);
-                    if(response.msg && response.msg.card_content){
-                        self.update_bind_data_from_card_content(self.bind_data, response.msg.card_content);
-                        //console.log('card_content from store is here', response.msg.card_content);
-                    }
-                    else{
-                        //self.load_card_content_from_wikimedia(self.bind_data.title());
-                    }
                 }
             );
         };
@@ -306,17 +296,34 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
             }    
             
         };
+        this.init_chrome_message_listener = function(){
+            chrome.runtime.onMessage.addListener(
+                function(request) {
+                    if(request.type === 'REPLYOF_LOAD_REQ_FROM_CARD'){
+                        if(request.msg && request.msg.card_content){
+                            if(request.msg.card_content.id === self.id){// this message can be for any card// very bad implementation as there are lots of card each of them will have a event listener
+                                self.update_bind_data_from_card_content(self.bind_data, request.msg.card_content);
+                            }
+                        }
+                        else{
+                            //self.load_card_content_from_wikimedia(self.bind_data.title());
+                        }
+                                
+                    }
+                }
+            );
+        };
         this.send_msg_to_background = function(_type, _msg){
             chrome.runtime.sendMessage(
                 {
                     type:_type,
                     msg:_msg
-                }, 
-                function(response) {
                 }
             );
         };
         this.attached =  function(view, parent){
+            self.init_chrome_message_listener();
+
             self.load_card_content_from_store();
             self.title(self.title());// so that the card_contenet variable updates id value
             // self.card_content.subscribe(function(newValue){
