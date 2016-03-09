@@ -530,6 +530,22 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         });
                         // console.log({config:currentFrame.frame_config, config_map:currentFrame.frame_config_map});
                     }
+                    else if("image" === cmd[0].toLowerCase()){
+                        if(cmd.length>1){
+                            var img_url = "<img src=\""+  cmd[1] +"\" alt=\"Image\" style=\" \">";
+                            console.log('image found');
+                            var _card_data={
+                                title:'Untitled',
+                                text:img_url,
+                                model:currentFrame.activeModel,
+                                view:currentFrame.activeView,
+                                sctype:card_props.TYPE.SIMPLE_TEXT,
+                                default_size:{w:3, h:3}
+                            }
+                            card_ = currentFrame.actions.add_new_card(_card_data);
+                            $commandInput.val('');
+                        }
+                    }
                     else if(cmd[0].indexOf('http') === 0){// some url is given
                         if(cmd[0].indexOf('youtube.com') > 1){// an youtube url
                             var lnk = cmd[0].split('v=');
@@ -690,7 +706,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             showCommandForm : function(){
                 $commandForm.show(100);
                 $commandInput.focus();
-            }
+            },
+            
                 
         };
 

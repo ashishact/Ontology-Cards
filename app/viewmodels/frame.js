@@ -26,7 +26,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
         //Viewmodels
             this.activeModel = "viewmodels/card";
             this.activeView = "views/cards/simpletext.html";
-            this._root = {max_card_id:0};// needs to be updated always
+            
 
             //Frameview (Currently loaded)
             this.frameviewkey_prefix = 'frameviewkey_';
@@ -91,6 +91,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             this.bindingComplete = function (view) {
             };
             this.attached = function(view, parent){
+                self.actions.init_chrome_message_listener();// attach message listener from background
                 self.on_start();
             };
             this.afterAddWidget = function (items){
@@ -190,7 +191,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 // };
      
             this.on_start = function(){
-                //self.actions._load_root();
                 self.actions._load_frame_config();
 
                 //if(state.parsedHTMLRESULT){//temp get from somewhere else
@@ -219,8 +219,49 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             this.create_actions = function(){
                 var me = this;
                 //@
+                this.init_chrome_message_listener = function(){
+                    chrome.runtime.onMessage.addListener(
+                      function(request) {
+                        if(request.type === 'REPLYOF_LOAD_ALL_FROM_STORE_TO_FV'){
+                            var _cards = request.msg._cards;
+                            var atleastonecardexist = false;
+                            _.forIn(_cards, function(value, key) {
+                                me._add_card_from_store_to_frameview(value);
+                                atleastonecardexist = true;
+                            });
+                            if(atleastonecardexist){
+                                //me.frame_animateIn(500);
+                            }
+                            else{
+                                //me.add_new_card({title:'No cards exist', volatile:true});
+                            }
+
+                            //card positions are messed up sort it out
+                            me._update_all_card_in_frameview();
+                            self.all_cards_in_frame_loaded = true;
+
+                        }
+                        else if(request.type === 'REPLYOF_LOAD_FRAME_CONFIG_FROM_STORE'){
+                            config = request.msg.frame_config;
+                            if(config){
+                                if(config.length === self.frame_config.length){
+                                    self.frame_config = config;
+                                }
+                                else {
+                                    console.log('@im');
+                                    me.save_frame_config();
+                                }
+                            }
+                            else{
+                                me.save_frame_config();
+                            }
+                        }
+                        else if(request.type === 'other'){
+                            
+                        }
+                    });
+                };
                 this._add_new_card_from_user_to_frameview = function(x, y, width, height, CARD_TYPE, card_data){
-                    // var newid = self._root.max_card_id+1;
                     var newid = Date.now().toString(36) + '-' + (Math.random()).toString(36).split('.').pop();
                     var CARD_STATE = me._create_card_state();
                     me._update_view_model_strings(card_data);// change view model type before binding
@@ -238,9 +279,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     };
                     self.cards.push(newcard);
                     self.frameview.ids.push(newid);
-
-                    //self._root.max_card_id = newid;
-                    //me._save_root();
 
                     return newcard;
                 };
@@ -362,9 +400,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                         {
                             type:type,
                             msg:msg
-                        }, 
-                        function(response) {
-                            return response;
                         }
                     );
                 };
@@ -412,33 +447,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 this._create_non_editable_card_type = function(){
                     return me._create_card_type(['MOVABLE', 'DRAGGABLE' , 'EXPANDABLE']);
                 };
-                this._save_root= function(){
-                    var _type = 'SAVE_ROOT';
-                    chrome.runtime.sendMessage(
-                        {
-                            type:_type,
-                            msg:{_root:self._root}
-                        }, 
-                        function(response) {
-                        }
-                    );
-                };
-                this._load_root= function(){
-                    var _type = 'LOAD_ROOT';
-                    chrome.runtime.sendMessage(
-                        {
-                            type:_type
-                        }, 
-                        function(response) {
-                            var root = response.msg._root;
-                            if(root){
-                                _.forIn(root, function(value, key) {
-                                    self._root[key] = value;
-                                });
-                            }
-                        }
-                    );
-                };
+                
                 this.save_frame_config = function(){
                     var _type = 'SAVE_FRAME_CONFIG_TO_STORE';
                     var _msg = {frame_config:self.frame_config};
@@ -449,21 +458,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     chrome.runtime.sendMessage(
                         {
                             type:_type
-                        }, 
-                        function(response) {
-                            config = response.msg.frame_config;
-                            if(config){
-                                if(config.length === self.frame_config.length){
-                                    self.frame_config = config;
-                                }
-                                else {
-                                    console.log('@im');
-                                    me.save_frame_config();
-                                }
-                            }
-                            else{
-                                me.save_frame_config();
-                            }
                         }
                     );
 
@@ -563,29 +557,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                         {
                             type:_type,
                             msg:_msg
-                        }, 
-                        function(response) {
-                            //console.log(response);
-                            if(response && response.msg && response.msg._cards){
-                                var _cards = response.msg._cards;
-                                var atleastonecardexist = false;
-                                _.forIn(_cards, function(value, key) {
-                                    me._add_card_from_store_to_frameview(value);
-                                    atleastonecardexist = true;
-                                });
-                                if(atleastonecardexist){
-                                    //me.frame_animateIn(500);
-                                }
-                                else{
-                                    //me.add_new_card({title:'No cards exist', volatile:true});
-                                }
-
-                                //card positions are messed up sort it out
-                                me._update_all_card_in_frameview();
-                                self.all_cards_in_frame_loaded = true;
-                                
-                            };
-
                         }
                     );
                     
@@ -1167,8 +1138,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                         chrome.runtime.sendMessage(
                             {
                                 type:'STORE_REMOVEALL'
-                            }, 
-                            function(response) {
                             }
                         );
                     }
@@ -1177,9 +1146,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                         chrome.runtime.sendMessage(
                             {
                                 type:'STORE_GETALL'
-                            }, 
-                            function(response) {
-                                console.log('got these from store', response);
                             }
                         );
                     }

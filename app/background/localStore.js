@@ -1,11 +1,11 @@
-define(['store', 'lodash'],  function (store, _) {
+// define(['store', 'lodash'],  function (store, _) {
     var sc_localStore = function(){
         var self = this;
         this.frameview_prefix = "sc_frameview_";
         this.card_prefix = "sc_card_";
         this.card_content_prefix = "sc_content_";
         this.store = store;
-        //store.clear();
+        // store.clear();
         // console.log(store.getAll());
         //************************************
         this.getAll = function(){
@@ -122,5 +122,5 @@ define(['store', 'lodash'],  function (store, _) {
 
     };
 
-    return sc_localStore;
-});
+    // return sc_localStore;
+// });
