@@ -1,7 +1,31 @@
-define(['localstore','lodash'], function (localstore, _) {
+define(['localstore','pouchdb', 'pouchdbSearch', 'lodash'], function (localstore, PouchDB, PouchDBSearch, _) {
 
 var store = new localstore();
 var frameviewkey_prefix = 'frameviewkey_';
+
+//*****************************************
+var framepouch = null;
+var pouchsearch = PouchDB.plugin(PouchDBSearch);
+framepouch =  PouchDB('semanticcardsDB', function(err, db){
+	if(err){
+		console.log(err);
+	}
+	else{
+		framepouch = db;
+	}	
+});
+
+// pouchsearch({query:'card'}).then(function(){
+	
+// })
+// pouchsearch(
+// 	{
+// 		query:'card'
+// 	},
+// 	function(err, res){
+// 		console.log(err, res);
+// 	}
+// );
 
 //*****************************************
 
@@ -211,14 +235,45 @@ function get_frameview_full(frameview_key){
 
 function save_new_card_from_frameview_to_store(frameview_key, _card){
 	// determine by frameviewkey
-	if(!frameviewIds.hasOwnProperty(frameview_key))frameviewIds[frameview_key] = [];
+	if(!frameviewIds.hasOwnProperty(frameview_key))frameviewIds[frameview_key] = [];//array of ids of cards, which belong to this frameview
 	frameviewIds[frameview_key].push(_card.id);
 	cards[_card.id] = _card;
 	console.log("saving", _card);
 	store.save_frameview_ids(frameview_key, frameviewIds[frameview_key]);
 	store.save_card(_card);
-};
 
+
+	// framepouch.get(frameview_key, function(err, doc){
+	// 	if(err){//may be the doc never existed
+	// 		framepouch.put({_id:frameview_key, fvids:frameviewIds[frameview_key]});
+	// 	}
+	// 	else{
+	// 		console.log(doc);
+	// 		doc.fvids = frameviewIds[frameview_key];
+	// 		framepouch.put(doc);
+	// 	}
+	// });
+	
+	// framepouch.put({_id:_card.id, card:_card});
+
+	// framepouch.allDocs({include_docs: true}, function(err, res){
+	//     if(!err){
+	//     	res.rows.forEach(function(el){
+	//     		console.log('saved: ', el.doc);
+	//     	})
+	//     }
+	// });
+
+	// framepouch.search({
+	//     query: 'card',
+	//     fields: ['title', 'text'],
+	//     include_docs: true,
+	//     highlighting: true
+ //  	}, function(err, res){
+ //  		console.log('search resu', res);
+ //  	});
+
+};
 
 function update_card_from_frameview_to_store(frameview_key, _card){
 	cards[_card.id] = _card;

@@ -16,11 +16,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     // @cbc //both are same
             //this.searchbar = null; // complete searchbar element to blur and show when nessary
             $panzoom = null;
+            this.all_cards_in_frame_loaded = false;
 
             //Gridstack
             $grid_stack = null;// jquery gridstack selector
             this.grid = null;// gridstack grid object
-            this.manual_update = {manual:false, cardid:null};// store if card was updated by user or programatically by external data
             this.auto_position = false;//used in knockout data-bind for auto position of cards
 
         //Viewmodels
@@ -114,19 +114,20 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     }
                     if(self.grid){
                         $('#'+'gstack_'+self.frameID).on('change', function (event,items) {
-                            console.log('changing');
-                            _.forEach(items, function (i) {
+                            if(self.all_cards_in_frame_loaded){// if all cards are not loaded yet don't update their position as hey are overriding one another
+                                                                // start updating their position when all cards are loaded
+                                _.forEach(items, function (i) {
 
-                                var data = ko.dataFor(i.el[0]);
-                                var valueChanged = false;
-                                if(self.manual_update.manual === true && data.id === self.manual_update.cardid){
+                                    var data = ko.dataFor(i.el[0]);
+                                    var valueChanged = false;
                                     valueChanged = data.x !== i.x || data.y !== i.y  || data.width !== i.width || data.height !== i.height ;
-                                
+                                    
                                     if (data.x !== i.x) {//try using this as observable instead
                                         data.x = i.x;
                                     }
 
                                     if (data.y !== i.y) {
+                                        // console.log('from ' , data.y, '-> ', i.y);
                                         data.y = i.y;
                                     }
 
@@ -137,28 +138,14 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                                     if (data.height !== i.height) {
                                         data.height = i.height;
                                     }
-                                }
-
-                                if(self.manual_update.manual === true && data.id === self.manual_update.cardid){
+                                    
                                     if(valueChanged){
                                         self.actions._update_card_from_frameview_to_store(data);
-                                        self.manual_update.manual = false;
                                     }
-                                }
-                            });
-                        });
 
-                        $('#'+'gstack_'+self.frameID).on('dragstop', function (event, ui) {
-                            var card = ko.dataFor(ui.helper[0]);
-                            self.manual_update.manual = true;
-                            self.manual_update.cardid = card.id;
-                        });
-
-
-                        $('#'+'gstack_'+self.frameID).on('resizestop', function (event, ui) {
-                            var card = ko.dataFor(ui.helper[0]);                            
-                            self.manual_update.manual = true;
-                            self.manual_update.cardid = card.id;
+                                });
+                                
+                            }
                         });
 
                         //editing follows the same
@@ -357,6 +344,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     for (var i = allcards_.length - 1; i >= 0; i--) {
                         var c = allcards_[i];
                         me._update_card_in_frameview(c, c.x, c.y, c.width, c.height);
+                        
+
+                        //me._update_card_from_frameview_to_store(c);
                     };
                 };
                
@@ -568,6 +558,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     var _type = 'LOAD_ALL_FROM_STORE_TO_FV';
                     var _msg = {frameview_key:self.frameview.key()};
                     console.log("LOADING FRAMEVIEW_KEY", self.frameview.title());
+                    self.all_cards_in_frame_loaded = false;
                     chrome.runtime.sendMessage(
                         {
                             type:_type,
@@ -590,9 +581,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                                 }
 
                                 //card positions are messed up sort it out
-                                setTimeout(function(){
-                                    me._update_all_card_in_frameview();
-                                }, 2000);
+                                me._update_all_card_in_frameview();
+                                self.all_cards_in_frame_loaded = true;
                                 
                             };
 
@@ -611,8 +601,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 this.save_card=function(_card){// for external call for saving updated contents
                 };
                 
-                this.remove_card= function(card){
-                    me._remove_card_from_frameview_and_store(card);
+                this.remove_card= function(card, status){
+                    if(status === 'PERMANENT') me._remove_card_from_frameview_and_store(card);
+                    else if(status === 'TEMPORARY') me._remove_card_from_frameview_only(card);
                 };
                 this.add_new_card_autoposition= function(card_data){
                     var card_ = null;
@@ -858,8 +849,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             
             this.left_click_on_card = function(card, target, dt, dx, dy){
                 if($(target).hasClass('removeCardBtn')){
-                    self.actions.remove_card(card);
-                    console.log('comming');
+                    if(state.keyboard.ctrl_down){
+                        self.actions.remove_card(card, 'PERMANENT');
+                    }
+                    else{
+                        self.actions.remove_card(card, 'TEMPORARY');
+                    }
+                        
                 }// should be before or other events will fire
                 else{
                     if(card.TYPE.PARENT){
@@ -1030,7 +1026,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     }
                 }
                 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                if(!card.TYPE.VOLATILE && reason=='EDITING_FINISHED')app.trigger('editing:finished', card.id);
+                if(!card.TYPE.VOLATILE && reason=='EDITING_FINISHED'){
+                    app.trigger('editing:finished', card.id);// saves card_content in card.js
+                    self.actions._update_card_from_frameview_to_store(card);// saves card, along with card_data here
+                }
 
             };
             this.stop_editing_all = function(reason){
@@ -1249,6 +1248,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             };
             this.reload_frameview = function(){//just reload this frameview/ its being changed somewhere
                 console.log('forcefully reloading this frame, key: -', self.frameview.key());
+                self.all_cards_in_frame_loaded = false;// so that onchange event are not passed to other tabs
                 self.actions.remove_frameview_from_frame();
                 self.actions.load_all_from_store_to_frameview();
             };
@@ -1310,6 +1310,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             this.toggle_hide_frame = function(data, event){
                 var $frame_content = $(event.target).parent().parent().siblings();
                 $frame_content.slideToggle(100);
+                self.appActions.showCommandForm();
             };
             this.close_frame = function(data, event){
                 // called in UI

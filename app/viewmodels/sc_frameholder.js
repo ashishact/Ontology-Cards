@@ -548,7 +548,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                                 $commandInput.val('');
                             }
                         }//youtube
-                        else if(cmd[0].match(/\.(jpg|png|gif)$/)) {
+                        else if(cmd[0].match(/\.(jpg|png|gif|JPG)$/)) {
                             var img_url = "<img src=\""+  cmd[0] +"\" alt=\"Image\" style=\" \">";
                             console.log('image found');
                             var _card_data={
@@ -686,7 +686,12 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             },
             hideCommandForm : function(){
                 $commandForm.hide(100);
+            },
+            showCommandForm : function(){
+                $commandForm.show(100);
+                $commandInput.focus();
             }
+                
         };
 
         this.keyUpTimeOutVar = null;// used bellow
@@ -836,9 +841,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
         this.someKeyUp = function(event){
             if(event.keyCode == 27){// ESC
                 // get the current frame
-                var _cf = self.framesData()[0].frameModel;
-                if(_cf ){
-                    _cf.state_manager.rollback();
+                var _cfm = self.framesData()[0].frameModel;
+                if(_cfm ){
+                    if($commandForm.is(':visible')) _cfm.state_manager.rollback();
                 }
                 $commandForm.show(100);
                 $commandInput.focus();

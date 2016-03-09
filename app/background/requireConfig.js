@@ -7,7 +7,9 @@ requirejs.config({
         'lodash': '../lib/lodash/lodash',
         'store':'../lib/store/store.min',
         'background':'background/background',
-        'localstore':'background/localStore'
+        'localstore':'background/localStore',
+        'pouchdb':'../lib/store/pouchdb.min',
+        'pouchdbSearch':'../lib/store/pouchdb.quick-search'
     }
 });
 
@@ -25,13 +27,8 @@ requirejs.config({
 // };
 
 
-require(['background'], function(oninject){
-    var iframe = document.body.appendChild(document.createElement('iframe'));
-    iframe.src = 'http://www.factbites.com';
-    iframe.onload = function() {
-      //console.log(iframe.contentDocument.innerHTML);
-      console.log('loaded');
-    };
+require(['background'], function(background){
+   
 });
 
 
