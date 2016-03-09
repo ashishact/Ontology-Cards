@@ -320,13 +320,73 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     if(card_data.view)self.activeView = card_data.view;//@im check if view is valid
                 }
                 //@
-                this._update_card_from_store_to_frameview = function(_card){
+                this.any_data_changed = false;
+                this.update_card_content_from_bind_data = function(bind_data, card_content){
+                    _.forIn(bind_data, function(value, key){
+                        if(typeof(value) == 'function'){//ko observable
+                            if(card_content[key] !== bind_data[key]()) me.any_data_changed = true;// checking if any data has changed from the previous values
+                            card_content[key] = bind_data[key]();
+                        }
+                        else if(typeof(value) == 'object'){//could be arry or a hash
+                            if(value instanceof Array){
+                                if(card_content[key] !== bind_data[key]) me.any_data_changed = true;// checking if any data has changed from the previous values
+                                card_content[key] = bind_data[key];
+                            }
+                            else{//hash object re iterate through it, as it might have ko observable inside it
+                                me.update_card_content_from_bind_data(bind_data[key], card_content[key], any_data_changed);  
+                            }
+                        }
+                        else{//string or number
+                            if(card_content[key] !== bind_data[key] ) me.any_data_changed = true;// checking if any data has changed from the previous values
+                            card_content[key] = bind_data[key];
+                        }
+                    });
+                };
+                this.update_bind_data_from_card_content = function(bind_data, card_content){
+                    _.forIn(bind_data, function(value, key) {
+                        if(card_content[key]){//if it exists
+                            if(typeof(value) == 'function'){//knockout observable
+                                bind_data[key](card_content[key]);//knockout observable
+                            }
+                            else if(typeof(value) == 'object'){//could be arry or a hash
+                                if(value instanceof Array){
+                                    bind_data[key] = card_content[key];
+                                }
+                                else{//hash object re iterate through it
+                                    me.update_bind_data_from_card_content(bind_data[key], card_content[key]);  
+                                }
+                            }
+                            else{//string or number
+                                bind_data[key] = card_content[key];
+                            }
+                        }
+                        else{
+                            console.log("raise warning why was it not saved?");
+                        }
+                        
+                    });
+                };
+
+                this._update_card_from_store_to_frameview = function(_card){// most prob.. not be useful 
+                                                                            // as single card will not be updated from store
                     var card = me._get_card_byID(_card.id);
                     if(card){
                         me._update_card_in_frameview(card, _card.x, _card.y, _card.width, _card.height);
                     }
-                };
 
+                    // change observable from json received from database
+                    me.update_bind_data_from_card_content(card.bind_data, _card.card_data.card_content);
+                };
+                this.update_card_content_from_frameview_to_store = function(card){// saves card content
+                    //update all observable to json in card_data.card_content
+                    me.any_data_changed = false;//below line may toggle this
+                    me.update_card_content_from_bind_data(card.bind_data, card.card_data.card_content);
+                    console.log(card.bind_data);
+                    console.log(card.card_data.card_content);
+                    if(me.any_data_changed){
+                        me._update_card_from_frameview_to_store(card);
+                    }
+                };
                 this._update_card_from_frameview_to_store = function(card){
                     var _card = {
                         id:card.id,
@@ -998,8 +1058,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 }
                 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                 if(!card.TYPE.VOLATILE && reason=='EDITING_FINISHED'){
-                    app.trigger('editing:finished', card.id);// saves card_content in card.js
-                    self.actions._update_card_from_frameview_to_store(card);// saves card, along with card_data here
+                    // app.trigger('editing:finished', card.id);// saves card_content in card.js
+                    // self.actions._update_card_from_frameview_to_store(card);// saves card, along with card_data here
+                    self.actions.update_card_content_from_frameview_to_store(card);
+                    //this in turn saves card datas as well
                 }
 
             };
@@ -1233,7 +1295,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
 
 
                         if(_nav.length == 1){// Only home
-                            self.navigation.push({key:_fv_key, title: card.card_data.title});
+                            self.navigation.push({key:_fv_key, title: card.card_data.card_content.title});
                         }
                         else{
                             for (var i = _nav.length - 1; i >= 0; i--) {
@@ -1245,11 +1307,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                                         }
                                         else{
                                             self.navigation.splice(i+1, _nav.length-1);//remove all after i+1, note splice 2nd argument is how many element to remove, if that no is greater than available it removes until the end
-                                            self.navigation.push({key:_fv_key, title: card.card_data.title});
+                                            self.navigation.push({key:_fv_key, title: card.card_data.card_content.title});
                                         }
                                     }
                                     else{//I am at the last breadcrumb
-                                        self.navigation.push({key:_fv_key, title: card.card_data.title});
+                                        self.navigation.push({key:_fv_key, title: card.card_data.card_content.title});
                                     }
 
                                     break;
@@ -1263,7 +1325,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
 
 
                         //Triggering Parent
-                        self.goto_frameview(_fv_key, card.card_data.title);
+                        self.goto_frameview(_fv_key, card.card_data.card_content.title);
                     }
                 }
                 else{
