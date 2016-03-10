@@ -12,11 +12,6 @@ requirejs.config({
         'panzoom':'../lib/panzoom/jquery.panzoom.min',
         'lodash': '../lib/lodash/lodash',
         'jquery-ui':'../lib/jquery-ui/jquery-ui',
-        'jquery-ui/core':'../lib/jquery-ui/ui/core',
-        'jquery-ui/widget':'../lib/jquery-ui/ui/widget',
-        'jquery-ui/mouse':'../lib/jquery-ui/ui/mouse',
-        'jquery-ui/draggable':'../lib/jquery-ui/ui/draggable',
-        'jquery-ui/resizable':'../lib/jquery-ui/ui/resizable',
         'xml2json':'../lib/jqueryplugins/xml2json',
         'store':'../lib/store/store.min',
         'sc-localstore':'session/sc_localStore',
@@ -36,6 +31,15 @@ requirejs.config({
             deps: ['jquery'],
             exports: 'jQuery'
        }
+    },
+    map: {
+        '*': {
+            'jquery-ui/core':'jquery-ui',
+            'jquery-ui/widget':'jquery-ui',
+            'jquery-ui/mouse':'jquery-ui',
+            'jquery-ui/draggable':'jquery-ui',
+            'jquery-ui/resizable':'jquery-ui',
+        }
     }
 });
 
@@ -57,6 +61,7 @@ require(['sc-oninject'], function(oninject){
 });
 
 //Personal work
+console.warn('Remove youtube deleter');
 var _elm = document.getElementById('feed-main-what_to_watch');
 if(_elm)_elm.parentNode.removeChild(_elm);
 

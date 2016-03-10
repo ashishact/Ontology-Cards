@@ -7,7 +7,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
         this.currentFrame = null;
 
         $commandForm = null;// focus element to focus and get cmd value
-        $commandForm = null;
+        $commandInput = null;
+        $commandSuggestions = null;
+
         this.commandSuggestions = ko.observableArray([]);
 
         this.frameviews_to_update_when_tab_focused = [];//fv_key1, fv_key2, //when this tab is focused these frameview should be updated, because they have changed somewhere
@@ -358,12 +360,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
 
     //Search
         this.focus_on_command_input = function(event){// !!! event can be null here
-            if($commandForm && $commandInput){
+            if($commandForm && $commandInput && $commandSuggestions){
 
                 if(event && !state.keyboard.ctrl_down){
                     var _schar = String.fromCharCode(event.which);
                     if(_schar.match(/^[a-zA-Z0-9 ]+/)){
                         $commandForm.show(100);
+                        // $commandSuggestions.show();
                         $commandInput.val(_schar.toLowerCase());
                         $commandInput.focus();
                     }
@@ -374,6 +377,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 console.log('@im - how can $commandForm & $commandInput not exist');
                 $commandForm = $('#commandForm');
                 $commandInput = $('#commandInput');
+                $commandSuggestions = $('commandSuggestions');
             }
         };
         this.searchSubmit = function(from_el){
@@ -543,6 +547,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         });
                         // console.log({config:currentFrame.frame_config, config_map:currentFrame.frame_config_map});
                     }
+                    else if("exit" === cmd[0].toLowerCase()){
+                        self.removeCurrentFrame();
+                    }
                     else if("image" === cmd[0].toLowerCase()){
                         if(cmd.length>1){
                             var img_url = "<img src=\""+  cmd[1] +"\" alt=\"Image\" style=\" \">";
@@ -608,14 +615,24 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 }
             }// end if(isCmd)
             else{// Search
-                var searchStr = cmd.replace(/\s+/g, " ");
-                console.log("Search for", searchStr);
+                var query = cmd.replace(/\s+/g, " ");
+                console.log("Search for", query);
+                var type = 'SEARCH_STORE';
+                var _msg = {query:query, title_only:true, highlighting:true};
+                self.send_msg_to_background(type, _msg);
             }
 
             // as enter was pressed, remove all characters
             $commandInput.val('');
         };
-
+        this.send_msg_to_background= function(type, msg){
+            chrome.runtime.sendMessage(
+                {
+                    type:type,
+                    msg:msg
+                }
+            );
+        };
         this.activate = function(){
             self.createNewBindings();
             if(!self.framesData().length){// add only if no ther frame exists
@@ -627,14 +644,14 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
         this.attached = function(){
             chrome.runtime.onMessage.addListener(
               function(request, sender, sendResponse) {
-                if(request._type == 'FRAMEVIEW_HAS_CHANGED'){
+                if(request.type == 'FRAMEVIEW_HAS_CHANGED'){
                     var fv_key = request.frameview_key;
                     var key_list = self.frameviews_to_update_when_tab_focused;
                     if($.inArray(fv_key, key_list)<0){//fv_key doesn't exists
                         key_list.push(fv_key);
                     }
                 }
-                else if(request._type == 'FRAMEVIEW_WAS_REMOVED'){
+                else if(request.type == 'FRAMEVIEW_WAS_REMOVED'){
                     var fs_data = self.framesData();
                     var removed_fv_key = request.frameview_key;
                     for (var i = fs_data.length - 1; i >= 0; i--) {// go through each frame
@@ -647,9 +664,18 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
 
                     }
                 }
-                else if(request._type == 'UPDATE_CHANGED_FRAMES_NOW'){// this tab just got focused updated the changes in frames if any
+                else if(request.type == 'UPDATE_CHANGED_FRAMES_NOW'){// this tab just got focused updated the changes in frames if any
                     self.update_changed_frames_now();
                 }
+
+
+                //*****************************************************
+                else if(request.type == 'REPLYOF_SEARCH_STORE'){
+                    request.msg.search_results.forEach(function(obj){
+                        console.log('found:', obj);
+                    });
+                }
+                //*****************************************************
             });
 
             $commandForm = $('#commandForm');
@@ -664,6 +690,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     $commandInput = $('#commandInput');
                 },1000);
             }
+            $commandSuggestions = $('#commandSuggestions');
+            if(!$commandSuggestions){
+                setTimeout(function(){
+                    $commandSuggestions = $('#commandSuggestions');
+                },1000);
+            }
+
             // hide whenever out of focus
             // $commandInput.blur(function(){
             //     $commandForm.hide(100);
@@ -723,7 +756,18 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 self.framesData.remove(data);
             })
         };
-
+        this.removeCurrentFrame = function(){
+            if(self.framesData().length){
+                    console.log('2');
+                var fdata = self.framesData()[0];
+                var $frame = $('#frame_root_'+ fdata.frameID);
+                $frame.slideToggle(100, function(){
+                    fdata.frameModel.actions.remove_frameview_from_frame();//@? do you have to do this
+                    self.framesData.remove(fdata);
+                });
+                
+            }
+        }
         // functions to be used in frame.js
         this.appActions = {
             loadFrameViewInNewFrame : function(frameview_key, card){
@@ -734,6 +778,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             },
             showCommandForm : function(){
                 $commandForm.show(100);
+                // $commandSuggestions.show();
                 $commandInput.focus();
             },
             
@@ -741,7 +786,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
         };
 
         this.keyUpTimeOutVar = null;// used bellow
-        minTimeIntervalForQuery = 250; // ms
+        minTimeIntervalForQuery = 500; // ms
         this.commandSuggest = function(event){
 
             var str = $commandInput.val();
@@ -873,6 +918,39 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                                 
                             });
                         }
+                        else if(str.indexOf('dbl')===0 ){
+                            query = str.substr(str.indexOf(' ') ,str.length-1);
+                            
+                            if(query.length > 2){
+                                var prefix_url = 'http://lookup.dbpedia.org/api/search/PrefixSearch';
+                                var prefix_data = {QueryString:query};
+                                var search_url = 'http://lookup.dbpedia.org/api/search/KeywordSearch';
+                                var search_data = {QueryClass:'place', QueryString:query};
+
+                                if(str.substr(3,4)==='p')prefix_data.QueryClass = 'place';
+                                if(str.substr(3,4)==='P')prefix_data.QueryClass = 'person';
+                                if(str.substr(3,4)==='S')prefix_data.QueryClass = 'scientist';
+                                // var _url = 'http://lookup.dbpedia.org/api/search/KeywordSearch?QueryClass=place&QueryString='+ query;
+                                $.getJSON(prefix_url, prefix_data, function(json){
+                                    console.log(json);
+                                    if(json.results && json.results.length){
+                                        self.commandSuggestions.removeAll();//clear suggestions
+                                        var bind_data = {};
+                                        $.each(json.results, function(i, item){
+                                            bind_data.title = item.label;
+                                            bind_data.desc = item.description;
+                                            if(bind_data.title)self.commandSuggestions.unshift(bind_data);
+                                            
+                                        });
+                                    }
+                                    
+                                });
+                            }
+                                
+
+                            
+                        }
+                        
                         
                     }
                 }, minTimeIntervalForQuery);
@@ -887,12 +965,15 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
         this.someKeyUp = function(event){
             if(event.keyCode == 27){// ESC
                 // get the current frame
-                var _cfm = self.framesData()[0].frameModel;
-                if(_cfm ){
-                    if($commandForm.is(':visible')) _cfm.state_manager.rollback();
-                }
-                $commandForm.show(100);
+
+                $commandForm.toggle(100);
                 $commandInput.focus();
+
+                // var _cfm = self.framesData()[0].frameModel;
+                // if(_cfm ){
+                //     if($commandForm.is(':visible')) _cfm.state_manager.rollback();
+                // }
+
             }
                     
 

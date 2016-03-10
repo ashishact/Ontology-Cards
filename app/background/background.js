@@ -68,6 +68,12 @@ chrome.runtime.onMessage.addListener(
 			save_frame_config_to_store(request.msg.frame_config, tabIdOfSender);
 		}
 
+		//*********************************************************
+		else if(request.type == 'SEARCH_STORE'){
+			search_store(request.msg, tabIdOfSender);
+		}
+		//*********************************************************
+
 	
 
 });
@@ -75,7 +81,7 @@ chrome.runtime.onMessage.addListener(
 chrome.tabs.onActivated.addListener(
 	function(activeInfo){
 		//console.log(activeInfo);
-		sendMSG_to_tab_byId({_type:'UPDATE_CHANGED_FRAMES_NOW'}, activeInfo.tabId);
+		sendMSG_to_tab_byId({type:'UPDATE_CHANGED_FRAMES_NOW'}, activeInfo.tabId);
 	}
 );
 function sendMSG_to_tab(_msg, tab){
@@ -105,12 +111,12 @@ function sendMSGToAll(_msg, except){
 
 
 function frameview_has_changed(frameview_key, tab){
-	var msg = {_type:'FRAMEVIEW_HAS_CHANGED', frameview_key:frameview_key};
+	var msg = {type:'FRAMEVIEW_HAS_CHANGED', frameview_key:frameview_key};
 	sendMSGToAll(msg, tab);
 }
 
 function frameview_was_removed(frameview_key, tab){
-	var msg = {_type:'FRAMEVIEW_WAS_REMOVED', frameview_key:frameview_key};
+	var msg = {type:'FRAMEVIEW_WAS_REMOVED', frameview_key:frameview_key};
 	sendMSGToAll(msg, tab);
 }
 
@@ -122,6 +128,9 @@ var chromeReply = {
 	},
 	load_frame_config_from_store: function(frame_config, tab_id){
 		sendMSG_to_tab_byId({type:'REPLYOF_LOAD_FRAME_CONFIG_FROM_STORE', msg:{frame_config:frame_config}}, tab_id);
+	},
+	search_store: function(search_results, tab_id){
+		sendMSG_to_tab_byId({type:'REPLYOF_SEARCH_STORE', msg:{search_results: search_results}}, tab_id);
 	}
 }
 //**********************************************
@@ -158,7 +167,6 @@ function save_frame_config_to_store(frame_config, tab_id){
 
 function get_frameview_full(frameview_key, tab_id){
 	//PouchDB
-	console.log(frameview_key);
 
 	framepouch.get(frameview_key, function(err, doc){
 		if(err){//may be the doc never existed
@@ -183,7 +191,6 @@ function get_frameview_full(frameview_key, tab_id){
 				    		}
 				    			
 				    	});
-				    	console.log(_cs);
 						chromeReply.get_frameview_full(_cs, tab_id);
 				    }
 				});
@@ -232,26 +239,7 @@ function save_new_card_from_frameview_to_store(frameview_key, _card, tab_id){
 	});
 
 
-	// framepouch.search(
-	// 	{
-	//     	query: 'secret',
-	//     	fields: ['card.card_data.title', 'card.card_data.text'],
-	// 	    include_docs: true,
-	// 	    highlighting: true
-	//   	},
-	//   	function (err, res) {
-	//   		if(err){
-	//   			console.log(err);
-	//   		}
-	//   		else{
-	//   			res.rows.forEach(function(obj, i){
-	//   				console.log('search result->', obj.doc, '\nhighlighting +>', obj.highlighting);
-	//   			})
-
-	//   		}
-	  			
-	// 	}
-	// );
+	
 
 	//Search highlighting & with doc
 		// framepouch.search(
@@ -276,6 +264,43 @@ function save_new_card_from_frameview_to_store(frameview_key, _card, tab_id){
 		// );
 
 };
+
+function search_store(msg, tab_id){
+	if(!msg.query)return;
+	
+	var _field = ['card.card_data.card_content.title', 'card.card_data.card_content.text'];
+	var _highlighting = false;
+	var _include_docs = false;
+
+	if(msg.title_only)_fields = ['card.card_data.card_content.title'];
+	if(msg.highlighting) _highlighting = true;
+	if(msg.include_docs) _include_docs = true;
+	
+	framepouch.search(
+		{
+	    	query: msg.query,
+	    	fields: _fields,
+		    highlighting: _highlighting,
+		    include_docs: _include_docs
+	  	},
+	  	function (err, res) {
+	  		if(err){
+	  			console.log(err);
+	  		}
+	  		else{
+	  			var search_results = [];
+	  			res.rows.forEach(function(obj, i){
+	  				search_results.push({id:obj.id});
+	  				console.log(obj.id);
+	  				if(obj.doc)console.log('search result->', obj.doc);
+	  				if(obj.highlighting)console.log('obj.highlighting=>', obj.highlighting);
+	  			})
+	  			chromeReply.search_store(search_results, tab_id);
+	  		}
+	  			
+		}
+	);
+}
 
 function update_card_from_frameview_to_store(_card, tab_id){
 
