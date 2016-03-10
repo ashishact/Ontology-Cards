@@ -16,6 +16,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                                                         // it has frameview_key collection
         this.cssColorNames = ['darkseagreen','burlywood',   'bisque', 'cadetblue', 'aquamarine','coral', 'chocolate', 'darkcyan', 'salmon', 'darkslategray', 'dimgrey', 'hotpink', 'indianred', 'khaki', 'lavenderblush', 'lightblue', 'lightcoral', 'lightgreen', 'lightpink', 'lightsalmon', 'lightseagreen', 'mediumaquamarine', 'mediumvioletred', 'palegoldenrod', 'palegreen', 'sandybrown', 'tomato' ];
         this.currentColorId = 0;
+
+
+
+
+        this.previousCardPosSize = {x:-2, y:0, w:2, h:2};
         /*['aliceblue',
                             'antiquewhite',
                             'aqua',
@@ -410,12 +415,19 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                                     for (var i = cmd.length - 1; i >= 3; i--) {
                                         _title = _title + ' ' + cmd[i];
                                     };
+                                    var d_size = {w:2, h:2};//size of this card
+                                    var d_pos = {x:(self.previousCardPosSize.x+self.previousCardPosSize.w)%12, y:0};//to be used next time when a card is being used
+                                                    //12 is horizontal unit size of the grid
+                                                    // if that is changed it also has to be changed
+                                    self.updatedPreviousCardPosSize(d_pos.x, d_pos.y, d_size.w, d_size.h);//save the current setting to be used for later
                                     var _card_content = {
                                         title:_title,
                                         text:self.getRandomText()
                                     }
                                     var _card_data = {
                                         parent:true,
+                                        default_size:d_size,
+                                        default_pos: d_pos,
                                         card_content: _card_content,
                                         model:currentFrame.activeModel,
                                         view:currentFrame.activeView,
@@ -424,12 +436,20 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                                     card_ = currentFrame.actions.add_new_card(_card_data);
                                 }
                                 else{// just parent
+                                    var d_size = {w:2, h:2};//size of this card
+                                    var d_pos = {x:(self.previousCardPosSize.x+self.previousCardPosSize.w)%12, y:0};//to be used next time when a card is being used
+                                                    //12 is horizontal unit size of the grid
+                                                    // if that is changed it also has to be changed
+                                    self.updatedPreviousCardPosSize(d_pos.x, d_pos.y, d_size.w, d_size.h);//save the current setting to be used for later
+
                                     var _card_content = {
                                         title:'Parent',
                                         text:self.getRandomText()
                                     }
                                     var _card_data = {
                                         parent:true,
+                                        default_size:d_size,
+                                        default_pos: d_pos,
                                         card_content: _card_content,
                                         model:currentFrame.activeModel,
                                         view:currentFrame.activeView,
@@ -454,11 +474,19 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                                     _title = _title + ' ' + cmd[i];
                                 };
 
+                                var d_size = {w:2, h:2};//size of this card
+                                var d_pos = {x:(self.previousCardPosSize.x+self.previousCardPosSize.w)%12, y:0};//to be used next time when a card is being used
+                                                //12 is horizontal unit size of the grid
+                                                // if that is changed it also has to be changed
+                                self.updatedPreviousCardPosSize(d_pos.x, d_pos.y, d_size.w, d_size.h);//save the current setting to be used for later
+
                                 var _card_content = {
                                     title:_title,
                                     text:self.getRandomText()
                                 }
                                 var _card_data = {
+                                    default_size:d_size,
+                                    default_pos: d_pos,
                                     card_content: _card_content,
                                     model:currentFrame.activeModel,
                                     view:currentFrame.activeView,
@@ -468,11 +496,20 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                             }
                         }
                         else{
+                            var d_size = {w:2, h:2};//size of this card
+                            var d_pos = {x:(self.previousCardPosSize.x+self.previousCardPosSize.w)%12, y:0};//to be used next time when a card is being used
+                                                                                                //12 is horizontal unit size of the grid
+                                                                                                // if that is changed it also has to be changed
+                            console.log(self.previousCardPosSize.x+self.previousCardPosSize.w);
+                            self.updatedPreviousCardPosSize(d_pos.x, d_pos.y, d_size.w, d_size.h);//save the current setting to be used for later
+
                             var _card_content = {
                                 title:'Card',
                                 text:self.getRandomText()
                             }
                             var _card_data = {
+                                default_size:d_size,
+                                default_pos: d_pos,
                                 card_content: _card_content,
                                 model:currentFrame.activeModel,
                                 view:currentFrame.activeView,
@@ -555,16 +592,22 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                             var img_url = "<img src=\""+  cmd[1] +"\" alt=\"Image\" style=\" \">";
                             console.log('image found');
 
+                            var d_size = {w:3, h:3};//size of this card
+                            var d_pos = {x:(self.previousCardPosSize.x+self.previousCardPosSize.w)%12, y:0};//to be used next time when a card is being used
+                                            //12 is horizontal unit size of the grid
+                                            // if that is changed it also has to be changed
+                            self.updatedPreviousCardPosSize(d_pos.x, d_pos.y, d_size.w, d_size.h);//save the current setting to be used for later
                             var _card_content = {
                                 title:'Untitled',
                                 text:img_url,
                             }
                             var _card_data = {
+                                default_size:d_size,
+                                default_pos: d_pos,
                                 card_content: _card_content,
                                 model:currentFrame.activeModel,
                                 view:currentFrame.activeView,
                                 sctype:card_props.TYPE.SIMPLE_TEXT,
-                                default_size:{w:3, h:3}
                             }
                             card_ = currentFrame.actions.add_new_card(_card_data);
                             $commandInput.val('');
@@ -576,17 +619,24 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                             if(lnk.length>1){
                                 var embed_url = "<iframe width=\"680\" height=\"380\" src=\"https://www.youtube.com/embed/"+ lnk[1].replace('&', '?') +"\" frameborder=\"0\" allowfullscreen></iframe>";
                                 
+                                var d_size = {w:6, h:6};//size of this card
+                                var d_pos = {x:(self.previousCardPosSize.x+self.previousCardPosSize.w)%12, y:0};//to be used next time when a card is being used
+                                                //12 is horizontal unit size of the grid
+                                                // if that is changed it also has to be changed
+                                self.updatedPreviousCardPosSize(d_pos.x, d_pos.y, d_size.w, d_size.h);//save the current setting to be used for later
+
                                 var _card_content = {
                                     title:'Untitled',
                                     text:embed_url,
                                 }
                                 var _card_data = {
+                                    default_size:d_size,
+                                    default_pos: d_pos,
                                     card_content: _card_content,
                                     model:currentFrame.activeModel,
                                     view:currentFrame.activeView,
                                     sctype:card_props.TYPE.SIMPLE_TEXT,
                                     non_resizable: true,
-                                    default_size:{w:6, h:6}
                                 }
 
                                 card_ = currentFrame.actions.add_new_card(_card_data);
@@ -597,16 +647,23 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                             var img_url = "<img src=\""+  cmd[0] +"\" alt=\"Image\" style=\" \">";
                             console.log('image found');
                             
+                            var d_size = {w:3, h:3};//size of this card
+                            var d_pos = {x:(self.previousCardPosSize.x+self.previousCardPosSize.w)%12, y:0};//to be used next time when a card is being used
+                                            //12 is horizontal unit size of the grid
+                                            // if that is changed it also has to be changed
+                            self.updatedPreviousCardPosSize(d_pos.x, d_pos.y, d_size.w, d_size.h);//save the current setting to be used for later
+
                             var _card_content = {
                                 title:'Untitled',
                                 text:img_url,
                             }
                             var _card_data = {
+                                default_size:d_size,
+                                default_pos: d_pos,
                                 card_content: _card_content,
                                 model:currentFrame.activeModel,
                                 view:currentFrame.activeView,
                                 sctype:card_props.TYPE.SIMPLE_TEXT,
-                                default_size:{w:3, h:3}
                             }
                             card_ = currentFrame.actions.add_new_card(_card_data);
                             $commandInput.val('');
@@ -624,6 +681,12 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
 
             // as enter was pressed, remove all characters
             $commandInput.val('');
+        };
+        this.updatedPreviousCardPosSize = function(x, y, w, h){
+            self.previousCardPosSize.x = x;
+            self.previousCardPosSize.y = y;
+            self.previousCardPosSize.w = w;
+            self.previousCardPosSize.h = h;
         };
         this.send_msg_to_background= function(type, msg){
             chrome.runtime.sendMessage(

@@ -639,8 +639,12 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 this.add_new_card_autoposition= function(card_data){
                     var card_ = null;
                     var size = self.get_fc_value('card_default_size');
+                    var pos = {x:0, y:0};
                     if(card_data.default_size){
                         size = card_data.default_size;
+                    }
+                    if(card_data.default_pos){
+                        pos = card_data.default_pos;
                     }
                     var CARD_TYPE = null;
                     if(card_data.parent){
@@ -660,7 +664,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                         if(card_data.settings){// settings is a volatile Card
                         }
                     }
-                    card_ = me._add_new_card_from_user_to_frameview(0,0,size.w,size.h, CARD_TYPE, card_data);
+                    card_ = me._add_new_card_from_user_to_frameview(pos.x, pos.y, size.w,size.h, CARD_TYPE, card_data);
                     if(!card_.TYPE.VOLATILE) me._save_new_card_from_frameview_to_store(card_);
 
                     //After card created
