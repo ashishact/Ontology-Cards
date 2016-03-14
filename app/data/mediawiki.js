@@ -46,6 +46,7 @@ define(['jquery','qwest'], function ($, qwest) {
 
             var url = self.wp+self.aq+self.t+ item +self.p+self.r+self.f;
             //url = "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=Stack%20Overflow";
+            //https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=Isaac_Newton
             console.log("URL", url);
             qwest.get(url,{})
             .then(function(xhr, response) {

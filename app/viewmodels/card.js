@@ -1,4 +1,6 @@
-define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki', 'qwest'], function (app, ko, $, _, card_props, mediawiki, qwest) {
+//Todos
+//remove event handler on detach
+define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki', 'qwest', 'state'], function (app, ko, $, _, card_props, mediawiki, qwest, state) {
 
     var card = function(){
         var self=this;
@@ -6,9 +8,12 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
         this.id = null;
         this.sctype = 0;
         this.bind_data = {};
+        this.isParent = false;
 
 
         this.ifcardsctype = null;
+
+        this.optionalKeyHandler = null;
         
         this.create_array_from_json = function(_prefix, _array, _obj){
             if(typeof(_prefix) != 'string')_prefix='';
@@ -52,6 +57,28 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
                     return{
                         title:ko.observable(data.title),
                         text:ko.observable(data.text)
+                    }
+                }
+            }
+            // LEAF_EDITOR
+            else if(sctype === card_props.TYPE.LEAF_EDITOR){
+                if(data.title && data.text){
+                    return{
+                        title:ko.observable(data.title),
+                        text:ko.observable(data.text)
+                    }
+                }
+            }
+
+            else if(sctype === card_props.TYPE.LIST){
+                if(data.title && data.list){
+                    var _list = [];
+                    for (var i = data.list.length - 1; i >= 0; i--) {
+                        _list.unshift({text: ko.observable(data.list[i].text) , on:ko.observable(data.list[i].on)});
+                    }
+                    return{
+                        title:ko.observable(data.title),
+                        list:ko.observableArray(_list)
                     }
                 }
             }
@@ -161,6 +188,7 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
             
             self.id = __card.id;
             self.sctype = __card.card_data.sctype;
+            self.isParent = __card.TYPE.PARENT;
 
             if(self.sctype == card_props.TYPE.SUMMARY){
                 if(__card.card_data.parsedHTMLRESULT){
@@ -195,6 +223,25 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
                 }
             }
 
+            else if(self.sctype == card_props.TYPE.LEAF_EDITOR){
+                var _t = __card.card_data.card_content.title;
+                var _tx = __card.card_data.card_content.text;
+                if(_t && _tx){
+                    self.bind_data = self.create_card_type(self.sctype, {title:_t, text:_tx});
+                    
+                }
+
+            }
+
+            else if(self.sctype == card_props.TYPE.LIST){
+                var _t = __card.card_data.card_content.title;
+                var _l = __card.card_data.card_content.list;
+                if(_t && _l && _l.hasOwnProperty('length')){
+                    self.bind_data = self.create_card_type(self.sctype, {title:_t, list:_l});
+                    
+                }
+            }
+
             //If Settings
             if(__card.card_data.settings){
                 console.log(__card);
@@ -216,6 +263,17 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
         
         this.attached =  function(view, parent){
         };
+       
+
+        this.clickedOnElement = function(data, event){
+            if(self.sctype == card_props.TYPE.LIST){
+                if(data.on())data.on(false);
+                else data.on(true);
+                app.trigger('save:do_not_compare', self.id);
+            }
+            return true;
+        };
+
 
     };
 

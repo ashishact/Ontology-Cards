@@ -16,6 +16,7 @@ define([], function(){
 			FEED:10,
 			SEETINGS:11,
 			ARTICLE_LIST:12,
+			LEAF_EDITOR:13,
 		}
 	}
 

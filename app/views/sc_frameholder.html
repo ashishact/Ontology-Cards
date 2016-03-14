@@ -1,5 +1,5 @@
 <div spellcheck=false style="width:100%; height:100%; overflow-y: auto;" id="SC-FRAMEHOLDER" data-bind="foreach: {data: framesData, afterRender: afterFrameAdded}">
-    <div class="SC-APPLICATION" data-bind="compose:{model:$data.viewModel, activationData:$data}, style:{ backgroundColor: $data.bgColor}, click:$root.frameClicked"></div>
+    <div class="SC-APPLICATION" data-bind="compose:{model:$data.viewModel, activationData:$data}, style:{ backgroundColor: $data.bgColor}, click:$root.frameClicked, attr:{id:'frame_root_'+$data.frameID}"></div>
 
 </div>
 

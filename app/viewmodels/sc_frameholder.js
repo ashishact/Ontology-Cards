@@ -201,7 +201,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         "Red meat is not bad for you. Fuzzy green meat is bad for you.",
                         "The early bird may get the worm, but the second mouse gets the cheese.",
                         "Isn't it scary that doctors call what they do \"practice\"?",
-                        "The problem with sex in the movies is, that the popcorn usually spills.",
                         "If I want your opinion, I'll ask you to fill out the necessary forms.",
                         "Living on Earth is expensive, but it does include a free trip around the sun.",
                         "Despite the cost of living, have you noticed how popular it remains?",
@@ -228,30 +227,38 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         "I am an agent of Satan, but my duties are largely ceremonial.",
                         "You have the capacity to learn from your mistakes, and you will learn a lot today.",
                         "Failure is not an option. It's bundled with your software.",
-                        "I think sex is better than logic, but I can't prove it.",
                         "I drive way too fast to worry about cholesterol.",
                         "When everything's coming your way, you're in the wrong lane and going the wrong way.",
                         "If at first you don't succeed, redefine success.",
                         "If at first you don't succeed, destroy all evidence that you tried."];
         this.getRandomText = function(){
-            return self.oneLiners[Math.floor(self.oneLiners.length*Math.random())];
+            // return self.oneLiners[Math.floor(self.oneLiners.length*Math.random())];
+            return "\"\"\"\"\"\"";
         };
         this.afterFrameAdded = function(items, frameData){
             //self.currentFrame = frameData.frameModel;
             //console.log(self.currentFrame);
         };
         this.addFrame = function(frameData){
+
             //assign an id to each frame to be able to refer to it later on , and create uing DOM id in html
             frameData.frameID = self.framesData().length; // length of the observable , 0 for 1st
             frameData.appActions = self.appActions;
             frameData.viewModel = "viewmodels/frame";
             frameData.frameModel = null;
             frameData.bgColor = self.cssColorNames[self.currentColorId]; self.currentColorId++; if(self.currentColorId >= self.cssColorNames.length)self.currentColorId=0;
+            self.framesData.unshift(frameData);                
 
+            self.adjustCurrentFrame();
 
-
-            self.framesData.unshift(frameData);
-            //console.log("frame added");
+            var _fs_data = self.framesData();
+            for (var i = _fs_data.length - 1; i > 2; i--) {// don't cound 0 this one was added just now
+                                                // let them have same one at top
+                if(_fs_data[i].frameModel.frameview.key() === frameData.frameview_key){// don't compare with 0
+                    // this frame already exist
+                    self.removeFrameByObject(_fs_data[i]);
+                }
+            };
         };
 
         this.createNewBindings = function(){
@@ -329,7 +336,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     var value = ko.utils.unwrapObservable(valueAccessor()) || "";
                     if(value == '<br>') value = '';
                     element.innerHTML = value;
-                    // if($(element).childNodes)
                     sanitizeInnerHTML(element);
                 }
             };
@@ -399,7 +405,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
 
             var isCmd = true;// wheather its a command or search query
             if(!$commandInput) $commandInput = $('#commandInput');
-            var cmd = $commandInput.val();
+            var _fullstr = $commandInput.val();
+            var cmd = _fullstr;
             // commandline.value = '';
             if(cmd[0]==' ')isCmd = false;
 
@@ -416,10 +423,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                                         _title = _title + ' ' + cmd[i];
                                     };
                                     var d_size = {w:2, h:2};//size of this card
-                                    var d_pos = {x:(self.previousCardPosSize.x+self.previousCardPosSize.w)%12, y:0};//to be used next time when a card is being used
-                                                    //12 is horizontal unit size of the grid
-                                                    // if that is changed it also has to be changed
-                                    self.updatedPreviousCardPosSize(d_pos.x, d_pos.y, d_size.w, d_size.h);//save the current setting to be used for later
+                                    var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
+
                                     var _card_content = {
                                         title:_title,
                                         text:self.getRandomText()
@@ -429,18 +434,16 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                                         default_size:d_size,
                                         default_pos: d_pos,
                                         card_content: _card_content,
-                                        model:currentFrame.activeModel,
-                                        view:currentFrame.activeView,
+                                        model:currentFrame.defaultModel,
+                                        view:currentFrame.defaultView,
                                         sctype:card_props.TYPE.SIMPLE_TEXT 
                                     }
                                     card_ = currentFrame.actions.add_new_card(_card_data);
+                                    state.actions.select_this_card(state, card_);
                                 }
                                 else{// just parent
                                     var d_size = {w:2, h:2};//size of this card
-                                    var d_pos = {x:(self.previousCardPosSize.x+self.previousCardPosSize.w)%12, y:0};//to be used next time when a card is being used
-                                                    //12 is horizontal unit size of the grid
-                                                    // if that is changed it also has to be changed
-                                    self.updatedPreviousCardPosSize(d_pos.x, d_pos.y, d_size.w, d_size.h);//save the current setting to be used for later
+                                    var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
 
                                     var _card_content = {
                                         title:'Parent',
@@ -451,11 +454,12 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                                         default_size:d_size,
                                         default_pos: d_pos,
                                         card_content: _card_content,
-                                        model:currentFrame.activeModel,
-                                        view:currentFrame.activeView,
+                                        model:currentFrame.defaultModel,
+                                        view:currentFrame.defaultView,
                                         sctype:card_props.TYPE.SIMPLE_TEXT 
                                     }
                                     card_ = currentFrame.actions.add_new_card(_card_data);
+                                    state.actions.select_this_card(state, card_);
                                 }
                             }
                             else if('frame'.indexOf(cmd[1].toLowerCase()) === 0){//new frame
@@ -468,6 +472,90 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                                     self.addFrame({frameview_key:'home', title:'Home', bgColor:'darkcyan'});
                                 }
                             }
+                            else if(':list' === cmd[1].toLowerCase()){// a list
+                                if(cmd.length > 2){
+                                    var _title = cmd[2];
+                                    if(cmd.length > 3){
+                                        for (var i = cmd.length - 1; i >= 3; i--) {
+                                            _title = _title + ' ' + cmd[i];
+                                        };
+                                    }
+
+                                    var d_size = {w:2, h:3};//size of this card
+                                    var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
+                                    
+                                    // var l1 = {text:'ashish', on:true};
+                                    // var l2 = {text:'Sir Issac Newton', on:true};
+                                    // var l3 = {text:'Someone else', on:false};
+                                    var _card_content = {
+                                        title:_title,
+                                        list:[],
+                                    }
+                                    var _card_data = {
+                                        default_size:d_size,
+                                        default_pos: d_pos,
+                                        card_content: _card_content,
+                                        model:currentFrame.defaultModel,
+                                        view:"views/cards/todo.html",
+                                        non_editable:true,
+                                        sctype:card_props.TYPE.LIST
+                                    }
+                                    card_ = currentFrame.actions.add_new_card(_card_data);
+                                    state.actions.select_this_card(state, card_);
+
+                                }
+                                else{// generate everything
+
+                                }
+                            }
+                            else if(':li' === cmd[1].toLowerCase()){// a list item
+                                if(cmd.length >2  && state.isany_card_selcted){
+                                    var _item = _fullstr.split(':li');
+                                    if(_item.length > 1){
+                                        _item = _item[1];
+                                        console.log(_item);
+                                        var _card = state.now_selected_cards[0];
+                                        if(_card.card_data.sctype === card_props.TYPE.LIST){
+                                            // its a list
+                                            _card.bind_data.list.unshift({text:ko.observable(_item), on:ko.observable(false)});
+                                            self.currentFrame.frameModel.actions.save_card_content(_card, true);
+                                        }
+                                    }
+                                }
+
+                            }
+                            else if(':leaf' === cmd[1].toLowerCase()){// a leaf_editor
+                                
+                                var _title = 'Untitled';
+                                if(cmd.length > 2){
+                                    _title = '';
+                                    for (var i = cmd.length - 1; i >= 2; i--) {
+                                        _title = _title + ' ' + cmd[i];
+                                    };
+                                }
+
+                                var d_size = {w:3, h:4};//size of this card
+                                var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
+                                
+                                // var l1 = {text:'ashish', on:true};
+                                // var l2 = {text:'Sir Issac Newton', on:true};
+                                // var l3 = {text:'Someone else', on:false};
+                                var _card_content = {
+                                    title:_title,
+                                    text:'Start writing hare',
+                                }
+                                var _card_data = {
+                                    default_size:d_size,
+                                    default_pos: d_pos,
+                                    card_content: _card_content,
+                                    model:currentFrame.defaultModel,
+                                    view:"views/cards/leafeditor.html",
+                                    sctype:card_props.TYPE.LEAF_EDITOR,
+                                }
+                                card_ = currentFrame.actions.add_new_card(_card_data);
+                                state.actions.select_this_card(state, card_);
+
+                            }
                             else{//card with given title
                                 var _title = cmd[1];
                                 for (var i = cmd.length - 1; i >= 2; i--) {
@@ -475,10 +563,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                                 };
 
                                 var d_size = {w:2, h:2};//size of this card
-                                var d_pos = {x:(self.previousCardPosSize.x+self.previousCardPosSize.w)%12, y:0};//to be used next time when a card is being used
-                                                //12 is horizontal unit size of the grid
-                                                // if that is changed it also has to be changed
-                                self.updatedPreviousCardPosSize(d_pos.x, d_pos.y, d_size.w, d_size.h);//save the current setting to be used for later
+                                var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
 
                                 var _card_content = {
                                     title:_title,
@@ -488,20 +573,17 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                                     default_size:d_size,
                                     default_pos: d_pos,
                                     card_content: _card_content,
-                                    model:currentFrame.activeModel,
-                                    view:currentFrame.activeView,
+                                    model:currentFrame.defaultModel,
+                                    view:currentFrame.defaultView,
                                     sctype:card_props.TYPE.SIMPLE_TEXT 
                                 }
                                 card_ = currentFrame.actions.add_new_card(_card_data);
+                                state.actions.select_this_card(state, card_);
                             }
                         }
                         else{
                             var d_size = {w:2, h:2};//size of this card
-                            var d_pos = {x:(self.previousCardPosSize.x+self.previousCardPosSize.w)%12, y:0};//to be used next time when a card is being used
-                                                                                                //12 is horizontal unit size of the grid
-                                                                                                // if that is changed it also has to be changed
-                            console.log(self.previousCardPosSize.x+self.previousCardPosSize.w);
-                            self.updatedPreviousCardPosSize(d_pos.x, d_pos.y, d_size.w, d_size.h);//save the current setting to be used for later
+                            var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
 
                             var _card_content = {
                                 title:'Card',
@@ -511,11 +593,12 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                                 default_size:d_size,
                                 default_pos: d_pos,
                                 card_content: _card_content,
-                                model:currentFrame.activeModel,
-                                view:currentFrame.activeView,
+                                model:currentFrame.defaultModel,
+                                view:currentFrame.defaultView,
                                 sctype:card_props.TYPE.SIMPLE_TEXT 
                             }
                             card_ = currentFrame.actions.add_new_card(_card_data);
+                            state.actions.select_this_card(state, card_);
                         }
 
                         //currentFrame.start_editing_card(card_);
@@ -524,11 +607,23 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         // console.log('title', $.sc_find_rec(card_.el,'title'));
 
                     }
-                    else if ("goto".indexOf(cmd[0].toLowerCase()) === 0 ){
-                        if(cmd.length == 2 ){
-                            currentFrame.goto_frameview(cmd[1]);
+                    else if("remove".indexOf(cmd[0].toLowerCase()) === 0 ){
+                        if(cmd.length > 1){
+
+                        }
+                        else{
+                            var _cd = state.actions.get_primary_selected_card(state);
+                            if(_cd){
+                                self.currentFrame.frameModel.actions.remove_card(_cd, 'TEMPORARY');
+                            }
+                                
                         }
                     }
+                    // else if ("goto".indexOf(cmd[0].toLowerCase()) === 0 ){
+                    //     if(cmd.length == 2 ){
+                    //         currentFrame.goto_frameview(cmd[1]);
+                    //     }
+                    // }
                     //clear store
                     else if ("clear".indexOf(cmd[0].toLowerCase()) === 0 && cmd.length > 1 && "store".indexOf(cmd[1]) === 0){
                         console.log('clearing store');
@@ -557,16 +652,16 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                             if("view".indexOf(cmd[1].toLowerCase()) ===0){
                                 if(cmd.length > 2){
                                     if("card".indexOf(cmd[2].toLowerCase()) ===0){
-                                        currentFrame.activeView = "views/card.html";
+                                        currentFrame.defaultView = "views/card.html";
                                         console.log('YOU have BOUND card', cmd[2]);
 
                                     }
                                     else if("ribbon".indexOf(cmd[2].toLowerCase()) ===0){
-                                        currentFrame.activeView = "views/ribbon.html";
+                                        currentFrame.defaultView = "views/ribbon.html";
                                         console.log('YOU have BOUND  ribbon');
                                     }
                                     else{
-                                        currentFrame.activeView = "views/cards/" + cmd[2] + ".html";
+                                        currentFrame.defaultView = "views/cards/" + cmd[2] + ".html";
                                     }
                                 }
                             }
@@ -587,16 +682,18 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     else if("exit" === cmd[0].toLowerCase()){
                         self.removeCurrentFrame();
                     }
+                    else if("go" === cmd[0].toLowerCase()){
+                        var _cards = state.actions.get_selected_cards(state);
+                        if(_cards.length)self.currentFrame.frameModel.trigger_parent(_cards[0]);
+                    }
                     else if("image" === cmd[0].toLowerCase()){
                         if(cmd.length>1){
                             var img_url = "<img src=\""+  cmd[1] +"\" alt=\"Image\" style=\" \">";
                             console.log('image found');
 
                             var d_size = {w:3, h:3};//size of this card
-                            var d_pos = {x:(self.previousCardPosSize.x+self.previousCardPosSize.w)%12, y:0};//to be used next time when a card is being used
-                                            //12 is horizontal unit size of the grid
-                                            // if that is changed it also has to be changed
-                            self.updatedPreviousCardPosSize(d_pos.x, d_pos.y, d_size.w, d_size.h);//save the current setting to be used for later
+                            var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
+
                             var _card_content = {
                                 title:'Untitled',
                                 text:img_url,
@@ -605,11 +702,77 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                                 default_size:d_size,
                                 default_pos: d_pos,
                                 card_content: _card_content,
-                                model:currentFrame.activeModel,
-                                view:currentFrame.activeView,
+                                model:currentFrame.defaultModel,
+                                view:currentFrame.defaultView,
                                 sctype:card_props.TYPE.SIMPLE_TEXT,
                             }
                             card_ = currentFrame.actions.add_new_card(_card_data);
+                            state.actions.select_this_card(state, card_);
+
+                            $commandInput.val('');
+                        }
+                    }
+                    else if("setimage" === cmd[0].toLowerCase()){
+                        if(cmd.length>1){
+                            var _cs = state.actions.get_selected_cards(state);
+                            if(_cs.length && _cs[0].bind_data.text){// _cs is definitely an array
+                                
+                                var _w = Math.round($(_cs[0].el).width())-20;
+                                var img_url = "<img src=\""+  cmd[1] +"\" alt=\"Image\" style=\" width:100%;\">";
+                                _cs[0].bind_data.text(img_url);
+                                self.currentFrame.frameModel.actions.save_card_content(_cs[0], true);
+                            }
+                            
+                            $commandInput.val('');
+                        }
+                        else{
+                            http.jsonp('http://api.flickr.com/services/feeds/photos_public.gne', { tags: 'mount ranier', tagmode: 'any', format: 'json' }, 'jsoncallback').then(function(response) {
+                                console.log(response.items);
+                            });
+                        }
+                    }
+                    else if("settext" === cmd[0].toLowerCase()){
+                        var _cs = state.actions.get_selected_cards(state);
+                        if(_cs.length){// _cs is definitely an array
+                            if(_cs[0].bind_data.text){// not everyone has text
+                                _cs[0].bind_data.text(cmd.join(' ').replace('settext ', ''));
+                                self.currentFrame.frameModel.actions.save_card_content(_cs[0], true);
+                            }
+                        }
+                        
+                        $commandInput.val('');
+                    }
+                    else if("settitle" === cmd[0].toLowerCase()){
+                        var _cs = state.actions.get_selected_cards(state);
+                        if(_cs.length){// _cs is definitely an array
+                            _cs[0].bind_data.title(cmd.join(' ').replace('settitle ', ''));
+                            self.currentFrame.frameModel.actions.save_card_content(_cs[0], true);
+                        }
+                        
+                        $commandInput.val('');
+                    }
+                    else if("iframe" === cmd[0].toLowerCase()){
+                        if(cmd.length>1){
+                            var _iframe = "<iframe width=\"600px\" height=\"340px\" src=\""+  cmd[1] +"\"  style=\" \"></iframe>";
+
+                            var d_size = {w:6, h:6};//size of this card
+                            var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
+
+                            var _card_content = {
+                                title:'Untitled',
+                                text:_iframe,
+                            }
+                            var _card_data = {
+                                default_size:d_size,
+                                default_pos: d_pos,
+                                card_content: _card_content,
+                                model:currentFrame.defaultModel,
+                                view:currentFrame.defaultView,
+                                sctype:card_props.TYPE.SIMPLE_TEXT,
+                            }
+                            card_ = currentFrame.actions.add_new_card(_card_data);
+                            state.actions.select_this_card(state, card_);
+
                             $commandInput.val('');
                         }
                     }
@@ -617,13 +780,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         if(cmd[0].indexOf('youtube.com') > 1){// an youtube url
                             var lnk = cmd[0].split('v=');
                             if(lnk.length>1){
-                                var embed_url = "<iframe width=\"680\" height=\"380\" src=\"https://www.youtube.com/embed/"+ lnk[1].replace('&', '?') +"\" frameborder=\"0\" allowfullscreen></iframe>";
+                                var embed_url = "<iframe width=\"600\" height=\"300\" src=\"https://www.youtube.com/embed/"+ lnk[1].replace('&', '?') +"\" frameborder=\"0\" allowfullscreen></iframe>";
                                 
-                                var d_size = {w:6, h:6};//size of this card
-                                var d_pos = {x:(self.previousCardPosSize.x+self.previousCardPosSize.w)%12, y:0};//to be used next time when a card is being used
-                                                //12 is horizontal unit size of the grid
-                                                // if that is changed it also has to be changed
-                                self.updatedPreviousCardPosSize(d_pos.x, d_pos.y, d_size.w, d_size.h);//save the current setting to be used for later
+                                var d_size = {w:6, h:5};//size of this card
+                                var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
 
                                 var _card_content = {
                                     title:'Untitled',
@@ -633,13 +793,15 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                                     default_size:d_size,
                                     default_pos: d_pos,
                                     card_content: _card_content,
-                                    model:currentFrame.activeModel,
-                                    view:currentFrame.activeView,
+                                    model:currentFrame.defaultModel,
+                                    view:currentFrame.defaultView,
                                     sctype:card_props.TYPE.SIMPLE_TEXT,
                                     non_resizable: true,
                                 }
 
                                 card_ = currentFrame.actions.add_new_card(_card_data);
+                                state.actions.select_this_card(state, card_);
+
                                 $commandInput.val('');
                             }
                         }//youtube
@@ -648,10 +810,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                             console.log('image found');
                             
                             var d_size = {w:3, h:3};//size of this card
-                            var d_pos = {x:(self.previousCardPosSize.x+self.previousCardPosSize.w)%12, y:0};//to be used next time when a card is being used
-                                            //12 is horizontal unit size of the grid
-                                            // if that is changed it also has to be changed
-                            self.updatedPreviousCardPosSize(d_pos.x, d_pos.y, d_size.w, d_size.h);//save the current setting to be used for later
+                            var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
 
                             var _card_content = {
                                 title:'Untitled',
@@ -661,11 +820,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                                 default_size:d_size,
                                 default_pos: d_pos,
                                 card_content: _card_content,
-                                model:currentFrame.activeModel,
-                                view:currentFrame.activeView,
+                                model:currentFrame.defaultModel,
+                                view:currentFrame.defaultView,
                                 sctype:card_props.TYPE.SIMPLE_TEXT,
                             }
                             card_ = currentFrame.actions.add_new_card(_card_data);
+                            state.actions.select_this_card(state, card_);
+
                             $commandInput.val('');
                         }
                     }
@@ -674,6 +835,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             else{// Search
                 var query = cmd.replace(/\s+/g, " ");
                 console.log("Search for", query);
+
                 var type = 'SEARCH_STORE';
                 var _msg = {query:query, title_only:true, highlighting:true};
                 self.send_msg_to_background(type, _msg);
@@ -698,13 +860,15 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
         };
         this.activate = function(){
             self.createNewBindings();
-            if(!self.framesData().length){// add only if no ther frame exists
-                self.addFrame({frameview_key:'home', title:'Home',  bgColor:'bisque'});
-            }
-            // self.addFrame({frameModel:null, viewModel:"viewmodels/frame", bgColor:'cadetblue'});
-
+            self.attachedChromeEventListener();
+            self.send_msg_to_background('GET_DATA_ELEMENT', {id:'LAST_USED_FRAMEVIEW_KEY'});
+            setTimeout(function(){
+                if(!self.framesData().length){
+                    self.on_start('home', 'Home');
+                }
+            }, 2000);
         };
-        this.attached = function(){
+        this.attachedChromeEventListener = function(){
             chrome.runtime.onMessage.addListener(
               function(request, sender, sendResponse) {
                 if(request.type == 'FRAMEVIEW_HAS_CHANGED'){
@@ -739,8 +903,35 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     });
                 }
                 //*****************************************************
-            });
+                else if(request.type == 'LAST_USED_FRAMEVIEW_KEY'){
+                    if(request.msg.data && request.msg.data.fv_key && request.msg.data.fv_title){
+                        self.on_start(request.msg.data.fv_key, request.msg.data.fv_title);
+                    }
+                    else{
+                        self.on_start('home', 'Home');
+                    }
+                        
+                }
 
+                else if(request.type == 'REPLYOF_MIXED_CONTENT_CALLBACK'){
+                    console.log(request.msg.json.results);
+                    if(request.msg && request.msg.json){
+                        if(request.msg.json.results && request.msg.json.results.length){
+                            self.commandSuggestions.removeAll();//clear suggestions
+                            var bind_data = {};
+                            $.each(request.msg.json.results, function(i, item){
+                                bind_data.title = item.label;
+                                bind_data.desc = item.description;
+                                if(bind_data.title)self.commandSuggestions.unshift(bind_data);
+                            });
+                        }
+                    }
+                }
+                
+                //*****************************************************
+            });
+        }
+        this.attached = function(){
             $commandForm = $('#commandForm');
             if(!$commandForm){
                 setTimeout(function(){
@@ -793,6 +984,12 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
 
 
         };
+        this.on_start = function(fv_key, fv_title){
+            if(!self.framesData().length){// add only if no ther frame exists
+                self.addFrame({frameview_key:fv_key, title:fv_title,  bgColor:'bisque'});
+            }
+            // self.addFrame({frameModel:null, viewModel:"viewmodels/frame", bgColor:'cadetblue'});
+        }
 
         this.update_changed_frames_now = function(){//every time this tab is active this is called
             var fs_data = self.framesData();
@@ -817,19 +1014,47 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             $frame.slideToggle(100, function(){
                 data.frameModel.actions.remove_frameview_from_frame();//@? do you have to do this
                 self.framesData.remove(data);
+                self.adjustCurrentFrame();
+
+                data.frameModel.actions.remove_chrome_message_listener();
             })
+
         };
+        
         this.removeCurrentFrame = function(){
             if(self.framesData().length){
-                    console.log('2');
                 var fdata = self.framesData()[0];
                 var $frame = $('#frame_root_'+ fdata.frameID);
                 $frame.slideToggle(100, function(){
                     fdata.frameModel.actions.remove_frameview_from_frame();//@? do you have to do this
                     self.framesData.remove(fdata);
+                
+                    self.adjustCurrentFrame();
+                    fdata.frameModel.actions.remove_chrome_message_listener();
                 });
                 
             }
+        }
+        this.removeFrameByObject = function(frameData){
+            frameData.frameModel.actions.remove_frameview_from_frame();//@? do you have to do this
+            self.framesData.remove(frameData);
+            self.adjustCurrentFrame();
+            frameData.frameModel.actions.remove_chrome_message_listener();
+        }
+        
+        this.adjustCurrentFrame = function(){
+            if(self.framesData().length)self.currentFrame = self.framesData()[0];
+            else self.currentFrame = null;
+        }
+
+        //Utility
+        this.getPrefferedPosToDisplayCard = function(d_size){
+            var d_pos = {x:(self.previousCardPosSize.x+self.previousCardPosSize.w)%12, y:0};//to be used next time when a card is being used
+                            //12 is horizontal unit size of the grid
+                            // if that is changed it also has to be changed
+            self.updatedPreviousCardPosSize(d_pos.x, d_pos.y, d_size.w, d_size.h);//save the current setting to be used for later
+
+            return d_pos;
         }
         // functions to be used in frame.js
         this.appActions = {
@@ -844,6 +1069,14 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 // $commandSuggestions.show();
                 $commandInput.focus();
             },
+            focusOnCommandInput: function(){
+                $commandInput.focus();
+            },
+            getTopFrameviewKey: function(){
+                if(self.framesData().length){
+                    return self.framesData()[0].frameModel.frameview.key();
+                }
+            }
             
                 
         };
@@ -953,74 +1186,109 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 }//enter pressed
 
                 //realtime suggestions
-                clearTimeout(self.keyUpTimeOutVar);
-                self.keyUpTimeOutVar = setTimeout(function(){
-                    if(str.length > 3){// 2 for 'w ' 2 for text
-                        
-                        if(str.indexOf('w ')==0){//'w ' -> wikipedia
-                            var query = str;
-                            if(str.slice)query = str.slice(2,str.length-1);
-                            else if(str.substr)query = str.substr(2,str.length-1);
-                            mediawiki.wikipedia_suggest(query, _callb);
-                        }
-
-                        else if(str.indexOf('g ')==0){//'g ' -> google suggestions
-                            var query = str;
-                            if(str.slice)query = str.slice(2,str.length-1);
-                            else if(str.substr)query = str.substr(2,str.length-1);
-
-                            searchapi.getGoogleSuggestion(query, function(json){
-                                self.commandSuggestions.removeAll();//clear suggestions
-                                var bind_data = {};
-                                $.each(json.CompleteSuggestion, function(i, item){
-                                    bind_data.title = item.suggestion.data;
-                                    bind_data.desc = '';
-                                    if(bind_data.title)self.commandSuggestions.unshift(bind_data);
-                                    
-                                });
-                                
-                            });
-                        }
-                        else if(str.indexOf('dbl')===0 ){
-                            query = str.substr(str.indexOf(' ') ,str.length-1);
+                else if(str.substr(0,1) === ' '){
+                    var str = str.substr(1,str.length-1);
+                    // str don't contain begining space
+                    clearTimeout(self.keyUpTimeOutVar);
+                    self.keyUpTimeOutVar = setTimeout(function(){
+                        if(str.length > 3){// 2 for 'w ' 2 for text
                             
-                            if(query.length > 2){
-                                var prefix_url = 'http://lookup.dbpedia.org/api/search/PrefixSearch';
-                                var prefix_data = {QueryString:query};
-                                var search_url = 'http://lookup.dbpedia.org/api/search/KeywordSearch';
-                                var search_data = {QueryClass:'place', QueryString:query};
+                            if(str.indexOf('w ')==0){//'w ' -> wikipedia
+                                var query = str;
+                                if(str.slice)query = str.slice(2,str.length-1);
+                                else if(str.substr)query = str.substr(2,str.length-1);
+                                mediawiki.wikipedia_suggest(query, _callb);
+                            }
 
-                                if(str.substr(3,4)==='p')prefix_data.QueryClass = 'place';
-                                if(str.substr(3,4)==='P')prefix_data.QueryClass = 'person';
-                                if(str.substr(3,4)==='S')prefix_data.QueryClass = 'scientist';
-                                // var _url = 'http://lookup.dbpedia.org/api/search/KeywordSearch?QueryClass=place&QueryString='+ query;
-                                $.getJSON(prefix_url, prefix_data, function(json){
-                                    console.log(json);
-                                    if(json.results && json.results.length){
-                                        self.commandSuggestions.removeAll();//clear suggestions
-                                        var bind_data = {};
-                                        $.each(json.results, function(i, item){
-                                            bind_data.title = item.label;
-                                            bind_data.desc = item.description;
-                                            if(bind_data.title)self.commandSuggestions.unshift(bind_data);
-                                            
-                                        });
-                                    }
+                            else if(str.indexOf('g ')==0){//'g ' -> google suggestions
+                                var query = str;
+                                if(str.slice)query = str.slice(2,str.length-1);
+                                else if(str.substr)query = str.substr(2,str.length-1);
+
+                                searchapi.getGoogleSuggestion(query, function(json){
+                                    self.commandSuggestions.removeAll();//clear suggestions
+                                    var bind_data = {};
+                                    $.each(json.CompleteSuggestion, function(i, item){
+                                        bind_data.title = item.suggestion.data;
+                                        bind_data.desc = '';
+                                        if(bind_data.title)self.commandSuggestions.unshift(bind_data);
+                                        
+                                    });
                                     
                                 });
                             }
+                            else if(str.indexOf('dbl')===0 ){
+                                query = str.substr(str.indexOf(' ') ,str.length-1);
                                 
+                                if(query.length > 2){// atleast 3 character
+                                    var prefix_url = 'http://lookup.dbpedia.org/api/search/PrefixSearch';
+                                    var prefix_data = {QueryString:query};
+                                    var search_url = 'http://lookup.dbpedia.org/api/search/KeywordSearch';
+                                    var search_data = {QueryClass:'place', QueryString:query};
 
+                                    if(str.substr(3,4)==='p')prefix_data.QueryClass = 'place';
+                                    if(str.substr(3,4)==='P')prefix_data.QueryClass = 'person';
+                                    if(str.substr(3,4)==='S')prefix_data.QueryClass = 'scientist';
+                                    // var _url = 'http://lookup.dbpedia.org/api/search/KeywordSearch?QueryClass=place&QueryString='+ query;
+
+                                    var loc_proto = window.location.protocol;
+                                    console.log(loc_proto);
+                                    if(loc_proto === 'https:'){
+                                        var _type = 'MIXED_CONTENT_CALLBACK';
+                                        var _msg = {url:'http://lookup.dbpedia.org/api/search/PrefixSearch?QueryClass=place&QueryString='+query};
+                                        self.send_msg_to_background(_type, _msg);
+                                    }
+                                    else{// no mixed content error
+                                        $.getJSON(prefix_url, prefix_data, function(json){
+                                            console.log(json);
+                                            if(json.results && json.results.length){
+                                                self.commandSuggestions.removeAll();//clear suggestions
+                                                var bind_data = {};
+                                                $.each(json.results, function(i, item){
+                                                    bind_data.title = item.label;
+                                                    bind_data.desc = item.description;
+                                                    if(bind_data.title)self.commandSuggestions.unshift(bind_data);
+                                                    
+                                                });
+                                            }
+                                            
+                                        });
+                                    }
+                                        
+
+                                }
+                                    
+
+                                
+                            }
+                            
                             
                         }
-                        
-                        
+                    }, minTimeIntervalForQuery);
+                }
+                else{
+                    if(self.framesData().length){
+                        var _cm = self.framesData()[0].frameModel;
+                        if('select'.indexOf(str.toLowerCase()) === 0 ){
+                                _cm.show_all_card_label(true);
+                        }
+                        else{
+                            var match = str.toLowerCase().match(/sele?c?t?(\d+)\.?(\d+)?/);
+                            if(match && match.length>1){
+                                ind = parseInt(match[1])-1;
+                                if(ind < _cm.cards().length)state.actions.select_this_card(state, _cm.cards()[ind]);
+                            }
+                            if(_cm.show_all_card_label())_cm.show_all_card_label(false);
+                        }
                     }
-                }, minTimeIntervalForQuery);
+                }
 
 
             }// at least one char
             else{
+                if(self.currentFrame) self.currentFrame.frameModel.show_all_card_label(false);
+                
+                
                 self.commandSuggestions.removeAll();
             }
 
@@ -1028,17 +1296,37 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
         this.someKeyUp = function(event){
             if(event.keyCode == 27){// ESC
                 // get the current frame
-
-                $commandForm.toggle(100);
-                $commandInput.focus();
-
-                // var _cfm = self.framesData()[0].frameModel;
-                // if(_cfm ){
-                //     if($commandForm.is(':visible')) _cfm.state_manager.rollback();
-                // }
-
+                if(state.isany_card_being_edited){
+                    var _cfm = self.framesData()[0].frameModel;
+                    if(_cfm )_cfm.state_manager.rollback();
+                }
+                else if(!$commandForm.is(':visible')){
+                    $commandForm.show(100);
+                    $commandInput.focus();
+                }
+                else if($(document.activeElement).attr('id') === "commandInput"){
+                    var _cfm = self.framesData()[0].frameModel;
+                    if(_cfm )_cfm.state_manager.rollback();
+                    $commandInput.select();
+                }
+                else{
+                    $commandInput.focus();
+                }
             }
-                    
+            else if(event.keyCode == 37  && !state.isany_card_being_edited){//LeftArrow
+               if(self.currentFrame) self.currentFrame.frameModel.actions.move_selected_card_and_save({left:1});
+            }
+            else if(event.keyCode == 39 && !state.isany_card_being_edited){//RightArrow
+               if(self.currentFrame) self.currentFrame.frameModel.actions.move_selected_card_and_save({right:1});
+            }
+            // else if(event.keyCode == 38){//UpArrow
+            //    if(self.currentFrame) self.currentFrame.frameModel.actions.move_selected_card_and_save({up:2});
+            // }
+            // else if(event.keyCode == 40){//DownArrow
+
+            //    if(self.currentFrame) self.currentFrame.frameModel.actions.move_selected_card_and_save({down:2});
+            // }
+
 
             if(event.keyCode == 16){//shift
                 state.keyboard.shift_down = false;
@@ -1073,6 +1361,14 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             self.focus_on_command_input(event);
 
             return true;
+        };
+        this.send_msg_to_background= function(type, msg){
+            chrome.runtime.sendMessage(
+                {
+                    type:type,
+                    msg:msg
+                }
+            );
         };
   
         

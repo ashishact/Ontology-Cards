@@ -72,6 +72,22 @@ chrome.runtime.onMessage.addListener(
 		else if(request.type == 'SEARCH_STORE'){
 			search_store(request.msg, tabIdOfSender);
 		}
+		else if(request.type == 'MIXED_CONTENT_CALLBACK'){
+			mixed_content_callback(request.msg, tabIdOfSender);
+		}
+
+		else if(request.type == 'SAVE_DATA_ELEMENT'){
+			if(request.msg.id && request.msg.data){// this is pouchdb id
+				save_data_element_to_pouchdb(request.msg.id, request.msg.data, tabIdOfSender);
+			}
+				
+		}
+		else if(request.type == 'GET_DATA_ELEMENT'){
+			if(request.msg.id){// this is pouchdb id
+				get_data_element_from_pouchdb(request.msg.id, tabIdOfSender);
+			}
+		}
+		
 		//*********************************************************
 
 	
@@ -123,15 +139,23 @@ function frameview_was_removed(frameview_key, tab){
 //**********************************************
 
 var chromeReply = {
-	get_frameview_full: function(_cs, tab_id){
-		sendMSG_to_tab_byId({type:'REPLYOF_LOAD_ALL_FROM_STORE_TO_FV', msg:{_cards:_cs}}, tab_id);
+	send_data_element: function(id, data, tab_id){
+		sendMSG_to_tab_byId({type:id, msg:{data:data}}, tab_id);
+	},
+	get_frameview_full: function(_cs, frameview_key, tab_id){
+		sendMSG_to_tab_byId({type:'REPLYOF_LOAD_ALL_FROM_STORE_TO_FV', msg:{_cards:_cs, _fv_key:frameview_key}}, tab_id);
 	},
 	load_frame_config_from_store: function(frame_config, tab_id){
 		sendMSG_to_tab_byId({type:'REPLYOF_LOAD_FRAME_CONFIG_FROM_STORE', msg:{frame_config:frame_config}}, tab_id);
 	},
 	search_store: function(search_results, tab_id){
 		sendMSG_to_tab_byId({type:'REPLYOF_SEARCH_STORE', msg:{search_results: search_results}}, tab_id);
+	},
+	mixed_content_callback: function(json, tab_id){
+		sendMSG_to_tab_byId({type:'REPLYOF_MIXED_CONTENT_CALLBACK', msg:{json: json}}, tab_id);
 	}
+
+
 }
 //**********************************************
 
@@ -170,30 +194,35 @@ function get_frameview_full(frameview_key, tab_id){
 
 	framepouch.get(frameview_key, function(err, doc){
 		if(err){//may be the doc never existed
-			console.log('frameview with key:', frameview_key + 'doesn\'t exists')
+			console.log('frameview with key:', frameview_key + 'doesn\'t exists');
 		}
 		else{
 			if(doc.fvids){
 				var ids = doc.fvids;
 				var _cs = {};//{'fg903hshjhsiaj-658HGH': _card1, 'hshduuey-HJJJHK:_card2'}
-				
+				console.log("no of card in this frameview should be"+ ids.length);
 				framepouch.allDocs(
 					{
 						include_docs: true,
 						keys: ids
 					},
 					function(err, res){
-				    if(!err){
-				    	res.rows.forEach(function(el){
-				    		if(el.doc){
-					    		var _card = el.doc.card;
-					    		_cs[_card.id] = _card;
-				    		}
-				    			
-				    	});
-						chromeReply.get_frameview_full(_cs, tab_id);
-				    }
-				});
+					    if(!err){
+					    	res.rows.forEach(function(el){
+					    		if(el.doc){
+						    		var _card = el.doc.card;
+						    		_cs[_card.id] = _card;
+					    		}
+					    			
+					    	});
+					    	console.log("no of card actually is"+ res.rows.length);
+							chromeReply.get_frameview_full(_cs, frameview_key,  tab_id);
+					    }
+					    else{
+					    	console.log(err);
+					    }
+					}
+				);
 
 			}
 		}
@@ -214,12 +243,37 @@ function get_card_from_pouchdb(id){
 	});
 	return _card_;
 };
+function save_data_element_to_pouchdb(id, data, tab_id){
+	framepouch.get(id, function(err, doc){
+		if(err){
+			console.log('creating new instance');
+			framepouch.put({_id:id, data:data});
+		}
+		else{
+			console.log('creating new instance');
+			doc.data = data;
+			framepouch.put(doc);
+		}
+	});
+}
+function get_data_element_from_pouchdb(id, tab_id){
+	framepouch.get(id, function(err, doc){
+		if(err){
+			console.log('no such element with id ' + id + ' exist');
+			chromeReply.send_data_element(id, null, tab_id);
+		}
+		else{
+			console.log('got you: ', id,  doc.data);
+			chromeReply.send_data_element(id, doc.data, tab_id);// send even if data is not existenent			 
+		}
+	});
+}
 
 //************
 
 function save_new_card_from_frameview_to_store(frameview_key, _card, tab_id){
 	//PouchDB
-
+	sendMSG_to_tab_byId({type:'all people'}, tab_id);
 	//first save the new card
 	framepouch.put({_id:_card.id, card:_card});
 
@@ -377,3 +431,9 @@ function remove_frameview_from_store(frameview_key){
 }
 
 //***********************************
+
+function mixed_content_callback(msg, tab_id){
+	$.getJSON(msg.url, function(json){
+		chromeReply.mixed_content_callback(json, tab_id);
+	});
+}

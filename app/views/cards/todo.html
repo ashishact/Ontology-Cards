@@ -1,0 +1,37 @@
+<div style="box-sizing: border-box; font-size: 13px; line-height: 13px; font-family: 'Open Sans', sans-serif; outline-style: none; border-radius: 5px; box-shadow: rgba(58, 51, 46, 0.258824) 0px 0px 12px; position: relative; z-index: 0; color: rgb(142, 128, 113); background-color: white">
+	
+	<div
+		class="sc-editable"
+		data-bind="sc_contenteditable:bind_data.title"
+		contenteditable="true"
+
+		style="text-align: center; font-weight: 600; font-size: 18px; padding: 12px 20px 12px 15px;  color: white; text-transform: uppercase; box-shadow: rgba(57, 57, 57, 0.360784) 0px -2px 2px inset; border-radius: 4px 4px 0px 0px; background-color: rgb(123, 109, 94);">
+		LIST OF SCIENTISTS
+	</div>
+
+	<!-- ko if: bind_data.list -->
+		<ul 
+			class="sc-editable"
+			data-bind="foreach: {data:bind_data.list}"
+			contenteditable="false"
+			style="list-style-type: none; padding-left: 5px; margin: 5px 0px 0px 0px;">
+
+			<li style="position: relative; margin:0px 0px 1px 0px;">
+				<div style="
+				color: rgb(123, 109, 94);
+				text-decoration: none;
+				padding: 12px 12px;
+				border-left-width: 3px;
+				border-left-style: solid;
+				font-size: 14px;
+				display: block;
+				position: relative;
+				outline-style: none;
+				"  class="listholder" data-bind="click:$root.clickedOnElement,  style:{backgroundColor:$data.on()? 'rgb(246, 240, 236)':'white', borderLeftColor: $data.on()? 'rgb(64, 162, 104)':'transparent'}">
+					<span  style="" data-bind="text:$data.text"></span>
+				</div>
+			</li>
+
+		</ul>
+	<!-- /ko -->
+</div>

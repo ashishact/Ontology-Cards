@@ -99,12 +99,50 @@ define(['lodash'],  function (_) {
         last_selected_card:null,
         primary_selected_card:null,
         now_selected_cards:[],
+        
+        actions:{
+            select_this_card: function(_state, card){
+                for (var i = _state.now_selected_cards.length - 1; i >= 0; i--) {
+                    _state.now_selected_cards[i].isSelected(false);
+                };
+                _state.now_selected_cards = [];
+                _state.now_selected_cards.push(card);
+                _state.primary_selected_card = card;
+                card.isSelected(true);
+                _state.isany_card_selcted = true;
+                _state.ismany_card_selcted = false;
+                _state.last_selected_card = card;
+            },
+            get_selected_cards: function(_state){
+                return _state.now_selected_cards;
+            },
+            get_primary_selected_card: function(_state){
+                return _state.primary_selected_card;
+            },
+            removingThisCard: function(card, _state){
+                if(card === _state.primary_selected_card){
+                    _state.primary_selected_card = null;
+                }
+                if(card === _state.last_selected_card){
+                    _state.last_selected_card = null;
+                }
+                _.remove(_state.now_selected_cards, function(c){ return c==card });
+
+                if(!_state.now_selected_cards.length){
+                    _state.isany_card_selcted = false;
+                    _state.ismany_card_selcted = false;
+                }
+                
+            }
+
+        },
 
 
 
         issearchbar_focused:false,
 
         queue: new create_queue(),
+
 
     }
     return state;

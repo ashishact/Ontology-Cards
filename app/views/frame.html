@@ -7,7 +7,7 @@
  -->
 
 
-<div data-bind="attr:{id:'frame_root_'+frameID}">
+<div>
 	<!-- custombreadcrumbs -->
 	<div style="/*margin:2px 2px 2px 10px; padding-top: 6px;*/ height: 35px;
 	-webkit-box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.50);
@@ -17,7 +17,7 @@
 			<a style="color:#777"  data-bind="text:$data.title, click:$root.clicked_on_breadcrumb, css: {active: $data.key == $root.frameview.key() }"></a>
 		</div>
 		<div style="float:right; position: relative; padding-top: 5px;">
-			<i style="
+			<i title="Close this frame" style="
 			box-shadow: 0 0 8px 1px rgba(0, 0, 0, 0.35);
 			color: white;
 			background-color: #666;
@@ -25,16 +25,16 @@
 			position: relative;
 			float:right;
 			padding-right: 5px;
-			cursor:pointer;" class="fa fa-times-circle removeFrame" data-bind="click:close_frame"></i>
-			<i style="
+			cursor:pointer;" class="zoom_on_hover fa fa-times-circle removeFrame" data-bind="click:close_frame"></i>
+			<i title="Toggle this frame" style="
 			box-shadow: 0 0 8px 1px rgba(0, 0, 0, 0.35);
 			color: white;
 			background-color: #666;
 			border-radius: 50%;
 			position: relative;
 			float:right;
-			padding-right: 5px;
-			cursor:pointer;" class="fa fa-chevron-circle-down" data-bind="click:toggle_hide_frame"></i>
+			margin-right: 7px;
+			cursor:pointer;" class="zoom_on_hover fa fa-chevron-circle-down" data-bind="click:toggle_hide_frame"></i>
 			
 		</div>
 
@@ -51,8 +51,24 @@
 					
 				</div>
 
-				<div  style="position: absolute; top:0px; right:15px;" data-bind="fadeVisible:$data.isMouseHovered">
-					<i style="cursor:pointer; color:#999" class="removeCardBtn fa fa-times"></i>
+
+
+
+				<!-- SELECTED -->
+				<div data-bind="fadeVisible:$data.isSelected() || $root.show_all_card_label()" style=" position: absolute; top:-10px; margin-top: 0px; " class="custombreadcrumb flat">
+					<a style="color:#777;" class="" data-bind="text:($root.show_all_card_label() ? ($index()+1) : $root.card_label_text()), css:{active:$root.show_all_card_label(), big_font:$root.show_all_card_label(), normal_font:!$root.show_all_card_label()}"></a>
+				</div>
+
+				<div title="Close this. You can add it later by searching for it"  style="position: absolute; top:0px; right:15px;" data-bind="fadeVisible:$data.isMouseHovered">
+					<i style="cursor:pointer; color:#aaa" class="zoom_on_hover removeCardBtn fa fa-times"></i>
+				</div>
+
+				<div style="position: absolute; top:8px; right:38px; padding:1px;" data-bind="fadeVisible:$data.isMouseHovered">
+					<i style="color:#aaa; display: block;" class="zoom_on_hover cardMenuIcon fa fa-ellipsis-h"></i>
+
+					<i title="Edit/Save" data-bind="fadeVisible:$root.show_additional_card_menu, style:{color: $data.STATE.SAVED ? '#aca' : '#caa'}" style="display: block; padding-bottom: 1px; background-color: white;" class=" zoom_on_hover cardMenuIcon cardMenuEditIcon fa fa-edit"></i>
+
+					<i title="Remove Permanently" data-bind="fadeVisible:$root.show_additional_card_menu" style="color:#daa; display: block; background-color: white;" class="zoom_on_hover cardMenuIcon cardMenuTrashIcon fa fa-trash-o"></i>
 				</div>
 
 			</div>

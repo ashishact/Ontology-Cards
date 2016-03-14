@@ -6,7 +6,7 @@
 
         
         if(document.title.length){
-            app.title = document.title + " @Semanticcards"
+            app.title = "@Semanticcards " + document.title;
         }
         else{
             app.title = 'Semanticcards';
