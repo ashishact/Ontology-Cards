@@ -1,10 +1,12 @@
-define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'state', 'mediawiki', 'searchapi'], function (http, app, ko, $, card_props, state, mediawiki, searchapi) {
+define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'state', 'mediawiki', 'searchapi', 'interpreter'], function (http, app, ko, $, card_props, state, mediawiki, searchapi, interpreter) {
     var sc_frameholder = function(){
         var self = this;
         this.name = "Semanticcards";
         this.description = "Sementic cards application";
         this.framesData = ko.observableArray([]);
         this.currentFrame = null;
+
+        interpreter.sc_holdder_ref = this
 
         $commandForm = null;// focus element to focus and get cmd value
         $commandInput = null;
@@ -14,161 +16,18 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
 
         this.frameviews_to_update_when_tab_focused = [];//fv_key1, fv_key2, //when this tab is focused these frameview should be updated, because they have changed somewhere
                                                         // it has frameview_key collection
-        this.cssColorNames = ['darkseagreen','burlywood',   'bisque', 'cadetblue', 'aquamarine','coral', 'chocolate', 'darkcyan', 'salmon', 'darkslategray', 'dimgrey', 'hotpink', 'indianred', 'khaki', 'lavenderblush', 'lightblue', 'lightcoral', 'lightgreen', 'lightpink', 'lightsalmon', 'lightseagreen', 'mediumaquamarine', 'mediumvioletred', 'palegoldenrod', 'palegreen', 'sandybrown', 'tomato' ];
+        this.cssColorNames = ['darkseagreen', 'cadetblue', 'burlywood', 'coral', 'chocolate', 'darkcyan', 'salmon', 'darkslategray', 'dimgrey', 'hotpink', 'indianred', 'khaki', 'lavenderblush', 'lightblue', 'lightcoral', 'lightgreen', 'lightpink', 'lightsalmon', 'lightseagreen', 'mediumaquamarine', 'mediumvioletred', 'palegoldenrod', 'palegreen', 'sandybrown', 'tomato' ];
         this.currentColorId = 0;
 
 
 
 
         this.previousCardPosSize = {x:-2, y:0, w:2, h:2};
-        /*['aliceblue',
-                            'antiquewhite',
-                            'aqua',
-                            'aquamarine',
-                            'azure',
-                            'beige',
-                            'bisque',
-                            'black',
-                            'blanchedalmond',
-                            'blue',
-                            'blueviolet',
-                            'brown',
-                            'burlywood',
-                            'cadetblue',
-                            'chartreuse',
-                            'chocolate',
-                            'coral',
-                            'cornflowerblue',
-                            'cornsilk',
-                            'crimson',
-                            'cyan',
-                            'darkblue',
-                            'darkcyan',
-                            'darkgoldenrod',
-                            'darkgray',
-                            'darkgrey',
-                            'darkgreen',
-                            'darkkhaki',
-                            'darkmagenta',
-                            'darkolivegreen',
-                            'darkorange',
-                            'darkorchid',
-                            'darkred',
-                            'darksalmon',
-                            'darkseagreen',
-                            'darkslateblue',
-                            'darkslategray',
-                            'darkslategrey',
-                            'darkturquoise',
-                            'darkviolet',
-                            'deeppink',
-                            'deepskyblue',
-                            'dimgray',
-                            'dimgrey',
-                            'dodgerblue',
-                            'firebrick',
-                            'floralwhite',
-                            'forestgreen',
-                            'fuchsia',
-                            'gainsboro',
-                            'ghostwhite',
-                            'gold',
-                            'goldenrod',
-                            'gray',
-                            'grey',
-                            'green',
-                            'greenyellow',
-                            'honeydew',
-                            'hotpink',
-                            'indianred ',
-                            'indigo ',
-                            'ivory',
-                            'khaki',
-                            'lavender',
-                            'lavenderblush',
-                            'lawngreen',
-                            'lemonchiffon',
-                            'lightblue',
-                            'lightcoral',
-                            'lightcyan',
-                            'lightgoldenrodyellow',
-                            'lightgray',
-                            'lightgrey',
-                            'lightgreen',
-                            'lightpink',
-                            'lightsalmon',
-                            'lightseagreen',
-                            'lightskyblue',
-                            'lightslategray',
-                            'lightslategrey',
-                            'lightsteelblue',
-                            'lightyellow',
-                            'lime',
-                            'limegreen',
-                            'linen',
-                            'magenta',
-                            'maroon',
-                            'mediumaquamarine',
-                            'mediumblue',
-                            'mediumorchid',
-                            'mediumpurple',
-                            'mediumseagreen',
-                            'mediumslateblue',
-                            'mediumspringgreen',
-                            'mediumturquoise',
-                            'mediumvioletred',
-                            'midnightblue',
-                            'mintcream',
-                            'mistyrose',
-                            'moccasin',
-                            'navajowhite',
-                            'navy',
-                            'oldlace',
-                            'olive',
-                            'olivedrab',
-                            'orange',
-                            'orangered',
-                            'orchid',
-                            'palegoldenrod',
-                            'palegreen',
-                            'paleturquoise',
-                            'palevioletred',
-                            'papayawhip',
-                            'peachpuff',
-                            'peru',
-                            'pink',
-                            'plum',
-                            'powderblue',
-                            'purple',
-                            'rebeccapurple',
-                            'red',
-                            'rosybrown',
-                            'royalblue',
-                            'saddlebrown',
-                            'salmon',
-                            'sandybrown',
-                            'seagreen',
-                            'seashell',
-                            'sienna',
-                            'silver',
-                            'skyblue',
-                            'slateblue',
-                            'slategray',
-                            'slategrey',
-                            'snow',
-                            'springgreen',
-                            'steelblue',
-                            'tan',
-                            'teal',
-                            'thistle',
-                            'tomato',
-                            'turquoise',
-                            'violet',
-                            'wheat',
-                            'white',
-                            'whitesmoke',
-                            'yellow',
-                            'yellowgreen']*/
+
+        this.selectedCommandIndex = 0;
+        this.prevSelectedCommandIndex = 0;
+        this.commands = [];
+        
 
         this.oneLiners = ["When your only tool is a hammer, all problems start looking like nails.",
                         "99 percent of lawyers give the rest a bad name.",
@@ -233,7 +92,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         "If at first you don't succeed, destroy all evidence that you tried."];
         this.getRandomText = function(){
             // return self.oneLiners[Math.floor(self.oneLiners.length*Math.random())];
-            return "\"\"\"\"\"\"";
+            return " ";
         };
         this.afterFrameAdded = function(items, frameData){
             //self.currentFrame = frameData.frameModel;
@@ -242,7 +101,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
         this.addFrame = function(frameData){
 
             //assign an id to each frame to be able to refer to it later on , and create uing DOM id in html
-            frameData.frameID = self.framesData().length; // length of the observable , 0 for 1st
+            frameData.frameID = Date.now().toString(36);// all should have unique id
             frameData.appActions = self.appActions;
             frameData.viewModel = "viewmodels/frame";
             frameData.frameModel = null;
@@ -330,7 +189,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                             var allBindings = allBindingsAccessor();
                             if (allBindings['_ko_property_writers'] && allBindings['_ko_property_writers'].htmlValue) allBindings['_ko_property_writers'].htmlValue(elementValue);
                         }
-                    })
+                    });
                 },
                 update: function(element, valueAccessor) {
                     var value = ko.utils.unwrapObservable(valueAccessor()) || "";
@@ -391,458 +250,637 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 $commandSuggestions = $('commandSuggestions');
             }
         };
-        this.searchSubmit = function(from_el){
-            var currentFrame = null;
+
+        this.frameActions = {
+            add_parent_with_title: function(FM, cmd){
+                if(cmd.length>2){
+                    var _title = cmd[2];
+                    for (var i = 3; i < cmd.length; i++) {
+                        _title = _title + ' ' + cmd[i];
+                    };
+
+
+
+                    var d_size = {w:2, h:2};//size of this card
+                    var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
+
+                    var _card_content = {
+                        title:_title,
+                        text:self.getRandomText()
+                    }
+                    var _card_data = {
+                        parent:true,
+                        default_size:d_size,
+                        default_pos: d_pos,
+                        card_content: _card_content,
+                        model:FM.defaultModel,
+                        view:FM.defaultView,
+                        sctype:card_props.TYPE.SIMPLE_TEXT 
+                    }
+                    card_ = FM.actions.add_new_card(_card_data);
+                    state.actions.select_this_card(state, card_);
+                    return card_;
+                }
+            },
+            add_parent_with_default_title: function(FM){
+                var d_size = {w:2, h:2};//size of this card
+                var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
+
+                var _card_content = {
+                    title:'Parent',
+                    text:self.getRandomText()
+                }
+                var _card_data = {
+                    parent:true,
+                    default_size:d_size,
+                    default_pos: d_pos,
+                    card_content: _card_content,
+                    model:FM.defaultModel,
+                    view:FM.defaultView,
+                    sctype:card_props.TYPE.SIMPLE_TEXT 
+                }
+                card_ = FM.actions.add_new_card(_card_data);
+                state.actions.select_this_card(state, card_);
+                return card_;
+            },
+            add_frame: function(frameview_key, cmd){
+                console.log("adding frame");
+                if(cmd.length > 2){//frame with frameview_key
+                    var _fv_key = cmd[2];
+                    self.addFrame({frameview_key:_fv_key, title:'Frameview', bgColor:'darkcyan'});    
+                }
+                else{
+                    self.addFrame({frameview_key:'home', title:'Home', bgColor:'darkcyan'});
+                }
+            },
+            add_list: function(FM, cmd){
+                if(cmd.length > 2){
+                    var _title = cmd[2];
+                    if(cmd.length > 3){
+                        for (var i = 3; i < cmd.length; i++) {
+                            _title = _title + ' ' + cmd[i];
+                        };
+                    }
+
+                    var d_size = {w:2, h:3};//size of this card
+                    var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
+                    
+                    // var l1 = {text:'ashish', on:true};
+                    // var l2 = {text:'Sir Issac Newton', on:true};
+                    // var l3 = {text:'Someone else', on:false};
+                    var _card_content = {
+                        title:_title,
+                        list:[],
+                    }
+                    var _card_data = {
+                        default_size:d_size,
+                        default_pos: d_pos,
+                        card_content: _card_content,
+                        model:FM.defaultModel,
+                        view:"views/cards/todo.html",
+                        non_editable:true,
+                        sctype:card_props.TYPE.LIST
+                    }
+                    card_ = FM.actions.add_new_card(_card_data);
+                    state.actions.select_this_card(state, card_);
+                }
+                else{// generate everything
+
+                }
+            },
+            add_list_item: function(FM, cmd){
+                if(cmd.length >2  && state.isany_card_selcted){
+                    var _item = _fullstr.split(':li');
+                    if(_item.length > 1){
+                        _item = _item[1];
+                        console.log(_item);
+                        var _card = state.now_selected_cards[0];
+                        if(_card.card_data.sctype === card_props.TYPE.LIST){
+                            // its a list
+                            _card.bind_data.list.unshift({text:ko.observable(_item), on:ko.observable(false)});
+                            FM.actions.save_card_content(_card, true);
+                        }
+                    }
+                }
+            },
+            add_leaf: function(FM, cmd){
+
+                var _title = 'Untitled';
+                if(cmd.length > 2){
+                    _title = '';
+                    for (var i = 2; i < cmd.length; i++) {
+                        _title = _title + ' ' + cmd[i];
+                    };
+                }
+
+                var d_size = {w:3, h:4};//size of this card
+                var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
+                
+                // var l1 = {text:'ashish', on:true};
+                // var l2 = {text:'Sir Issac Newton', on:true};
+                // var l3 = {text:'Someone else', on:false};
+                var _card_content = {
+                    title:_title,
+                    text:'Start writing here',
+                }
+                var _card_data = {
+                    default_size:d_size,
+                    default_pos: d_pos,
+                    card_content: _card_content,
+                    model:FM.defaultModel,
+                    view:"views/cards/leafeditor.html",
+                    sctype:card_props.TYPE.LEAF_EDITOR,
+                }
+                card_ = FM.actions.add_new_card(_card_data);
+                state.actions.select_this_card(state, card_);
+                return card_;
+            },
+            add_card_with_title: function(FM, cmd, id){
+                var _title = cmd[1].length? cmd[1]:'Card';
+                for (var i = 2; i < cmd.length; i++) {
+                    _title = _title + ' ' + cmd[i];
+                };
+
+
+
+                var d_size = {w:2, h:2};//size of this card
+                var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
+
+                var _card_content = {
+                    title:_title,
+                    text:self.getRandomText()
+                }
+                var _card_data = {
+                    default_size:d_size,
+                    default_pos: d_pos,
+                    card_content: _card_content,
+                    model:FM.defaultModel,
+                    view:FM.defaultView,
+                    sctype:card_props.TYPE.SIMPLE_TEXT 
+                }
+                card_ = FM.actions.add_new_card(_card_data);
+                state.actions.select_this_card(state, card_);
+                return card_;
+            },
+            add_card_with_default_title: function(FM, cmd){
+                var d_size = {w:2, h:2};//size of this card
+                var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
+
+                var _card_content = {
+                    title:'Card',
+                    text:self.getRandomText()
+                }
+                var _card_data = {
+                    default_size:d_size,
+                    default_pos: d_pos,
+                    card_content: _card_content,
+                    model:FM.defaultModel,
+                    view:FM.defaultView,
+                    sctype:card_props.TYPE.SIMPLE_TEXT 
+                }
+                card_ = FM.actions.add_new_card(_card_data);
+                state.actions.select_this_card(state, card_);
+
+                return card_;
+            },
+            remove_card: function(FM, sel_card){
+                    if(sel_card){
+                        FM.actions.remove_card(sel_card, 'TEMPORARY');
+                    }
+            },
+            copy_card: function(FM, sel_card){
+                // if(sel_card && sel_card.id){
+                //     var from_fv_key = FM.getCurrentFrameviewKeyAndTitle().fv_key;
+                //     state.actions.set_copy_card_ids({from_fv_key:from_fv_key, ids:[sel_card.id]}, state);
+                //     console.log('copied', from_fv_key);
+                // }
+                // 
+                // above is id transfer version
+                
+                state.copied_card = sel_card;
+
+            },
+            paste_card: function(FM){
+                // var obj = state.actions.get_cut_or_copied_card_id(state);
+                //     console.log(obj);
+                // if(obj && obj.ids.length && obj.from_fv_key){
+                //     var to_fv_key = FM.getCurrentFrameviewKeyAndTitle().fv_key;
+                //     if(to_fv_key != obj.from_fv_key){
+                //         FM.actions.transfer_cards_between_frameview( obj.ids, obj.from_fv_key, to_fv_key);
+                //         FM.actions.load_cards_from_store_to_frameview(obj.ids);
+                //         state.actions.set_copy_card_ids(null, _state);
+                //         // removed the copied element or its possible to paste it every where
+                //         // 
+                //     }
+                // }
+                // // above is id transfer version
+                // 
+                if(state.copied_card) FM.actions.clone_card_and_save(state.copied_card);
+            },
+
+                    
+            delete_card: function(FM, sel_card){
+                    if(sel_card){
+                        FM.actions.remove_card(sel_card, 'PERMANENT');
+                    }
+            },
+
+            show_settings: function(FM){
+                console.log("settings config");
+                FM.actions.add_new_card({
+                    title:'Settings:Config',
+                    settings:{config:FM.frame_config, config_map:FM.frame_config_map},
+                    volatile:true
+                });
+                // console.log({config:FM.frame_config, config_map:FM.frame_config_map});
+            },
+            exit: function(){
+                self.removeCurrentFrame();
+            },
+            trigger_selected_parent: function(FM, sel_card){
+                if(sel_card)FM.trigger_parent(sel_card);
+            },
+
+            add_image_card: function(FM, src){
+                if(src.length > 100)return;// don't aloow large file names
+                var img_url = "<img src=\""+  src +"\" alt=\"Image\" style=\" width:100%;\">";
+                console.log('image found');
+
+                var d_size = {w:3, h:3};//size of this card
+                var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
+
+                var _card_content = {
+                    title:'Untitled',
+                    text:img_url,
+                }
+                var _card_data = {
+                    default_size:d_size,
+                    default_pos: d_pos,
+                    card_content: _card_content,
+                    model:FM.defaultModel,
+                    view:FM.defaultView,
+                    sctype:card_props.TYPE.SIMPLE_TEXT,
+                }
+                card_ = FM.actions.add_new_card(_card_data);
+                state.actions.select_this_card(state, card_);
+
+                
+            },
+            set_image_of_selected_card: function(FM, sel_card, src){
+                if(src.length > 100)return;// don't aloow large file names
+                if(sel_card && sel_card.bind_data.text){
+                    var img_url = "<img src=\""+  src +"\" alt=\"Image\" style=\" width:100%;\">";
+                    sel_card.bind_data.text(img_url);
+                    FM.actions.save_card_content(sel_card, true);
+                }
+            },
+            set_text_of_selected_card: function(FM, sel_card, _text){
+                var _cd = sel_card;
+                if(_cd){// _cs is definitely an array
+                    if(_cd.bind_data.text){// not everyone has text
+                        if(_text.match(/^https?:\/\//)){
+                            _text = "<a  href=\"" + _text + "\" target=\"_blank\">" + _text+ "</a>";
+                        }                            
+                         _cd.bind_data.text(_text);
+                        FM.actions.save_card_content(_cd, true);
+                    }
+                }
+            },
+            add_text_of_selected_card: function(FM, sel_card, _text){
+                var _cd = sel_card;
+                if(_cd){// _cs is definitely an array
+                    if(_cd.bind_data.text){// not everyone has text
+                        if(_text.match(/^https?:\/\//)){
+                            _text = "<a  href=\"" + _text + "\" target=\"_blank\">" + _text+ "</a>";
+                        }
+                        
+                        _cd.bind_data.text(_cd.bind_data.text() + "<div>"+_text+ "</div>");
+                        FM.actions.save_card_content(_cd, true);
+                    }
+                }
+            },
+                        
+                            
+            set_password_for_selected_card: function(FM, sel_card, _pass){
+                var _cd = sel_card;
+                if(_cd && _cd.TYPE.PARENT){
+                    if(_pass.length){
+                        _cd.card_data.password = _pass;
+                        FM.actions.save_card_content(_cd, true);
+                    }
+                    else{
+                        delete _cd.card_data.password;
+                        delete _cd.restricted;
+                        FM.actions.save_card_content(_cd, true);   
+                    }
+                }
+            },
+            make_selected_card_nonremovable: function(FM, sel_card){
+                if(sel_card){
+                    sel_card.card_data.non_removable = true;
+                    FM.actions.save_card_content(sel_card, true);  
+                }
+            },
+            make_selected_card_removable: function(FM, sel_card){
+                if(sel_card){
+                    delete sel_card.card_data.non_removable;
+                    FM.actions.save_card_content(sel_card, true);  
+                }
+            },
+            set_title: function(FM, sel_card, title){
+                if(sel_card){
+                    sel_card.bind_data.title(title);
+                    FM.actions.save_card_content(sel_card, true);
+                }
+            },
+            add_iframe_from_src: function(FM, src){
+                if(src.length>1){
+                    var _iframe = "<iframe width=\"100%\" height=\"auto\" src=\""+  src +"\"  style=\" \"></iframe>";
+
+                    var d_size = {w:6, h:6};//size of this card
+                    var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
+
+                    var _card_content = {
+                        title:'Untitled',
+                        text:_iframe,
+                    }
+                    var _card_data = {
+                        default_size:d_size,
+                        default_pos: d_pos,
+                        card_content: _card_content,
+                        model:FM.defaultModel,
+                        view:FM.defaultView,
+                        sctype:card_props.TYPE.SIMPLE_TEXT,
+                    }
+                    card_ = FM.actions.add_new_card(_card_data);
+                    state.actions.select_this_card(state, card_);
+
+                    // return card_;
+                }
+            },
+
+            embed_youtube_link: function(FM, link){
+                var lnk = link.split('v=');
+                if(lnk.length>1){
+                    var embed_url = "<iframe width=\"600\" height=\"300\" src=\"https://www.youtube.com/embed/"+ lnk[1].replace('&', '?') +"\" frameborder=\"0\" allowfullscreen></iframe>";
+                    
+                    var d_size = {w:6, h:5};//size of this card
+                    var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
+
+                    var _card_content = {
+                        title:'Untitled',
+                        text:embed_url,
+                    }
+                    var _card_data = {
+                        default_size:d_size,
+                        default_pos: d_pos,
+                        card_content: _card_content,
+                        model:FM.defaultModel,
+                        view:FM.defaultView,
+                        sctype:card_props.TYPE.SIMPLE_TEXT,
+                        non_resizable: true,
+                    }
+
+                    card_ = FM.actions.add_new_card(_card_data);
+                    state.actions.select_this_card(state, card_);
+                    // return card_;
+                }
+            },
+            embed_img_link: function(FM, src){
+                if(src.length > 100)return;// don't aloow large file names
+                var img_url = "<img src=\""+  src +"\" alt=\"Image\" style=\" \">";
+                console.log('image found');
+                
+                var d_size = {w:3, h:3};//size of this card
+                var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
+
+                var _card_content = {
+                    title:'Untitled',
+                    text:img_url,
+                }
+                var _card_data = {
+                    default_size:d_size,
+                    default_pos: d_pos,
+                    card_content: _card_content,
+                    model:FM.defaultModel,
+                    view:FM.defaultView,
+                    sctype:card_props.TYPE.SIMPLE_TEXT,
+                }
+                card_ = FM.actions.add_new_card(_card_data);
+                state.actions.select_this_card(state, card_);
+            },
+
+            check_value: function(name, obj){
+                if(obj){
+                    self.frameActions.add_command({title:name+ ': True', desc:""});
+                }
+                else{
+                    self.frameActions.add_command({title:name+ ': False', desc:""});
+                }
+                    
+            },
+
+
+            add_command: function(cmd){
+                self.commands.push(cmd);
+            },
+            remove_commands: function(){
+                self.commands = [];
+                interpreter.filteredCardTitles = [];
+                interpreter.queryQuestions = [];
+                interpreter.queryAnswers = [];
+            }
+
+        }
+        this.searchSubmit = function(commit){// commit is a complete misnomer , its actauly a dom element
             if(self.framesData().length){
-                currentFrame = self.framesData()[0].frameModel;
+                FM = self.framesData()[0].frameModel;
             }
             else {
                 self.addFrame({frameview_key:'home', title:'Home', bgColor:'darkcyan'});
                 return;// return or if the command is add frame it will be added again
                     //in fact it will return in the check bellow
             }
-            if(!currentFrame)return;
+            if(!FM)return;
 
-            var isCmd = true;// wheather its a command or search query
-            if(!$commandInput) $commandInput = $('#commandInput');
-            var _fullstr = $commandInput.val();
-            var cmd = _fullstr;
-            // commandline.value = '';
-            if(cmd[0]==' ')isCmd = false;
+            var command_str = $commandInput.val();
 
-            if(isCmd){
-                var cmd = cmd.replace(/\s+/g, " ").split(" ");
-                if(cmd[0] != ''){
-                    if ("add".indexOf(cmd[0].toLowerCase()) === 0 ){
-                        var card_ = null;
-                        if(cmd.length > 1){
-                            if('parent'.indexOf(cmd[1].toLowerCase()) === 0){//parent
-                                if(cmd.length > 2){//parent with title
-                                    var _title = cmd[2];
-                                    for (var i = cmd.length - 1; i >= 3; i--) {
-                                        _title = _title + ' ' + cmd[i];
-                                    };
-                                    var d_size = {w:2, h:2};//size of this card
-                                    var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
-
-                                    var _card_content = {
-                                        title:_title,
-                                        text:self.getRandomText()
-                                    }
-                                    var _card_data = {
-                                        parent:true,
-                                        default_size:d_size,
-                                        default_pos: d_pos,
-                                        card_content: _card_content,
-                                        model:currentFrame.defaultModel,
-                                        view:currentFrame.defaultView,
-                                        sctype:card_props.TYPE.SIMPLE_TEXT 
-                                    }
-                                    card_ = currentFrame.actions.add_new_card(_card_data);
-                                    state.actions.select_this_card(state, card_);
+            if(command_str && command_str.length){
+                var cmd = command_str.replace(/\s+/g, " ").split(" ");
+                if(cmd[0].length && (cmd[0][0] != ':' )){// command
+                    var ctx = {}
+                    ctx.sel_card = state.actions.get_primary_selected_card(state);
+                    if(ctx.sel_card){
+                        ctx.isparent = (ctx.sel_card.TYPE.PARENT);
+                        ctx.islist = (ctx.sel_card.card_data.sctype === card_props.TYPE.LIST);                    
+                    }
+                    var c0 = cmd[0].toLowerCase();
+                    var c1 = cmd.length>1?cmd[1].toLowerCase():null;
+                    if ('add'.indexOf(c0) === 0){
+                        if(cmd.length > 1 && cmd[1].length){
+                            var c1 = cmd[1].toLowerCase();
+                            if( 'parent'.indexOf(c1) === 0){//parent
+                                if(cmd.length > 2 && cmd[2].length){//parent with title
+                                    if(!commit) self.frameActions.add_command({title:'add parent', desc:'add a card with title \"' + cmd.slice(2, cmd.length).join(' ')+ '\"' });
+                                    else self.frameActions.add_parent_with_title(FM, cmd);
                                 }
                                 else{// just parent
-                                    var d_size = {w:2, h:2};//size of this card
-                                    var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
-
-                                    var _card_content = {
-                                        title:'Parent',
-                                        text:self.getRandomText()
-                                    }
-                                    var _card_data = {
-                                        parent:true,
-                                        default_size:d_size,
-                                        default_pos: d_pos,
-                                        card_content: _card_content,
-                                        model:currentFrame.defaultModel,
-                                        view:currentFrame.defaultView,
-                                        sctype:card_props.TYPE.SIMPLE_TEXT 
-                                    }
-                                    card_ = currentFrame.actions.add_new_card(_card_data);
-                                    state.actions.select_this_card(state, card_);
+                                    if(!commit) self.frameActions.add_command({title:'add parent', desc:'add a parent card named \"Parent\"'});
+                                    else self.frameActions.add_parent_with_default_title(FM);
                                 }
                             }
-                            else if('frame'.indexOf(cmd[1].toLowerCase()) === 0){//new frame
-                                console.log("adding frame");
-                                if(cmd.length > 2){//frame with frameview_key
-                                    var _fv_key = cmd[2];
-                                    self.addFrame({frameview_key:_fv_key, title:'Frameview', bgColor:'darkcyan'});    
-                                }
-                                else{
-                                    self.addFrame({frameview_key:'home', title:'Home', bgColor:'darkcyan'});
-                                }
+                            else if('frame'.indexOf(c1) === 0){//new frame
+                                if(!commit) self.frameActions.add_command({title:'add frame', desc:''});
+                                else self.frameActions.add_frame({});
                             }
-                            else if(':list' === cmd[1].toLowerCase()){// a list
-                                if(cmd.length > 2){
-                                    var _title = cmd[2];
-                                    if(cmd.length > 3){
-                                        for (var i = cmd.length - 1; i >= 3; i--) {
-                                            _title = _title + ' ' + cmd[i];
-                                        };
-                                    }
-
-                                    var d_size = {w:2, h:3};//size of this card
-                                    var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
-                                    
-                                    // var l1 = {text:'ashish', on:true};
-                                    // var l2 = {text:'Sir Issac Newton', on:true};
-                                    // var l3 = {text:'Someone else', on:false};
-                                    var _card_content = {
-                                        title:_title,
-                                        list:[],
-                                    }
-                                    var _card_data = {
-                                        default_size:d_size,
-                                        default_pos: d_pos,
-                                        card_content: _card_content,
-                                        model:currentFrame.defaultModel,
-                                        view:"views/cards/todo.html",
-                                        non_editable:true,
-                                        sctype:card_props.TYPE.LIST
-                                    }
-                                    card_ = currentFrame.actions.add_new_card(_card_data);
-                                    state.actions.select_this_card(state, card_);
-
-                                }
-                                else{// generate everything
-
-                                }
+                            else if('li'.indexOf(c1) === 0 && ctx.islist){// a list item
+                                if(!commit) self.frameActions.add_command({title:'add list item', desc:'add a non editable list'});
+                                else self.frameActions.add_list_item(FM, cmd);
                             }
-                            else if(':li' === cmd[1].toLowerCase()){// a list item
-                                if(cmd.length >2  && state.isany_card_selcted){
-                                    var _item = _fullstr.split(':li');
-                                    if(_item.length > 1){
-                                        _item = _item[1];
-                                        console.log(_item);
-                                        var _card = state.now_selected_cards[0];
-                                        if(_card.card_data.sctype === card_props.TYPE.LIST){
-                                            // its a list
-                                            _card.bind_data.list.unshift({text:ko.observable(_item), on:ko.observable(false)});
-                                            self.currentFrame.frameModel.actions.save_card_content(_card, true);
-                                        }
-                                    }
-                                }
-
+                            else if('list'.indexOf(c1) === 0){// a list
+                                if(!commit) self.frameActions.add_command({title:'add list', desc:'add a non editable list'});
+                                else self.frameActions.add_list(FM, cmd);
                             }
-                            else if(':leaf' === cmd[1].toLowerCase()){// a leaf_editor
-                                
-                                var _title = 'Untitled';
-                                if(cmd.length > 2){
-                                    _title = '';
-                                    for (var i = cmd.length - 1; i >= 2; i--) {
-                                        _title = _title + ' ' + cmd[i];
-                                    };
-                                }
-
-                                var d_size = {w:3, h:4};//size of this card
-                                var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
-                                
-                                // var l1 = {text:'ashish', on:true};
-                                // var l2 = {text:'Sir Issac Newton', on:true};
-                                // var l3 = {text:'Someone else', on:false};
-                                var _card_content = {
-                                    title:_title,
-                                    text:'Start writing hare',
-                                }
-                                var _card_data = {
-                                    default_size:d_size,
-                                    default_pos: d_pos,
-                                    card_content: _card_content,
-                                    model:currentFrame.defaultModel,
-                                    view:"views/cards/leafeditor.html",
-                                    sctype:card_props.TYPE.LEAF_EDITOR,
-                                }
-                                card_ = currentFrame.actions.add_new_card(_card_data);
-                                state.actions.select_this_card(state, card_);
-
+                            else if('leaf'.indexOf(c1) === 0){// a leaf_editor
+                                if(!commit) self.frameActions.add_command({title:'add leaf', desc:'add the leaf edtor'});
+                                else self.frameActions.add_leaf(FM, cmd);
                             }
                             else{//card with given title
-                                var _title = cmd[1];
-                                for (var i = cmd.length - 1; i >= 2; i--) {
-                                    _title = _title + ' ' + cmd[i];
-                                };
-
-                                var d_size = {w:2, h:2};//size of this card
-                                var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
-
-                                var _card_content = {
-                                    title:_title,
-                                    text:self.getRandomText()
-                                }
-                                var _card_data = {
-                                    default_size:d_size,
-                                    default_pos: d_pos,
-                                    card_content: _card_content,
-                                    model:currentFrame.defaultModel,
-                                    view:currentFrame.defaultView,
-                                    sctype:card_props.TYPE.SIMPLE_TEXT 
-                                }
-                                card_ = currentFrame.actions.add_new_card(_card_data);
-                                state.actions.select_this_card(state, card_);
-                            }
-                        }
-                        else{
-                            var d_size = {w:2, h:2};//size of this card
-                            var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
-
-                            var _card_content = {
-                                title:'Card',
-                                text:self.getRandomText()
-                            }
-                            var _card_data = {
-                                default_size:d_size,
-                                default_pos: d_pos,
-                                card_content: _card_content,
-                                model:currentFrame.defaultModel,
-                                view:currentFrame.defaultView,
-                                sctype:card_props.TYPE.SIMPLE_TEXT 
-                            }
-                            card_ = currentFrame.actions.add_new_card(_card_data);
-                            state.actions.select_this_card(state, card_);
-                        }
-
-                        //currentFrame.start_editing_card(card_);
-
-                        // $(card_.el).find('.title').focus();
-                        // console.log('title', $.sc_find_rec(card_.el,'title'));
-
-                    }
-                    else if("remove".indexOf(cmd[0].toLowerCase()) === 0 ){
-                        if(cmd.length > 1){
-
-                        }
-                        else{
-                            var _cd = state.actions.get_primary_selected_card(state);
-                            if(_cd){
-                                self.currentFrame.frameModel.actions.remove_card(_cd, 'TEMPORARY');
-                            }
-                                
-                        }
-                    }
-                    // else if ("goto".indexOf(cmd[0].toLowerCase()) === 0 ){
-                    //     if(cmd.length == 2 ){
-                    //         currentFrame.goto_frameview(cmd[1]);
-                    //     }
-                    // }
-                    //clear store
-                    else if ("clear".indexOf(cmd[0].toLowerCase()) === 0 && cmd.length > 1 && "store".indexOf(cmd[1]) === 0){
-                        console.log('clearing store');
-                        chrome.runtime.sendMessage(
-                            {
-                                type:'STORE_REMOVEALL'
-                            }, 
-                            function(response) {
-                            }
-                        );
-                    }
-                    else if ("get".indexOf(cmd[0].toLowerCase()) === 0 && cmd.length > 1 && "store".indexOf(cmd[1]) === 0 ){
-                        console.log('trying to get all in store');
-                        chrome.runtime.sendMessage(
-                            {
-                                type:'STORE_GETALL'
-                            }, 
-                            function(response) {
-                                console.log('got these from store', response);
-                            }
-                        );
-                    }
-                    
-                    else if("set".indexOf(cmd[0].toLowerCase()) === 0){
-                        if(cmd.length>1){
-                            if("view".indexOf(cmd[1].toLowerCase()) ===0){
-                                if(cmd.length > 2){
-                                    if("card".indexOf(cmd[2].toLowerCase()) ===0){
-                                        currentFrame.defaultView = "views/card.html";
-                                        console.log('YOU have BOUND card', cmd[2]);
-
+                                if(!commit) interpreter.resolve_pattern('add', '[title]', cmd.slice(1,cmd.length).join(' '));
+                                else {
+                                    var id = self.commandSuggestions()[0].id;
+                                    if(id){
+                                        FM.actions.load_cards_from_store_to_frameview([id]);
                                     }
-                                    else if("ribbon".indexOf(cmd[2].toLowerCase()) ===0){
-                                        currentFrame.defaultView = "views/ribbon.html";
-                                        console.log('YOU have BOUND  ribbon');
-                                    }
-                                    else{
-                                        currentFrame.defaultView = "views/cards/" + cmd[2] + ".html";
+                                    else{// card title doesn't exist a new one will be created
+                                        self.frameActions.add_card_with_title(FM, cmd);
                                     }
                                 }
                             }
-                            else if("config".indexOf(cmd[0].toLowerCase()) ===0){
 
-                            }
-                        }
-                    }
-                    else if("settings".indexOf(cmd[0].toLowerCase()) === 0){
-                        console.log("settings config");
-                        currentFrame.actions.add_new_card({
-                            title:'Settings:Config',
-                            settings:{config:currentFrame.frame_config, config_map:currentFrame.frame_config_map},
-                            volatile:true
-                        });
-                        // console.log({config:currentFrame.frame_config, config_map:currentFrame.frame_config_map});
-                    }
-                    else if("exit" === cmd[0].toLowerCase()){
-                        self.removeCurrentFrame();
-                    }
-                    else if("go" === cmd[0].toLowerCase()){
-                        var _cards = state.actions.get_selected_cards(state);
-                        if(_cards.length)self.currentFrame.frameModel.trigger_parent(_cards[0]);
-                    }
-                    else if("image" === cmd[0].toLowerCase()){
-                        if(cmd.length>1){
-                            var img_url = "<img src=\""+  cmd[1] +"\" alt=\"Image\" style=\" \">";
-                            console.log('image found');
-
-                            var d_size = {w:3, h:3};//size of this card
-                            var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
-
-                            var _card_content = {
-                                title:'Untitled',
-                                text:img_url,
-                            }
-                            var _card_data = {
-                                default_size:d_size,
-                                default_pos: d_pos,
-                                card_content: _card_content,
-                                model:currentFrame.defaultModel,
-                                view:currentFrame.defaultView,
-                                sctype:card_props.TYPE.SIMPLE_TEXT,
-                            }
-                            card_ = currentFrame.actions.add_new_card(_card_data);
-                            state.actions.select_this_card(state, card_);
-
-                            $commandInput.val('');
-                        }
-                    }
-                    else if("setimage" === cmd[0].toLowerCase()){
-                        if(cmd.length>1){
-                            var _cs = state.actions.get_selected_cards(state);
-                            if(_cs.length && _cs[0].bind_data.text){// _cs is definitely an array
-                                
-                                var _w = Math.round($(_cs[0].el).width())-20;
-                                var img_url = "<img src=\""+  cmd[1] +"\" alt=\"Image\" style=\" width:100%;\">";
-                                _cs[0].bind_data.text(img_url);
-                                self.currentFrame.frameModel.actions.save_card_content(_cs[0], true);
-                            }
-                            
-                            $commandInput.val('');
+                                            
+                                        
                         }
                         else{
-                            http.jsonp('http://api.flickr.com/services/feeds/photos_public.gne', { tags: 'mount ranier', tagmode: 'any', format: 'json' }, 'jsoncallback').then(function(response) {
-                                console.log(response.items);
-                            });
+                            if(!commit) self.frameActions.add_command({title:'add *', desc:'add a card named \"Card\"'});
+                            else card_ = self.frameActions.add_card_with_default_title(FM, cmd);
                         }
                     }
-                    else if("settext" === cmd[0].toLowerCase()){
-                        var _cs = state.actions.get_selected_cards(state);
-                        if(_cs.length){// _cs is definitely an array
-                            if(_cs[0].bind_data.text){// not everyone has text
-                                _cs[0].bind_data.text(cmd.join(' ').replace('settext ', ''));
-                                self.currentFrame.frameModel.actions.save_card_content(_cs[0], true);
-                            }
-                        }
+                    else if('remove'.indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'remove', desc:'Remove selected card'});
+                        else self.frameActions.remove_card(FM, ctx.sel_card);
+                    }
+                    else if('copy'.indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'copy', desc:'Copy selected card'});
+                        else self.frameActions.copy_card(FM, ctx.sel_card);
+                    }
+                    else if('paste'.indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'paste', desc:'Paste copied card into frameview'});
+                        else self.frameActions.paste_card(FM);
+                    }
+                    else if('delete'.indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'delete', desc:'Delete selected card, You can\'t undo this action. Write full command'});
+                        else if(c0.length === 6) self.frameActions.delete_card(FM, ctx.sel_card);
+                    }
+                    else if('exit'.indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'exit', desc:'Close all cards and frames, Just close everything and sleep'});
+                        else self.frameActions.exit();
+                    }
+                    else if('go'.indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'go', desc:'Enter inside this card'});
+                        else self.frameActions.trigger_selected_parent(FM, ctx.sel_card);
+                    } 
+                    else if('image'.indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'image ', desc:'add an image card'});
+                        else if(c1 && c1.length < 100) self.frameActions.add_image_card(FM, c1);
+                    }
+                    else if('setimage'.indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'setimage ', desc:'Set background image of this card'});
+                        else if(c1 && c1.length < 100) self.frameActions.set_image_of_selected_card(FM, ctx.sel_card, c1);
+                    }
+                    else if('settext'.indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'settext ' + "\"" + cmd.slice(1, cmd.length).join(" ") + "\"", desc:'set text '});
+                        else if(c1) self.frameActions.set_text_of_selected_card(FM, ctx.sel_card, cmd.slice(1, cmd.length).join(" "));
+                    }
+                    else if('addtext'.indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'addtext ' + "\"" + cmd.slice(1, cmd.length).join(" ") + "\"", desc:'add text '});
+                        else if(c1) self.frameActions.add_text_of_selected_card(FM, ctx.sel_card, cmd.slice(1, cmd.length).join(" "));
+                    }
+                    else if('setpassword'.indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'setpassword', desc:'Setpassword'});
+                        else if(c1) self.frameActions.set_password_for_selected_card(FM, ctx.sel_card, c1);
+                    }
+                    else if("isnonremovable".indexOf(c0) === 0){
+                        if(!commit) self.frameActions.check_value('isnonremovable', ctx.sel_card.card_data.non_removable);
+                    }                        
+                    else if("settitle".indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'settitle ' + "\"" + cmd.slice(1, cmd.length).join(" ") + "\"", desc:'Set this card\'s title to:'});
+                       else if(c1) self.frameActions.set_title(FM, ctx.sel_card, cmd.slice(1, cmd.length).join(" "));
                         
-                        $commandInput.val('');
                     }
-                    else if("settitle" === cmd[0].toLowerCase()){
-                        var _cs = state.actions.get_selected_cards(state);
-                        if(_cs.length){// _cs is definitely an array
-                            _cs[0].bind_data.title(cmd.join(' ').replace('settitle ', ''));
-                            self.currentFrame.frameModel.actions.save_card_content(_cs[0], true);
-                        }
-                        
-                        $commandInput.val('');
+                    else if('settings'.indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'settings', desc:'Update your settings'});
+                        else self.frameActions.show_settings(FM);
                     }
-                    else if("iframe" === cmd[0].toLowerCase()){
-                        if(cmd.length>1){
-                            var _iframe = "<iframe width=\"600px\" height=\"340px\" src=\""+  cmd[1] +"\"  style=\" \"></iframe>";
-
-                            var d_size = {w:6, h:6};//size of this card
-                            var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
-
-                            var _card_content = {
-                                title:'Untitled',
-                                text:_iframe,
-                            }
-                            var _card_data = {
-                                default_size:d_size,
-                                default_pos: d_pos,
-                                card_content: _card_content,
-                                model:currentFrame.defaultModel,
-                                view:currentFrame.defaultView,
-                                sctype:card_props.TYPE.SIMPLE_TEXT,
-                            }
-                            card_ = currentFrame.actions.add_new_card(_card_data);
-                            state.actions.select_this_card(state, card_);
-
-                            $commandInput.val('');
-                        }
+                    else if("iframe".indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'iframe ' + "\"" + cmd.slice(1, cmd.length).join(" ") + "\"", desc:'Add an I frame with given source url'});
+                        else if(c1) self.frameActions.add_iframe_from_src(FM, c1);
                     }
-                    else if(cmd[0].indexOf('http') === 0){// some url is given
-                        if(cmd[0].indexOf('youtube.com') > 1){// an youtube url
-                            var lnk = cmd[0].split('v=');
-                            if(lnk.length>1){
-                                var embed_url = "<iframe width=\"600\" height=\"300\" src=\"https://www.youtube.com/embed/"+ lnk[1].replace('&', '?') +"\" frameborder=\"0\" allowfullscreen></iframe>";
-                                
-                                var d_size = {w:6, h:5};//size of this card
-                                var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
-
-                                var _card_content = {
-                                    title:'Untitled',
-                                    text:embed_url,
-                                }
-                                var _card_data = {
-                                    default_size:d_size,
-                                    default_pos: d_pos,
-                                    card_content: _card_content,
-                                    model:currentFrame.defaultModel,
-                                    view:currentFrame.defaultView,
-                                    sctype:card_props.TYPE.SIMPLE_TEXT,
-                                    non_resizable: true,
-                                }
-
-                                card_ = currentFrame.actions.add_new_card(_card_data);
-                                state.actions.select_this_card(state, card_);
-
-                                $commandInput.val('');
-                            }
+                    else if("makenonremovable".indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'makenonremovable', desc:"Make this a non removable card, useful for most important tcards , so that you don\'t remove them by mistake"});
+                        else self.frameActions.make_selected_card_nonremovable(FM, ctx.sel_card);
+                    }
+                    else if("deletenonremovable".indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'deletenonremovable', desc:"Remove non_removable when You absolutely have to remove this"});
+                        else self.frameActions.make_selected_card_removable(FM, ctx.sel_card);
+                    }
+                    else if(c0.indexOf('http') === 0){// some url is given
+                        if(c0.indexOf('youtube.com') > 1){// an youtube url
+                            if(!commit) self.frameActions.add_command({title:'embed youtube video', desc:'Embed a youtube video with url: ' + "\"" + c0 + "\""});
+                            else self.frameActions.embed_youtube_link(FM, c0);
                         }//youtube
-                        else if(cmd[0].match(/\.(jpg|png|gif|JPG)$/)) {
-                            var img_url = "<img src=\""+  cmd[0] +"\" alt=\"Image\" style=\" \">";
-                            console.log('image found');
-                            
-                            var d_size = {w:3, h:3};//size of this card
-                            var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
 
-                            var _card_content = {
-                                title:'Untitled',
-                                text:img_url,
-                            }
-                            var _card_data = {
-                                default_size:d_size,
-                                default_pos: d_pos,
-                                card_content: _card_content,
-                                model:currentFrame.defaultModel,
-                                view:currentFrame.defaultView,
-                                sctype:card_props.TYPE.SIMPLE_TEXT,
-                            }
-                            card_ = currentFrame.actions.add_new_card(_card_data);
-                            state.actions.select_this_card(state, card_);
-
-                            $commandInput.val('');
+                        else if(c0.match(/\.(jpg|png|gif|JPG)$/)) {
+                            if(!commit) self.frameActions.add_command({title:'embed image', desc:'Embed an image with src: ' + "\"" + c0 + "\""});
+                            else self.frameActions.embed_img_link(FM, c0);
                         }
+                            
+                    }
+                    else{// doesn't match anything
+                        self.frameActions.remove_commands();
+                    }
+
+                    //Select
+                    if('select'.indexOf(c0) === 0 && c0.length > 2){
+                        FM.show_all_card_label(true);
+                        if(!commit) self.frameActions.add_command({title:'select', desc:"Select a card by Index, eg. \'sel4\' to select card with index 4"});
+                    }
+                    else{
+                        var match = command_str.toLowerCase().match(/sele?c?t?(\d+)\.?(\d+)?/);
+                        if(match && match.length>1){
+                            ind = parseInt(match[1])-1;
+                            if(ind < FM.cards().length)state.actions.select_this_card(state, FM.cards()[ind]);
+                        }
+                        if(FM.show_all_card_label())FM.show_all_card_label(false);
                     }
                 }
-            }// end if(isCmd)
-            else{// Search
-                var query = cmd.replace(/\s+/g, " ");
-                console.log("Search for", query);
+                else if(cmd[0][0] == ':'){
+                    var c0 = cmd[0].slice(1,cmd[0].length).toLowerCase();
+                    var q = cmd.slice(1, cmd.length).join(" ");
+                    interpreter.onlineCommandSearch(c0, q);
+                }
+                else{// search with space(" ")
+                    if(!commit) self.frameActions.add_command({title:'Search', desc:'Search for anything. well, almost anything. But there is no guarantee that you will find it'});
+                }
 
-                var type = 'SEARCH_STORE';
-                var _msg = {query:query, title_only:true, highlighting:true};
-                self.send_msg_to_background(type, _msg);
+                if(commit) $commandInput.val('');
+            }//if(cmd_str...
+            else{                
+                self.frameActions.remove_commands();
+
+                if(FM.show_all_card_label())FM.show_all_card_label(false);
             }
 
-            // as enter was pressed, remove all characters
-            $commandInput.val('');
         };
         this.updatedPreviousCardPosSize = function(x, y, w, h){
             self.previousCardPosSize.x = x;
@@ -862,6 +900,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             self.createNewBindings();
             self.attachedChromeEventListener();
             self.send_msg_to_background('GET_DATA_ELEMENT', {id:'LAST_USED_FRAMEVIEW_KEY'});
+            self.send_msg_to_background('GET_ALL_CARD_AND_FRAMEVIEW_TITLES', {});
             setTimeout(function(){
                 if(!self.framesData().length){
                     self.on_start('home', 'Home');
@@ -909,6 +948,16 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     }
                     else{
                         self.on_start('home', 'Home');
+                    }
+                        
+                }
+                else if(request.type === 'REPLYOF_GET_ALL_CARD_AND_FRAMEVIEW_TITLES'){
+                    if(request.msg.data && request.msg.data.card_titles && request.msg.data.frameview_titles){
+                        var data = request.msg.data;
+                        interpreter.on_start(data);
+                    }
+                    else{// request.msg.data could be null
+                        // it will create and send again
                     }
                         
                 }
@@ -1035,6 +1084,68 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 
             }
         }
+
+        this.emit_valid_commands_changed=function(){
+
+            var bind_data = {};
+            self.commandSuggestions.removeAll();
+
+
+
+            var cmds = self.commands;
+            for(var i = cmds.length-1; i >= 0; i-- ){
+                bind_data.title = cmds[i].title;
+                bind_data.desc = cmds[i].desc;
+                if(i===0){
+                    bind_data.selected = ko.observable(true);
+                }
+                else bind_data.selected = ko.observable(false);
+                self.selectedCommandIndex = 0;
+                if(bind_data.title)self.commandSuggestions.unshift(bind_data);
+            }
+
+
+
+            var cmds = interpreter.filteredCardTitles;
+            for(var i = cmds.length-1; i >= 0; i-- ){
+                bind_data.title = cmds[i].title;
+                bind_data.desc = cmds[i].desc;
+                if(cmds[i].id)bind_data.id = cmds[i].id;// id is required to work on this card
+                if(i===0){
+                    bind_data.selected = ko.observable(true);
+                }
+                else bind_data.selected = ko.observable(false);
+                self.selectedCommandIndex = 0;
+                if(bind_data.title)self.commandSuggestions.unshift(bind_data);
+            }
+
+            var cmds = interpreter.queryQuestions;
+            for(var i = cmds.length-1; i >= 0; i-- ){
+                bind_data.title = cmds[i].title;
+                bind_data.desc = cmds[i].desc;
+                if(i===0){
+                    bind_data.selected = ko.observable(true);
+                }
+                else bind_data.selected = ko.observable(false);
+                self.selectedCommandIndex = 0;
+                if(bind_data.title)self.commandSuggestions.unshift(bind_data);
+            }
+
+
+            var cmds = interpreter.queryAnswers;
+            for(var i = cmds.length-1; i >= 0; i-- ){
+                bind_data.title = cmds[i].title;
+                bind_data.desc = cmds[i].desc;
+                if(i===0){
+                    bind_data.selected = ko.observable(true);
+                }
+                else bind_data.selected = ko.observable(false);
+                self.selectedCommandIndex = 0;
+                if(bind_data.title)self.commandSuggestions.unshift(bind_data);
+            }
+        };
+    
+            
         this.removeFrameByObject = function(frameData){
             frameData.frameModel.actions.remove_frameview_from_frame();//@? do you have to do this
             self.framesData.remove(frameData);
@@ -1076,233 +1187,38 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 if(self.framesData().length){
                     return self.framesData()[0].frameModel.frameview.key();
                 }
-            }
+            },
+            getCommandInputString: function(){
+                return $commandInput.val();
+            },
+            setCommandInputString: function(str){
+                $commandInput.val(str);
+            },
+
             
                 
         };
 
-        this.keyUpTimeOutVar = null;// used bellow
-        minTimeIntervalForQuery = 500; // ms
-        this.commandSuggest = function(event){
-
-            var str = $commandInput.val();
-            var _callb = function(json){
-                if(json.query && json.query.pages){
-                    self.commandSuggestions.removeAll();//clear suggestions
-                    $.each(json.query.pages, function(i,item){
-                        // console.log(item);
-
-                        var bind_data = {};
-                        bind_data.title = item.title;
-                        if(item.thumbnail && item.thumbnail.source)bind_data.thumb_source = item.thumbnail.source;
-                        if(item.terms && item.terms.description && item.terms.description.length){
-                            bind_data.desc = item.terms.description[0];
-                        }else bind_data.desc = '';
-                        
-                        if(bind_data.title)self.commandSuggestions.unshift(bind_data);
-                    });
-
-                }
-            }
-            if(str.length){//atleast one character exist
-                if(event.keyCode == 13 || event.which == 13){// enter pressed
-
-                    var tokens = str.replace(/\s+/g, " ").split(" ");
-                    if(tokens[0]=='w'){//wikipedia search & enter
-
-                    }
-                    else if(tokens[0]=='d'){//'d ' -> duckDuckGo
-                        // send all tokens except the first
-                        var _query = tokens.slice();//clone
-                        _query.splice(0,1);
-                        searchapi.searchDuckDuckGo(_query, function(json){
-                            if(!json.RelatedTopics.length)return; // if no result go back
-                            self.commandSuggestions.removeAll();//clear suggestions
-
-                            var bind_data = {};
-                            $.each(json.RelatedTopics, function(i, item){
-                                if(item.hasOwnProperty('Name')){
-                                    $.each(item.Topics, function(j, childItem){
-                                        bind_data = {};
-                                        var _tok = childItem.FirstURL.split('/');
-                                        if(_tok){
-                                            _tok = _tok[_tok.length-1]; //get the last value
-                                            _tok = _tok.split('%2').join(' ').split('2%').join(' ').split('_').join(' ').split('%').join(' ');
-                                        }
-                                        bind_data.title = _tok;
-                                        bind_data.desc = childItem.Text;
-                                        self.commandSuggestions.unshift(bind_data);
-                                    });
-                                }
-                                else {
-                                    bind_data = {};
-                                    var _tok = item.FirstURL.split('/');
-                                    if(_tok){
-                                        _tok = _tok[_tok.length-1]; //get the last value
-                                        _tok = _tok.split('%2').join(' ').split('2%').join(' ').split('_').join(' ').split('%').join(' ');
-                                    }
-                                    bind_data.title = _tok;
-                                    bind_data.desc = item.Text;
-                                    self.commandSuggestions.unshift(bind_data);
-                                }
-
-                            });
-                        });
-                    }
-                    else if(tokens[0] == 'g'){// 'g ' for google suggests
-                    // else if(false){// 'g ' for google suggests
-                        var _query = tokens.slice();// clone
-                        _query.splice(0,1);// take the last one
-                        searchapi.getGoogleSuggestion(_query, function(json){
-                            $.each(json.CompleteSuggestion, function(i, item){
-                                // console.log(item.suggestion.data);
-                            });
-                        });
-
-                    }
-                    //umbel, http only
-                    // it has more tpes of query , check each one of them
-                    // see that you take care of mixed content warning
-                    
-                    else if(tokens[0] == 'u'){// 'u ' for umbel search
-                        var _query = tokens.slice();// clone
-                        _query.splice(0,1);// take the last one
-                        searchapi.searchUmbelConcept(_query, function(json){
-                            var bind_data = {};
-                            $.each(json.results, function(i, item){
-                                var _tok = item._id.split('/');
-                                if(_tok){
-                                    _tok = _tok[_tok.length-1]; //get the last value
-                                    _tok = _tok.split(/(?=[A-Z])/).join(' ');// separate word based on Capital leters
-                                }
-                                bind_data.title = _tok;
-                                bind_data.desc = item.description;
-                                self.commandSuggestions.unshift(bind_data);
-                            });
-                        });
-
-                    }
-                    
-                }//enter pressed
-
-                //realtime suggestions
-                else if(str.substr(0,1) === ' '){
-                    var str = str.substr(1,str.length-1);
-                    // str don't contain begining space
-                    clearTimeout(self.keyUpTimeOutVar);
-                    self.keyUpTimeOutVar = setTimeout(function(){
-                        if(str.length > 3){// 2 for 'w ' 2 for text
-                            
-                            if(str.indexOf('w ')==0){//'w ' -> wikipedia
-                                var query = str;
-                                if(str.slice)query = str.slice(2,str.length-1);
-                                else if(str.substr)query = str.substr(2,str.length-1);
-                                mediawiki.wikipedia_suggest(query, _callb);
-                            }
-
-                            else if(str.indexOf('g ')==0){//'g ' -> google suggestions
-                                var query = str;
-                                if(str.slice)query = str.slice(2,str.length-1);
-                                else if(str.substr)query = str.substr(2,str.length-1);
-
-                                searchapi.getGoogleSuggestion(query, function(json){
-                                    self.commandSuggestions.removeAll();//clear suggestions
-                                    var bind_data = {};
-                                    $.each(json.CompleteSuggestion, function(i, item){
-                                        bind_data.title = item.suggestion.data;
-                                        bind_data.desc = '';
-                                        if(bind_data.title)self.commandSuggestions.unshift(bind_data);
-                                        
-                                    });
-                                    
-                                });
-                            }
-                            else if(str.indexOf('dbl')===0 ){
-                                query = str.substr(str.indexOf(' ') ,str.length-1);
-                                
-                                if(query.length > 2){// atleast 3 character
-                                    var prefix_url = 'http://lookup.dbpedia.org/api/search/PrefixSearch';
-                                    var prefix_data = {QueryString:query};
-                                    var search_url = 'http://lookup.dbpedia.org/api/search/KeywordSearch';
-                                    var search_data = {QueryClass:'place', QueryString:query};
-
-                                    if(str.substr(3,4)==='p')prefix_data.QueryClass = 'place';
-                                    if(str.substr(3,4)==='P')prefix_data.QueryClass = 'person';
-                                    if(str.substr(3,4)==='S')prefix_data.QueryClass = 'scientist';
-                                    // var _url = 'http://lookup.dbpedia.org/api/search/KeywordSearch?QueryClass=place&QueryString='+ query;
-
-                                    var loc_proto = window.location.protocol;
-                                    console.log(loc_proto);
-                                    if(loc_proto === 'https:'){
-                                        var _type = 'MIXED_CONTENT_CALLBACK';
-                                        var _msg = {url:'http://lookup.dbpedia.org/api/search/PrefixSearch?QueryClass=place&QueryString='+query};
-                                        self.send_msg_to_background(_type, _msg);
-                                    }
-                                    else{// no mixed content error
-                                        $.getJSON(prefix_url, prefix_data, function(json){
-                                            console.log(json);
-                                            if(json.results && json.results.length){
-                                                self.commandSuggestions.removeAll();//clear suggestions
-                                                var bind_data = {};
-                                                $.each(json.results, function(i, item){
-                                                    bind_data.title = item.label;
-                                                    bind_data.desc = item.description;
-                                                    if(bind_data.title)self.commandSuggestions.unshift(bind_data);
-                                                    
-                                                });
-                                            }
-                                            
-                                        });
-                                    }
-                                        
-
-                                }
-                                    
-
-                                
-                            }
-                            
-                            
-                        }
-                    }, minTimeIntervalForQuery);
-                }
-                else{
-                    if(self.framesData().length){
-                        var _cm = self.framesData()[0].frameModel;
-                        if('select'.indexOf(str.toLowerCase()) === 0 ){
-                                _cm.show_all_card_label(true);
-                        }
-                        else{
-                            var match = str.toLowerCase().match(/sele?c?t?(\d+)\.?(\d+)?/);
-                            if(match && match.length>1){
-                                ind = parseInt(match[1])-1;
-                                if(ind < _cm.cards().length)state.actions.select_this_card(state, _cm.cards()[ind]);
-                            }
-                            if(_cm.show_all_card_label())_cm.show_all_card_label(false);
-                        }
-                    }
-                }
-
-
-            }// at least one char
-            else{
-                if(self.currentFrame) self.currentFrame.frameModel.show_all_card_label(false);
-                
-                
-                self.commandSuggestions.removeAll();
-            }
-
+        this.init_app_events = function(){
+            // app.on('save:save_all_card_and_frameview_titles', data).then(function(data){
+            //     self.send_msg_to_background('SAVE_DATA_ELEMENT', {id:'ALL_CARD_AND_FRAMEVIEW_TITLE_LIST', data:data});
+            // });
+            //not  saving this anymore,  every time reloading all
         };
+        
         this.someKeyUp = function(event){
             if(event.keyCode == 27){// ESC
                 // get the current frame
                 if(state.isany_card_being_edited){
+                    $commandForm.show();
+                    $commandInput.focus();//
                     var _cfm = self.framesData()[0].frameModel;
                     if(_cfm )_cfm.state_manager.rollback();
                 }
                 else if(!$commandForm.is(':visible')){
                     $commandForm.show(100);
-                    $commandInput.focus();
+                    // $commandInput.focus();
+                    $commandInput.select();
                 }
                 else if($(document.activeElement).attr('id') === "commandInput"){
                     var _cfm = self.framesData()[0].frameModel;
@@ -1313,20 +1229,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     $commandInput.focus();
                 }
             }
-            else if(event.keyCode == 37  && !state.isany_card_being_edited){//LeftArrow
-               if(self.currentFrame) self.currentFrame.frameModel.actions.move_selected_card_and_save({left:1});
-            }
-            else if(event.keyCode == 39 && !state.isany_card_being_edited){//RightArrow
-               if(self.currentFrame) self.currentFrame.frameModel.actions.move_selected_card_and_save({right:1});
-            }
-            // else if(event.keyCode == 38){//UpArrow
-            //    if(self.currentFrame) self.currentFrame.frameModel.actions.move_selected_card_and_save({up:2});
-            // }
-            // else if(event.keyCode == 40){//DownArrow
-
-            //    if(self.currentFrame) self.currentFrame.frameModel.actions.move_selected_card_and_save({down:2});
-            // }
-
 
             if(event.keyCode == 16){//shift
                 state.keyboard.shift_down = false;
@@ -1341,16 +1243,25 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 // console.log('alt pressed up');
             }
 
-            //************************************
             if(state.isany_card_being_edited){
                 return true;
             }
+
+            
+
+            //************************************
             if(document.activeElement.nodeName==='INPUT' || $(document.activeElement).hasClass('sc-editable')){// editing something don't take the event
                 // event is for other input elements 
             // or for sc-editable elements 
             // or commandForm is already in focus
                 if(event.target.id == 'commandInput'){
-                    self.commandSuggest(event);
+                    if(event.keyCode != 13){// if enter pressed don't remove commands
+                                            // as there data is needed to perform the enter command
+                        self.frameActions.remove_commands();
+                        self.searchSubmit(null);// null will only search and no action will be performed
+                        self.emit_valid_commands_changed();
+                    }
+                        
                 }
                     
                 return true;
@@ -1359,6 +1270,35 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             // but if no such element is being focused now
             // no where this key event is used so use it for command
             self.focus_on_command_input(event);
+
+            // shouldn't trigger when cursor is at a input field
+            if(event.keyCode == 37  && !state.isany_card_being_edited){//LeftArrow
+               if(self.currentFrame) self.currentFrame.frameModel.actions.move_selected_card_and_save({left:1});
+            }
+            else if(event.keyCode == 39 && !state.isany_card_being_edited){//RightArrow
+               if(self.currentFrame) self.currentFrame.frameModel.actions.move_selected_card_and_save({right:1});
+            }
+
+            //COPY, PASTE
+            //************************************
+            if(event.keyCode == 67  && !state.isany_card_being_edited){
+                //C
+                if(event.ctrlKey){
+                    FM = self.currentFrame.frameModel;
+                    sel_card = state.actions.get_primary_selected_card(state);
+                    if(FM && sel_card) self.frameActions.copy_card(FM, sel_card);
+                }
+            }
+            else if(event.keyCode == 86  && !state.isany_card_being_edited){
+                //V
+                if(event.ctrlKey){
+                    FM = self.currentFrame.frameModel;
+                    if(FM) self.frameActions.paste_card(FM);
+                }   
+            }
+            
+            //************************************
+            
 
             return true;
         };

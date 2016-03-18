@@ -260,10 +260,6 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
             // self.update_bind_data_from_card_content(self.bind_data, __card.card_data.card_content);
             //^above is required if card_content comes from some other source after activation is complete
         };
-        
-        this.attached =  function(view, parent){
-        };
-       
 
         this.clickedOnElement = function(data, event){
             if(self.sctype == card_props.TYPE.LIST){

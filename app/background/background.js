@@ -60,6 +60,13 @@ chrome.runtime.onMessage.addListener(
 			remove_card_from_store(request.msg.frameview_key, request.msg.id, tabIdOfSender);
 			frameview_has_changed(request.msg.frameview_key, sender.tab);//let other tab know that this frameview has changed
 		}
+		else if(request.type == 'LOAD_CARDS_FROM_STORE'){
+			load_cards_from_pouchdb(request.msg.ids, tabIdOfSender);			
+		}
+		else if(request.type == 'TRANSFER_CARDS_BETWEEN_FRAMEVIEW'){
+			transfer_cards_between_frameview(request.msg,  tabIdOfSender);
+			
+		}
 
 		else if(request.type == 'LOAD_FRAME_CONFIG_FROM_STORE'){
 			load_frame_config_from_store(tabIdOfSender);
@@ -69,6 +76,10 @@ chrome.runtime.onMessage.addListener(
 		}
 
 		//*********************************************************
+
+		else if(request.type == 'GET_ALL_CARD_AND_FRAMEVIEW_TITLES'){
+			get_allcard_and_frameview_titles(tabIdOfSender);
+		}
 		else if(request.type == 'SEARCH_STORE'){
 			search_store(request.msg, tabIdOfSender);
 		}
@@ -153,7 +164,14 @@ var chromeReply = {
 	},
 	mixed_content_callback: function(json, tab_id){
 		sendMSG_to_tab_byId({type:'REPLYOF_MIXED_CONTENT_CALLBACK', msg:{json: json}}, tab_id);
-	}
+	},
+	get_allcard_and_frameview_titles: function(data, tab_id){
+		sendMSG_to_tab_byId({type:'REPLYOF_GET_ALL_CARD_AND_FRAMEVIEW_TITLES', msg:{data: data}}, tab_id);
+	},
+	load_cards_from_pouchdb: function(cards, tab_id){
+		sendMSG_to_tab_byId({type:'REPLYOF_LOAD_CARDS_FROM_STORE', msg:{cards: cards}}, tab_id);
+	},
+
 
 
 }
@@ -243,6 +261,31 @@ function get_card_from_pouchdb(id){
 	});
 	return _card_;
 };
+function load_cards_from_pouchdb(ids, tab_id){
+	// console.log('will try to load', ids);
+	framepouch.allDocs(
+		{
+			include_docs: true,
+			keys: ids
+		},
+		function(err, res){
+		    if(!err){
+				var _cards = [];
+		    	res.rows.forEach(function(el){
+		    		if(el.doc){	
+			    		_cards.push(el.doc.card);
+		    		}
+		    			
+		    	});
+				chromeReply.load_cards_from_pouchdb(_cards,  tab_id);
+				// console.log("found", _cards);
+		    }
+		    else{
+		    	console.log(err);
+		    }
+		}
+	);
+}
 function save_data_element_to_pouchdb(id, data, tab_id){
 	framepouch.get(id, function(err, doc){
 		if(err){
@@ -250,7 +293,6 @@ function save_data_element_to_pouchdb(id, data, tab_id){
 			framepouch.put({_id:id, data:data});
 		}
 		else{
-			console.log('creating new instance');
 			doc.data = data;
 			framepouch.put(doc);
 		}
@@ -260,20 +302,49 @@ function get_data_element_from_pouchdb(id, tab_id){
 	framepouch.get(id, function(err, doc){
 		if(err){
 			console.log('no such element with id ' + id + ' exist');
+			// create_and_send_data_element_if_needed(id, tab_id);
 			chromeReply.send_data_element(id, null, tab_id);
 		}
 		else{
 			console.log('got you: ', id,  doc.data);
 			chromeReply.send_data_element(id, doc.data, tab_id);// send even if data is not existenent			 
+
 		}
 	});
+}
+
+// the data that you asked for doesn't exist , so creating it with conditions
+function get_allcard_and_frameview_titles(tab_id){
+	framepouch.allDocs(
+		{
+			include_docs: true,
+		},
+		function(err, res){
+		    if(!err){
+		    	var _card_fv_titles = {card_titles:[], frameview_titles:[]};
+		    	res.rows.forEach(function(el){
+		    		if(el.doc && el.doc.card && el.doc.card.card_data){
+			    		_card_fv_titles.card_titles.push({id: el.doc.card.id, title:el.doc.card.card_data.card_content.title});
+		    		}
+		    		else if(el.doc && el.doc.fv_key){
+		    			// insert frameview
+		    			//title doesn't exist yet
+		    			//TODO
+		    		}
+		    			
+		    	});
+				chromeReply.get_allcard_and_frameview_titles(_card_fv_titles, tab_id);
+		    }
+		    else{
+		    	console.log(err);
+		    }
+		}
+	);
 }
 
 //************
 
 function save_new_card_from_frameview_to_store(frameview_key, _card, tab_id){
-	//PouchDB
-	sendMSG_to_tab_byId({type:'all people'}, tab_id);
 	//first save the new card
 	framepouch.put({_id:_card.id, card:_card});
 
@@ -430,6 +501,54 @@ function remove_frameview_from_store(frameview_key){
 	frameview_was_removed(frameview_key,{id:null});//id is null so that message is send to all tabs / no tab is left
 }
 
+
+function transfer_cards_between_frameview(msg, tab_id){
+	var ids = msg.ids;
+	var from_fv_key = msg.from_fv_key;
+	var to_fv_key = msg.to_fv_key;
+
+
+	//****************************
+	
+	//remove id from from_fv =>
+	framepouch.get(from_fv_key, function(err, doc){
+		if(err){//may be the doc never existed
+			console.log('frameview with key' + from_fv_key + 'doesn\'t exists');
+		}
+		else{
+			for(var i =0; i < ids.length; i++){
+				var id = ids[i];
+				_.remove(doc.fvids, function(v){return v == id;});// remove the card id  from fvids
+			}
+			framepouch.put(doc);
+		}
+	});
+
+	//****************************
+	
+	
+	//then add those ids to to_frameveiew, the cards need not be changed as they are stored separately
+	framepouch.get(to_fv_key, function(err, doc){
+		if(err){
+			console.log('frameview with key' + to_fv_key + 'doesn\'t exists');
+		}
+		else{
+			for(var i =0; i < ids.length; i++){
+				var id = ids[i];
+				//add the new id to to_fv_key frameview's id list
+				doc.fvids.push(id);
+				
+				framepouch.put(doc);
+			}
+		}
+	});
+
+	//****************************
+
+	
+
+}
+
 //***********************************
 
 function mixed_content_callback(msg, tab_id){
@@ -437,3 +556,13 @@ function mixed_content_callback(msg, tab_id){
 		chromeReply.mixed_content_callback(json, tab_id);
 	});
 }
+
+
+//*****************************************************************
+//*****************************************************************
+    //$.get('http://www.factbites.com/topics/tower%20of%20hanoi', function(data){console.log((data).replace(/<(?:.|\n)*?>/gm, ''))})
+    //$.get('http://www.factbites.com/topics/tower%20of%20hanoi', function(data){var el = document.createElement('html'); el.innerHTML = data; console.log(el)})
+//     var el = $( '<div></div>' );
+// el.html("<html><head><title>titleTest</title></head><body><a href='test0'>test01</a><a href='test1'>test02</a><a href='test2'>test03</a></body></html>");
+
+// $('a', el) // All the anchor elements

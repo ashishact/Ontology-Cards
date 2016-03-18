@@ -24,6 +24,8 @@ requirejs.config({
         'mediawiki':'data/mediawiki',
         'searchapi':'data/searchapi',
         'qwest':'../lib/qwest/qwest.min',
+        'bloodhound':'temporalcontextmachine/bloodhound',
+        'interpreter':'temporalcontextmachine/interpreter',
 
     },
     shim: {
