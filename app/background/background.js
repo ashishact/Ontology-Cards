@@ -10,6 +10,7 @@
 // these prefix are needed because they are save in the same databse as all the cards
 var frameviewkey_prefix = 'frameviewkey_';
 var frame_config_id = 'config_frame_id';
+var orphan_frameviewkey = 'orphan_frameviewkey_';
 
 //*****************************************
 var framepouch = null;
@@ -444,6 +445,72 @@ function update_card_from_frameview_to_store(_card, tab_id){
 
 }
 
+// //COMENTED OUT FRAMEVIEW REMOVE ON PARENT CARD DIED VERSION// //COMENTED OUT FRAMEVIEW REMOVE ON PARENT CARD DIED VERSION
+// //COMENTED OUT FRAMEVIEW REMOVE ON PARENT CARD DIED VERSION
+// //COMENTED OUT FRAMEVIEW REMOVE ON PARENT CARD DIED VERSION
+ 
+
+	// function remove_card_from_store(frameview_key, id, tab_id){
+
+	// 	//PouchDb
+	// 	framepouch.get(id, function(err, doc){
+	// 		if(err){//@impossible I am removing it so it must already exit in the db
+	// 			console.log('trying to remove , what doesn\'t exits');
+	// 		}
+	// 		else{
+	// 			//if it is a parent first deal with the child frameview
+	// 			if(doc.card.TYPE && doc.card.TYPE.PARENT){
+	// 				var childFrameview_key = frameviewkey_prefix+id;// its the frameview_key for the child frameview assosiated with this card
+	// 				remove_frameview_from_store(childFrameview_key);
+	// 			}
+	// 			//after removing its child frameview recurcively // or if no such thing exists
+	// 			//remove card from db
+	// 			framepouch.remove(doc);
+	// 		}
+	// 	});
+	// 	//After the card and all its child frameview are removed from db
+
+	// 	//update current frameview , by removing this card id from its list of ids
+	// 	framepouch.get(frameview_key, function(err, doc){
+	// 		if(err){//may be the doc never existed
+	// 			console.log('frameview with key' + frameview_key + 'doesn\'t exists');
+	// 		}
+	// 		else{
+	// 			_.remove(doc.fvids, function(v){return v == id;});// remove the card id  from fvids
+	// 			framepouch.put(doc);
+	// 		}
+	// 	});
+
+	// }
+
+	// function remove_frameview_from_store(frameview_key){
+
+	// 	console.log('removing frameview '+frameview_key);
+
+	// 	//PouchDB
+	// 	framepouch.get(frameview_key, function(err, doc){
+	// 		if(err){//may be this key belongs to a parent which never had a frameview created// @pos
+	// 			console.log('frameview with key' + frameview_key + 'doesn\'t exists');
+	// 		}
+	// 		else{
+	// 			var ids = doc.fvids;
+	// 			//remove all card in this frameview
+	// 			for (var i = ids.length - 1; i >= 0; i--) {
+	// 				remove_card_from_store(frameview_key, ids[i]);
+	// 				// this will take care of doing recurcive deletion
+	// 			};
+	// 		}
+	// 	});
+
+	// 	// remove frame from every tab
+	// 	// sending from here because this request will not be made from front end
+	// 	frameview_was_removed(frameview_key,{id:null});//id is null so that message is send to all tabs / no tab is left
+	// }
+
+	// //COMENTED OUT FRAMEVIEW REMOVE ON PARENT CARD DIED VERSION
+	// //COMENTED OUT FRAMEVIEW REMOVE ON PARENT CARD DIED VERSION
+
+
 function remove_card_from_store(frameview_key, id, tab_id){
 
 	//PouchDb
@@ -455,7 +522,7 @@ function remove_card_from_store(frameview_key, id, tab_id){
 			//if it is a parent first deal with the child frameview
 			if(doc.card.TYPE && doc.card.TYPE.PARENT){
 				var childFrameview_key = frameviewkey_prefix+id;// its the frameview_key for the child frameview assosiated with this card
-				remove_frameview_from_store(childFrameview_key);
+				send_frameview_to_orphan(childFrameview_key);
 			}
 			//after removing its child frameview recurcively // or if no such thing exists
 			//remove card from db
@@ -477,9 +544,10 @@ function remove_card_from_store(frameview_key, id, tab_id){
 
 }
 
-function remove_frameview_from_store(frameview_key){
-
-	console.log('removing frameview '+frameview_key);
+function send_frameview_to_orphan(frameview_key){
+	//this is not recurcive anymore
+	//as we don't have to remove anymore card , there will not be any more framview removal
+	console.log('sending frameview '+frameview_key + 'to orphan');
 
 	//PouchDB
 	framepouch.get(frameview_key, function(err, doc){
@@ -487,12 +555,17 @@ function remove_frameview_from_store(frameview_key){
 			console.log('frameview with key' + frameview_key + 'doesn\'t exists');
 		}
 		else{
-			var ids = doc.fvids;
-			//remove all card in this frameview
-			for (var i = ids.length - 1; i >= 0; i--) {
-				remove_card_from_store(frameview_key, ids[i]);
-				// this will take care of doing recurcive deletion
-			};
+			var lostids = doc.fvids;
+			framepouch.get(orphan_frameviewkey , function(err, doc){
+				if(err){
+					console.log('orphan doesn\'t exist . will create and use');
+					framepouch.put({_id:orphan_frameviewkey, fvids:lostids });
+				}
+				else{
+					doc.fvids = _.concat(doc.fvids, lostids);
+					framepouch.put(doc);
+				}
+			});
 		}
 	});
 

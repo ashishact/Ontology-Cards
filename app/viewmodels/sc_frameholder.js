@@ -303,11 +303,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 state.actions.select_this_card(state, card_);
                 return card_;
             },
-            add_frame: function(frameview_key, cmd){
+            add_frame: function(frameview_key){
                 console.log("adding frame");
-                if(cmd.length > 2){//frame with frameview_key
-                    var _fv_key = cmd[2];
-                    self.addFrame({frameview_key:_fv_key, title:'Frameview', bgColor:'darkcyan'});    
+                if(frameview_key){//frame with frameview_key
+                    self.addFrame({frameview_key:frameview_key, title:'Frameview', bgColor:'darkcyan'});    
                 }
                 else{
                     self.addFrame({frameview_key:'home', title:'Home', bgColor:'darkcyan'});
@@ -677,9 +676,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 else{
                     self.frameActions.add_command({title:name+ ': False', desc:""});
                 }
-                    
             },
-
+            show_value: function(name, value){
+                self.frameActions.add_command({title:name+ ': ' + value.toString() , desc:""});
+            },
 
             add_command: function(cmd){
                 self.commands.push(cmd);
@@ -731,7 +731,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                             }
                             else if('frame'.indexOf(c1) === 0){//new frame
                                 if(!commit) self.frameActions.add_command({title:'add frame', desc:''});
-                                else self.frameActions.add_frame({});
+                                else if(cmd.length>2 && cmd[2].length > 2) self.frameActions.add_frame(cmd[2]);
+                                else self.frameActions.add_frame();
                             }
                             else if('li'.indexOf(c1) === 0 && ctx.islist){// a list item
                                 if(!commit) self.frameActions.add_command({title:'add list item', desc:'add a non editable list'});
@@ -834,6 +835,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         if(!commit) self.frameActions.add_command({title:'deletenonremovable', desc:"Remove non_removable when You absolutely have to remove this"});
                         else self.frameActions.make_selected_card_removable(FM, ctx.sel_card);
                     }
+                    else if("$echoid".indexOf(c0) === 0){
+                        if(!commit) self.frameActions.show_value('id', ctx.sel_card.id);
+                    } 
                     else if(c0.indexOf('http') === 0){// some url is given
                         if(c0.indexOf('youtube.com') > 1){// an youtube url
                             if(!commit) self.frameActions.add_command({title:'embed youtube video', desc:'Embed a youtube video with url: ' + "\"" + c0 + "\""});

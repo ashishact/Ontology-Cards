@@ -50,7 +50,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             this.frameview.key = ko.observable('home');
             this.frameview.title = ko.observable('Home');
             this.frameview.cards = this.cards;
+            
+            this.orphan_frameviewkey = 'orphan_frameviewkey_';
             //Cache
+            //
             this.cache = {keyPrev1:null, keyPrev2:null, keyPrev3:null, cardsPrev1:[], cardsPrev2:[], cardsPrev3:[] };            
 
         // Configs
