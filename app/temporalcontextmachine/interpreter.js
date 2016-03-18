@@ -114,6 +114,9 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 		this.queryQuestions = [];
 		this.onlineSearchReply = {
 			gotGoogleSuggestions: function(json){
+				
+				if(!json.CompleteSuggestion)return;
+				self.queryAnswers = [];
 				$.each(json.CompleteSuggestion, function(i, item){
 					var title = item.suggestion.data;
 					if(title)self.queryAnswers.push({title:title, desc:''});
@@ -121,37 +124,114 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 
 				self.sc_holdder_ref.emit_valid_commands_changed();
 			},
-			gotWikipediaSuggestions: function(){
-				
-			}
+			gotWikipediaSuggestions: function(json){
+				if(json.query && json.query.pages){
+					self.queryAnswers = [];
+				    $.each(json.query.pages, function(i,item){
+				        var bind_data = {};
+				        bind_data.title = item.title;
+				        if(item.thumbnail && item.thumbnail.source)bind_data.thumb_source = item.thumbnail.source;
+				        if(item.terms && item.terms.description && item.terms.description.length){
+				            bind_data.desc = item.terms.description[0];
+				        }else bind_data.desc = '';
+				        
+				        if(bind_data.title)self.queryAnswers.push(bind_data);
+				    });
+
+				    self.sc_holdder_ref.emit_valid_commands_changed();
+
+				}
+			},
+			gotUmbelConcept: function(json){
+				if(!json.results) return;
+				console.log(json);
+				self.queryAnswers = [];
+				$.each(json.results, function(i, item){
+				    _tok = item['pref-label'];
+				    // console.log(_tok);
+				    if(_tok)self.queryAnswers.push({title:_tok, desc:item.description});
+				});
+
+				self.sc_holdder_ref.emit_valid_commands_changed();
+			},
+			gotDuckDuckGoSuggestions : function(json){
+				if(!json.RelatedTopics.length)return;
+
+				self.queryAnswers = [];
+				$.each(json.RelatedTopics, function(i, item){
+					console.log(item);
+				    if(item.hasOwnProperty('Name')){
+				        $.each(item.Topics, function(j, childItem){
+				            var _tok = childItem.FirstURL.split('/');
+				            if(_tok){
+				                _tok = _tok[_tok.length-1]; //get the last value
+				                _tok = _tok.split('%2').join(' ').split('2%').join(' ').split('_').join(' ').split('%').join(' ');
+				            }
+				            self.queryAnswers.push({title:_tok, desc:childItem.Text});
+				        });
+				    }
+				    else {
+				        var _tok = item.FirstURL.split('/');
+				        if(_tok){
+				            _tok = _tok[_tok.length-1]; //get the last value
+				            _tok = _tok.split('%2').join(' ').split('2%').join(' ').split('_').join(' ').split('%').join(' ');
+				        }
+				        self.queryAnswers.push({title:_tok, desc:item.Text});
+				    }
+
+				});
+				self.sc_holdder_ref.emit_valid_commands_changed();
+			},
 		}
+
+
 		this.onlineSearchQuery = {
 			getGoogleSuggestions: function(query){
 				searchapi.getGoogleSuggestion(query, self.onlineSearchReply.gotGoogleSuggestions);
 			},
 			getWikipediaSuggestions: function(query){
             	mediawiki.wikipedia_suggest(query, self.onlineSearchReply.gotWikipediaSuggestions);
+			},
+			getUmbelConcept: function(query){
+				searchapi.searchUmbelConcept(query, self.onlineSearchReply.gotUmbelConcept);
+			},
+			getDuckDuckGoSuggestions: function(query){
+				searchapi.searchDuckDuckGo(query, self.onlineSearchReply.gotDuckDuckGoSuggestions)
 			}
 		}
 		this.keyUpTimeOutVar = null;// used for timer event
-		minTimeIntervalForQuery = 500; // ms
-
+		minTimeIntervalForQuery = 400; // ms
+		this.last_query_str = '';
 		this.onlineCommandSearch = function(cmd, query){
+			if(self.last_query_str === query)return;
+			
 			var qsearch = self.onlineSearchQuery;
-
 			clearTimeout(self.keyUpTimeOutVar);
-			if(cmd.length){
-				if('wikipedia'.indexOf(cmd) === 0){
-					self.queryQuestions.push({title:'searching wikipedia', desc:''});
-					if(query.length) qsearch.getWikipediaSuggestions(query);
-				}
-				else if('google'.indexOf(cmd) === 0){
-					self.queryQuestions.push({title:'searching google', desc:''});
-					if(query.length) qsearch.getGoogleSuggestions(query);
+
+			var timeOutFunction = function(){
+				if(cmd.length){
+					console.log('came');
+					if('wikipedia'.indexOf(cmd) === 0){
+						self.queryQuestions.push({title:'wikipedia', desc:''});
+						if(query.length) qsearch.getWikipediaSuggestions(query);
+					}
+					else if('google'.indexOf(cmd) === 0){
+						self.queryQuestions.push({title:'google result', desc:''});
+						if(query.length) qsearch.getGoogleSuggestions(query);
+					}
+					else if('umbel'.indexOf(cmd) === 0){
+						self.queryQuestions.push({title:'umbel', desc:''});
+						if(query.length) qsearch.getUmbelConcept(query);
+					}
+					else if('duckduckgo'.indexOf(cmd) === 0){
+						self.queryQuestions.push({title:'duckduckgo', desc:''});
+						if(query.length) qsearch.getDuckDuckGoSuggestions(query);
+					}
 				}
 			}
 
-			
+			self.keyUpTimeOutVar = setTimeout(timeOutFunction, minTimeIntervalForQuery);
+			self.last_query_str = query;
 		}
 
 

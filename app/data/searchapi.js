@@ -48,6 +48,8 @@ define(['jquery','qwest', 'xml2json'], function ($, qwest, xml2json) {
 			});
 		};
 
+		
+
 	}
 	return new searchapi();
 });

@@ -1044,7 +1044,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             };
 
             this.onPointerUp_background = function(i, e){
-                if(!state.isany_card_being_edited)self.appActions.hideCommandForm();// remove searchbar and suggestion when clicked on background
+                if(!state.isany_card_being_edited)self.appActions.hidecommandSuggestions();// remove searchbar and suggestion when clicked on background
                 
                 if($(e.target).hasClass('grid-stack')){
                     self.stop_editing_all('EDITING_FINISHED');
@@ -1296,7 +1296,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 }
 
                 //card.isSelected(true);// it was selected but this variable was set to false to remove ui clutterness when editing
-                self.appActions.showCommandForm();// to go out of focus of editing
+                self.appActions.showcommandSuggestions();// to go out of focus of editing
             };
             this.stop_editing_all = function(reason){
                 edcards = state.now_editing_cards;
@@ -1514,7 +1514,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 }
 
                 $frame_content.slideToggle(100);
-                self.appActions.showCommandForm();
+                self.appActions.showcommandSuggestions();
             };
 
             this.toggle_hide_frame_on_dbl_click = function(event){
@@ -1531,7 +1531,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 }
 
                 $frame_content.slideToggle(100);
-                self.appActions.showCommandForm();
+                self.appActions.showcommandSuggestions();
             };
             this.close_frame = function(data, event){
                 // called in UI

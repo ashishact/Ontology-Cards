@@ -235,8 +235,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 if(event && !state.keyboard.ctrl_down){
                     var _schar = String.fromCharCode(event.which);
                     if(_schar.match(/^[a-zA-Z0-9 ]+/)){
-                        $commandForm.show(100);
-                        // $commandSuggestions.show();
+                        // $commandForm.show(100);
+                        $commandSuggestions.show();
                         $commandInput.val(_schar.toLowerCase());
                         $commandInput.focus();
                     }
@@ -312,54 +312,33 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     self.addFrame({frameview_key:'home', title:'Home', bgColor:'darkcyan'});
                 }
             },
-            add_list: function(FM, cmd){
-                if(cmd.length > 2){
-                    var _title = cmd[2];
-                    if(cmd.length > 3){
-                        for (var i = 3; i < cmd.length; i++) {
-                            _title = _title + ' ' + cmd[i];
-                        };
-                    }
-
-                    var d_size = {w:2, h:3};//size of this card
-                    var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
-                    
-                    // var l1 = {text:'ashish', on:true};
-                    // var l2 = {text:'Sir Issac Newton', on:true};
-                    // var l3 = {text:'Someone else', on:false};
-                    var _card_content = {
-                        title:_title,
-                        list:[],
-                    }
-                    var _card_data = {
-                        default_size:d_size,
-                        default_pos: d_pos,
-                        card_content: _card_content,
-                        model:FM.defaultModel,
-                        view:"views/cards/todo.html",
-                        non_editable:true,
-                        sctype:card_props.TYPE.LIST
-                    }
-                    card_ = FM.actions.add_new_card(_card_data);
-                    state.actions.select_this_card(state, card_);
+            add_list: function(FM, _title){
+                var d_size = {w:2, h:3};//size of this card
+                var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
+                
+                // var l1 = {text:'ashish', on:true};
+                // var l2 = {text:'Sir Issac Newton', on:true};
+                // var l3 = {text:'Someone else', on:false};
+                var _card_content = {
+                    title:_title,
+                    list:[],
                 }
-                else{// generate everything
-
+                var _card_data = {
+                    default_size:d_size,
+                    default_pos: d_pos,
+                    card_content: _card_content,
+                    model:FM.defaultModel,
+                    view:"views/cards/todo.html",
+                    non_editable:true,
+                    sctype:card_props.TYPE.LIST
                 }
+                card_ = FM.actions.add_new_card(_card_data);
+                state.actions.select_this_card(state, card_);
             },
-            add_list_item: function(FM, cmd){
-                if(cmd.length >2  && state.isany_card_selcted){
-                    var _item = _fullstr.split(':li');
-                    if(_item.length > 1){
-                        _item = _item[1];
-                        console.log(_item);
-                        var _card = state.now_selected_cards[0];
-                        if(_card.card_data.sctype === card_props.TYPE.LIST){
-                            // its a list
-                            _card.bind_data.list.unshift({text:ko.observable(_item), on:ko.observable(false)});
-                            FM.actions.save_card_content(_card, true);
-                        }
-                    }
+            add_list_item: function(FM, sel_card, item){
+                if(sel_card && sel_card.card_data.sctype === card_props.TYPE.LIST){
+                    sel_card.bind_data.list.unshift({text:ko.observable(item), on:ko.observable(false)});
+                    FM.actions.save_card_content(sel_card, true);
                 }
             },
             add_leaf: function(FM, cmd){
@@ -683,12 +662,14 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
 
             add_command: function(cmd){
                 self.commands.push(cmd);
+                self.commandSuggestions.removeAll();
+                self.commandSuggestions.push(cmd);
             },
             remove_commands: function(){
                 self.commands = [];
                 interpreter.filteredCardTitles = [];
-                interpreter.queryQuestions = [];
-                interpreter.queryAnswers = [];
+                // interpreter.queryQuestions = [];
+                // interpreter.queryAnswers = [];
             }
 
         }
@@ -736,11 +717,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                             }
                             else if('li'.indexOf(c1) === 0 && ctx.islist){// a list item
                                 if(!commit) self.frameActions.add_command({title:'add list item', desc:'add a non editable list'});
-                                else self.frameActions.add_list_item(FM, cmd);
+                                else self.frameActions.add_list_item(FM, ctx.sel_card, cmd.slice(2,cmd.length).join(' '));
                             }
                             else if('list'.indexOf(c1) === 0){// a list
                                 if(!commit) self.frameActions.add_command({title:'add list', desc:'add a non editable list'});
-                                else self.frameActions.add_list(FM, cmd);
+                                else self.frameActions.add_list(FM, cmd.slice(2,cmd.length).join(' '));
                             }
                             else if('leaf'.indexOf(c1) === 0){// a leaf_editor
                                 if(!commit) self.frameActions.add_command({title:'add leaf', desc:'add the leaf edtor'});
@@ -768,8 +749,17 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         }
                     }
                     else if('remove'.indexOf(c0) === 0){
-                        if(!commit) self.frameActions.add_command({title:'remove', desc:'Remove selected card'});
-                        else self.frameActions.remove_card(FM, ctx.sel_card);
+                        if(cmd.length > 1){
+                            if(c1.length && 'li'.indexOf(c1) === 0 && ctx.islist){// a list item
+                                if(!commit) self.frameActions.add_command({title:'remove list item', desc:'remove List item'});
+                                // else self.frameActions.remove_list_item(FM, ctx.sel_card, cmd.slice(2,cmd.length).join(' '));
+                            }
+                        }
+                        else{
+                            if(!commit) self.frameActions.add_command({title:'remove', desc:'Remove selected card'});
+                            else self.frameActions.remove_card(FM, ctx.sel_card);
+                        }
+                            
                     }
                     else if('copy'.indexOf(c0) === 0){
                         if(!commit) self.frameActions.add_command({title:'copy', desc:'Copy selected card'});
@@ -879,7 +869,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
 
                 if(commit) $commandInput.val('');
             }//if(cmd_str...
-            else{                
+            else{
+                // self.commandSuggestions.removeAll();
                 self.frameActions.remove_commands();
 
                 if(FM.show_all_card_label())FM.show_all_card_label(false);
@@ -970,6 +961,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     console.log(request.msg.json.results);
                     if(request.msg && request.msg.json){
                         if(request.msg.json.results && request.msg.json.results.length){
+                            // self.commandSuggestions().splice(10, self.commandSuggestions().length);
                             self.commandSuggestions.removeAll();//clear suggestions
                             var bind_data = {};
                             $.each(request.msg.json.results, function(i, item){
@@ -1088,65 +1080,43 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 
             }
         }
-
+        this.beforeRemoveCommandSuggestions = function(elem){
+            if (elem.nodeType === 1) $(elem).slideUp(function() { $(elem).remove(); });            
+            console.log('adding something');
+        }
+        this.afterAddCommandSuggestions = function(elem) {
+            if (elem.nodeType === 1) $(elem).hide().slideDown();
+        }
         this.emit_valid_commands_changed=function(){
 
-            var bind_data = {};
-            self.commandSuggestions.removeAll();
+            self.commandSuggestions().splice(10, self.commandSuggestions().length);
 
 
 
-            var cmds = self.commands;
-            for(var i = cmds.length-1; i >= 0; i-- ){
-                bind_data.title = cmds[i].title;
-                bind_data.desc = cmds[i].desc;
-                if(i===0){
-                    bind_data.selected = ko.observable(true);
-                }
-                else bind_data.selected = ko.observable(false);
-                self.selectedCommandIndex = 0;
-                if(bind_data.title)self.commandSuggestions.unshift(bind_data);
-            }
+            // var cmds = self.commands;
+            // for(var i = 0; i < cmds.length; i++){
+            //     if(cmds[i].title)self.commandSuggestions.push(cmds[i]);
+            // }
 
+            // var cmds = interpreter.filteredCardTitles;
+            // for(var i = 0; i < cmds.length; i++){
+            //     if(cmds[i].title)self.commandSuggestions.push(cmds[i]);
+            // }
 
+            // var cmds = interpreter.queryQuestions;
+            // for(var i = 0; i < cmds.length; i++){
+            //     if(cmds[i].title)self.commandSuggestions.push(cmds[i]);
+            // }
 
-            var cmds = interpreter.filteredCardTitles;
-            for(var i = cmds.length-1; i >= 0; i-- ){
-                bind_data.title = cmds[i].title;
-                bind_data.desc = cmds[i].desc;
-                if(cmds[i].id)bind_data.id = cmds[i].id;// id is required to work on this card
-                if(i===0){
-                    bind_data.selected = ko.observable(true);
-                }
-                else bind_data.selected = ko.observable(false);
-                self.selectedCommandIndex = 0;
-                if(bind_data.title)self.commandSuggestions.unshift(bind_data);
-            }
-
-            var cmds = interpreter.queryQuestions;
-            for(var i = cmds.length-1; i >= 0; i-- ){
-                bind_data.title = cmds[i].title;
-                bind_data.desc = cmds[i].desc;
-                if(i===0){
-                    bind_data.selected = ko.observable(true);
-                }
-                else bind_data.selected = ko.observable(false);
-                self.selectedCommandIndex = 0;
-                if(bind_data.title)self.commandSuggestions.unshift(bind_data);
-            }
-
-
-            var cmds = interpreter.queryAnswers;
-            for(var i = cmds.length-1; i >= 0; i-- ){
-                bind_data.title = cmds[i].title;
-                bind_data.desc = cmds[i].desc;
-                if(i===0){
-                    bind_data.selected = ko.observable(true);
-                }
-                else bind_data.selected = ko.observable(false);
-                self.selectedCommandIndex = 0;
-                if(bind_data.title)self.commandSuggestions.unshift(bind_data);
-            }
+            
+            
+            // for(var i = 0; i < cmds.length; i++){
+            //     if(cmds[i].title)self.commandSuggestions.push(cmds[i]);
+            // }
+            
+            // self.commandSuggestions(self.commands);
+            self.commandSuggestions(interpreter.queryAnswers);
+            
         };
     
             
@@ -1176,12 +1146,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             loadFrameViewInNewFrame : function(frameview_key, card){
                 self.addFrame({frameview_key:frameview_key, title:card.card_data.card_content.title, bgColor:'cadetblue'});
             },
-            hideCommandForm : function(){
-                $commandForm.hide(100);
+            hidecommandSuggestions : function(){
+                $commandSuggestions.hide(100);
             },
-            showCommandForm : function(){
-                $commandForm.show(100);
-                // $commandSuggestions.show();
+            showcommandSuggestions : function(){
+                if(!$commandSuggestions.is(':visible')) $commandSuggestions.show(100);
                 $commandInput.focus();
             },
             focusOnCommandInput: function(){
@@ -1214,14 +1183,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             if(event.keyCode == 27){// ESC
                 // get the current frame
                 if(state.isany_card_being_edited){
-                    $commandForm.show();
+                    $commandSuggestions.show();
                     $commandInput.focus();//
                     var _cfm = self.framesData()[0].frameModel;
                     if(_cfm )_cfm.state_manager.rollback();
                 }
-                else if(!$commandForm.is(':visible')){
-                    $commandForm.show(100);
-                    // $commandInput.focus();
+                else if(!$commandSuggestions.is(':visible')){
+                    $commandSuggestions.show(100);
                     $commandInput.select();
                 }
                 else if($(document.activeElement).attr('id') === "commandInput"){
@@ -1267,7 +1235,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     }
                         
                 }
-                    
+                self.appActions.showcommandSuggestions()
                 return true;
             }
 

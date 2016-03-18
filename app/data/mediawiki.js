@@ -97,7 +97,7 @@ define(['jquery','qwest'], function ($, qwest) {
                 }
                 else searchq = searchq + words[i]+'%20';
             };
-            var _url = 'https://en.wikipedia.org/w/api.php?action=query&format=json&version=2&generator=prefixsearch&gpssearch=' + searchq + '&gpslimit=10&prop=pageimages%7Cpageterms&piprop=thumbnail&pithumbsize=50&pilimit=10&redirects=&wbptterms=description'
+            var _url = 'https://en.wikipedia.org/w/api.php?action=query&format=json&version=2&generator=prefixsearch&gpssearch=' + searchq + '&gpslimit=4&prop=pageimages%7Cpageterms&piprop=thumbnail&pithumbsize=50&pilimit=10&redirects=&wbptterms=description'
             
             // qwest.get(_url,{})
             // .then(function(xhr, response) {
