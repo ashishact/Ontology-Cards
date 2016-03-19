@@ -34,7 +34,6 @@
         "<all_urls>"
       ],
       "css":[
-      //"lib/bootstrap/css/bootstrap-responsive.min.css",
       "lib/font-awesome4.5.0/css/font-awesome.css",
       "css/skeleton/normalize.css",
       "css/skeleton/skeleton.css",

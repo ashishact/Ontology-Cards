@@ -10,7 +10,7 @@ requirejs.config({
         'jquery': '../lib/jquery/jquery-1.9.1',
         'gridstack': '../lib/gridstack/dist/gridstack',
         'panzoom':'../lib/panzoom/jquery.panzoom.min',
-        'lodash': '../lib/lodash/lodash',
+        'lodash': '../lib/lodash/lodash.min',
         'jquery-ui':'../lib/jquery-ui/jquery-ui',
         'xml2json':'../lib/jqueryplugins/xml2json',
         'store':'../lib/store/store.min',
