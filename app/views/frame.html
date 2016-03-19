@@ -13,9 +13,12 @@
 	-webkit-box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.50);
 	-moz-box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.50);
 	box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.50);">
-		<div style="margin-left: 10px; margin-top: 9px; " class="custombreadcrumb flat" data-bind="foreach: {data: navigation}">
+		<div style="margin-left: 10px; margin-top: 9px; float: left;" class="custombreadcrumb flat" data-bind="foreach: {data: navigation}">
 			<a style="color:#777"  data-bind="text:$data.title, click:$root.clicked_on_breadcrumb, css: {active: $data.key == $root.frameview.key() }"></a>
 		</div>
+
+		
+
 		<div style="float:right; position: relative; padding-top: 5px;">
 			<i title="Close this frame" style="
 			box-shadow: 0 0 8px 1px rgba(0, 0, 0, 0.35);
@@ -35,6 +38,10 @@
 			float:right;
 			margin-right: 7px;
 			cursor:pointer;" class="_toggle_frame zoom_on_hover fa fa-chevron-circle-down" data-bind="click:toggle_hide_frame"></i>
+
+			<div style="position:relative; top: -5px; margin-right: 50px;" class="custombreadcrumb flat">
+						<a style="color:#777;" class="" data-bind="text:frame_message_text"></a>
+			</div>
 			
 		</div>
 

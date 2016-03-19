@@ -24,6 +24,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             this.show_additional_card_menu = ko.observable(false);
             this.show_all_card_label = ko.observable(false);
             this.card_label_text = ko.observable('Selected');
+            var card_hint_timer = null;
+            this.frame_message_text = ko.observable(':)');
+            var frame_hint_timer = null;
             this.chromeMessageListener = null;
 
             //Gridstack
@@ -37,6 +40,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
 
             this.defaultModel = "viewmodels/card";
             this.defaultView = "views/cards/default.html";
+            this.default_sctype = card_props.TYPE.SIMPLE_TEXT;
             
 
             //Frameview (Currently loaded)
@@ -295,12 +299,31 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                             }
                         }
                         else if(request.type === 'REPLYOF_LOAD_CARDS_FROM_STORE'){
-                            var cards = request.msg.cards;
-                            for(var i = 0; i < cards.length; i++){
-                                cards[i].TYPE.VOLATILE = true;
-                                me._add_card_from_store_to_frameview(cards[i]);
+                            var fv_key = request.msg.fv_key;
+                            console.log(fv_key, self.frameview.key());
+                            if(fv_key === self.frameview.key()){
+                                var cards = request.msg.cards;
+                                for(var i = 0; i < cards.length; i++){
+                                    cards[i].TYPE.VOLATILE = true;
+                                    me._add_card_from_store_to_frameview(cards[i]);
+                                }
+                                app.trigger('frameview:updated_with_ids', self.frameview.ids);
                             }
-                            app.trigger('frameview:updated_with_ids', self.frameview.ids);
+                        }
+
+                        else if(request.type === 'REPLYOF_LOAD_ALL_CARDS_FROM_STORE'){
+                            var fv_key = request.msg.fv_key;
+                            if(fv_key === self.frameview.key()){
+                                var cards = request.msg.cards;
+                                for(var i = 0; i < cards.length; i++){
+                                    cards[i].TYPE.VOLATILE = true;
+                                    cards[i].TYPE.EDITABLE = false;
+                                    //don't save this or it will persist
+                                    me._add_card_from_store_to_frameview(cards[i]);
+                                }
+                                // app.trigger('frameview:updated_with_ids', self.frameview.ids);
+                            }
+                                
                         }
                     }
                     chrome.runtime.onMessage.addListener(self.chromeMessageListener);
@@ -507,6 +530,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     }
                 };
                 this._update_card_from_frameview_to_store = function(card){
+                    if(card.TYPE.VOLATILE){ return;}
+
                     var _card = {
                         id:card.id,
                         x:card.x,
@@ -545,7 +570,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     var _msg = {frameview_key:self.frameview.key(), id:card.id};
                     me._send_msg_to_background(_type, _msg);
                     app.trigger('card:deleted_from_store', card.id);
-                    app.trigger('card:removed_from_frameview', card.id);
+                    
 
                 };
                 //@
@@ -569,7 +594,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                         var c = allcards_[i];
                         me._update_card_in_frameview(c, c.x, c.y, c.width, c.height);
                         
-                        //me._update_card_from_frameview_to_store(c);
                         if(i === allcards_.length-1)state.actions.select_this_card(state, allcards_[i]);// select lastly added card
                     };
                 };
@@ -726,14 +750,15 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 this.load_cards_from_store_to_frameview = function(ids){
                     for (var i = ids.length - 1; i >= 0; i--) {
                         var id = ids[i];
-                        var current_fv_key = self.getCurrentFrameviewKeyAndTitle().fv_key;
+                        var current_fv_ids = self.frameview.ids;
                         _.remove(ids, function(id){// remove id which are currently already existing in this frameview
-                            return _.find(current_fv_key, function(key){return key === id})
+                            return _.find(current_fv_ids, function(__id){return __id === id})
                         });
                     }
                     if(ids.length){// could have been remove above
                         var _type = 'LOAD_CARDS_FROM_STORE';
-                        var _msg = {ids:ids};
+                        var _msg = {ids:ids, frameview_key:self.frameview.key()};// frameview key will be used to chen if this frameview asked for it
+                                                                                // otherwise not required
                         chrome.runtime.sendMessage(
                             {
                                 type:_type,
@@ -742,6 +767,17 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                         );
                     }
                 };
+                this.load_all_cards_from_store_to_frameview = function(){
+                    var _type = 'LOAD_ALL_CARDS_FROM_STORE';
+                    var _msg = {frameview_key:self.frameview.key()};// frameview key will be used to chen if this frameview asked for it
+                                                                    // otherwise not required
+                    chrome.runtime.sendMessage(
+                        {
+                            type:_type,
+                            msg:_msg
+                        }
+                    );
+                }
 
                 this.transfer_cards_between_frameview = function(ids, from_fv_key, to_fv_key){
                     //[id1, id2, id3] , from_fv_key, to_fv_key
@@ -757,7 +793,28 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                         }
                     );  
                 };
+                this.show_card_hint = function(str, timeout){
+                    self.card_label_text(str);
+                    if(timeout){
+                        clearTimeout(card_hint_timer);
+                        card_hint_timer = setTimeout(function(){
+                            self.card_label_text('Selected');
+                        }, timeout);
+                    }
+                        
+                };
+                this.show_frame_hint = function(str, timeout){
+                    self.frame_message_text(str);
+                    if(timeout){
+                        clearTimeout(frame_hint_timer);
+                        frame_hint_timer = setTimeout(function(){
+                            self.frame_message_text(':)');
+                        }, timeout);
+                    }
+                        
+                };
                 this.clone_card_and_save = function(card){
+                    card.card_data.cloned_from_id = card.id;
                     me.add_new_card(card.card_data);
                 }
 
@@ -930,7 +987,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                         var curr_title = self.frameview.title();
                         var dest_key = curr_key;
                         var dest_title = curr_title;
-
+                        if(curr_title.length && curr_title[0] === '$'){
+                            self.actions.show_frame_hint('This is a root frame. ESC won\'t take you back', 3000);
+                            return;
+                        }
                         if(curr_key == 'home');
                         else{
                             var navs = self.navigation();
@@ -1056,6 +1116,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             
             this.left_click_on_card = function(card, target, dt, dx, dy){
                 self.show_additional_card_menu(false);
+                if(!card.STATE.EDITING)self.card_label_text('Selected');
+
                 state.actions.select_this_card(state, card);// give state as a self ref
                 
                 if($(target).hasClass('removeCardBtn')){
@@ -1079,7 +1141,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                             }
                         }
                         else{
-                            console.log('this card is not editable');
+                            self.actions.show_card_hint('this card is not editable');
                         }
                     }
                     else if($(target).hasClass('cardMenuTrashIcon')){
@@ -1120,6 +1182,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                             }
                         }
                         else{// this card may not be editable but there could be a card which is being edited when clicked on this card
+                            if(self.is_perfect_click(dx, dy, dt, self.get_fc_value('perfect_click_max')))self.actions.show_card_hint('This card is not Editable');
                             if(state.isany_card_being_edited){// may be you were editing something else
                                 self.stop_editing_all('EDITING_FINISHED');
                             }
@@ -1288,8 +1351,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     // self.actions._update_card_from_frameview_to_store(card);// saves card, along with card_data here
                     self.actions.update_card_content_from_frameview_to_store(card);
                     //this in turn saves card datas as well
-                    self.card_label_text('Saved');
-                    setTimeout(function(){self.card_label_text('Selected')}, 1000);
+                    
+                    self.actions.show_card_hint('Saved');
+                    
                 }
                 else{
                     self.card_label_text('Selected');
@@ -1432,6 +1496,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 if(card.TYPE.PARENT && !card.restricted){
                     // Breadcrumb Manipulation
                     var _fv_key = self.frameviewkey_prefix + card.id;
+                    if(card.card_data.cloned_from_id){// its own childframeview doesn't exist
+                                                        // it's a cloned card , so go to the original card's Child frameview
+                        _fv_key = self.frameviewkey_prefix + card.card_data.cloned_from_id;
+                    }
                     var _nav = self.navigation();
                     
                     if(!dx){// didn't come here from mouse event

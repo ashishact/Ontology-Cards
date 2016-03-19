@@ -153,6 +153,7 @@ define(['lodash'],  function (_) {
         },
 
         valid_commands:  [],
+        dot:0,
 
 
         issearchbar_focused:false,

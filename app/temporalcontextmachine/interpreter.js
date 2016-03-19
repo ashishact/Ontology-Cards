@@ -32,6 +32,7 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 			}
 		}
 		this.resurltOfSearchCardTitles = function(datum){
+			self.filteredCardTitles = [];
 			for(var i = 0; i < datum.length; i++){
 				if(self.titleContextPrefix === '[thisframeview.title]'){
 					if(_.find(self.sc_data_space.thisframeview_ids , function(e){return e === datum[i].id})){
@@ -50,6 +51,8 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 		};
 
 		this.on_card_content_updated = function(card){
+			if(card.TYPE.VOLATILE)return;
+
 			var obj = _.find(self.sc_data_space.card_titles, function(v){return v.id === card.id});
 			if(obj.title != card.card_data.card_content.title){
 				obj.title = card.title;
@@ -75,13 +78,19 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 			});
 
 			app.on('card:new_card_added_from_user_to_frameview').then(function(card){
-				var obj = {id: card.id, title:card.card_data.card_content.title};
+				if(card.TYPE.VOLATILE)return;
+				var obj = {id: card.id, title:card.card_data.card_content.title.replace(/<[^>]*>/g, "")};
 				self.sc_data_space.card_titles.push(obj);
 				if(self.cardTitleSearchEngine)self.cardTitleSearchEngine.add([obj]);
 			});
 
 			app.on('card:card_content_updated').then(self.on_card_content_updated);
-			app.on('card:removed_from_frameview').then(self.on_card_removed_from_frameview);
+			// app.on('card:removed_from_frameview').then(self.on_card_removed_from_frameview);
+			// removed is called for each card removed from frameview
+			// no need to listen it both remove and delete
+			// removed is called for Volatile and non volatile cards
+			// delete is called for only non volatile card
+			// anyway volatile card list is not inserted in bloodhound
 			app.on('card:deleted_from_store').then(on_card_deleted_from_store);
 
 
@@ -190,7 +199,7 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 				searchapi.getGoogleSuggestion(query, self.onlineSearchReply.gotGoogleSuggestions);
 			},
 			getWikipediaSuggestions: function(query){
-            	mediawiki.wikipedia_suggest(query, self.onlineSearchReply.gotWikipediaSuggestions);
+            	searchapi.wikipedia_suggest(query, self.onlineSearchReply.gotWikipediaSuggestions);
 			},
 			getUmbelConcept: function(query){
 				searchapi.searchUmbelConcept(query, self.onlineSearchReply.gotUmbelConcept);
@@ -454,11 +463,21 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 
 			console.log(self.prefixPattern);
 			if(stored_data.card_titles && stored_data.card_titles.length){
+				for (var i = stored_data.card_titles.length - 1; i >= 0; i--) {
+					// remove html encoding from string
+					stored_data.card_titles[i].title  = stored_data.card_titles[i].title.replace(/<[^>]*>/g, "");
+				}
 				self.sc_data_space.card_titles = stored_data.card_titles;
 			}
+
 			if(stored_data.frameview_titles && stored_data.frameview_titles.length){
+				for (var i = stored_data.frameview_titles.length - 1; i >= 0; i--) {
+					// remove html encoding from string
+					stored_data.frameview_titles[i].title  = stored_data.frameview_titles[i].title.replace(/<[^>]*>/g, "");
+				}
 				self.sc_data_space.frameview_titles = stored_data.frameview_titles;
 			}
+
 			if(stored_data.thisframeview_ids){
 				self.sc_data_space.thisframeview_ids = stored_data.thisframeview_ids;
 			}

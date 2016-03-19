@@ -62,7 +62,11 @@ chrome.runtime.onMessage.addListener(
 			frameview_has_changed(request.msg.frameview_key, sender.tab);//let other tab know that this frameview has changed
 		}
 		else if(request.type == 'LOAD_CARDS_FROM_STORE'){
-			load_cards_from_pouchdb(request.msg.ids, tabIdOfSender);			
+			load_cards_from_pouchdb(request.msg.ids, request.msg.frameview_key, tabIdOfSender);			
+		}
+		else if(request.type == 'LOAD_ALL_CARDS_FROM_STORE'){
+			load_all_cards_from_pouchdb(request.msg.frameview_key, tabIdOfSender);
+			
 		}
 		else if(request.type == 'TRANSFER_CARDS_BETWEEN_FRAMEVIEW'){
 			transfer_cards_between_frameview(request.msg,  tabIdOfSender);
@@ -169,9 +173,13 @@ var chromeReply = {
 	get_allcard_and_frameview_titles: function(data, tab_id){
 		sendMSG_to_tab_byId({type:'REPLYOF_GET_ALL_CARD_AND_FRAMEVIEW_TITLES', msg:{data: data}}, tab_id);
 	},
-	load_cards_from_pouchdb: function(cards, tab_id){
-		sendMSG_to_tab_byId({type:'REPLYOF_LOAD_CARDS_FROM_STORE', msg:{cards: cards}}, tab_id);
+	load_cards_from_pouchdb: function(cards, frameview_key, tab_id){
+		sendMSG_to_tab_byId({type:'REPLYOF_LOAD_CARDS_FROM_STORE', msg:{cards: cards, fv_key: frameview_key}}, tab_id);
 	},
+	load_all_cards_from_pouchdb: function(all_cards, frameview_key, tab_id){
+		sendMSG_to_tab_byId({type:'REPLYOF_LOAD_ALL_CARDS_FROM_STORE', msg:{cards: all_cards, fv_key: frameview_key}}, tab_id);
+	},
+
 
 
 
@@ -247,22 +255,33 @@ function get_frameview_full(frameview_key, tab_id){
 		}
 	});
 }
-function get_card_from_pouchdb(id){
-	var _card_ = null;
-	framepouch.get(id, function(err, doc){
-		if(err){
-			console.log('card with id:', id + 'doesn\'t exists');
+
+function load_all_cards_from_pouchdb(frameview_key, tab_id){// the fv_key which asked for this command
+
+	framepouch.allDocs(
+		{
+			include_docs: true,
+		},
+		function(err, res){
+		    if(!err){
+		    	all_cards = [];
+		    	res.rows.forEach(function(el){
+		    		if(el.doc && el.doc.card){// filter all card
+			    		all_cards.push(el.doc.card);
+		    		}
+		    			
+		    	});
+		    	//send all cards to insert as volatile card
+		    	chromeReply.load_all_cards_from_pouchdb(all_cards, frameview_key,  tab_id);
+		    }
+		    else{
+		    	console.log('Couldn\'t get any card. Not even One, because of ', err);
+		    }
 		}
-		else{
-			if(doc.card){
-				_card_ = doc.card;
-			}
-				
-		}
-	});
-	return _card_;
-};
-function load_cards_from_pouchdb(ids, tab_id){
+	);
+}
+
+function load_cards_from_pouchdb(ids, frameview_key, tab_id){// frameview_key will be used to filter where to finally load at front end
 	// console.log('will try to load', ids);
 	framepouch.allDocs(
 		{
@@ -278,7 +297,7 @@ function load_cards_from_pouchdb(ids, tab_id){
 		    		}
 		    			
 		    	});
-				chromeReply.load_cards_from_pouchdb(_cards,  tab_id);
+				chromeReply.load_cards_from_pouchdb(_cards, frameview_key, tab_id);
 				// console.log("found", _cards);
 		    }
 		    else{
@@ -562,7 +581,7 @@ function send_frameview_to_orphan(frameview_key){
 					framepouch.put({_id:orphan_frameviewkey, fvids:lostids });
 				}
 				else{
-					doc.fvids = _.concat(doc.fvids, lostids);
+					doc.fvids = doc.fvids.concat(lostids);
 					framepouch.put(doc);
 				}
 			});
@@ -623,11 +642,40 @@ function transfer_cards_between_frameview(msg, tab_id){
 }
 
 //***********************************
+//***********************************
 
 function mixed_content_callback(msg, tab_id){
 	$.getJSON(msg.url, function(json){
 		chromeReply.mixed_content_callback(json, tab_id);
 	});
+}
+
+//***********************************
+//***********************************
+//***********************************
+
+function save_all_data_to_firebase(){
+	var firebase = new Firebase('https://semanticcards.firebaseio.com');
+	var firebase_whole_store = firebase.child('whole_store');
+
+	framepouch.allDocs(
+		{
+			include_docs: true,
+		},
+		function(err, res){
+		    if(!err){
+		    	if(res.rows.length){
+		    		firebase_whole_store.set(res.rows, function(err){
+		    			if(!err)console.log("Saved to ffirebase");
+		    			else console.log('Couldn\'t save to firebase');
+		    		});
+		    	}		    	
+		    }
+		    else{
+		    	console.log(err);
+		    }
+		}
+	);
 }
 
 

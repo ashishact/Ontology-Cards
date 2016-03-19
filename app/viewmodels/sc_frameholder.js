@@ -95,8 +95,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             return " ";
         };
         this.afterFrameAdded = function(items, frameData){
-            //self.currentFrame = frameData.frameModel;
-            //console.log(self.currentFrame);
+            if(frameData.frameview_key === 'show_all_cards_frameview_key'){
+                setTimeout(function(){
+                    frameData.frameModel.actions.load_all_cards_from_store_to_frameview();
+                }, 2000);
+            }
         };
         this.addFrame = function(frameData){
 
@@ -234,14 +237,19 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
 
                 if(event && !state.keyboard.ctrl_down){
                     var _schar = String.fromCharCode(event.which);
-                    if(_schar.match(/^[a-zA-Z0-9 ]+/)){
-                        // $commandForm.show(100);
+                    var focus = false;
+                    if(event.which === 191){_schar = '/'; focus = true;}
+                    if(event.which === 190){_schar = '.'; focus = true;}
+                    if(event.which === 186){_schar = ';'; focus = true;}
+
+                    if(_schar.match(/^[a-zA-Z0-9 ]+/))focus = true;
+
+                    if(focus){
                         $commandSuggestions.show();
                         $commandInput.val(_schar.toLowerCase());
                         $commandInput.focus();
                     }
                 }
-                
             }
             else {
                 console.log('@im - how can $commandForm & $commandInput not exist');
@@ -306,7 +314,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             add_frame: function(frameview_key){
                 console.log("adding frame");
                 if(frameview_key){//frame with frameview_key
-                    self.addFrame({frameview_key:frameview_key, title:'Frameview', bgColor:'darkcyan'});    
+                    if('orphan'.indexOf(frameview_key) === 0)self.addFrame({frameview_key:'orphan_frameviewkey_', title:'ORPHAN', bgColor:'darkcyan'});    
+                    else self.addFrame({frameview_key:frameview_key, title:'Frameview', bgColor:'darkcyan'});
+                    
                 }
                 else{
                     self.addFrame({frameview_key:'home', title:'Home', bgColor:'darkcyan'});
@@ -341,6 +351,21 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     FM.actions.save_card_content(sel_card, true);
                 }
             },
+            generate_card_data: function(w, h, card_content,  view, sctype){
+                var d_size = {w:w, h:h};//size of this card
+                var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
+                
+                var _card_data = {
+                    default_size:d_size,
+                    default_pos: d_pos,
+                    card_content: card_content,
+                    model:FM.defaultModel,
+                    view:view,
+                    sctype:sctype,
+                }
+                return _card_data;
+            },
+
             add_leaf: function(FM, cmd){
 
                 var _title = 'Untitled';
@@ -421,6 +446,17 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
 
                 return card_;
             },
+
+            add_volatile_card: function(FM, cmd){
+                var _card_data = self.frameActions.generate_card_data(2, 2, {title:'Volatile', text:'This card will not be saved to store'},  FM.defaultView , FM.default_sctype);
+                _card_data.volatile = true;
+                _card_data.non_editable = true;
+                if(cmd.length > 2)_card_data.card_content.title = cmd.slice(2,cmd.length)+ ' ';
+
+                card_ = FM.actions.add_new_card(_card_data);
+                state.actions.select_this_card(state, card_);
+                // return card_;
+            },
             remove_card: function(FM, sel_card){
                     if(sel_card){
                         FM.actions.remove_card(sel_card, 'TEMPORARY');
@@ -472,6 +508,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 });
                 // console.log({config:FM.frame_config, config_map:FM.frame_config_map});
             },
+            show_all_cards: function(){
+                self.addFrame({frameview_key:'show_all_cards_frameview_key', title:'All Cards', bgColor:'darkcyan'});
+            },
             exit: function(){
                 self.removeCurrentFrame();
             },
@@ -480,7 +519,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             },
 
             add_image_card: function(FM, src){
-                if(src.length > 100)return;// don't aloow large file names
+                if(src.length > 500)return;// don't aloow large file names
                 var img_url = "<img src=\""+  src +"\" alt=\"Image\" style=\" width:100%;\">";
                 console.log('image found');
 
@@ -505,7 +544,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 
             },
             set_image_of_selected_card: function(FM, sel_card, src){
-                if(src.length > 100)return;// don't aloow large file names
+                if(src.length > 500)return;// don't aloow large file names
                 if(sel_card && sel_card.bind_data.text){
                     var img_url = "<img src=\""+  src +"\" alt=\"Image\" style=\" width:100%;\">";
                     sel_card.bind_data.text(img_url);
@@ -625,8 +664,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 }
             },
             embed_img_link: function(FM, src){
-                if(src.length > 100)return;// don't aloow large file names
-                var img_url = "<img src=\""+  src +"\" alt=\"Image\" style=\" \">";
+                if(src.length > 500)return;// don't aloow large file names
+                var img_url = "<img src=\""+  src +"\" alt=\"Image\" style=\" width:100%;\">";
                 console.log('image found');
                 
                 var d_size = {w:3, h:3};//size of this card
@@ -659,6 +698,29 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             show_value: function(name, value){
                 self.frameActions.add_command({title:name+ ': ' + value.toString() , desc:""});
             },
+            toggle_editable: function(FM, sel_card){
+                if(sel_card){
+                    if(sel_card.card_data.sctype === card_props.TYPE.LIST)return;
+                    if(sel_card.TYPE.EDITABLE) {
+                        sel_card.TYPE.EDITABLE = false;
+                        FM.actions.show_card_hint("Now Not Editable");
+                    }
+                    else{
+                        sel_card.TYPE.EDITABLE = true;
+                        if(sel_card.TYPE.VOLATILE) FM.actions.show_card_hint("Now  Editable, but it's volatile. So it can't be saved, remove volatileness to save it");
+                        else FM.actions.show_card_hint("Now  Editable");
+                    }
+                    FM.actions.save_card_content(sel_card, true);
+                }
+            },
+
+            remove_volatile: function(FM, sel_card){
+                if(sel_card){
+                    sel_card.TYPE.VOLATILE = false;
+                    FM.actions.show_card_hint("Now Non Volatile");
+                    FM.actions.save_card_content(sel_card, true);
+                }
+            },
 
             add_command: function(cmd){
                 self.commands.push(cmd);
@@ -667,7 +729,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             },
             remove_commands: function(){
                 self.commands = [];
-                interpreter.filteredCardTitles = [];
+                // interpreter.filteredCardTitles = [];
                 // interpreter.queryQuestions = [];
                 // interpreter.queryAnswers = [];
             }
@@ -685,10 +747,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             if(!FM)return;
 
             var command_str = $commandInput.val();
+            state.dot = (command_str.match(/\./g) || []).length;
+
+            command_str = command_str.replace('.','');
 
             if(command_str && command_str.length){
                 var cmd = command_str.replace(/\s+/g, " ").split(" ");
-                if(cmd[0].length && (cmd[0][0] != ':' )){// command
+                if(cmd[0].length && (cmd[0][0] != ';' )){// command
                     var ctx = {}
                     ctx.sel_card = state.actions.get_primary_selected_card(state);
                     if(ctx.sel_card){
@@ -726,6 +791,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                             else if('leaf'.indexOf(c1) === 0){// a leaf_editor
                                 if(!commit) self.frameActions.add_command({title:'add leaf', desc:'add the leaf edtor'});
                                 else self.frameActions.add_leaf(FM, cmd);
+                            }
+                            else if('volatile'.indexOf(c1) === 0){
+                                if(!commit) self.frameActions.add_command({title:'add volatile', desc:'add a volatile card, It will not persist'});
+                                else self.frameActions.add_volatile_card(FM, cmd); // cmd not used
                             }
                             else{//card with given title
                                 if(!commit) interpreter.resolve_pattern('add', '[title]', cmd.slice(1,cmd.length).join(' '));
@@ -813,6 +882,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         if(!commit) self.frameActions.add_command({title:'settings', desc:'Update your settings'});
                         else self.frameActions.show_settings(FM);
                     }
+                    else if('seeallcards'.indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'seeallcards', desc:'load alll cards in a new frameview. It will load all the cards'});
+                        else self.frameActions.show_all_cards();
+                    }
                     else if("iframe".indexOf(c0) === 0){
                         if(!commit) self.frameActions.add_command({title:'iframe ' + "\"" + cmd.slice(1, cmd.length).join(" ") + "\"", desc:'Add an I frame with given source url'});
                         else if(c1) self.frameActions.add_iframe_from_src(FM, c1);
@@ -828,6 +901,14 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     else if("$echoid".indexOf(c0) === 0){
                         if(!commit) self.frameActions.show_value('id', ctx.sel_card.id);
                     } 
+                    else if("toggleeditable".indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'Toggle Editable', desc:'cmd: toggleeditable'});
+                        else self.frameActions.toggle_editable(FM, ctx.sel_card);
+                    } 
+                    else if("removevolatile".indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'Remove Volatileness, to save this card', desc:'cmd: removevolatile'});
+                        else self.frameActions.remove_volatile(FM, ctx.sel_card);
+                    } 
                     else if(c0.indexOf('http') === 0){// some url is given
                         if(c0.indexOf('youtube.com') > 1){// an youtube url
                             if(!commit) self.frameActions.add_command({title:'embed youtube video', desc:'Embed a youtube video with url: ' + "\"" + c0 + "\""});
@@ -841,7 +922,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                             
                     }
                     else{// doesn't match anything
+                        console.log('no match')
                         self.frameActions.remove_commands();
+                        self.commandSuggestions.removeAll();
                     }
 
                     //Select
@@ -858,7 +941,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         if(FM.show_all_card_label())FM.show_all_card_label(false);
                     }
                 }
-                else if(cmd[0][0] == ':'){
+                else if(cmd[0][0] == ';'){
                     var c0 = cmd[0].slice(1,cmd[0].length).toLowerCase();
                     var q = cmd.slice(1, cmd.length).join(" ");
                     interpreter.onlineCommandSearch(c0, q);
@@ -867,11 +950,14 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     if(!commit) self.frameActions.add_command({title:'Search', desc:'Search for anything. well, almost anything. But there is no guarantee that you will find it'});
                 }
 
-                if(commit) $commandInput.val('');
+                if(commit){
+                    $commandInput.val('');
+                    
+                }
             }//if(cmd_str...
             else{
-                // self.commandSuggestions.removeAll();
-                self.frameActions.remove_commands();
+                console.log('command_str', command_str);
+                self.commandSuggestions.removeAll();
 
                 if(FM.show_all_card_label())FM.show_all_card_label(false);
             }
@@ -1115,7 +1201,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             // }
             
             // self.commandSuggestions(self.commands);
-            self.commandSuggestions(interpreter.queryAnswers);
+            if(interpreter.filteredCardTitles.length)self.commandSuggestions(interpreter.filteredCardTitles);
+            else self.commandSuggestions(interpreter.queryAnswers);
             
         };
     
