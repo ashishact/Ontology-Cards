@@ -23,6 +23,7 @@ requirejs.config({
         'card_props':'viewmodels/card_props',
         'mediawiki':'data/mediawiki',
         'searchapi':'data/searchapi',
+        'wikipediajs':'../lib/semanticweb/wikipedia',
         'qwest':'../lib/qwest/qwest.min',
         'bloodhound':'temporalcontextmachine/bloodhound',
         'interpreter':'temporalcontextmachine/interpreter',

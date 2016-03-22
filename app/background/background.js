@@ -35,76 +35,86 @@ var cards = {};
 var card_contents = {};
 var cache_frame_config = null;
 
-var tabIdOfSender = null;
+var tab_id = null;
 
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
 		// console.log(sender.tab ?
 		// 	"from a content script:" + sender.tab.url :
 		// 	"from the extension");
-		tabIdOfSender = sender.tab.id;
+		tab_id = sender.tab.id;
 	//*******************************************************
 		if(request.type == 'LOAD_ALL_FROM_STORE_TO_FV'){
 			console.log("logging request.msg.frameview_key", request.msg.frameview_key);
-			get_frameview_full(request.msg.frameview_key, tabIdOfSender);
+			get_frameview_full(request.msg.frameview_key, tab_id);
 		}
 		else if(request.type == 'SAVE_NEW_CARD_FROM_FV_TO_STORE'){
 
-			save_new_card_from_frameview_to_store(request.msg.frameview_key, request.msg._card, tabIdOfSender);
+			save_new_card_from_frameview_to_store(request.msg.frameview_key, request.msg._card, tab_id);
 			frameview_has_changed(request.msg.frameview_key, sender.tab);//let other tab know that this frameview has changed
 		}
 		else if(request.type == 'UPDATE_CARD_FROM_FV_TO_STORE'){
-			update_card_from_frameview_to_store( request.msg._card, tabIdOfSender);
+			update_card_from_frameview_to_store( request.msg._card, tab_id);
 			frameview_has_changed(request.msg.frameview_key, sender.tab);//let other tab know that this frameview has changed
 		}
 		else if(request.type == 'REMOVE_CARD_FROM_STORE'){
-			remove_card_from_store(request.msg.frameview_key, request.msg.id, tabIdOfSender);
+			remove_card_from_store(request.msg.frameview_key, request.msg.id, tab_id);
 			frameview_has_changed(request.msg.frameview_key, sender.tab);//let other tab know that this frameview has changed
 		}
 		else if(request.type == 'LOAD_CARDS_FROM_STORE'){
-			load_cards_from_pouchdb(request.msg.ids, request.msg.frameview_key, tabIdOfSender);			
+			load_cards_from_pouchdb(request.msg.ids, request.msg.frameview_key, tab_id);			
 		}
 		else if(request.type == 'LOAD_ALL_CARDS_FROM_STORE'){
-			load_all_cards_from_pouchdb(request.msg.frameview_key, tabIdOfSender);
+			load_all_cards_from_pouchdb(request.msg.frameview_key, tab_id);
 			
 		}
 		else if(request.type == 'TRANSFER_CARDS_BETWEEN_FRAMEVIEW'){
-			transfer_cards_between_frameview(request.msg,  tabIdOfSender);
+			transfer_cards_between_frameview(request.msg,  tab_id);
 			
 		}
 
+	//************************************************
+
 		else if(request.type == 'LOAD_FRAME_CONFIG_FROM_STORE'){
-			load_frame_config_from_store(tabIdOfSender);
+			load_frame_config_from_store(tab_id);
 		}
 		else if(request.type == 'SAVE_FRAME_CONFIG_TO_STORE'){
-			save_frame_config_to_store(request.msg.frame_config, tabIdOfSender);
+			save_frame_config_to_store(request.msg.frame_config, tab_id);
 		}
 
-		//*********************************************************
+	//*********************************************************
 
 		else if(request.type == 'GET_ALL_CARD_AND_FRAMEVIEW_TITLES'){
-			get_allcard_and_frameview_titles(tabIdOfSender);
+			get_allcard_and_frameview_titles(tab_id);
 		}
 		else if(request.type == 'SEARCH_STORE'){
-			search_store(request.msg, tabIdOfSender);
+			search_store(request.msg, tab_id);
 		}
 		else if(request.type == 'MIXED_CONTENT_CALLBACK'){
-			mixed_content_callback(request.msg, tabIdOfSender);
+			mixed_content_callback(request.msg, tab_id);
 		}
 
 		else if(request.type == 'SAVE_DATA_ELEMENT'){
 			if(request.msg.id && request.msg.data){// this is pouchdb id
-				save_data_element_to_pouchdb(request.msg.id, request.msg.data, tabIdOfSender);
+				save_data_element_to_pouchdb(request.msg.id, request.msg.data, tab_id);
 			}
 				
 		}
 		else if(request.type == 'GET_DATA_ELEMENT'){
 			if(request.msg.id){// this is pouchdb id
-				get_data_element_from_pouchdb(request.msg.id, tabIdOfSender);
+				get_data_element_from_pouchdb(request.msg.id, tab_id);
 			}
 		}
 		
+	//*********************************************************
 		//*********************************************************
+		//*********************************************************
+		else if(request.type == 'SW:QUESTION_FROM_TAB'){
+			if(request.msg.question){
+				SW.questionFromTab(request.msg.question, tab_id);
+			}
+		}
+		
 
 	
 
@@ -678,7 +688,7 @@ function save_all_data_to_firebase(){
 	);
 }
 
-
+//*****************************************************************
 //*****************************************************************
 //*****************************************************************
     //$.get('http://www.factbites.com/topics/tower%20of%20hanoi', function(data){console.log((data).replace(/<(?:.|\n)*?>/gm, ''))})
@@ -687,3 +697,4 @@ function save_all_data_to_firebase(){
 // el.html("<html><head><title>titleTest</title></head><body><a href='test0'>test01</a><a href='test1'>test02</a><a href='test2'>test03</a></body></html>");
 
 // $('a', el) // All the anchor elements
+

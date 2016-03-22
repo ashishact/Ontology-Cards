@@ -23,6 +23,27 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 			exactmatch_cmds : [],
 		}
 
+		this.preetyJson = {
+			replacer: function(match, pIndent, pKey, pVal, pEnd) {
+				var key = '<span class=json-key>';
+				var val = '<span class=json-value>';
+				var str = '<span class=json-string>';
+				var r = pIndent || '';
+				if (pKey)
+					r = r + key + pKey.replace(/[": ]/g, '') + '</span>: ';
+				if (pVal)
+					r = r + (pVal[0] == '"' ? str : val) + pVal + '</span>';
+				return r + (pEnd || '');
+			},
+			print: function(obj) {
+				var jsonLine = /^( *)("[\w]+": )?("[^"]*"|[\w.+-]*)?([,[{])?$/mg;
+				return JSON.stringify(obj, null, 3)
+					.replace(/&/g, '&amp;').replace(/\\"/g, '&quot;')
+					.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+					.replace(jsonLine, self.preetyJson.replacer);
+			}
+		};
+
 		this.cardTitleIfNotFound = '_Card_';
 		this.searchTitles = function(search_str){
 			self.cardTitleIfNotFound = search_str;
@@ -119,6 +140,7 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 		//******************************************************
 		//ONLINE COMMAND SEARCH
 		//******************************************************
+
 		this.queryAnswers = [];
 		this.queryQuestions = [];
 		this.onlineSearchReply = {
@@ -127,13 +149,14 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 				if(!json.CompleteSuggestion)return;
 				self.queryAnswers = [];
 				$.each(json.CompleteSuggestion, function(i, item){
-					var title = item.suggestion.data;
+					var title = item.suggestion? item.suggestion.data: '';
 					if(title)self.queryAnswers.push({title:title, desc:''});
 				});
 
 				self.sc_holdder_ref.emit_valid_commands_changed();
 			},
 			gotWikipediaSuggestions: function(json){
+				console.log(json);
 				if(json.query && json.query.pages){
 					self.queryAnswers = [];
 				    $.each(json.query.pages, function(i,item){
@@ -191,6 +214,17 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 				});
 				self.sc_holdder_ref.emit_valid_commands_changed();
 			},
+			gotDbpediaLookupSuggestions: function(json){
+				console.log(json);
+				if(json.results && json.results.length){
+				    $.each(json.results, function(i, item){
+				        self.queryAnswers.push({title:item.label, desc:item.description});				        
+				    });
+				}
+				self.sc_holdder_ref.emit_valid_commands_changed();
+			},
+
+
 		}
 
 
@@ -206,39 +240,54 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 			},
 			getDuckDuckGoSuggestions: function(query){
 				searchapi.searchDuckDuckGo(query, self.onlineSearchReply.gotDuckDuckGoSuggestions)
-			}
+			},
+			getDbpediaLookupSuggestions: function(query){
+				searchapi.searchDbpediaLookup(query, self.onlineSearchReply.gotDbpediaLookupSuggestions)
+			},
 		}
-		this.keyUpTimeOutVar = null;// used for timer event
-		minTimeIntervalForQuery = 400; // ms
-		this.last_query_str = '';
+		
 		this.onlineCommandSearch = function(cmd, query){
-			if(self.last_query_str === query)return;
 			
 			var qsearch = self.onlineSearchQuery;
-			clearTimeout(self.keyUpTimeOutVar);
-
-			var timeOutFunction = function(){
-				if(cmd.length){
-					console.log('came');
-					if('wikipedia'.indexOf(cmd) === 0){
-						self.queryQuestions.push({title:'wikipedia', desc:''});
-						if(query.length) qsearch.getWikipediaSuggestions(query);
-					}
-					else if('google'.indexOf(cmd) === 0){
-						self.queryQuestions.push({title:'google result', desc:''});
-						if(query.length) qsearch.getGoogleSuggestions(query);
-					}
-					else if('umbel'.indexOf(cmd) === 0){
-						self.queryQuestions.push({title:'umbel', desc:''});
-						if(query.length) qsearch.getUmbelConcept(query);
-					}
-					else if('duckduckgo'.indexOf(cmd) === 0){
-						self.queryQuestions.push({title:'duckduckgo', desc:''});
-						if(query.length) qsearch.getDuckDuckGoSuggestions(query);
-					}
+			if(cmd.length){
+				console.log('came');
+				if('wikipedia'.indexOf(cmd) === 0){
+					self.queryQuestions.push({title:'wikipedia', desc:''});
+					if(query.length) qsearch.getWikipediaSuggestions(query);
+				}
+				else if('google'.indexOf(cmd) === 0){
+					self.queryQuestions.push({title:'google result', desc:''});
+					if(query.length) qsearch.getGoogleSuggestions(query);
+				}
+				else if('umbel'.indexOf(cmd) === 0){
+					self.queryQuestions.push({title:'umbel', desc:''});
+					if(query.length) qsearch.getUmbelConcept(query);
+				}
+				else if('duckduckgo'.indexOf(cmd) === 0){
+					self.queryQuestions.push({title:'duckduckgo', desc:''});
+					if(query.length) qsearch.getDuckDuckGoSuggestions(query);
+				}
+				else if('dbpedialookup'.indexOf(cmd) === 0){
+					self.queryQuestions.push({title:'dbpedia', desc:''});
+					if(query.length) qsearch.getDbpediaLookupSuggestions(query);
 				}
 			}
+		}
 
+		this.keyUpTimeOutVar = null;// used for timer event
+		minTimeIntervalForQuery = 1000; // ms
+		this.last_query_str = '';
+
+		this.explore = function(query){
+			if(self.last_query_str === query)return;
+
+			self.onlineCommandSearch('wikipedia', query);
+			self.onlineCommandSearch('dbpedialookup', query);
+
+			clearTimeout(self.keyUpTimeOutVar);
+			var timeOutFunction = function(){
+				self.send_msg_to_background("SW:QUESTION_FROM_TAB", {question:query});
+			}
 			self.keyUpTimeOutVar = setTimeout(timeOutFunction, minTimeIntervalForQuery);
 			self.last_query_str = query;
 		}
@@ -455,7 +504,33 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 
 		//******************************************************
 		//******************************************************
+		this.RDF_MSG_TYPE = {
+			LOAD_FROM_URL:1,
+			CLEAR_DOCUMENT:2,
+			GET_ANY:3,
+			GET_THE:4,
+			GET_MANY:5,
+			S_MATCHING:6,
+			ADD:7,
+			REMOVE:8,
+			GET_ALL_S:9,
+			GET_ALL_P:10,
+			GET_ALL_O:11,
+		};
 
+		this.rdfstore = {
+			load_rdf_from_url: function(url){
+				self.send_msg_to_background();
+			},
+		}
+		this.send_msg_to_background= function(type, msg){
+		    chrome.runtime.sendMessage(
+		        {
+		            type:type,
+		            msg:msg
+		        }
+		    );
+		};
 
 		this.on_start = function(stored_data){
 			console.log(stored_data.card_titles.length);

@@ -225,7 +225,15 @@ html{
     background-color: bisque;
 }
 
-
+#SEMANTICCARDS-05041993 .json-key {
+ color: brown;
+}
+#SEMANTICCARDS-05041993 .json-value {
+ color: navy;
+}
+#SEMANTICCARDS-05041993 .json-string {
+ color: olive;
+}
 //******************************************************
 //******************************************************
 //  .listholder{

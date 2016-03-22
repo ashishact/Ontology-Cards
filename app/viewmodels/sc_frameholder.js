@@ -563,7 +563,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     }
                 }
             },
-            add_text_of_selected_card: function(FM, sel_card, _text){
+            add_text_to_selected_card: function(FM, sel_card, _text){
                 var _cd = sel_card;
                 if(_cd){// _cs is definitely an array
                     if(_cd.bind_data.text){// not everyone has text
@@ -576,7 +576,49 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     }
                 }
             },
-                        
+            add_json_to_selected_card: function(FM, sel_card, _text){
+                var _cd = sel_card;
+                if(_cd){// _cs is definitely an array
+                    if(_cd.bind_data.text){// not everyone has text
+                        try {
+                            _text = "<pre>"+interpreter.preetyJson.print($.parseJSON(_text))+ "</pre>";
+                        }
+                        catch(err) {
+                            FM.actions.show_card_hint("Error in json string", 2500);
+                        }
+                        if(_cd.bind_data.text){
+                            _cd.bind_data.text(_cd.bind_data.text() + _text);
+                            FM.actions.save_card_content(_cd, true);
+                        }
+                    }
+                }
+            },
+
+            direct_sparql_query: function(FM, sel_card, query){
+                var endpoint = 'http://dbpedia.org/sparql';
+                if(!query || query.length < 6) query = "SELECT ?s WHERE {?s ?p ?o} LIMIT 10";
+                var queryUrl = endpoint + "?query="+ encodeURIComponent(query) +"&format=json";
+                $.ajax({
+                    dataType: 'json',
+                    url: queryUrl,
+                    success: function(data) {
+                        if(data.results){
+                            if(sel_card){
+                                var text = "<pre>"+interpreter.preetyJson.print(data.results.bindings)+ "</pre>";
+                                if(sel_card.bind_data.text){
+                                    sel_card.bind_data.text(text);  
+                                    FM.actions.save_card_content(sel_card, true);
+                                }
+                            }
+                            else{
+                                console.log(data.results.bindings);
+                            }
+
+                        }
+                        else console.log(data);
+                    }
+                });
+            }, 
                             
             set_password_for_selected_card: function(FM, sel_card, _pass){
                 var _cd = sel_card;
@@ -749,7 +791,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             var command_str = $commandInput.val();
             state.dot = (command_str.match(/\./g) || []).length;
 
-            command_str = command_str.replace('.','');
+            // command_str = command_str.replace('.','');
 
             if(command_str && command_str.length){
                 var cmd = command_str.replace(/\s+/g, " ").split(" ");
@@ -842,10 +884,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         if(!commit) self.frameActions.add_command({title:'delete', desc:'Delete selected card, You can\'t undo this action. Write full command'});
                         else if(c0.length === 6) self.frameActions.delete_card(FM, ctx.sel_card);
                     }
-                    else if('exit'.indexOf(c0) === 0){
-                        if(!commit) self.frameActions.add_command({title:'exit', desc:'Close all cards and frames, Just close everything and sleep'});
-                        else self.frameActions.exit();
-                    }
                     else if('go'.indexOf(c0) === 0){
                         if(!commit) self.frameActions.add_command({title:'go', desc:'Enter inside this card'});
                         else self.frameActions.trigger_selected_parent(FM, ctx.sel_card);
@@ -864,7 +902,15 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     }
                     else if('addtext'.indexOf(c0) === 0){
                         if(!commit) self.frameActions.add_command({title:'addtext ' + "\"" + cmd.slice(1, cmd.length).join(" ") + "\"", desc:'add text '});
-                        else if(c1) self.frameActions.add_text_of_selected_card(FM, ctx.sel_card, cmd.slice(1, cmd.length).join(" "));
+                        else if(c1) self.frameActions.add_text_to_selected_card(FM, ctx.sel_card, cmd.slice(1, cmd.length).join(" "));
+                    }
+                    else if('addjson'.indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'addjson', desc:'add json ' + "\"" + cmd.slice(1, cmd.length).join(" ") + "\""});
+                        else if(c1) self.frameActions.add_json_to_selected_card(FM, ctx.sel_card, cmd.slice(1, cmd.length).join(" "));
+                    }
+                    else if('sparql'.indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'SPARQL', desc:'query  :  ' + "\"" + cmd.slice(1, cmd.length).join(" ") + "\""});
+                        else if(c1) self.frameActions.direct_sparql_query(FM, ctx.sel_card, cmd.slice(1, cmd.length).join(" "));
                     }
                     else if('setpassword'.indexOf(c0) === 0){
                         if(!commit) self.frameActions.add_command({title:'setpassword', desc:'Setpassword'});
@@ -886,6 +932,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         if(!commit) self.frameActions.add_command({title:'seeallcards', desc:'load alll cards in a new frameview. It will load all the cards'});
                         else self.frameActions.show_all_cards();
                     }
+                    else if('exit'.indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'exit', desc:'Close all cards and frames, Just close everything and sleep'});
+                        else self.frameActions.exit();
+                    }
                     else if("iframe".indexOf(c0) === 0){
                         if(!commit) self.frameActions.add_command({title:'iframe ' + "\"" + cmd.slice(1, cmd.length).join(" ") + "\"", desc:'Add an I frame with given source url'});
                         else if(c1) self.frameActions.add_iframe_from_src(FM, c1);
@@ -898,6 +948,12 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         if(!commit) self.frameActions.add_command({title:'deletenonremovable', desc:"Remove non_removable when You absolutely have to remove this"});
                         else self.frameActions.make_selected_card_removable(FM, ctx.sel_card);
                     }
+                    else if("explore".indexOf(c0) === 0){
+                        // if(!commit) self.frameActions.add_command({title:'Explore', desc:cmd.slice(1, cmd.length).join(" ")});
+                        // else interpreter.explore(cmd.slice(1, cmd.length).join(" "));
+                        if(!commit) interpreter.explore(cmd.slice(1, cmd.length).join(" "));
+                        else ;
+                    } 
                     else if("$echoid".indexOf(c0) === 0){
                         if(!commit) self.frameActions.show_value('id', ctx.sel_card.id);
                     } 
@@ -1059,6 +1115,18 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     }
                 }
                 
+                //*****************************************************
+                //*****************************************************
+                else if(request.type == 'SW:ANSWER_FROM_BACK'){
+                    console.log(request.msg);
+                    if(request.msg.answers){
+                        //request.msg.answers:{id:'im34nxls', answers:[], source:''}
+                        interpreter.queryAnswers = request.msg.answers;
+                        self.emit_valid_commands_changed();
+                    }
+                        
+                }
+                //*****************************************************
                 //*****************************************************
             });
         }

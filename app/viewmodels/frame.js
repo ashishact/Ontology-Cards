@@ -11,6 +11,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
         
         //UI
             this.frameID = null;
+            this.frameType = 'default';
             this.appActions = null;
             //Observables
             this.cards = ko.observableArray([]);
@@ -23,7 +24,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             this.all_cards_in_frame_loaded = false;
             this.show_additional_card_menu = ko.observable(false);
             this.show_all_card_label = ko.observable(false);
-            this.card_label_text = ko.observable('Selected');
+            this.card_label_text = ko.observable('V: Selected');
             var card_hint_timer = null;
             this.frame_message_text = ko.observable(':)');
             var frame_hint_timer = null;
@@ -103,7 +104,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 self.appActions = activationData.appActions;// use functions within this object to call application functions
                 self.frameview.key(activationData.frameview_key);
                 self.frameview.title(activationData.title);
-
+                self.frameType = activationData.frameType;//default,  explore
+                    // frametype decides wheatheer to do a semantic explore or just creat notes and edit
                 if(activationData.frameview_key != 'home'){// if the frmeview requested is not 'home' 
                     self.navigation.push({key:activationData.frameview_key, title:activationData.title});
                 }
@@ -305,6 +307,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                                 var cards = request.msg.cards;
                                 for(var i = 0; i < cards.length; i++){
                                     cards[i].TYPE.VOLATILE = true;
+                                    cards[i].y = 0;
                                     me._add_card_from_store_to_frameview(cards[i]);
                                 }
                                 app.trigger('frameview:updated_with_ids', self.frameview.ids);
@@ -814,8 +817,17 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                         
                 };
                 this.clone_card_and_save = function(card){
-                    card.card_data.cloned_from_id = card.id;
-                    me.add_new_card(card.card_data);
+                    //if this card itself is a clone
+                    //you will be creating clone of a clone
+                    //and when its a parent card, cloned id will not work
+                    var new_card_data = _.clone(card.card_data);
+                    if(card.card_data.cloned_from_id){// it is already clone of something else
+                        new_card_data.cloned_from_id = card.card_data.cloned_from_id;// get the original id
+                    }
+                    else{
+                        new_card_data.cloned_from_id = card.id;
+                    }
+                    me.add_new_card(new_card_data);
                 }
 
                 this.card_set_draggable= function(card, opt){
