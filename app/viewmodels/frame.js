@@ -11,7 +11,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
         
         //UI
             this.frameID = null;
-            this.frameType = 'default';
             this.appActions = null;
             //Observables
             this.cards = ko.observableArray([]);
@@ -24,7 +23,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             this.all_cards_in_frame_loaded = false;
             this.show_additional_card_menu = ko.observable(false);
             this.show_all_card_label = ko.observable(false);
-            this.card_label_text = ko.observable('V: Selected');
+            this.card_label_text = ko.observable('V:Selected');
             var card_hint_timer = null;
             this.frame_message_text = ko.observable(':)');
             var frame_hint_timer = null;
@@ -55,7 +54,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             this.frameview.key = ko.observable('home');
             this.frameview.title = ko.observable('Home');
             this.frameview.cards = this.cards;
-            
+            this.frameview.type = 'default';//not observable, value=> default, volatile
+            this.frameview.exploring = false;// if exploring
+
             this.orphan_frameviewkey = 'orphan_frameviewkey_';
             //Cache
             //
@@ -104,12 +105,17 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 self.appActions = activationData.appActions;// use functions within this object to call application functions
                 self.frameview.key(activationData.frameview_key);
                 self.frameview.title(activationData.title);
-                self.frameType = activationData.frameType;//default,  explore
                     // frametype decides wheatheer to do a semantic explore or just creat notes and edit
                 if(activationData.frameview_key != 'home'){// if the frmeview requested is not 'home' 
                     self.navigation.push({key:activationData.frameview_key, title:activationData.title});
                 }
                 
+                if(activationData.title.indexOf('$') === 0){// 
+                    self.frameview.type = 'volatile';
+                }
+                if(activationData.frameview_key === '$explore'){
+                    self.frameview.exploring = true;
+                }
             };
             this.bindingComplete = function (view) {
             };
@@ -279,9 +285,15 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                                 me._update_all_card_in_frameview();
                                 self.all_cards_in_frame_loaded = true;
                                 
-                                var _obj = self.getCurrentFrameviewKeyAndTitle();                            
-                                me._send_msg_to_background('SAVE_DATA_ELEMENT', {id:'LAST_USED_FRAMEVIEW_KEY', data:{fv_key: _obj.fv_key, fv_title: _obj.fv_title}});
-                                app.trigger('frameview:loded_with_ids', self.frameview.ids);
+                                if(self.frameview.type === 'volatile'){
+
+                                }
+                                else{
+                                    var _obj = self.getCurrentFrameviewKeyAndTitle();                            
+                                    me._send_msg_to_background('SAVE_DATA_ELEMENT', {id:'LAST_USED_FRAMEVIEW_KEY', data:{fv_key: _obj.fv_key, fv_title: _obj.fv_title}});
+                                    app.trigger('frameview:loded_with_ids', self.frameview.ids);
+                                }
+                                    
                             }
 
                         }
@@ -383,6 +395,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 };
                 //@
                 this._save_new_card_from_frameview_to_store = function(card){
+                    if(self.frameview.type === 'volatile'){
+                        console.log(self.frameview.type);
+                        self.actions.show_frame_hint('This is a volatile frameview cards will not be saved here',2000);
+                        return;
+                    }
                     var _card = {
                         id:card.id,
                         x:card.x,
@@ -533,7 +550,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     }
                 };
                 this._update_card_from_frameview_to_store = function(card){
-                    if(card.TYPE.VOLATILE){ return;}
+                    if(self.frameview.type ==='volatile' || card.TYPE.VOLATILE){ return;}
 
                     var _card = {
                         id:card.id,
@@ -839,6 +856,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
 
                 this.save_card_content=function(_card, do_not_compare){
                     // do_not compare when data is added or removed 
+                    if(self.frameview.type === 'volatile'){
+                        me.show_frame_hint("This is a volatile frameview. Cards won\'t be saved here", 2000);
+                        return;
+                    }
 
                     // saves everything but before doing that it updates content;
                     var _do_not_compare = false; if(do_not_compare)_do_not_compare = true;
@@ -1358,7 +1379,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     }
                 }
                 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                if(!card.TYPE.VOLATILE && reason=='EDITING_FINISHED'){
+                if(self.frameview.type === 'volatile'){
+                    self.actions.show_frame_hint("This is a volatile frameview, Cards won\'t be saved here", 2000);
+                    return;
+                }
+                else if(!card.TYPE.VOLATILE && reason=='EDITING_FINISHED'){
                     // app.trigger('editing:finished', card.id);// saves card_content in card.js
                     // self.actions._update_card_from_frameview_to_store(card);// saves card, along with card_data here
                     self.actions.update_card_content_from_frameview_to_store(card);
@@ -1473,6 +1498,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 //new
                 self.frameview.key(frameview_key);
                 self.frameview.title(title);
+                self.frameview.type = (title.indexOf('$') === 0)? 'volatile': 'default';
+                self.frameview.exploring = (frameview_key === '$explore')? true: false;
 
                 
                 self.actions.remove_frameview_from_frame();
@@ -1490,6 +1517,12 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 self.actions.remove_frameview_from_frame();
                 self.actions.load_all_from_store_to_frameview();
             };
+            this.load_explore_frameview = function(query){
+                self.navigation([{key:'home', title: 'Home'}, {key:'$explore', title: '$explore'} ]);
+                self.actions.show_frame_hint("No card will be saved here, type a query in the search bar");
+                self.frameview.exploring = true;
+                self.goto_frameview('$explore', '$explore');
+            }
             this.trigger_parent = function(card, target, dt, dx, dy){
                 if(card.TYPE.PARENT && card.card_data.password){
                     card.restricted = true;

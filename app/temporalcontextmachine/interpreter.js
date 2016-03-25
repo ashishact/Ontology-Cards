@@ -1,5 +1,19 @@
 define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki'],  function (app, _, state, Bloodhound, searchapi, mediawiki) {
 	// interpretes intention from string 
+	function unique() {
+	    var a = [];
+	    var l = this.length;
+	    for(var i=0; i<l; i++) {
+	      for(var j=i+1; j<l; j++) {
+	        // If this[i] is found later in the array
+	        if (this[i] === this[j])
+	          j = ++i;
+	      }
+	      a.push(this[i]);
+	    }
+	    return a;
+	  };
+
 	interpreter = function(){
 		var self = this;
 		this.sc_holdder_ref = null;
@@ -73,36 +87,40 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 
 		this.on_card_content_updated = function(card){
 			if(card.TYPE.VOLATILE)return;
+			self.updateCardTitleSearchIndex(card.id, card.card_data.card_content.title, 'update');
 
-			var obj = _.find(self.sc_data_space.card_titles, function(v){return v.id === card.id});
-			if(obj.title != card.card_data.card_content.title){
-				obj.title = card.title;
-				if(self.cardTitleSearchEngine)self.cardTitleSearchEngine.initialize(true);
-			}
+			// var obj = _.find(self.sc_data_space.card_titles, function(v){return v.id === card.id});
+			// if(obj.title != card.card_data.card_content.title){
+				// obj.title = card.title;
+				// if(self.cardTitleSearchEngine)self.cardTitleSearchEngine.initialize(true);
+				
+			// }
 		};
 
 		this.on_card_removed_from_frameview = function(card_id){
-			_.remove(self.sc_data_space.thisframeview_ids, function(id){return id === card_id});
+			// _.remove(self.sc_data_space.thisframeview_ids, function(id){return id === card_id});
 		};
 
 		this.on_card_deleted_from_store = function(id){
 			console.log('removing here as well');
-			_.remove(self.sc_data_space.card_titles, function(ct){return ct.id === id});
-			if(self.cardTitleSearchEngine) self.cardTitleSearchEngine.initialize(true);
+			// _.remove(self.sc_data_space.card_titles, function(ct){return ct.id === id});
+			// if(self.cardTitleSearchEngine) self.cardTitleSearchEngine.initialize(true);
+			self.updateCardTitleSearchIndex(id, '', 'remove');
 		};
 		this.init_app_events = function(){
 			app.on('frameview:loded_with_ids').then(function(ids){
-			     self.sc_data_space.thisframeview_ids = ids;
+			     // self.sc_data_space.thisframeview_ids = ids;
 			});
 			app.on('frameview:updated_with_ids').then(function(ids){// same as above but triggered when few cards are lodede from store rather than the whole frameview 
-			     self.sc_data_space.thisframeview_ids = ids;
+			     // self.sc_data_space.thisframeview_ids = ids;
 			});
 
 			app.on('card:new_card_added_from_user_to_frameview').then(function(card){
 				if(card.TYPE.VOLATILE)return;
-				var obj = {id: card.id, title:card.card_data.card_content.title.replace(/<[^>]*>/g, "")};
-				self.sc_data_space.card_titles.push(obj);
-				if(self.cardTitleSearchEngine)self.cardTitleSearchEngine.add([obj]);
+				// var obj = {id: card.id, title:card.card_data.card_content.title.replace(/<[^>]*>/g, "")};
+				// self.sc_data_space.card_titles.push(obj);
+				// if(self.cardTitleSearchEngine)self.cardTitleSearchEngine.add([obj]);
+				self.updateCardTitleSearchIndex(card.id, card.card_data.card_content.title, 'insert');
 			});
 
 			app.on('card:card_content_updated').then(self.on_card_content_updated);
@@ -147,6 +165,7 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 			gotGoogleSuggestions: function(json){
 				
 				if(!json.CompleteSuggestion)return;
+
 				self.queryAnswers = [];
 				$.each(json.CompleteSuggestion, function(i, item){
 					var title = item.suggestion? item.suggestion.data: '';
@@ -157,8 +176,8 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 			},
 			gotWikipediaSuggestions: function(json){
 				console.log(json);
-				if(json.query && json.query.pages){
 					self.queryAnswers = [];
+				if(json.query && json.query.pages){
 				    $.each(json.query.pages, function(i,item){
 				        var bind_data = {};
 				        bind_data.title = item.title;
@@ -180,18 +199,35 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 				self.queryAnswers = [];
 				$.each(json.results, function(i, item){
 				    _tok = item['pref-label'];
-				    // console.log(_tok);
-				    if(_tok)self.queryAnswers.push({title:_tok, desc:item.description});
+
+				    var classes = [];
+				    var labels = [];// finding dublicates
+				    if(item.type instanceof Array){
+					    for (var i = 0; i < item.type.length; i++) {
+					    	var l = _.last(item.type[i].split('/'));// http://www.w3.org/2002/07/owl#Thing
+					    	if(labels.indexOf(l)>-1) continue;
+					    	if(l.length>2)labels.push(l);
+					    	if(l.length>2)classes.push({label:l});
+					    }
+				    }
+				    else if(item.type && item.type.length){
+					    var l = _.last(item.type[i].split('/'));
+					    if(l.length>2)classes.push({label:l});
+				    }
+				    	
+				    if(_tok)self.queryAnswers.push({title:_tok, desc:item.description, classes:classes});
+				    	
+
 				});
 
 				self.sc_holdder_ref.emit_valid_commands_changed();
 			},
 			gotDuckDuckGoSuggestions : function(json){
 				if(!json.RelatedTopics.length)return;
+				console.log(json);
 
 				self.queryAnswers = [];
 				$.each(json.RelatedTopics, function(i, item){
-					console.log(item);
 				    if(item.hasOwnProperty('Name')){
 				        $.each(item.Topics, function(j, childItem){
 				            var _tok = childItem.FirstURL.split('/');
@@ -216,15 +252,61 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 			},
 			gotDbpediaLookupSuggestions: function(json){
 				console.log(json);
+				self.queryAnswers = [];
 				if(json.results && json.results.length){
 				    $.each(json.results, function(i, item){
-				        self.queryAnswers.push({title:item.label, desc:item.description});				        
+				    	var classes = [];
+				    	var labels = [];// finding dublicates
+				    	for (var i = 0; i < item.classes.length; i++) {
+				    		var l = _.last(item.classes[i].label.split('/'));// http://www.w3.org/2002/07/owl#Thing
+				    		if(labels.indexOf(l)>-1) continue;
+
+				    		labels.push(l);
+				    		classes.push({label:l});
+				    	}
+
+				        self.queryAnswers.push({title:item.label, desc:item.description, classes:classes});
 				    });
 				}
 				self.sc_holdder_ref.emit_valid_commands_changed();
 			},
+			gotMedlinePlusSuggestions: function(json){
+				if(!json)return;
 
+				if(json.spellingCorrection){
+					self.queryAnswers = [];
+					self.queryAnswers.push({title:json.term + " not found", desc:'Search for '+ json.spellingCorrection+' instead'});
+					self.sc_holdder_ref.emit_valid_commands_changed();
+					return;
+				}
 
+				if(!json.list || !json.list.document || !json.list.document.length)return;
+				// console.log(json);
+
+				self.queryAnswers = [];
+				for (var i = 0; i < json.list.document.length; i++) {
+					var conts = json.list.document[i].content;
+					var bind_data = {classes:[]};
+					for (var j = 0; j < conts.length; j++) {
+						var name = conts[j].name;
+						if(name === 'title'){
+							bind_data.title = conts[j].text.replace(/<[^>]*>/g, "");
+						}
+						// else if(name === 'snippet'){
+						else if(name === 'FullSummary'){
+							// bind_data.desc = conts[j].text.replace(/<[^>]*>/g, "");
+							bind_data.desc = conts[j].text.replace(/<p>/g, '<p style=\'margin-bottom:10px;\'>');
+						}
+						else if(name === 'groupName'){
+							bind_data.classes.push({label:conts[j].text.replace(/<[^>]*>/g, "")});
+						}
+					}
+					console.log(bind_data);
+					self.queryAnswers.push(bind_data);
+				}
+				
+				self.sc_holdder_ref.emit_valid_commands_changed();
+			}
 		}
 
 
@@ -239,37 +321,54 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 				searchapi.searchUmbelConcept(query, self.onlineSearchReply.gotUmbelConcept);
 			},
 			getDuckDuckGoSuggestions: function(query){
-				searchapi.searchDuckDuckGo(query, self.onlineSearchReply.gotDuckDuckGoSuggestions)
+				searchapi.searchDuckDuckGo(query, self.onlineSearchReply.gotDuckDuckGoSuggestions);
 			},
 			getDbpediaLookupSuggestions: function(query){
-				searchapi.searchDbpediaLookup(query, self.onlineSearchReply.gotDbpediaLookupSuggestions)
+				searchapi.searchDbpediaLookup(query, self.onlineSearchReply.gotDbpediaLookupSuggestions);
+			},
+			getMedlinePlusSuggestions: function(query){
+				searchapi.searchMedlinePlusSuggestions(query, self.onlineSearchReply.gotMedlinePlusSuggestions);
 			},
 		}
 		
+		keyUpTimeOutVar = null;// used for timer event
+		last_query_str = '';
+
 		this.onlineCommandSearch = function(cmd, query){
-			
+			if(last_query_str === query)return;
 			var qsearch = self.onlineSearchQuery;
 			if(cmd.length){
-				if('wikipedia'.indexOf(cmd) === 0){
-					self.queryQuestions.push({title:'wikipedia', desc:''});
-					if(query.length) qsearch.getWikipediaSuggestions(query);
+
+				function timeOutFunction(){
+					if('wikipedia'.indexOf(cmd) === 0){
+						self.queryQuestions.push({title:'wikipedia', desc:''});
+						if(query.length) qsearch.getWikipediaSuggestions(query);
+					}
+					else if('google'.indexOf(cmd) === 0){
+						self.queryQuestions.push({title:'google result', desc:''});
+						if(query.length) qsearch.getGoogleSuggestions(query);
+					}
+					else if('umbel'.indexOf(cmd) === 0){
+						self.queryQuestions.push({title:'umbel', desc:''});
+						if(query.length>2) qsearch.getUmbelConcept(query);
+					}
+					else if('duckduckgo'.indexOf(cmd) === 0){
+						self.queryQuestions.push({title:'duckduckgo', desc:''});
+						if(query.length>2) qsearch.getDuckDuckGoSuggestions(query);
+					}
+					else if('dbpedialookup'.indexOf(cmd) === 0){
+						self.queryQuestions.push({title:'dbpedia', desc:''});
+						if(query.length>3) qsearch.getDbpediaLookupSuggestions(query);
+					}
+					else if('medlineplus'.indexOf(cmd) === 0){
+						self.queryQuestions.push({title:'medline plus', desc:'cmd:medlineplus'});
+						if(query.length>3) qsearch.getMedlinePlusSuggestions(query);
+					}
 				}
-				else if('google'.indexOf(cmd) === 0){
-					self.queryQuestions.push({title:'google result', desc:''});
-					if(query.length) qsearch.getGoogleSuggestions(query);
-				}
-				else if('umbel'.indexOf(cmd) === 0){
-					self.queryQuestions.push({title:'umbel', desc:''});
-					if(query.length) qsearch.getUmbelConcept(query);
-				}
-				else if('duckduckgo'.indexOf(cmd) === 0){
-					self.queryQuestions.push({title:'duckduckgo', desc:''});
-					if(query.length) qsearch.getDuckDuckGoSuggestions(query);
-				}
-				else if('dbpedialookup'.indexOf(cmd) === 0){
-					self.queryQuestions.push({title:'dbpedia', desc:''});
-					if(query.length) qsearch.getDbpediaLookupSuggestions(query);
-				}
+				clearTimeout(keyUpTimeOutVar);
+				keyUpTimeOutVar = setTimeout(timeOutFunction, 500);
+				last_query_str = query;
+
 			}
 		}
 
@@ -279,9 +378,6 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 
 		this.explore = function(query){
 			if(self.last_query_str === query)return;
-
-			self.onlineCommandSearch('wikipedia', query);
-			self.onlineCommandSearch('dbpedialookup', query);
 
 			clearTimeout(self.keyUpTimeOutVar);
 			var timeOutFunction = function(){
@@ -323,16 +419,15 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 		};
 
 		this.on_start = function(stored_data){
-			console.log(stored_data.card_titles.length);
 			self.init_app_events();
 
-			console.log(self.prefixPattern);
 			if(stored_data.card_titles && stored_data.card_titles.length){
 				for (var i = stored_data.card_titles.length - 1; i >= 0; i--) {
 					// remove html encoding from string
 					stored_data.card_titles[i].title  = stored_data.card_titles[i].title.replace(/<[^>]*>/g, "");
+					self.updateCardTitleSearchIndex(stored_data.card_titles[i].id, stored_data.card_titles[i].title, 'insert');
 				}
-				self.sc_data_space.card_titles = stored_data.card_titles;
+				// self.sc_data_space.card_titles = stored_data.card_titles;
 			}
 
 			if(stored_data.frameview_titles && stored_data.frameview_titles.length){
@@ -340,36 +435,84 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 					// remove html encoding from string
 					stored_data.frameview_titles[i].title  = stored_data.frameview_titles[i].title.replace(/<[^>]*>/g, "");
 				}
-				self.sc_data_space.frameview_titles = stored_data.frameview_titles;
+				// self.sc_data_space.frameview_titles = stored_data.frameview_titles;
 			}
 
-			if(stored_data.thisframeview_ids){
-				self.sc_data_space.thisframeview_ids = stored_data.thisframeview_ids;
-			}
+			// if(stored_data.thisframeview_ids){
+			// 	self.sc_data_space.thisframeview_ids = stored_data.thisframeview_ids;
+			// }
 
-			if(self.cardTitleSearchEngine){
-				self.cardTitleSearchEngine.clear();
-				self.cardTitleSearchEngine = null;
-			}
-			if(self.frameviewSearchEngine){
-				self.frameviewSearchEngine.clear();
-				self.frameviewSearchEngine = null;
-			}
+			// if(self.cardTitleSearchEngine){
+			// 	self.cardTitleSearchEngine.clear();
+			// 	self.cardTitleSearchEngine = null;
+			// }
+			// if(self.frameviewSearchEngine){
+			// 	self.frameviewSearchEngine.clear();
+			// 	self.frameviewSearchEngine = null;
+			// }
 
-			self.cardTitleSearchEngine = new Bloodhound({
-			    local: self.sc_data_space.card_titles,
-			    identify: function(obj) { return obj.id; },
-			    queryTokenizer: Bloodhound.tokenizers.whitespace,
-			    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
-			});
+			// self.cardTitleSearchEngine = new Bloodhound({
+			//     local: self.sc_data_space.card_titles,
+			//     identify: function(obj) { return obj.id; },
+			//     queryTokenizer: Bloodhound.tokenizers.whitespace,
+			//     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
+			// });
 			 	
-			self.frameviewSearchEngine = new Bloodhound({
-			    local: self.sc_data_space.frameview_titles,
-			    identify: function(obj) { return obj.id; },
-			    queryTokenizer: Bloodhound.tokenizers.whitespace,
-			    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
-			});
+			// self.frameviewSearchEngine = new Bloodhound({
+			//     local: self.sc_data_space.frameview_titles,
+			//     identify: function(obj) { return obj.id; },
+			//     queryTokenizer: Bloodhound.tokenizers.whitespace,
+			//     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
+			// });
 
+		};
+
+		this.getMatchedTitles = function(pre, ctx, query){
+			self.filteredCardTitles = [];
+			res = self.fastStringSearch(self.cardTitleSearchStringSource, query);
+			for (var i = 0; i < res.results.length; i++) {
+				var _t = res.results[i].split(self.searchIdDelim)[1];
+				var _id = res.results[i].split(self.searchIdDelim)[0];
+				self.filteredCardTitles.push({id:_id, title:pre + " " + _t, desc:''});
+			}
+			if(!res.count) self.filteredCardTitles.push({title:pre + " Card", desc:''});
+
+		}
+
+		this.updateCardTitleSearchIndex = function(id, title, mode){
+			if(mode === 'insert')
+				self.cardTitleSearchStringSource+= self.searchDelim + id + self.searchIdDelim + title.replace(/<[^>]*>/g, "") + self.searchDelim;
+			else if(mode === 'remove'){
+				var res = self.fastStringSearch(self.cardTitleSearchStringSource, id);
+				if(res.results.length){
+					title = res.results[0].split(self.searchIdDelim)[1];
+					self.cardTitleSearchStringSource = self.cardTitleSearchStringSource.replace(self.searchDelim + id + self.searchIdDelim + title + self.searchDelim,'');
+				}
+			}
+			else if(mode === 'update'){
+				var res = self.fastStringSearch(self.cardTitleSearchStringSource, id);
+				if(res.results.length){
+					var str = res.results[0];
+					self.cardTitleSearchStringSource = self.cardTitleSearchStringSource.replace(str, id + self.searchIdDelim + title.replace(/<[^>]*>/g, ""));
+				}
+			}
+					
+		}
+			
+		this.cardTitleSearchStringSource = '';
+		this.searchDelim = '"';
+		this.searchIdDelim = '~';
+		this.fastStringSearch = function(source, term){
+			var rx = new RegExp('"([^"]*'+term+'[^"]*)"','gi');
+			var i = 0;
+			var results = [];
+			while (result = rx.exec(source)) {
+				results.push(result[1]);
+				console.log('match: '+ result[1]);
+			    i += 1;
+			    if (i >= 50)break;
+			}
+			return {results:results, count:i};
 		}
 
 		// at last singletons

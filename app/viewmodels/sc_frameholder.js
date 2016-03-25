@@ -322,6 +322,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     self.addFrame({frameview_key:'home', title:'Home', bgColor:'darkcyan'});
                 }
             },
+            load_explore_frameview: function(FM, text){
+                FM.load_explore_frameview(text);
+            },
             add_list: function(FM, _title){
                 var d_size = {w:2, h:3};//size of this card
                 var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
@@ -585,6 +588,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         }
                         catch(err) {
                             FM.actions.show_card_hint("Error in json string", 2500);
+                            _text = "<pre>"+ _text +"</pre>";
                         }
                         if(_cd.bind_data.text){
                             _cd.bind_data.text(_cd.bind_data.text() + _text);
@@ -788,14 +792,21 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             }
             if(!FM)return;
 
+            var exploring = FM.frameview.exploring;
             var command_str = $commandInput.val();
             state.dot = (command_str.match(/\./g) || []).length;
 
             // command_str = command_str.replace('.','');
-
             if(command_str && command_str.length){
                 var cmd = command_str.replace(/\s+/g, " ").split(" ");
-                if(cmd[0].length && (cmd[0][0] != ';' )){// command
+
+
+                if(exploring){
+                    interpreter.explore(command_str);
+                }
+
+
+                else if(cmd[0].length && (cmd[0][0] != ';' )){// command
                     var ctx = {}
                     ctx.sel_card = state.actions.get_primary_selected_card(state);
                     if(ctx.sel_card){
@@ -839,7 +850,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                                 else self.frameActions.add_volatile_card(FM, cmd); // cmd not used
                             }
                             else{//card with given title
-                                if(!commit) interpreter.resolve_pattern('add', '[title]', cmd.slice(1,cmd.length).join(' '));
+                                // if(!commit) interpreter.resolve_pattern('add', '[title]', cmd.slice(1,cmd.length).join(' '));
+                                if(!commit) interpreter.getMatchedTitles('add', '[title]', cmd.slice(1,cmd.length).join(' '));
                                 else {
                                     var id = self.commandSuggestions()[0].id;
                                     if(id){
@@ -951,8 +963,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     else if("explore".indexOf(c0) === 0){
                         // if(!commit) self.frameActions.add_command({title:'Explore', desc:cmd.slice(1, cmd.length).join(" ")});
                         // else interpreter.explore(cmd.slice(1, cmd.length).join(" "));
-                        if(!commit) interpreter.explore(cmd.slice(1, cmd.length).join(" "));
-                        else ;
+                        if(!commit){
+                            if(!interpreter.queryAnswers.length) self.frameActions.add_command({title:'Explore', desc:cmd.slice(1, cmd.length).join(" ")});
+                            interpreter.explore(cmd.slice(1, cmd.length).join(" "));
+                        } 
+                        else{
+                            self.frameActions.load_explore_frameview(FM, cmd.slice(1, cmd.length).join(" "));
+                        }
                     } 
                     else if("$echoid".indexOf(c0) === 0){
                         if(!commit) self.frameActions.show_value('id', ctx.sel_card.id);
@@ -997,18 +1014,21 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         if(FM.show_all_card_label())FM.show_all_card_label(false);
                     }
                 }
+
+
                 else if(cmd[0][0] == ';'){
                     var c0 = cmd[0].slice(1,cmd[0].length).toLowerCase();
                     var q = cmd.slice(1, cmd.length).join(" ");
                     interpreter.onlineCommandSearch(c0, q);
                 }
+
+
                 else{// search with space(" ")
                     if(!commit) self.frameActions.add_command({title:'Search', desc:'Search for anything. well, almost anything. But there is no guarantee that you will find it'});
                 }
 
                 if(commit){
                     $commandInput.val('');
-                    
                 }
             }//if(cmd_str...
             else{
@@ -1118,8 +1138,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 //*****************************************************
                 //*****************************************************
                 else if(request.type == 'SW:ANSWER_FROM_BACK'){
-                    console.log(request.msg);
-                    if(request.msg.answers){
+                    if(request.msg.answers.length){
                         //request.msg.answers:{id:'im34nxls', answers:[], source:''}
                         interpreter.queryAnswers = request.msg.answers;
                         self.emit_valid_commands_changed();
@@ -1243,7 +1262,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
         }
         this.emit_valid_commands_changed=function(){
 
-            self.commandSuggestions().splice(10, self.commandSuggestions().length);
+                        
+            // self.commandSuggestions.removeAll();
 
 
 
@@ -1269,8 +1289,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             // }
             
             // self.commandSuggestions(self.commands);
+            
             if(interpreter.filteredCardTitles.length)self.commandSuggestions(interpreter.filteredCardTitles);
-            else self.commandSuggestions(interpreter.queryAnswers);
+            else{
+                self.commandSuggestions(interpreter.queryAnswers);  
+                var nos = interpreter.queryAnswers.length;
+                // self.commandSuggestions().splice(nos, self.commandSuggestions().length);
+            }
             
         };
     

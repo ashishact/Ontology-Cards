@@ -86,6 +86,13 @@ var SEARCH_API = function(){
 				else console.log(json);
 		    });
 		} 
+	};
+	this.searchMedlinePlusSuggestions = function(query, callback){
+		var url =  'https://wsearch.nlm.nih.gov/ws/query?db=healthTopics&term='+query;+'&retmax=5';
+		$.get(url ,function(data) {// getJSOn can't be used because this gives xml by default in chrome
+			if(callback && typeof(callback) == 'function')callback( $.xml2json(data) );
+			else console.log($.xml2json(data));
+		});
 	}
 
 
