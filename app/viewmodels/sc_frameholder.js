@@ -477,6 +477,14 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 state.copied_card = sel_card;
 
             },
+            save_card: function(FM, sel_card){
+                if(sel_card){
+                    var volatile = sel_card.TYPE.VOLATILE;// save original value
+                    sel_card.TYPE.VOLATILE = false;// then we will be able to save, if it was true before
+                    FM.actions.save_card_content(sel_card, true);// donot compare
+                    sel_card.TYPE.VOLATILE = volatile;// restore its original value
+                }
+            },
             paste_card: function(FM){
                 // var obj = state.actions.get_cut_or_copied_card_id(state);
                 //     console.log(obj);
@@ -871,6 +879,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                             else card_ = self.frameActions.add_card_with_default_title(FM, cmd);
                         }
                     }
+                    else if('save'.indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'save', desc:'Will save this card  (even if it is volatile)'});
+                        else self.frameActions.save_card(FM, ctx.sel_card);
+                    }
                     else if('remove'.indexOf(c0) === 0){
                         if(cmd.length > 1){
                             if(c1.length && 'li'.indexOf(c1) === 0 && ctx.islist){// a list item
@@ -944,10 +956,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         if(!commit) self.frameActions.add_command({title:'seeallcards', desc:'load alll cards in a new frameview. It will load all the cards'});
                         else self.frameActions.show_all_cards();
                     }
-                    else if('exit'.indexOf(c0) === 0){
-                        if(!commit) self.frameActions.add_command({title:'exit', desc:'Close all cards and frames, Just close everything and sleep'});
-                        else self.frameActions.exit();
-                    }
                     else if("iframe".indexOf(c0) === 0){
                         if(!commit) self.frameActions.add_command({title:'iframe ' + "\"" + cmd.slice(1, cmd.length).join(" ") + "\"", desc:'Add an I frame with given source url'});
                         else if(c1) self.frameActions.add_iframe_from_src(FM, c1);
@@ -978,6 +986,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         if(!commit) self.frameActions.add_command({title:'Toggle Editable', desc:'cmd: toggleeditable'});
                         else self.frameActions.toggle_editable(FM, ctx.sel_card);
                     } 
+                    else if('exit'.indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'exit', desc:'Close all cards and frames, Just close everything and sleep'});
+                        else self.frameActions.exit();
+                    }
                     else if("removevolatile".indexOf(c0) === 0){
                         if(!commit) self.frameActions.add_command({title:'Remove Volatileness, to save this card', desc:'cmd: removevolatile'});
                         else self.frameActions.remove_volatile(FM, ctx.sel_card);

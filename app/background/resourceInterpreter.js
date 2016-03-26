@@ -14,10 +14,17 @@
 	var ustore = $rdf.graph();// used to store important tripple for user
 	var sstore = $rdf.graph();//used for suggestions
 
+//******************************
+//******************************
+//******************************
+//
+	var tripplestore = new Triplestore();
+	tripplestore.setMapping("foaf", "http://xmlns.com/foaf/0.1/");
+
 	var timeout = 5000;
 	var fetcher = new $rdf.Fetcher(store, timeout);
-	// var ufetcher = new $rdf.Fetcher(ustore, timeout);
-	// var sfetcher = new $rdf.Fetcher(sstore, timeout);
+	var ufetcher = new $rdf.Fetcher(ustore, timeout);
+	var sfetcher = new $rdf.Fetcher(sstore, timeout);
 
 
 	function roughSizeOfObject( object ) {
@@ -310,7 +317,6 @@
 							var sparqlid = variable.split('object')[1];// id to determine who made this sparql call
 							if(json.results.bindings){
 								var res = json.results.bindings; if(!res.length)return;
-								if(res[0][variable].type != 'uri')console.warn('Object from Sparql is not URI; wrong assumptions');
 								var obj = res[0][variable];
 								self.prepareContextStack({sparqlid:sparqlid, obj:obj, type:'object'})
 							}
@@ -359,7 +365,7 @@
 
 			this.getAllEnglishPredicate = function(s, id){// s is a $rdf Named node
 				s = '<'+s.uri+'>';
-				var qu = 'SELECT DISTINCT ?allPredicate'+id+' WHERE {'+s+' ?allPredicate'+id+' ?o.} LIMIT 250';
+				var qu = 'SELECT DISTINCT ?allPredicate'+id+' WHERE {'+s+' ?allPredicate'+id+' ?o.} LIMIT 4';
 				console.log(qu);
 				me.queryEndpoint(qu);
 			};
@@ -367,7 +373,8 @@
 			this.getObject = function(s, p, id){
 				s = '<'+s.uri+'>';
 				p = '<'+p.uri+'>';
-				var qu = 'SELECT DISTINCT ?object'+id+' WHERE {'+s+' '+p+' ?object'+id+'.} LIMIT 1';
+				o = '?object'+id;
+				var qu = 'SELECT DISTINCT ?object'+id+' WHERE {'+s+' '+p+' '+o+'. FILTER(!isLiteral('+o+') || lang('+o+') = "" || langMatches(lang('+o+'), "EN")) } LIMIT 1';
 				console.log(qu);
 				me.queryEndpoint(qu);
 
@@ -483,27 +490,42 @@
 			for (var i = 0; i < cs.length; i++) {
 				var ans = {};
 				var ctx = cs[i];
-				console.log(ctx);
-				var s = ctx.subject; if(!s){console.log('subject doesn\'t exist!!!!!'); break;}
+				// console.log(ctx);
+				var s = ctx.subject;
 				var ppredicate = ctx.parentPredicate;
 				var cpredicate = ctx.childPredicate;
 
 				if(ppredicate){
-					answers.push({desc:ppredicate.uri + '^'});
+					var match = ppredicate.uri.match(/.+[\/#](.+)$/);
+					if(match)answers.push({desc:match[1] + '^'});
 				}
 
-				var o = sstore.any(s, RDFS('label'));
-				if(o && o.value) ans.title = o.value + '(CTX)';
-				else if(s.uri) ans.title = s.uri;
-				else if(s.value) ans.title = s.value;
+				if(s){
+					var o = sstore.any(s, RDFS('label'));
+					if(o && o.value) ans.title = o.value + '(CTX)';
+					else if(s.uri){
+						var match = s.uri.match(/.+[\/#](.+)$/);
+						if(match) ans.title = match[1].replace('_',' ');
+					}
+					else if(s.value) ans.title = s.value;
 
-				o = sstore.any(s, SCARDS('termDescription'));
-				if(o && o.value) ans.desc = o.value;
+						
+
+					o = sstore.any(s, SCARDS('termDescription'));
+					if(o && o.value) ans.desc = o.value;
 
 
-				o = sstore.any(s, DBO('thumbnail'));
-				if(o && o.uri) ans.thumb_source = o.uri;
-
+					o = sstore.any(s, DBO('thumbnail'));
+					if(o && o.uri) ans.thumb_source = o.uri;
+				}
+				else if(ctx.object){// probably its not a resources , but a string or value
+					ans.desc = ctx.object;
+					answers.push(ans);break;// can\'t go further without a resources'
+				}
+				else {
+					console.log('subject doesn\'t exist!!!!!'); break;
+				}
+					
 				answers.push(ans);
 
 			}
@@ -729,7 +751,308 @@
 		this.termSuggestions = [];
 		this.maxSparqlQuery = 10;
 		this.noOfSparqlQueryMade = 0;
+		var countLoop = 0;
+		this.sfind = function(st,str){
+			ss = st.each();
+			for(var i =0; i < ss.length; i++){
+				if(!ss[i]) continue;
+				var val = ss[i].uri? ss[i].uri: ss[i].value;
+				if(val.indexOf(str) > -1){
+					var statement = st.statementsMatching(ss[i], undefined , undefined);
+					console.log('subject',i, statement);
+				}; 
+				ps = st.each(ss[i]); 
+				for(var j = 0; j < ps.length; j++){
+					if(!ps[j]) continue;
+					var val = ps[j].uri? ps[j].uri: ps[j].value;
+					if(val.indexOf(str) > -1){
+						var statement = st.statementsMatching(ss[i], ps[j], undefined);
+						console.log('predicate', i, j, statement);
+					}
+				}
+			}
+		};
+		this.sany = function(st,str, pos){
+			ss = st.each();
+			for(var i =0; i < ss.length; i++){
+				if(!ss[i]) continue;
+				var val = ss[i].uri? ss[i].uri: ss[i].value;
+				if(val.indexOf(str) > -1 && pos == 1){
+					var statement = st.statementsMatching(ss[i], undefined , undefined);
+					console.log('subject',i);
+					return statement;
+				}; 
+				ps = st.each(ss[i]); 
+				if(i == 2){
+					for(var j = 0; j < ps.length; j++){
+						if(!ps[j]) continue;
+						var val = ps[j].uri? ps[j].uri: ps[j].value;
+						if(val.indexOf(str) > -1){
+							var statement = st.statementsMatching(ss[i], ps[j], undefined);
+							console.log('predicate', i, j);
+							return statement;
+						}
+					}
+				}
+					
+			}
+		};
+
 		this.prepareContextStack = function(param){
+			for (var i = 0; i < self.tokenStrings.length; i++) {
+				if(self.contextStack[i].built)continue;// stack already filled previously
+				var tokenStr = self.tokenStrings[i];
+
+
+				if(i===0){
+					var qsearch = self.onlineSearchQuery;
+					var term_id = Date.now().toString(36) + '0';// save his to ustore
+					var qanswer = self.gotATermToken(term_id, tokenStr, 'subject');
+					if(qanswer){// question and answer already exists
+														//namedNodes
+						self.contextStack[i].subject = qanswer.answers[0];//TODO, for now only 0th
+						self.contextStack[i].built = true;
+
+						if(self.tokenStrings.length === 1){
+							for (var j = 0; j < qanswer.answers.length; j++) {
+								self.termSuggestions.push(qanswer.answers[j]);
+							}
+						}
+							
+					}
+					else{
+						qsearch.getWikipediaSuggestions(tokenStr, term_id);
+						// qsearch.getGoogleSuggestions(question, term_id);
+						// qsearch.getUmbelConcept(question, term_id);
+						// qsearch.getDuckDuckGoSuggestions(question, term_id);
+						// qsearch.getDbpediaLookupSuggestions(question, term_id);
+						
+						return;// important, as query are async . this function will be called again when data is available 
+					}
+				}
+				else{
+					var ps = self.contextStack[i-1].subject;
+					console.log(ps);
+					if(!ps){
+						console.log('Subject is not defined for context'+ i-1 + '  ', self.contextStack[i-1]);
+					}
+					else{
+						console.log(' now start working with context', i);
+						if(param){// result from sparql query 
+							console.log('got a param in context ', param,  i);
+							if(param.sparqlid === self.contextStack[i].sparqlid){// this is for me(i)
+								console.log('this sparqlid is for me', i);
+								delete self.contextStack[i].sparqlid; console.log('deleted', self.contextStack[i].sparqlid);
+
+								if(param.type === 'allPredicate'){
+									console.log('got all predicates from sparql for ', ps.uri);
+
+									for (var j = 0; j < param.predicates.length; j++) {
+										var p = $rdf.sym(param.predicates[j]);// make a named nodes
+										var statements = ustore.statementsMatching(ps, p, undefined);
+										if(statements.length){
+											for (var k = 0; k < statements.length; k++) {
+												var match = (statements[k].subject.uri === ps.uri  && statements[k].predicate.uri === p.uri);
+												if(match){
+													ustore.removeStatement(statements[k]);// remove all because i have new data
+													console.log('removing ', statements[k]);
+													//make sure that you actually have better data than previos
+												}
+											}
+										}
+										ustore.add(ps, p, 'empty');// object will be loaded when necessary
+										
+									}
+
+									var stringMatchedPredicate = false;
+									for (var j = 0; j < param.predicates.length; j++) {
+										if(param.predicates[j].toLowerCase().indexOf(tokenStr) > -1){
+											self.contextStack[i].parentPredicate = $rdf.sym(param.predicates[j]);
+											stringMatchedPredicate = true;
+										}
+									}
+
+
+
+									if(stringMatchedPredicate){// match , get subject
+										var p = self.contextStack[i].parentPredicate;
+										
+										if(self.maxSparqlQuery - self.noOfSparqlQueryMade > 0){
+											var sparqlid = self.contextStack[i].sparqlid = Date.now().toString(36);
+											console.log('_________________  Getting Object  _______________param')
+											self.sparql.getObject(ps, p, sparqlid);
+											self.noOfSparqlQueryMade++;
+
+											return;// will come here again
+										}
+										else{
+											console.warn('Why sparql query exceded max limit');
+										}
+									}
+									else{
+										// what the user has written has not matched with any predicate 
+										// suggest a new one here
+									}
+								}
+
+								else if(param.type === 'object'){
+									if(param.obj){
+										console.log(param.obj);
+
+										var ps = self.contextStack[i-1].subject;
+										var p = self.contextStack[i].parentPredicate;
+										var statements = ustore.statementsMatching(ps, p, undefined);
+										if(statements.length){
+											for (var j = 0; j < statements.length; j++) {
+												var suri = statements[j].subject.uri;
+												var puri = statements[j].predicate.uri;
+												if(ps.uri === suri && p.uri === puri) ustore.removeStatement(statements[j]);
+												else console.log('statementsMatching is not working in got__object ___');
+
+											}
+											
+										}
+
+										if(param.obj.type ==='uri'){
+											ustore.add(ps, p, $rdf.sym(param.obj.value));
+											self.contextStack[i].subject = $rdf.sym(param.obj.value);
+											self.contextStack[i].built = true;
+										}
+										else if(param.obj.type ==='typed-literal'){
+											console.log(param.obj);
+											ustore.add(ps, p, new $rdf.Literal(param.obj.value));
+											self.contextStack[i].object = param.obj.value;
+											self.contextStack[i].built = true;
+										}
+										else if(param.obj.type ==='literal'){
+											console.log(param.obj);
+											ustore.add(ps, p, new $rdf.Literal(param.obj.value));
+											self.contextStack[i].object = param.obj.value;
+											self.contextStack[i].built = true;
+										}
+										else{
+											// don't know why it will come here but will alow to skip
+											self.contextStack[i].built = true;
+											// because this should be brought out of the loop
+										}
+											
+									}
+								}
+							}
+							else{
+								if(self.contextStack[i].sparqlid)console.log(' sparql id doesn\'t match, but axist');
+							}
+						}
+						else{// when comming with param there is no need to check this// as with the above if (param) => everything is done to get the object for this context
+							console.log('No param', i);
+							var statements = ustore.statementsMatching(ps, undefined, undefined);
+							console.log(i, statements);
+							if(statements.length){
+								var predicateNames = [];
+								var urimatch = 0; // using it to sort out rdflib js problems , it doesn't give proper matchs
+								for (var j = 0; j < statements.length; j++) {
+									if(statements[j].subject.uri && statements[j].subject.uri && statements[j].subject.uri){console.log('pass')}else{console.log('fail')};
+
+									var uri = statements[j].predicate.uri ? statements[j].predicate.uri: statements[j].predicate.value;
+									if(statements[j].subject.uri === ps.uri ){
+										if(uri && uri.indexOf(tokenStr)>-1){// once uri was undefined , but that was because predicate was not assigned properly
+											self.contextStack[i].parentPredicate = statements[j].predicate; // namedNode
+											var p = self.contextStack[i].parentPredicate;
+											var ostatements = ustore.statementsMatching(ps, p, undefined);
+											if(ostatements.length){
+												console.log('ostatements', ostatements);
+												var o = ostatements[0].object;
+												
+												if(o.value && o.value === 'empty'){
+													if(self.maxSparqlQuery - self.noOfSparqlQueryMade > 0){
+														var sparqlid = self.contextStack[i].sparqlid = Date.now().toString(36);
+														console.log('_________________  Getting Object  _______________no param')
+														self.sparql.getObject(ps, p, sparqlid);
+														self.noOfSparqlQueryMade++;
+														
+														return;// will come here again
+													}
+													else{
+														console.warn('Why sparql query exceded max limit');
+													}
+												}
+												else{// proper object exist for this predicate
+													if(o.uri) {
+														self.contextStack[i].subject = o;
+														self.contextStack[i].built = true;
+
+													}
+													else console.log('what is this , didn\'t match what was expected', o);
+												}
+												
+											}
+											else{// no object
+												console.log('@im , a predicate exist so a subject must exist as well, atleast an empty');
+											}
+
+											if(i === self.tokenStrings.length-1){//last
+												match = uri.match(/.+[\/#](.+)$/);
+												if(match){
+													predicateNames.push({desc:match[1]});// if match it will have two values
+												}
+											}
+										}
+										urimatch++;
+									}
+									else{
+										console.log('statementsMatching not working properly', statements[j].subject.uri, ps.uri);
+									}
+								}
+
+								if(predicateNames.length){// will be true if its last token;
+									self.termSuggestions = predicateNames;
+								}
+
+								if(urimatch < 1){// les than 10 predicates, fetch more
+									console.log(ps, 'doesnot have enough predicates');
+									if(self.maxSparqlQuery - self.noOfSparqlQueryMade > 0){
+										self.contextStack[i].sparqlid = Date.now().toString(36);
+										console.log("---------------Getting All Predicate---------- for " + i);
+										sparql.getAllEnglishPredicate(ps, self.contextStack[i].sparqlid);
+										self.noOfSparqlQueryMade++;
+
+										return;
+									}
+									else{
+										console.warn('Why sparql query exceded max limit');
+									}
+								}
+							}
+							else{// no statements matched
+								console.log(ps, 'doesnot have ANY predicates');
+								if(self.maxSparqlQuery - self.noOfSparqlQueryMade > 0){
+									self.contextStack[i].sparqlid = Date.now().toString(36);
+									console.log("---------------Getting All Predicate---------- for " + i);
+									sparql.getAllEnglishPredicate(ps, self.contextStack[i].sparqlid);
+									self.noOfSparqlQueryMade++;
+
+									return;
+								}
+								else{
+									console.warn('Why sparql query exceded max limit');
+								}
+							}
+						}
+					}
+				}
+
+				if(self.contextStack.length-1	 === i){// every part of the stack is filled now
+					console.log(self.contextStack);
+					self.processAndSendAnswers();
+					console.log('came inside function, prepare  context ' + countLoop+ ' times' );
+					countLoop=0;
+				}
+			}
+		}
+
+
+		/*this.prepareContextStack = function(param){
+			countLoop++;
 
 			for (var i = 0; i < self.tokenStrings.length; i++) {
 				if(self.contextStack[i].built)continue;// stack already filled previously
@@ -783,6 +1106,7 @@
 
 									}
 									else{
+										console.log('not found', ps, p, o);
 										var st = ustore.add(ps, p, 'empty');// object will be loaded when necessary
 										// console.log(st);
 										// console.log('Emptttttttttttttttttyyyyyyyyyyyyyyy', ps, p, );
@@ -804,8 +1128,8 @@
 
 											if(self.maxSparqlQuery - self.noOfSparqlQueryMade > 0){
 												var sparqlid = self.contextStack[i].sparqlid = Date.now().toString(36);
+												console.log('_________________  Getting Object  _______________param')
 												self.sparql.getObject(ps, p, sparqlid);
-												console.log('_________________  Getting Object  _______________')
 												self.noOfSparqlQueryMade++;
 
 												return;// will come here again
@@ -839,7 +1163,8 @@
 									var o = ustore.any(ps, p);
 									console.log(ps, p, o);
 									if(o){// probably value is empty
-										ustore.removeMatches(ps, p, o);
+										var r = ustore.removeMatches(ps, p, o);
+										console.log(r);
 										console.log(param.obj.type);
 										if(param.obj.type ==='uri'){
 											ustore.add(ps, p, $rdf.sym(param.obj.value));
@@ -862,82 +1187,86 @@
 											// because this should be brought out of the loop
 											
 										}
+										console.log(ustore.any(ps, p));
 
 									}
 									else{
 										console.log('@im , just added an empty in the predicate stage');
 									}
 								}
+
+								console.log(self.contextStack[i].built, '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$');
+
 							}
 
 						}
 					}
-							
-					predicates = ustore.each(parentSubject);// Namednodes
-					if(predicates.length > 15){// atleast 15 predicates are available
-						var predicateNames = [];
-						for (var j = 0; j < predicates.length; j++) {
-							var uri = predicates[j].uri;
-							// console.log(predicates[j]);
-							if(uri && uri.indexOf(tokenStr)>-1){// once uri was undefined , but that was because predicate was not assigned properly
-								console.log(uri, 'working');
-								self.contextStack[i].parentPredicate = predicates[j]; // namedNode
+					else{// when comming with param there is no need to check this// as with the above if (param) => everything is done to get the object for this context
+						predicates = ustore.each(parentSubject);// Namednodes
+						if(predicates.length > 15){// atleast 15 predicates are available
+							var predicateNames = [];
+							for (var j = 0; j < predicates.length; j++) {
+								var uri = predicates[j].uri;
+								// console.log(predicates[j]);
+								if(uri && uri.indexOf(tokenStr)>-1){// once uri was undefined , but that was because predicate was not assigned properly
+									self.contextStack[i].parentPredicate = predicates[j]; // namedNode
+									var p = self.contextStack[i].parentPredicate;
+									var o = ustore.any(ps, p);
+										console.log(tokenStr, ps, p, o);
+									if(o){
+										if(o.value && o.value === 'empty'){
 
-								var p = self.contextStack[i].parentPredicate;
-								var o = ustore.any(ps, p);
-								console.log(o);
-								if(o){
-									if(o.value && o.value === 'empty'){
-
-										if(self.maxSparqlQuery - self.noOfSparqlQueryMade > 0){
-											var sparqlid = self.contextStack[i].sparqlid = Date.now().toString(36);
-											self.sparql.getObject(ps, p, sparqlid);
-											console.log('_________________  Getting Object  _______________')
-											self.noOfSparqlQueryMade++;
-											
-											return;// will come here again
+											if(self.maxSparqlQuery - self.noOfSparqlQueryMade > 0){
+												var sparqlid = self.contextStack[i].sparqlid = Date.now().toString(36);
+												console.log('_________________  Getting Object  _______________no param')
+												self.sparql.getObject(ps, p, sparqlid);
+												self.noOfSparqlQueryMade++;
+												
+												return;// will come here again
+											}
+											else{
+												console.warn('Why sparql query exceded max limit');
+											}
 										}
-										else{
-											console.warn('Why sparql query exceded max limit');
+										else{// proper object exist for this predicate
+											if(o.uri) {
+												self.contextStack[i].subject = o;
+												self.contextStack[i].built = true;
+											}
+											else console.log('what is this , didn\'t match what was expected', o);
 										}
 									}
-									else{// proper object exist for this predicate
-										if(o.uri) {
-											self.contextStack[i].subject = o;
-											self.contextStack[i].built = true;
-										}
-										else console.log('what is this , didn\'t match what was expected', o);
+									else{// no object
+										console.log('@im , a predicate exist so a subject must exist as well, atleast an empty');
 									}
-								}
-								else{// no object
-									console.log('@im , a predicate exist so a subject must exist as well, atleast an empty');
+
+									if(i === self.tokenStrings.length-1){//last
+										match = uri.match(/.+[\/#](.+)$/);
+										// console.log(match);
+										if(match){
+											predicateNames.push({desc:match[1]});// if match it will have two values
+										}
+									}
 								}
 
-								if(i === self.tokenStrings.length-1){//last
-									match = uri.match(/.+[\/#](.+)$/);
-									if(match){
-										predicateNames.push({desc:match[1]});// if match it will have two values
-									}
-								}
 							}
-
-						}
-						if(predicateNames.length){// will be true if its last token;
-							self.termSuggestions = predicateNames;
-						}
-					}
-					else{
-						if(parentSubject){// no need to check
-							if(self.maxSparqlQuery - self.noOfSparqlQueryMade > 0){
-								self.contextStack[i].sparqlid = Date.now().toString(36);
-								sparql.getAllEnglishPredicate(parentSubject, self.contextStack[i].sparqlid);
-								console.log("---------------Getting All Predicate----------------------");
-								self.noOfSparqlQueryMade++;
-
-								return;
+							if(predicateNames.length){// will be true if its last token;
+								self.termSuggestions = predicateNames;
 							}
-							else{
-								console.warn('Why sparql query exceded max limit');
+						}
+						else{
+							if(parentSubject){// no need to check
+								if(self.maxSparqlQuery - self.noOfSparqlQueryMade > 0){
+									self.contextStack[i].sparqlid = Date.now().toString(36);
+									console.log("---------------Getting All Predicate---------- for " + i);
+									sparql.getAllEnglishPredicate(parentSubject, self.contextStack[i].sparqlid);
+									self.noOfSparqlQueryMade++;
+
+									return;
+								}
+								else{
+									console.warn('Why sparql query exceded max limit');
+								}
 							}
 						}
 					}
@@ -947,10 +1276,11 @@
 				if(self.contextStack.length-1	 === i){// every part of the stack is filled now
 					console.log(self.contextStack);
 					self.processAndSendAnswers();
+					console.log('came inside function, prepare  context ' + countLoop+ ' times' );
+					countLoop=0;
 				}
 			}
-
-		}
+		}*/
 		this.gotAPredicateToken = function(subject_index, str){
 
 		};
@@ -1012,6 +1342,8 @@
 				for (var i = 0; i < self.tokenStrings.length; i++) {
 					self.contextStack.push({});
 				}
+
+				console.log('\n ------------------START---------------------------\n\n')
 				self.prepareContextStack();
 				
 			}
