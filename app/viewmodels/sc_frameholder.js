@@ -27,6 +27,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
         this.selectedCommandIndex = 0;
         this.prevSelectedCommandIndex = 0;
         this.commands = [];
+        this.terminalHistory = [];
+        this.terminalHistoryIndex = 0;
         
 
         this.oneLiners = ["When your only tool is a hammer, all problems start looking like nails.",
@@ -1044,7 +1046,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 }
             }//if(cmd_str...
             else{
-                console.log('command_str', command_str);
+                // console.log('command_str', command_str);
                 self.commandSuggestions.removeAll();
 
                 if(FM.show_all_card_label())FM.show_all_card_label(false);
@@ -1371,6 +1373,47 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             //not  saving this anymore,  every time reloading all
         };
         
+        var last_command_val = '';
+        this.updateTerminalHistoryIfNeeded = function(event){
+                    
+            if(state.keyboard.alt_down && event.keyCode == 38){// uparrow
+                self.terminalHistoryIndex--;
+                if( self.terminalHistoryIndex > -1 && self.terminalHistoryIndex < self.terminalHistory.length){
+                    str = self.terminalHistory[self.terminalHistoryIndex];
+                    $commandInput.val(str);
+                }
+            }
+            else if(state.keyboard.alt_down && event.keyCode == 40){// downarrow
+                self.terminalHistoryIndex++;
+                if( self.terminalHistoryIndex > -1 && self.terminalHistoryIndex < self.terminalHistory.length){
+                    str = self.terminalHistory[self.terminalHistoryIndex];
+                    $commandInput.val(str);
+                }
+            }
+            else{
+
+                var maxl = 20;
+                var command_str = $commandInput.val();
+                var command_str = command_str.replace(/\s+/g, " ");
+                var dot = command_str.match(/\s?[\.]\s?$/);
+
+                if(command_str != last_command_val){
+                    if(dot || event.keyCode === 13){
+                        if(command_str != _.last(self.terminalHistory)){
+                            self.terminalHistory.push(command_str);
+                            if(self.terminalHistory.length > maxl){
+                                self.terminalHistory.splice(0, self.terminalHistory.length - maxl);
+                            }
+                        }
+                    }
+
+                    self.terminalHistoryIndex = self.terminalHistory.length;// anything other which changes the command , resets the history searching index
+                }
+
+                last_command_val = command_str;
+            }
+        };
+
         this.someKeyUp = function(event){
             if(event.keyCode == 27){// ESC
                 // get the current frame
@@ -1425,7 +1468,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         self.searchSubmit(null);// null will only search and no action will be performed
                         self.emit_valid_commands_changed();
                     }
-                        
+
+                    self.updateTerminalHistoryIfNeeded(event);
                 }
                 self.appActions.showcommandSuggestions()
                 return true;

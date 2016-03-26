@@ -508,7 +508,7 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 			var results = [];
 			while (result = rx.exec(source)) {
 				results.push(result[1]);
-				console.log('match: '+ result[1]);
+				// console.log('match: '+ result[1]);
 			    i += 1;
 			    if (i >= 50)break;
 			}
