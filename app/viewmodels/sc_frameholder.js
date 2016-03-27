@@ -29,6 +29,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
         this.commands = [];
         this.terminalHistory = [];
         this.terminalHistoryIndex = 0;
+        this.frameviewBeforeExplore = {fv_key:'home', fv_title:'Home'};
         
 
         this.oneLiners = ["When your only tool is a hammer, all problems start looking like nails.",
@@ -313,10 +314,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 state.actions.select_this_card(state, card_);
                 return card_;
             },
-            add_frame: function(frameview_key){
+            add_frame: function(frameview_key, title){
                 console.log("adding frame");
                 if(frameview_key){//frame with frameview_key
                     if('orphan'.indexOf(frameview_key) === 0)self.addFrame({frameview_key:'orphan_frameviewkey_', title:'ORPHAN', bgColor:'darkcyan'});    
+                    else if(title) self.addFrame({frameview_key:frameview_key, title:title, bgColor:'darkcyan'});
                     else self.addFrame({frameview_key:frameview_key, title:'Frameview', bgColor:'darkcyan'});
                     
                 }
@@ -325,8 +327,16 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 }
             },
             load_explore_frameview: function(FM, text){
+                self.frameviewBeforeExplore = FM.getCurrentFrameviewKeyAndTitle();// {fv_key:'', fv_title:''}
                 FM.load_explore_frameview(text);
             },
+            unload_explore_frameview: function(FM){
+                FM.goto_frameview(self.frameviewBeforeExplore.fv_key, self.frameviewBeforeExplore.fv_title);
+                FM.navigation([{key:'home', title: 'Home'}, {key:self.frameviewBeforeExplore.fv_key, title: self.frameviewBeforeExplore.fv_title} ]);
+                FM.actions.show_frame_hint(":)");
+                // self.frameview.exploring = true; // not required , as while frameview is loaded if it has key 4explore that fv will be exploring or, not otherwise
+            },
+                
             add_list: function(FM, _title){
                 var d_size = {w:2, h:3};//size of this card
                 var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
@@ -812,7 +822,12 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
 
 
                 if(exploring){
-                    interpreter.explore(command_str);
+                    if(commit){
+                        if(command_str === 'exit'){
+                            self.frameActions.unload_explore_frameview(FM);// loads the frameview which was there before explore frameview wa loded
+                        }
+                    }
+                    else interpreter.explore(command_str);
                 }
 
 
@@ -1307,7 +1322,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             if(interpreter.filteredCardTitles.length)self.commandSuggestions(interpreter.filteredCardTitles);
             else{
                 self.commandSuggestions(interpreter.queryAnswers);  
-                var nos = interpreter.queryAnswers.length;
                 // self.commandSuggestions().splice(nos, self.commandSuggestions().length);
             }
             
@@ -1457,7 +1471,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             
 
             //************************************
-            if(document.activeElement.nodeName==='INPUT' || $(document.activeElement).hasClass('sc-editable')){// editing something don't take the event
+            // if(document.activeElement.nodeName==='INPUT' || $(document.activeElement).hasClass('sc-editable')){// editing something don't take the event
+            if(document.activeElement.nodeName==='INPUT'){// editing something don't take the event
                 // event is for other input elements 
             // or for sc-editable elements 
             // or commandForm is already in focus
@@ -1471,7 +1486,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
 
                     self.updateTerminalHistoryIfNeeded(event);
                 }
-                self.appActions.showcommandSuggestions()
+                self.appActions.showcommandSuggestions();// could have been hidden 
                 return true;
             }
 

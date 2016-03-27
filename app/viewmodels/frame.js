@@ -1137,13 +1137,15 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             };
 
             this.onPointerUp_background = function(i, e){
-                if(!state.isany_card_being_edited)self.appActions.hidecommandSuggestions();// remove searchbar and suggestion when clicked on background
+                if(!state.isany_card_being_edited){
+                    self.appActions.hidecommandSuggestions();// remove searchbar and suggestion when clicked on background
+                    self.appActions.focusOnCommandInput()// so that pressing backspace will not take back to brwser history;
+                }
                 
                 if($(e.target).hasClass('grid-stack')){
                     self.stop_editing_all('EDITING_FINISHED');
                 }
                 //$grid_stack.panzoom('dissable');
-                
                 return true;
             };
             

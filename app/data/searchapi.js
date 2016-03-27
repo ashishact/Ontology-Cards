@@ -68,8 +68,20 @@
 			};
 			this.searchDbpediaLookup = function(query, callback){
 				if(query.length){
+
+					prefix_data = {};
+					match = query.match(/:(\w*)\s(.*)/);
+					if(match){// eg ;dbpedialookup :Person Isaac Newton
+						prefix_data.QueryClass = match[1];
+						prefix_data.QueryString = match[2];
+					}
+					else{
+						prefix_data.QueryString = query; 
+					}
+
+					if(prefix_data.QueryString.length < 3)return;
 				    var prefix_url = 'http://lookup.dbpedia.org/api/search/PrefixSearch';
-				    var prefix_data = {QueryString:query};
+
 				    
 				    var search_url = 'http://lookup.dbpedia.org/api/search/KeywordSearch';
 				    var search_data = {QueryClass:'place', QueryString:query};

@@ -142,22 +142,7 @@
 	var SemanticWeb = function(){
 		var self = this;
 
-		this.prevContextStacks = []; //cache of contextStack; // current context stack doesn't exist here
-		this.prevContextStacksMaxNos = 10;
-		//this.contextStack = [];// array of context:id, current context stack the last element is current cuntext
-		this.context = {
-			id:0,
-			subject:null,
-			childPredicate:null,
-			parentPredicate:null,
-			predicates:[],
-			predicateSearchString:'',
-		};
-		this.contextCollection = {};// stores context by id
-		this.context_index = 0; // gets index in contextStack
-		this.possibleSubject = [];
-		this.tokenChainIndex = 0;// which part of the question we are deleaning with now; 
-									// will be determinded by no of sentence by question string
+		
 		this.tokenStrings = [];
 		this.rootToken = '';// token is a list of words here 
 		//__________________________________________________
@@ -174,97 +159,7 @@
 		//													|
 		//__________________________________________________|								
 		
-		// this.createContextStack = function(length){
-		// 	self.prevContextStacks.push()
-		// 	for (var i = 0; i < length; i++) {
-		// 		var newid = Date.now().toString()+i;
-		// 		self.contextStack.push(newid);
-
-		// 		self.contextCollection[newid] =	{	id:newid,
-		// 											subject:null,
-		// 											childPredicate:null,
-		// 											parentPredicate:null,
-		// 											predicates:[],
-		// 											predicateSearchString:''
-		// 										};
-		// 	}
-		// };
-				
-		this.goToPrevContext = function(){
-			var c = self.context;
-			var cs = self.contextStack;
-			var ci = self.context_index;
-			var CC = self.contextCollection;
-
-			if(ci > 0 && (cs.length > (ci-1))){// can go back && does the stack contain
-				self.context = CC[cs[ci-1]];// get prev id => find from CC 
-				self.context_index = ci -1;
-			}
-			else{
-				console.log('In root context can\'t go back');
-			}
-		}
-		this.goToNextContext = function(){
-			var c = self.context;
-			var cs = self.contextStack;
-			var ci = self.context_index;
-			var CC = self.contextCollection;
-			if(ci < cs.length-1){// can go forward
-				self.context = CC[cs[ci+1]];
-				self.context_index++;
-			}
-		}
-
-		this.addContext = function(namedNode, predicates , predicateSearchString){
-			//will be added to just after the current one, if there are others proceeding this they will be removed
-			var c = self.context;
-			var cs = self.contextStack;
-			var ci = self.context_index;
-			var CC = self.contextCollection;
-			
-			var newid = Date.now().toString(36);
-			//add to Collection
-			CC[newid] = {id:newid, subject:namedNode, predicates: predicates, predicateSearchString:predicateSearchString};
-			
-			if(ci === cs.length-1){// if at end
-				cs.push(newid);
-				self.context = CC[newid]; // get id in stack using ci, get context from Collection
-				self.context_index = cs.length-1;// point to last
-			}
-			else if(ci < cs.length-1){// create new branch at ci
-										// CONTEXT CHANGED
-				//save this to cache
-				var pcs = self.prevContextStacks;
-				var pcsmn = self.prevContextStacksMaxNos;
-				pcs.push(cs);
-				//remove old cache
-				for (var i = 0; i < pcs.length - pcsmn; i++) {
-					var conxs = pcs[i];
-					for (var j = 0; j < conxs.length; j++) {
-						var id = conxs[i][j];
-						delete CC[id];
-					}
-				}
-				// remove the conxs
-				if(pcs.length > pcsmn)pcs.splice(0, pcs.length-pcsmn);// remove using splice
-				
-				//remove proceeding contexts
-				cs.splice(ci+1, cs.length);
-				cs.push(newid);
-				self.context = CC[newid]; // get id in stack using ci, get context from Collection
-				self.context_index = cs.length-1;// point to last;
-			}
-			else{
-				if(cs.length === 0){
-					console.log('no context yet, adding this.');
-					cs.push(newid);
-					self.context_index = 0;
-					self.context = CC[newid];
-				}
-				else console.log('@im', ci, cs);
-			}
-
-		}
+		
 
 		this.OAPI = {
 			DBP_LKUP_PREFIX:1,
@@ -272,7 +167,6 @@
 			DBP_SPARQL:3,
 			WIKIPEDIA_PREFIX:4,
 			GOOGLE_PREFIX:5,
-
 		}
 		
 		this.tab_id = 0;
@@ -303,25 +197,36 @@
 						var variable = json.head.vars[0];
 						if(variable.indexOf('allPredicate') > -1){
 							var sparqlid = variable.split('allPredicate')[1];// id to determine who made this sparql call
-							if(json.results.bindings){
-								var res = json.results.bindings; if(!res.length)return;
+							if(json.results.bindings && json.results.bindings.length){
+								var res = json.results.bindings;
 								var predicatesUri = [];
 								for (var i = 0; i < res.length; i++) {
 									var predicate = res[i][variable].value;
 									predicatesUri.push(predicate);
 								}
-								console.log('calling back with sparql results');
+								console.log('calling back with sparql results for all predicates');
 								self.prepareContextStack({sparqlid:sparqlid, predicates: predicatesUri, type:'allPredicate'})
+							}
+							else{
+								console.log('0 results from sparql');
+								self.prepareContextStack({sparqlid:sparqlid, predicates: [], type:'allPredicate', status:'zeroresults'})
 							}
 						}
 						if(variable.indexOf('object') > -1){
 							var sparqlid = variable.split('object')[1];// id to determine who made this sparql call
-							if(json.results.bindings){
-								var res = json.results.bindings; if(!res.length)return;
-								var obj = res[0][variable];
-								console.log('calling back with sparql results');
-								self.prepareContextStack({sparqlid:sparqlid, obj:obj, type:'object'})
+							if(json.results.bindings && json.results.bindings.length){
+								var res = json.results.bindings;
+								var objs = [];
+								for (var i = 0; i < res.length; i++) {
+									objs.push(res[i][variable]);
+								}
+								console.log('calling back with sparql results for objects');
+								self.prepareContextStack({sparqlid:sparqlid, objs:objs, type:'object'})
 							}
+						}
+						else{
+							console.log('0 results from sparql');
+							self.prepareContextStack({sparqlid:sparqlid, obj:{}, type:'object', status:'zeroresults'})
 						}
 						
 					}
@@ -367,7 +272,7 @@
 
 			this.getAllEnglishPredicate = function(s, id){// s is a $rdf Named node
 				s = '<'+s+'>';
-				var qu = 'SELECT DISTINCT ?allPredicate'+id+' WHERE {'+s+' ?allPredicate'+id+' ?o.} LIMIT 150';
+				var qu = 'SELECT DISTINCT ?allPredicate'+id+' WHERE {'+s+' ?allPredicate'+id+' ?o.} LIMIT 200';
 				console.log(qu);
 				me.queryEndpoint(qu);
 			};
@@ -376,7 +281,7 @@
 				s = '<'+s+'>';
 				p = '<'+p+'>';
 				o = '?object'+id;
-				var qu = 'SELECT DISTINCT ?object'+id+' WHERE {'+s+' '+p+' '+o+'. FILTER(!isLiteral('+o+') || lang('+o+') = "" || langMatches(lang('+o+'), "EN")) } LIMIT 1';
+				var qu = 'SELECT DISTINCT ?object'+id+' WHERE {'+s+' '+p+' '+o+'. FILTER(!isLiteral('+o+') || lang('+o+') = "" || langMatches(lang('+o+'), "EN")) } LIMIT 50';
 				console.log(qu);
 				me.queryEndpoint(qu);
 
@@ -414,75 +319,7 @@
 			}
 
 		};
-		//
-			// this.processStatementForFront = function(statements){
-			// 	var results = [];
-			// 	for (var i = 0; i < statements.length; i++) {
-			// 		var st = statements[i];
-			// 		if(st.why.uri === SCARDS('wpPrefixSearch')){
-			// 			results.push({title:});
-			// 		}
-			// 	}
-			// }
-			
-			// this.processAndSendAnswers = function(term_id){// question id
-			// 	// now nothing much
-			// 	// but later can attach more attributes 
-			// 	// like owl class and ontology info.
-			// 	answersobj = self.queryAnswers[term_id];
-			// 	// console.log(answersobj);
-			// 	if(answersobj){
-			// 		var namedNodes = answersobj.answers;
-			// 		var answers__ = [];
-			// 		if(answersobj.type === 'subject suggestions'){
-			// 			// console.log(namedNodes);
-			// 			self.possibleSubject = [];
-			// 			for (var i = 0; i < namedNodes.length; i++) {
-			// 				var ans = {};
-			// 				var s = namedNodes[i];
-			// 				self.possibleSubject.push(s);
-			// 				var o = sstore.any(s, RDFS('label'));
-			// 				if(o && o.value) ans.title = o.value;
-
-			// 				o = sstore.any(s, SCARDS('termDescription'));
-			// 				if(o && o.value) ans.desc = o.value;
-
-
-			// 				o = sstore.any(s, DBO('thumbnail'));
-			// 				if(o && o.uri) ans.thumb_source = o.uri;
-
-			// 				if(ans.title)answers__.push(ans);
-			// 			}
-			// 		}
-
-			// 		else if(answersobj.type = 'predicates suggestion'){
-			// 			if(self.tokenChainIndex == 1){// predicate of (0th)(first)current subject
-			// 				var s = context.subject;
-			// 				var ans = {};
-			// 				var o = sstore.any(s, RDFS('label'));
-			// 				if(o && o.value) ans.title = o.value;
-
-			// 				o = sstore.any(s, SCARDS('termDescription'));
-			// 				if(o && o.value) ans.desc = o.value;
-
-			// 				o = sstore.any(s, DBO('thumbnail'));
-			// 				if(o && o.uri) ans.thumb_source = o.uri;
-
-			// 				if(ans.title)answers__.push(ans);
-
-			// 				var strings = answersobj.answers;
-			// 				for (var i = 0; i < strings.length && i < 10; i++) {// send only 10
-			// 					// var id = strings[i].split(self.searchIdDelim)[0];
-			// 					var predicateName = strings[i].split(self.searchIdDelim)[1];
-			// 					answers__.push({desc:predicateName});
-			// 				}
-			// 			}
-			// 		}
-						
-			// 		self.sendAnswers(answers__);
-			// 	}
-					
-			// };
+	
 
 		this.processAndSendAnswers = function(){
 
@@ -492,59 +329,96 @@
 			for (var i = 0; i < cs.length; i++) {
 				var ans = {};
 				var ctx = cs[i];
-				// console.log(ctx);
-				var s = ctx.subject; if(!s) continue;
+
 				var ppredicate = ctx.parentPredicate;
-				var cpredicate = ctx.childPredicate;
-
-				var isuri = (s.match(/^https?:\/\//));
-				var isdbr = (s.match(/http:\/\/dbpedia\.org\/resource\//));
-				var isimg = (s.match(/\.(jpg|png|gif|svg|JPG)$/));
-				
-				if(isuri)
-					$s = $rdf.sym(s);
-				else $s = null;
-
-
 				if(ppredicate){
 					var match = ppredicate.match(/.+[\/#](.+)$/);
 					if(match)answers.push({desc:'<a href=\''+ppredicate+'\' target=\'_blank\' title=\''+ppredicate+'\'>'+match[1]+'</a><i style=\'margin-left:10px;\' class=\"fa fa-arrow-down\"></i>'});
 				}
 
-				if(s){
 
-					if($s){
-						var o = sstore.any($s, RDFS('label'));
-						if(o && o.value) ans.title = o.value + '(CTX)';
-						else if(s){
-							var match = s.match(/.+[\/#](.+)$/);
-							if(match) ans.title = match[1].replace('_',' ');
+				var lastContext = (cs.length-1 === i);
+				var subjects = [];
+				if(lastContext){
+					if(ctx.subjects) subjects = ctx.subjects;
+				}
+				else{
+					if(ctx.subject) subjects = [ctx.subject];
+				}
+
+				for (var j = 0; j < subjects.length; j++) {
+					ans = {};
+					var s = subjects[j];
+					if(s){
+						var isuri = (s.match(/^https?:\/\//));
+						var isdbr = (s.match(/http:\/\/dbpedia\.org\/resource\//));
+						var isimg = (s.match(/\.(jpg|png|gif|svg|JPG)$/));
+						var isdbpthumb = (s.match(/\.(jpg|png|gif|svg|JPG)\?width=/));
+						
+						if(isuri)
+							$s = $rdf.sym(s);
+						else $s = null;
+
+
+						if(isuri){
+							if(isdbpthumb){
+								ans.desc = '<img style=\'width:50%;\' src=\''+s+'\'>';
+							}
+							else if(isimg){
+								ans.desc = '<img style=\'width:50%;\' src=\''+s+'\'>';
+							}
+							else if(isdbr){
+								var o = sstore.any($s, RDFS('label'));
+								if(o && o.value && j==0) ans.title = o.value + ' (Context)';
+								else if(o && o.value) ans.title = o.value+ ' (Suggestions)';
+								else{
+									m = s.match(/.+[\/#](.+)$/);
+									if(m){
+										ans.title = m[1].replace('_', ' ');
+									}
+									else{
+										ans.title = s;
+									}
+								}
+								
+
+								o = sstore.any($s, SCARDS('termDescription'));
+								if(o && o.value) ans.desc = o.value;
+
+
+								o = sstore.any($s, DBO('thumbnail'));
+								if(o && o.uri) ans.thumb_source = o.uri;
+
+							}
+							else{
+								m = s.match(/.+[\/#](.+)$/);
+								if(m){
+									ans.title = m[1].replace('_', ' ');
+								}
+								else{
+									ans.title = s;
+								}
+							}
 						}
-							
-
-						o = sstore.any($s, SCARDS('termDescription'));
-						if(o && o.value) ans.desc = o.value;
-
-
-						// o = sstore.any($s, DBO('thumbnail'));
-						// if(o && o.uri) ans.thumb_source = o.uri;
+						else if(typeof(s) === 'string'){
+							ans.title = s;
+						}
 					}
-					else if(typeof(s) === 'string' && !isuri)ans.title = s;
+					else{
+						ans.desc = 'subject or object doesn\'t exist!!!!!';
+					}
+						
+					answers.push(ans);
 				}
 
-				else if(ctx.object){// probably its not a resources , but a string or value
+				if(ctx.object){// probably its not a resources , but a string or value
 					ans.desc = ctx.object;
-					answers.push(ans);break;// can\'t go further without a resources'
+					answers.push(ans);
 				}
-				else {
-					console.log('subject doesn\'t exist!!!!!'); break;
-				}
-					
-				answers.push(ans);
 
 			}
 
-			if(termSuggestions.length)answers.push({desc:'<divtyle=\'width=500px;\' class=\'hline\'></div>'});
+			if(termSuggestions.length)answers.push({desc:'<div style=\'width:500px; opacity:0.6; border-width:2px;\' class=\'hline\'></div>'});
 
 			for (var i = 0; i < termSuggestions.length; i++) {
 				var s = termSuggestions[i];
@@ -555,25 +429,25 @@
 				}
 					
 				
-				if(isuri)
-					$s = $rdf.sym(s);
+				// if(isuri)
+				// 	$s = $rdf.sym(s);
 
 
-				if($s){//namedNode
-					var ans = {}
-					var o = sstore.any($s, RDFS('label'));
-					if(o && o.value) ans.title = o.value + '(suggestion)';
-					else ans.title = s.uri;
+				// if($s){//namedNode
+				// 	var ans = {}
+				// 	var o = sstore.any($s, RDFS('label'));
+				// 	if(o && o.value) ans.title = o.value + '(suggestion)';
+				// 	else ans.title = s.uri;
 
-					o = sstore.any($s, SCARDS('termDescription'));
-					if(o && o.value) ans.desc = o.value;
+				// 	o = sstore.any($s, SCARDS('termDescription'));
+				// 	if(o && o.value) ans.desc = o.value;
 
 
-					// o = sstore.any($s, DBO('thumbnail'));
-					// if(o && o.uri) ans.thumb_source = o.uri;
+				// 	// o = sstore.any($s, DBO('thumbnail'));
+				// 	// if(o && o.uri) ans.thumb_source = o.uri;
 
-					if(ans.title)answers.push(ans);
-				}
+				// 	if(ans.title)answers.push(ans);
+				// }
 				
 				if(s.desc){// predicate suggestion as desc
 					answers.push(s);
@@ -774,9 +648,12 @@
 			console.warn('complete TODO, Remove Questions');
 		};
 
+		this.ALL_PREDICATES_URI = 'http://semanticcards.org/allPredicates';
+
 		this.uriToPredicateNames = {};
 		this.contextStack = [];//{subject, parentPredicate, childPredicate, }
 		this.termSuggestions = [];
+		this.objectSuggestions = [];
 		this.maxSparqlQuery = 10;
 		this.noOfSparqlQueryMade = 0;
 		var countLoop = 0;
@@ -802,7 +679,7 @@
 		};
 		this.sany = function(st,str, pos){
 			ss = st.each();
-			for(var i =0; i < ss.length; i++){
+			for(var i = 0; i < ss.length; i++){
 				if(!ss[i]) continue;
 				var val = ss[i].uri? ss[i].uri: ss[i].value;
 				if(val.indexOf(str) > -1 && pos == 1){
@@ -827,27 +704,27 @@
 		};
 
 		this.prepareContextStack = function(param){
+			countLoop++;
+
 			for (var i = 0; i < self.tokenStrings.length; i++) {
 				if(self.contextStack[i].built)continue;// stack already filled previously
 				
 				var tokenStr = self.tokenStrings[i];
+				var lastToken = (i === tokenStrings.length-1);
 
-
-				if(i===0){
+				if(i === 0){
 					var qsearch = self.onlineSearchQuery;
 					var term_id = Date.now().toString(36) + '0';// save his to ustore
 					var qanswer = self.gotATermToken(term_id, tokenStr, 'subject');
 					if(qanswer){// question and answer already exists
 														//namedNodes
+						self.contextStack[i].subjects = [];
+						for (var j = 0; j < qanswer.answers.length; j++) {
+							self.contextStack[i].subjects.push(qanswer.answers[j].uri);
+						}
 						self.contextStack[i].subject = qanswer.answers[0].uri;//TODO, for now only 0th
 						self.contextStack[i].built = true;
 
-						if(self.tokenStrings.length === 1){
-							for (var j = 1; j < qanswer.answers.length; j++) {
-								self.termSuggestions.push(qanswer.answers[j].uri);
-							}
-						}
-							
 					}
 					else{
 						qsearch.getWikipediaSuggestions(tokenStr, term_id);
@@ -861,8 +738,10 @@
 				}
 				else{
 					var ps = self.contextStack[i-1].subject;
-					if(!ps){
-						console.log('Subject is not defined for context'+ i-1 + '  ', self.contextStack[i-1]);
+					var isuri = (ps.match(/^https?:\/\//));
+					if(!ps || !isuri){
+						console.log('Subject is not defined for context', i-1, '  ' +self.contextStack[i-1]);
+						return;
 					}
 					else{
 						console.log(' now start working with context', i);
@@ -873,141 +752,175 @@
 								delete self.contextStack[i].sparqlid;
 
 								if(param.type === 'allPredicate'){
-									console.log('got all predicates from sparql for ', ps);
-
-									for (var j = 0; j < param.predicates.length; j++) {
-										var p = param.predicates[j];
-										// remove dublicates//TODO
-										tripplestore.set(ps, p, 'empty');// object will be loaded when necessary
-									}
-										
-
-									var stringMatchedPredicate = false;
-									for (var j = 0; j < param.predicates.length; j++) {
-										if(param.predicates[j].toLowerCase().indexOf(tokenStr) > -1){
-											self.contextStack[i].parentPredicate = param.predicates[j];
-											stringMatchedPredicate = true;
-											console.log('token match ', self.contextStack[i].parentPredicate)
-											break;
-										}
-									}
-
-									console.log('stringMatchedPredicate', stringMatchedPredicate);
-									if(stringMatchedPredicate){// match , get subject
-										var p = self.contextStack[i].parentPredicate;
-										
-										if(self.maxSparqlQuery - self.noOfSparqlQueryMade > 0){
-											var sparqlid = self.contextStack[i].sparqlid = Date.now().toString(36);
-											console.log('_________________  Getting Object  _______________param')
-											self.sparql.getObject(ps, p, sparqlid);
-											self.noOfSparqlQueryMade++;
-
-											return;// will come here again
-										}
-										else{
-											console.warn('Why sparql query exceded max limit');
-										}
+									if(param.status === 'zeroresults'){
+										self.contextStack[i].object = '0 Results';
+										self.contextStack[i].built = true;// no need to come to this index again
 									}
 									else{
-										// what the user has written has not matched with any predicate 
-										// suggest a new one here
+										console.log('got all predicates from sparql for ', ps);
+
+										// first remove all predicates for ps; and add the new ones from sparql results
+										tripplestore.set(ps, self.ALL_PREDICATES_URI, param.predicates);//o is an arry of predicates URI
+										
+										self.contextStack[i].parentPredicates = [];// list of all matched predicates for a given tokenStr
+										predicateLabels = [];
 										for (var j = 0; j < param.predicates.length; j++) {
-											var p = param.predicates[j]
+											var p = param.predicates[j];
 											match = p.match(/.+[\/#](.+)$/);
 											if(match){
-												predicateNames.push({desc:'<a href=\''+p+'\' target=\'_blank\' title=\''+p+'\'>'+match[1]+'</a>'});// if match it will have two values
+												if(match[1].toLowerCase().indexOf(tokenStr.toLowerCase()) > -1){// matched the last part of the URI
+													self.contextStack[i].parentPredicates.push(p);// don't save lable. as we have to refer to full uri
+													if(lastToken) predicateLabels.push({desc:'<a href=\''+p+'\' target=\'_blank\' title=\''+p+'\'>'+match[1]+'</a>'});
+												}
 											}
 										}
-										self.termSuggestions = predicateNames;
-									}
-								}
 
-								else if(param.type === 'object'){
-									if(param.obj){
-										console.log(param.obj);
-
-										var ps = self.contextStack[i-1].subject;
-										var p = self.contextStack[i].parentPredicate;
-										// remove dublicates
-										if(param.obj.value.length) tripplestore.set(ps, p, param.obj.value);
-										self.contextStack[i].subject = param.obj.value;
-										self.contextStack[i].built = true;
-											
-									}
-								}
-							}
-							else{
-								if(self.contextStack[i].sparqlid)console.log(' sparql id doesn\'t match, but axist');
-							}
-						}
-						else{// when comming with param there is no need to check this// as with the above if (param) => everything is done to get the object for this context
-							console.log('No param', i);	
-
-							var predicateNames = [];
-							var predicates = tripplestore.getProperties(ps);
-							if(predicates.length > 2){
-								for (var j = 0; j < predicates.length; j++) {
-									p = predicates[j];
-									if(p.indexOf(tokenStr)>-1){
-										console.log('showing results for predicate ' + predicates[j]);
-										self.contextStack[i].parentPredicate = p;
-										var os = tripplestore.getValues(ps, p);
-										console.log(os, j);
-										if(os.length){
-											var o = os[0];
-											if(o === 'empty'){
-												console.log(ps, p , 'is Empty so getting object', j);
+										if(self.contextStack[i].parentPredicates.length){// atleast one matched
+											// set the selected predicate, here its is the first one
+											self.contextStack[i].parentPredicate = self.contextStack[i].parentPredicates[0]; 
+										}
+										// console.log('stringMatchedPredicate', stringMatchedPredicate);
+									
+										if(self.contextStack[i].parentPredicate){
+											// if(!lastToken){// dont get for last token , it will incur lot of bandwidth as the user is typing 
+															// once the user presses a dot// a random lastToken will be inserted to the  list and will then fetch the objects
+												
+												var p = self.contextStack[i].parentPredicate;
 												if(self.maxSparqlQuery - self.noOfSparqlQueryMade > 0){
 													var sparqlid = self.contextStack[i].sparqlid = Date.now().toString(36);
-													console.log('_________________  Getting Object  _______________no param')
+													console.log('_________________  Getting Object  _______________param')
 													self.sparql.getObject(ps, p, sparqlid);
 													self.noOfSparqlQueryMade++;
-													
+
 													return;// will come here again
 												}
 												else{
 													console.warn('Why sparql query exceded max limit');
 												}
-											}
-											else{// proper object exist for this predicate
-												console.log('the object is '+ o);
-												self.contextStack[i].subject = o;
-												self.contextStack[i].built = true;
-											}
+											// }
 										}
-										else{
-											console.log('@im , a predicate exist so a subject must exist as well, atleast an empty');
-										}
-
-										if(i === self.tokenStrings.length-1){//last
-											match = p.match(/.+[\/#](.+)$/);
-											if(match){
-												console.log(match[1]);
-												predicateNames.push({desc:'<a href=\''+p+'\' target=\'_blank\' title=\''+p+'\'>'+match[1]+'</a>'});// if match it will have two values
+										
+										if(lastToken){
+											if(!predicateLabels.length){
+												// what the user has written has not matched with any predicate 
+												// suggest a new one here
+												for (var j = 0; j < param.predicates.length; j++) {
+													var p = param.predicates[j];
+													match = p.match(/.+[\/#](.+)$/);
+													if(match){
+														predicateLabels.push({desc:'<a href=\''+p+'\' target=\'_blank\' title=\''+p+'\'>'+match[1]+'</a>'});// if match it will have two values
+													}
+												}
 											}
+											self.termSuggestions = _.sortBy(predicateLabels, 'desc');
 										}
-									}
-									else{
-
 									}
 								}
 
-								if(i === self.tokenStrings.length-1){//last
-									
-									if(predicateNames.length){// suggested names with matching
-										self.termSuggestions = predicateNames;
+								else if(param.type === 'object'){
+									if(param.objs){
+										console.log(param.objs);	
+										if(param.status === 'zeroresults'){
+											self.contextStack[i].object = '0 Results';
+											self.contextStack[i].built = true;// no need to come to this index again
+										}
+										else{
+											var ps = self.contextStack[i-1].subject;
+											var p = self.contextStack[i].parentPredicate;// it must exist , as this call was made for this p
+											// remove dublicates
+											// first remove all from this subject, property => objects
+											tripplestore.remove(ps, p);// removes all objects
+
+											self.contextStack[i].subjects = [];// all objects from: ps => p
+											for (var j = 0; j < param.objs.length; j++) {
+												var obj = param.objs[j];
+												if(obj.value.length){
+													tripplestore.add(ps, p, obj.value);
+													self.contextStack[i].subjects.push(obj.value);
+												}
+											}
+											if(self.contextStack[i].subjects.length){
+												self.contextStack[i].subject = self.contextStack[i].subjects[0];// selected subjects out of many
+											}
+											self.contextStack[i].built = true;
+										}
 									}
-									else{// no match , send all as suggestion
+								}
+							}
+							else{
+								if(self.contextStack[i].sparqlid)console.log(' sparql id doesn\'t match, but exist');
+							}
+						}
+						else{// when comming with param there is no need to check this// as with the above if (param) => everything is done to get the object for this context
+							console.log('No param', i);	
+
+							var predicateLabels = [];
+							var predicates = tripplestore.getValues(ps, self.ALL_PREDICATES_URI);
+							// which is [[p1, p2, p3....]]
+							if(predicates.length) predicates = predicates[0];
+							else{
+								console.log('all predicate list not found');
+							}
+							if(predicates.length > 2){
+								self.contextStack[i].parentPredicates = [];// list of all matched predicates for a given tokenStr
+								for (var j = 0; j < predicates.length; j++) {
+									p = predicates[j];
+									match = p.match(/.+[\/#](.+)$/);
+									if(match && match[1].toLowerCase().indexOf(tokenStr.toLowerCase()) > -1){// matched the last part of the URI
+										self.contextStack[i].parentPredicates.push(p);// insert the whole URI
+										if(lastToken) predicateLabels.push({desc:'<a href=\''+p+'\' target=\'_blank\' title=\''+p+'\'>'+match[1]+'</a>'});
+									}
+								}
+
+								if(self.contextStack[i].parentPredicates.length){// atleast one matched
+									self.contextStack[i].parentPredicate = self.contextStack[i].parentPredicates[0]; // select one 
+									var p = self.contextStack[i].parentPredicate;
+									console.log('showing results for predicate ' + p);
+
+									var objects = tripplestore.getValues(ps, p);
+									// console.log(objects, j);
+									self.contextStack[i].subjects = [];
+
+									if(objects.length){// atleast one object exists
+										for (var j = 0; j < objects.length; j++) {
+											var o = objects[j];
+											self.contextStack[i].subjects.push(o);
+										}
+										self.contextStack[i].subject = self.contextStack[i].subjects[0];// selected subjects out of many
+									}
+									else{
+										// if(!lastToken){// dont get for last token , it will incur lot of bandwidth as the user is typing 
+														// once the user presses a dot// a random lastToken will be inserted to the  list and will then fetch the objects
+											console.log(ps, p , 'Object doesn\'t exits', j);
+											if(self.maxSparqlQuery - self.noOfSparqlQueryMade > 0){
+												var sparqlid = self.contextStack[i].sparqlid = Date.now().toString(36);
+												console.log('_________________  Getting Object  _______________no param')
+												self.sparql.getObject(ps, p, sparqlid);
+												self.noOfSparqlQueryMade++;
+												
+												return;// will come here again
+											}
+											else{
+												console.warn('Why sparql query exceded max limit');
+											}
+										// }
+									}
+									self.contextStack[i].built = true;// if it came till here then , it must be done
+								}		
+
+								if(lastToken){
+									if(!predicateLabels.length){
+										// what the user has written has not matched with any predicate 
+										// suggest a new one here
 										for (var j = 0; j < predicates.length; j++) {
-											p = predicates[j];
+											var p = predicates[j];
 											match = p.match(/.+[\/#](.+)$/);
-											console.log(match[1]);
 											if(match){
-												predicateNames.push({desc:'<a href=\''+p+'\' target=\'_blank\' title=\''+p+'\'>'+match[1]+'</a>'});// if match it will have two values
+												predicateLabels.push({desc:'<a href=\''+p+'\' target=\'_blank\' title=\''+p+'\'>'+match[1]+'</a>'});// if match it will have two values
 											}
 										}
-										self.termSuggestions = predicateNames;
 									}
+									self.termSuggestions = _.sortBy(predicateLabels, 'desc');
 								}
 							}
 							else{
@@ -1028,7 +941,7 @@
 					}
 				}
 
-				if(self.contextStack.length-1	 === i){// every part of the stack is filled now
+				if(lastToken){// every part of the stack is filled now
 					console.log(self.contextStack);
 					self.processAndSendAnswers();
 					console.log('came inside function, prepare  context ' + countLoop+ ' times' );
@@ -1090,6 +1003,7 @@
 
 				var termended = question.match(/[\.?]+[\s]*$/);// compendiun will take only valid sentences ; but we need full stops and ? marks to say that it ended
 				// note that this will only match for last sentence
+				if(termended) tokenStrings.push('shdkhskdhsk');// this will search for all matches for the next possible predicates
 				
 				self.contextStack = [];
 				self.termSuggestions = [];
