@@ -1,4 +1,4 @@
-define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki'],  function (app, _, state, Bloodhound, searchapi, mediawiki) {
+define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi'],  function (app, _, state, Bloodhound, searchapi) {
 	// interpretes intention from string 
 	function unique() {
 	    var a = [];
@@ -169,7 +169,7 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 				self.queryAnswers = [];
 				$.each(json.CompleteSuggestion, function(i, item){
 					var title = item.suggestion? item.suggestion.data: '';
-					if(title)self.queryAnswers.push({title:title, desc:''});
+					if(title)self.queryAnswers.push({title:title, desc:'', id:i});
 				});
 
 				self.sc_holdder_ref.emit_valid_commands_changed();
@@ -186,6 +186,7 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 				            bind_data.desc = item.terms.description[0];
 				        }else bind_data.desc = '';
 				        
+				        bind_data.id = i;
 				        if(bind_data.title)self.queryAnswers.push(bind_data);
 				    });
 
@@ -203,8 +204,8 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 				    var classes = [];
 				    var labels = [];// finding dublicates
 				    if(item.type instanceof Array){
-					    for (var i = 0; i < item.type.length; i++) {
-					    	var l = _.last(item.type[i].split('/'));// http://www.w3.org/2002/07/owl#Thing
+					    for (var j = 0; j < item.type.length; j++) {
+					    	var l = _.last(item.type[j].split('/'));// http://www.w3.org/2002/07/owl#Thing
 					    	if(labels.indexOf(l)>-1) continue;
 					    	if(l.length>2)labels.push(l);
 					    	if(l.length>2)classes.push({label:l});
@@ -215,7 +216,7 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 					    if(l.length>2)classes.push({label:l});
 				    }
 				    	
-				    if(_tok)self.queryAnswers.push({title:_tok, desc:item.description, classes:classes});
+				    if(_tok)self.queryAnswers.push({title:_tok, desc:item.description, classes:classes, id:i});
 				    	
 
 				});
@@ -235,7 +236,7 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 				                _tok = _tok[_tok.length-1]; //get the last value
 				                _tok = _tok.split('%2').join(' ').split('2%').join(' ').split('_').join(' ').split('%').join(' ');
 				            }
-				            self.queryAnswers.push({title:_tok, desc:childItem.Text});
+				            self.queryAnswers.push({title:_tok, desc:childItem.Text, id:i});
 				        });
 				    }
 				    else {
@@ -244,7 +245,7 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 				            _tok = _tok[_tok.length-1]; //get the last value
 				            _tok = _tok.split('%2').join(' ').split('2%').join(' ').split('_').join(' ').split('%').join(' ');
 				        }
-				        self.queryAnswers.push({title:_tok, desc:item.Text});
+				        self.queryAnswers.push({title:_tok, desc:item.Text, id:i});
 				    }
 
 				});
@@ -257,15 +258,15 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 				    $.each(json.results, function(i, item){
 				    	var classes = [];
 				    	var labels = [];// finding dublicates
-				    	for (var i = 0; i < item.classes.length; i++) {
-				    		var l = _.last(item.classes[i].label.split('/'));// http://www.w3.org/2002/07/owl#Thing
+				    	for (var j = 0; j < item.classes.length; j++) {
+				    		var l = _.last(item.classes[j].label.split('/'));// http://www.w3.org/2002/07/owl#Thing
 				    		if(labels.indexOf(l)>-1) continue;
 
 				    		labels.push(l);
 				    		classes.push({label:l});
 				    	}
 
-				        self.queryAnswers.push({title:item.label, desc:item.description, classes:classes});
+				        self.queryAnswers.push({title:item.label, desc:item.description, classes:classes, id:i});
 				    });
 				}
 				self.sc_holdder_ref.emit_valid_commands_changed();
@@ -301,7 +302,7 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 							bind_data.classes.push({label:conts[j].text.replace(/<[^>]*>/g, "")});
 						}
 					}
-					console.log(bind_data);
+					bind_data.id = i;
 					self.queryAnswers.push(bind_data);
 				}
 				
@@ -334,7 +335,7 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 		keyUpTimeOutVar = null;// used for timer event
 		last_query_str = '';
 
-		this.onlineCommandSearch = function(cmd, query){
+		this.onlineCommandSearch = function(cmd, query, commit){
 			if(last_query_str === query)return;
 			var qsearch = self.onlineSearchQuery;
 			if(cmd.length){
@@ -364,12 +365,26 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 						self.queryQuestions.push({title:'medline plus', desc:'cmd:medlineplus'});
 						if(query.length>3) qsearch.getMedlinePlusSuggestions(query);
 					}
+					else if('factbites'.indexOf(cmd) === 0){
+						if(query.length>3) self.send_msg_to_background("SW:GET_FACT_BITES_RESULTS", {query:query});
+					}
+					
 				}
-				clearTimeout(keyUpTimeOutVar);
-				keyUpTimeOutVar = setTimeout(timeOutFunction, 500);
-				last_query_str = query;
+				var time = 1000;
+				if('wikipedia'.indexOf(cmd) === 0)time=100;
+				if('google'.indexOf(cmd) === 0)time=0;
+				if('umbel'.indexOf(cmd) === 0)time=600;
+				if('duckduckgo'.indexOf(cmd) === 0)time=500;
+				if('dbpedialookup'.indexOf(cmd) === 0)time=300;
+				if('medlineplus'.indexOf(cmd) === 0)time=700;
+				if('factbites'.indexOf(cmd) === 0)time=0;// because it uses a dot operator
 
+				clearTimeout(keyUpTimeOutVar);
+				keyUpTimeOutVar = setTimeout(timeOutFunction, time);
+				last_query_str = query;
 			}
+					
+
 		}
 
 		this.keyUpTimeOutVar = null;// used for timer event
@@ -385,6 +400,10 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 			}
 			self.keyUpTimeOutVar = setTimeout(timeOutFunction, minTimeIntervalForQuery);
 			self.last_query_str = query;
+		}
+		this.changeContextIndex = function(uiid){
+			// console.log('changing context to ', uiid);
+			self.send_msg_to_background("SW:CHANGE_CONTEXT_INDEX", {uiid:uiid});
 		}
 
 
@@ -473,7 +492,7 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi', 'mediawiki
 			for (var i = 0; i < res.results.length; i++) {
 				var _t = res.results[i].split(self.searchIdDelim)[1];
 				var _id = res.results[i].split(self.searchIdDelim)[0];
-				self.filteredCardTitles.push({id:_id, title:pre + " " + _t, desc:''});
+				self.filteredCardTitles.push({card_id:_id, title:pre + " " + _t, desc:'', id:i});
 			}
 			if(!res.count) self.filteredCardTitles.push({title:pre + " Card", desc:''});
 

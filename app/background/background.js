@@ -114,6 +114,14 @@ chrome.runtime.onMessage.addListener(
 				SW.questionFromTab(request.msg.question, tab_id);
 			}
 		}
+		else if(request.type == 'SW:CHANGE_CONTEXT_INDEX'){
+			SW.changeContextIndex(request.msg.uiid, tab_id);
+		}
+		//Hidden web
+		//*********************************************************
+		else if(request.type == 'SW:GET_FACT_BITES_RESULTS'){
+			SW.hiddenweb.getFactbitesResults(request.msg.query, tab_id);
+		}
 		
 
 	
@@ -698,3 +706,14 @@ function save_all_data_to_firebase(){
 
 // $('a', el) // All the anchor elements
 
+function removenlr(r){
+	_.forIn(r, function(v,k){
+		if(k=='left' || k=='right'){
+			for(var i = 0; i <v.length; i++){
+				console.log(v[i].raw);
+				removenlr(v[i].left);
+				removenlr(v[i].right);
+			}
+		}
+	})
+}

@@ -16,9 +16,13 @@ box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.65);
 		
 		<ul id='commandSuggestions' data-bind="foreach:{data: commandSuggestions}" style="background-color: white; margin: 0px; overflow-x: none; overflow-y:auto;position: relative; max-height: 500px; width: 100%; box-sizing: border-box; border-radius: 4px; font-size: 10px; text-align: left; list-style-type:none;">
 
-			<li style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(227, 227, 227); margin-bottom: 0px; padding: 5px 8px 5px 8px; font-family: 'Open Sans', sans-serif; color: rgb(144, 115, 84); overflow: hidden; white-space: nowrap; ">
+			<li data-bind="click:$root.commandSuggestionsListItemClicked, attr:{id:'clitem_'+$data.id}, style:{backgroundColor:($data.id == $root.selectedCommandId())? 'rgb(246, 240, 236)':'white', borderLeftColor: ($data.id == $root.selectedCommandId())? 'rgb(64, 162, 104)':'transparent', marginLeft: ($data.id == $root.selectedCommandId())? '8px':'0px'}" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(227, 227, 227); border-left-width: 3px;
+				border-left-style: solid; margin-bottom: 0px; padding: 5px 8px 5px 8px; font-family: 'Open Sans', sans-serif; color: rgb(144, 115, 84); overflow: hidden; white-space: nowrap; ">
 					<span data-bind="style:{maxWidth: $data.thumb_source ? '77%' : '100%'}" style="display: inline-block; vertical-align: middle;" >
-						<div data-bind="text:$data.title" class="change_background_color_on_hover" style="overflow: hidden; text-overflow: ellipsis; font-size: 16px; color: rgb(100, 70, 50); display: block; vertical-align: middle; white-space: normal;">...</div>
+					<!-- ko if: $data.title -->
+						<div data-bind="text:$data.title" style="overflow: hidden; text-overflow: ellipsis; font-size: 16px; color: rgb(100, 70, 50); display: block; vertical-align: middle; white-space: normal;"></div>
+					<!-- /ko -->
+					
 						<!-- ko if: $data.desc -->
 							<div style="overflow: hidden; text-overflow: ellipsis; display: block; vertical-align: bottom; font-size: 14px; color: rgb(144, 115, 84); white-space: normal;" data-bind="html:$data.desc"></div>
 
@@ -36,7 +40,7 @@ box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.65);
 				<!-- ko if: $data.thumb_source -->
 					<span data-bind="style: {'backgroundImage': 'url('+ $data.thumb_source +')'}"
 
-					 style="margin-right: 12px; position: relative; float: right; width: 50px; height: 50px; border-radius: 2px; display: inline-block; vertical-align: middle; background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;">
+					 style="margin-right: 12px; padding:3px; position: relative; float: right; width: 50px; height:50px; border-radius: 50%; display: inline-block; vertical-align: middle; background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;">
 					</span>
 				<!-- /ko -->
 				

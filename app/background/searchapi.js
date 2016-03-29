@@ -51,7 +51,7 @@ var SEARCH_API = function(){
 
 	this.wikipedia_suggest = function(query, q_id, callback){
 	    var searchq = query.split(' ').join('%20');
-	    var _url = 'https://en.wikipedia.org/w/api.php?action=query&format=json&version=2&generator=prefixsearch&gpssearch=' + searchq + '&gpslimit=6&prop=pageimages%7Cpageterms&piprop=thumbnail&pithumbsize=50&pilimit=10&redirects=&wbptterms=description';
+	    var _url = 'https://en.wikipedia.org/w/api.php?action=query&format=json&version=2&generator=prefixsearch&gpssearch=' + searchq + '&gpslimit=10&prop=pageimages%7Cpageterms&piprop=thumbnail&pithumbsize=50&pilimit=10&redirects=&wbptterms=description';
 	    // var _url = 'https://en.wikipedia.org/w/api.php?action=query&format=json&version=2&generator=prefixsearch&gpssearch=' + searchq + '&gpslimit=6&prop=pageimages%7Cpageterms&piprop=thumbnail&pithumbsize=50&prop=info&inprop=url&pilimit=10&redirects=&wbptterms=description';
 
 	    $.getJSON(_url ,function(data) {

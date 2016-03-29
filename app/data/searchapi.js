@@ -70,7 +70,7 @@
 				if(query.length){
 
 					prefix_data = {};
-					match = query.match(/:(\w*)\s(.*)/);
+					match = query.match(/:(\w*:?\w*)\s(.*)/);// :skos:Concept alchemy => ill work now
 					if(match){// eg ;dbpedialookup :Person Isaac Newton
 						prefix_data.QueryClass = match[1];
 						prefix_data.QueryString = match[2];

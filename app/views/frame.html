@@ -63,7 +63,7 @@
 
 				<!-- SELECTED -->
 				<div data-bind="fadeVisible:$data.isSelected() || $root.show_all_card_label()" style=" position: absolute; top:-10px; margin-top: 0px; " class="custombreadcrumb flat">
-					<a style="color:#777;" class="" data-bind="text:($root.show_all_card_label() ? ($index()+1) : $root.card_label_text()), css:{active:$root.show_all_card_label(), big_font:$root.show_all_card_label(), normal_font:!$root.show_all_card_label()}"></a>
+					<a style="color:#777;" class="" data-bind="html:($root.show_all_card_label() ? ($index()+1) : $root.card_label_text()), css:{active:$root.show_all_card_label(), big_font:$root.show_all_card_label(), normal_font:!$root.show_all_card_label()}"></a>
 				</div>
 
 				<div title="Close this. You can add it later by searching for it"  style="position: absolute; top:0px; right:15px;" data-bind="fadeVisible:$data.isMouseHovered">

@@ -2,8 +2,8 @@
 1. add card.isSelected and card.isMouseHovered to card.STATE instead
 */
 
-define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'state', 'store', 'panzoom', 'card_props'],
-    function (http, app, ko, gridstack, _ , state, store, panzoom, card_props) {
+define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'state', 'panzoom', 'card_props'],
+    function (http, app, ko, gridstack, _ , state, panzoom, card_props) {
 
     var frame = function(){
         var self=this;
@@ -23,7 +23,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             this.all_cards_in_frame_loaded = false;
             this.show_additional_card_menu = ko.observable(false);
             this.show_all_card_label = ko.observable(false);
-            this.card_label_text = ko.observable('V:Selected');
+            this.card_label_text = ko.observable('Selected');
             var card_hint_timer = null;
             this.frame_message_text = ko.observable(':)');
             var frame_hint_timer = null;
@@ -264,7 +264,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 //@
                 this.init_chrome_message_listener = function(){
                     self.chromeMessageListener = function(request) {
-                        console.log(request.type);
+                        // console.log(request.type);
                         if(request.type === 'REPLYOF_LOAD_ALL_FROM_STORE_TO_FV'){
                             var fv_key = request.msg._fv_key;
                             if(fv_key === self.frameview.key() && self.all_cards_in_frame_loaded===false){// this message is only for one specific frameview
@@ -614,7 +614,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                         var c = allcards_[i];
                         me._update_card_in_frameview(c, c.x, c.y, c.width, c.height);
                         
-                        if(i === allcards_.length-1)state.actions.select_this_card(state, allcards_[i]);// select lastly added card
+                        if(i === allcards_.length-1){
+                            state.actions.select_this_card(state, allcards_[i]);// select lastly added card
+                            me.show_card_hint(allcards_[i], 'Selected');
+                        }
                     };
                 };
                
@@ -813,16 +816,23 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                         }
                     );  
                 };
-                this.show_card_hint = function(str, timeout){
-                    self.card_label_text(str);
+                this.show_card_hint = function(card, str, timeout){
+                    var pre = '';
+                    if(card.TYPE.VOLATILE) pre = ':<span style=\'color:crimson;\'>V</span>';
+                    // if(card.TYPE.EDITABLE) pre = pre + ':<span style=\'color:cadetblue;\'>E</span>';
+                    if(card.TYPE.PARENT) pre = pre + ':<span style=\'color:dimgrey;\'>P</span>';
+                    if(card.card_data.cloned_from_id) pre = pre + ':<span style=\'color:chocolate;\'>L</span>';
+
+                    self.card_label_text(str+pre);
                     if(timeout){
                         clearTimeout(card_hint_timer);
                         card_hint_timer = setTimeout(function(){
-                            self.card_label_text('Selected');
+                            self.card_label_text('Selected'+pre);
                         }, timeout);
                     }
-                        
                 };
+
+                        
                 this.show_frame_hint = function(str, timeout){
                     self.frame_message_text(str);
                     if(timeout){
@@ -866,11 +876,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     me.update_card_content_from_frameview_to_store(_card, _do_not_compare);
                 };
                 
-                this.remove_card= function(card, status){
-                    state.actions.removingThisCard(card, state);
-                    if(status === 'PERMANENT') me._remove_card_from_frameview_and_store(card);
-                    else if(status === 'TEMPORARY') me._remove_card_from_frameview_only(card);
-                };
                 this.add_new_card_autoposition= function(card_data){
                     var card_ = null;
                     var size = self.get_fc_value('card_default_size');
@@ -939,6 +944,19 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     }
                     return card_;
                 };
+                this.remove_card= function(card, status){
+                    state.actions.removingThisCard(card, state);
+                    if(status === 'PERMANENT') me._remove_card_from_frameview_and_store(card);
+                    else if(status === 'TEMPORARY') me._remove_card_from_frameview_only(card);
+                };
+                this.remove_all_cards = function(){
+                    // var all_cards = self.cards();
+                    // console.log(all_cards);
+                    // for (var i = 0; i < all_cards.length; i++) {
+                    //       me.remove_card(all_cards[i], 'TEMPORARY');
+                    // }  
+                    me.remove_frameview_from_frame();
+                }
                 this.add_card_top_right= function(){};
                 this.add_card_bottom_left= function(){};
                 this.add_card_bottom_right= function(){};
@@ -1151,7 +1169,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             
             this.left_click_on_card = function(card, target, dt, dx, dy){
                 self.show_additional_card_menu(false);
-                if(!card.STATE.EDITING)self.card_label_text('Selected');
+                if(!card.STATE.EDITING)self.actions.show_card_hint(card, 'Selected');
 
                 state.actions.select_this_card(state, card);// give state as a self ref
                 
@@ -1176,7 +1194,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                             }
                         }
                         else{
-                            self.actions.show_card_hint('this card is not editable');
+                            self.actions.show_card_hint(card, 'this card is not editable');
                         }
                     }
                     else if($(target).hasClass('cardMenuTrashIcon')){
@@ -1217,7 +1235,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                             }
                         }
                         else{// this card may not be editable but there could be a card which is being edited when clicked on this card
-                            if(self.is_perfect_click(dx, dy, dt, self.get_fc_value('perfect_click_max')))self.actions.show_card_hint('This card is not Editable');
+                            if(self.is_perfect_click(dx, dy, dt, self.get_fc_value('perfect_click_max')))self.actions.show_card_hint( card, 'This card is not Editable');
                             if(state.isany_card_being_edited){// may be you were editing something else
                                 self.stop_editing_all('EDITING_FINISHED');
                             }
@@ -1318,7 +1336,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 state.now_editing_cards.push(card);
                 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                 //Hacks
-                self.card_label_text('Editing');
+                self.actions.show_card_hint(card, 'Editing');
                 //card.isSelected(false);// to switch off selection uis
                 // remember to make it true at stop_edit
             };
@@ -1391,11 +1409,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     self.actions.update_card_content_from_frameview_to_store(card);
                     //this in turn saves card datas as well
                     
-                    self.actions.show_card_hint('Saved');
+                    self.actions.show_card_hint(card, 'Saved');
                     
                 }
                 else{
-                    self.card_label_text('Selected');
+                    self.actions.show_card_hint(card, 'Selected');
                 }
 
                 //card.isSelected(true);// it was selected but this variable was set to false to remove ui clutterness when editing
@@ -1531,12 +1549,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     var pass = self.appActions.getCommandInputString();
                     if(pass === card.card_data.password){
                         delete card.restricted;
-                        self.card_label_text('Selected');
+                        self.actions.show_card_hint(card, 'Selected');
                         self.appActions.setCommandInputString('');
                     }
                     else{
-                        self.card_label_text('Password Protected');
-                        setTimeout(function(){self.card_label_text('Selected');}, 1000)
+                        self.actions.show_card_hint(card, 'Password Protected', 1000);
                     }
                 }
 

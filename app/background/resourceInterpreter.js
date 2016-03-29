@@ -1,30 +1,63 @@
-//
+	//
 
-	var RDF = $rdf.Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
-	var RDFS = $rdf.Namespace("http://www.w3.org/2000/01/rdf-schema#")
-	var FOAF = $rdf.Namespace("http://xmlns.com/foaf/0.1/")
-	var XSD = $rdf.Namespace("http://www.w3.org/2001/XMLSchema#")
-	var DBO = $rdf.Namespace('http://dbpedia.org/ontology/')
-	var DBR = $rdf.Namespace('http://dbpedia.org/resource/');
+		// var RDF = $rdf.Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
+		// var RDFS = $rdf.Namespace("http://www.w3.org/2000/01/rdf-schema#")
+		// var FOAF = $rdf.Namespace("http://xmlns.com/foaf/0.1/")
+		// var XSD = $rdf.Namespace("http://www.w3.org/2001/XMLSchema#")
+		// var DBO = $rdf.Namespace('http://dbpedia.org/ontology/')
+		// var DBR = $rdf.Namespace('http://dbpedia.org/resource/');
+		// var SCARDS = $rdf.Namespace("http://semanticcards.org/");
+
+		// var store = $rdf.graph();// used to load complete rdf graph
+		// var ustore = $rdf.graph();// used to store important tripple for user
+		// var sstore = $rdf.graph();//used for suggestions
+
+		// var timeout = 5000;
+		// var fetcher = new $rdf.Fetcher(store, timeout);
+		// var ufetcher = new $rdf.Fetcher(ustore, timeout);
+		// var sfetcher = new $rdf.Fetcher(sstore, timeout);
 
 
-	var SCARDS = $rdf.Namespace("http://semanticcards.org/");
+		// function loadrdf(url){
+		// 	fetcher.nowOrWhenFetched(url, function(ok, body, xhr) {
+		// 	    if (!ok) {
+		// 	        console.log("Oops, something happened and couldn't fetch data");
+		// 	    } else {
+		// 	        console.log(store);
+		// 	    }
+		// 	});
+		// }
+		// var rdf = {
+		// 	filterpredicate: function(pred){
+		// 		cms = store.statementsMatching(undefined, pred, undefined);
+		// 		$.each(cms, function(i, v){
+		// 			console.log(JSON.stringify(v.subject), JSON.stringify(v.object));
+		// 		})
 
-	var store = $rdf.graph();// used to load complete rdf graph
-	var ustore = $rdf.graph();// used to store important tripple for user
-	var sstore = $rdf.graph();//used for suggestions
+		// 	},
+		// 	comments: function(){
+		// 		rdf.filterpredicate(RDFS('comment'));
+		// 	},
+		// 	types: function(){
+		// 		rdf.filterpredicate(RDF('type'));
+		// 	}
+		// }
 
-//******************************
-//******************************
-//******************************
-//
+
+//******************************//******************************//******************************//******************************
+//******************************//******************************//******************************//******************************
+//******************************//******************************//******************************//******************************
+//******************************//******************************//******************************//******************************
+//******************************//******************************//******************************//******************************
 	var tripplestore = new Triplestore();
 	tripplestore.setMapping("foaf", "http://xmlns.com/foaf/0.1/");
+	tripplestore.setMapping("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+	tripplestore.setMapping("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
+	tripplestore.setMapping("xds", "http://www.w3.org/2001/XMLSchema#");
+	tripplestore.setMapping("dbo", "http://dbpedia.org/ontology/");
+	tripplestore.setMapping("dbr", "http://dbpedia.org/resource/");
+	tripplestore.setMapping("scards", "http://semanticcards.org/");
 
-	var timeout = 5000;
-	var fetcher = new $rdf.Fetcher(store, timeout);
-	var ufetcher = new $rdf.Fetcher(ustore, timeout);
-	var sfetcher = new $rdf.Fetcher(sstore, timeout);
 
 
 	function roughSizeOfObject( object ) {
@@ -61,30 +94,7 @@
 	    var kb = bytes/1024;
 	    return kb;
 	}
-	function loadrdf(url){
-		fetcher.nowOrWhenFetched(url, function(ok, body, xhr) {
-		    if (!ok) {
-		        console.log("Oops, something happened and couldn't fetch data");
-		    } else {
-		        console.log(store);
-		    }
-		});
-	}
-	var rdf = {
-		filterpredicate: function(pred){
-			cms = store.statementsMatching(undefined, pred, undefined);
-			$.each(cms, function(i, v){
-				console.log(JSON.stringify(v.subject), JSON.stringify(v.object));
-			})
 
-		},
-		comments: function(){
-			rdf.filterpredicate(RDFS('comment'));
-		},
-		types: function(){
-			rdf.filterpredicate(RDF('type'));
-		}
-	}
 	var getAbstract = function(name){
 		var whois = 'PREFIX owl: <http://www.w3.org/2002/07/owl#>\
 							PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
@@ -175,7 +185,7 @@
 		this.searchIdDelim = '~';
 
 		// this.queryAnswers = {};// term_id:{id:term_id, answers:[{title:'String', desc:'', thumb_source}, {}]}
-		this.queryAnswers = {};//{id:term_id, answers:[$rdf.NamedNode]}
+		this.queryAnswers = {};//{id:term_id, answers:[uri, uri...]}
 
 		this.queryQuestions = {};// term_id:{id:term_id, question:'what is solar system', count:1}
 		this.questionSearchStringSource = '';// '"234 who is barack obama""12 why is sea not green"......'
@@ -265,7 +275,7 @@
 	  								?x0 rdfs:label "'+name+'"@en.\
 	  								?x0 dbpedia-owl:abstract ?abs.\
 									FILTER(!isLiteral(?abs) || lang(?abs) = "" || langMatches(lang(?abs), "EN"))\
-								} LIMIT 12';
+								} LIMIT 1';
 				qu = qu.replace(/\s+/g, " ");
 				me.queryEndpoint(qu);
 			};
@@ -284,38 +294,112 @@
 				var qu = 'SELECT DISTINCT ?object'+id+' WHERE {'+s+' '+p+' '+o+'. FILTER(!isLiteral('+o+') || lang('+o+') = "" || langMatches(lang('+o+'), "EN")) } LIMIT 50';
 				console.log(qu);
 				me.queryEndpoint(qu);
+			}
 
+			this.getContentForCard = function(s, types){// s must be dbr
+				s = '<'+s+'>';
+				p = '<'+p+'>';
+				o = '?object'+id;
+				var qu = 'SELECT DISTINCT ?object'+id+' WHERE {'+s+' '+p+' '+o+'. FILTER(!isLiteral('+o+') || lang('+o+') = "" || langMatches(lang('+o+'), "EN")) } LIMIT 50';
+				console.log(qu);
+				me.queryEndpoint(qu);	
 			}
 
 			return this;
 		}
 		this.sparql = self.createSparql();
 
-		this.gotAllPredicates = function(predicatesUri, predicateNameArray){
-			self.context.predicates = predicatesUri;
-			for (var i = 0; i < predicateNameArray.length; i++) {
-				var name = predicateNameArray[i];
-				self.context.predicateSearchString+= self.searchDelim + i + self.searchIdDelim + name + self.searchDelim;
-			}
-		};
-				
-		this.gotNewStatements = function(statements){
-			// var answers = [];
-			// var uniqueNode = [];
-			// if(answer_type === 'subject suggestions'){
+		this.createHiddenWeb = function(){
+			var me = this;
 
-			// }
-			for (var i = 0; i < statements.length; i++) {
-				var st = statements[i];
-				var o_ = sstore.any(st.s, st.p);
-	        	if( o_ ){// this tripple exist
-	        		// may be update it
-	        		// TODO
-	        		console.log('alr exi');
-	        	}
-	        	else{
-	        		sstore.add(st.s, st.p, st.o, st.w);
-	        	}
+			this.last_query = '';
+			this.last_answers = null;
+			this.getFactbitesResults = function(query, tab_id){
+				
+				var match = query.match(/([\w\s]+)(\.+)$/);
+				if(match){
+					var no_of_dot = match[2].length;
+					var answers = [];
+
+					if((match[1] == me.last_query) &&  me.last_answers){
+						if(no_of_dot*4 < me.last_answers.length){
+							self.sendHiddenwebAnsewersFactbites(me.last_answers.slice(4*(no_of_dot-1), 4*(no_of_dot)));
+						}
+							
+						return;
+					}
+
+					me.last_query  = match[1];
+
+					$.get('http://www.factbites.com/topics/'+query,
+						function(data){
+							var ans = {}
+							var elems = $.parseHTML(data);
+							var topicFound = false;
+							$.each(elems, function(i, item){
+								if(item.nodeName === 'TABLE'){
+									if(topicFound){
+										var node = $(item).find('tbody');
+										var cl = node.find('td');
+										$.each(cl, function(j, n){
+											text = $(n).text();
+											if(text.length < 10) $(n).remove();
+											if(text.match(/words\)/) && text.match(/^\s*(http|www|en.wiki)/)){
+												console.log(text);
+												$(n).remove();
+											}
+											var $i = $(n).find('i');// Site not responding. Last check: 2007-11-07)
+											if($i)$i.remove();
+
+										})
+										node.find('a').each(function(e) {
+											var l = $(this).attr('href');
+											// $(this).css('color', 'initial');
+											// $(this).css('textDecoration', 'initial');
+											
+											if(l.indexOf('/topics') === 0) $(this).attr('href', 'http://www.factbites.com'+l);
+										})
+										if(node.text().length> 10) answers.push({html:node.html()});
+									}
+									else{
+										if($(item).text().indexOf('Topic:') > -1) topicFound = true;
+									}
+								}
+							})
+							me.last_answers = answers;
+							if(no_of_dot==1){
+								self.sendHiddenwebAnsewersFactbites(answers.slice(0, 4));
+							}
+						}
+					)
+				}
+			}
+			return this;
+		}
+		this.hiddenweb = self.createHiddenWeb();
+		// this.gotAllPredicates = function(predicatesUri, predicateNameArray){
+		// 	self.context.predicates = predicatesUri;
+		// 	for (var i = 0; i < predicateNameArray.length; i++) {
+		// 		var name = predicateNameArray[i];
+		// 		self.context.predicateSearchString+= self.searchDelim + i + self.searchIdDelim + name + self.searchDelim;
+		// 	}
+		// };
+				
+		this.gotNewTripplesFromPrefixSearch = function(tripples){
+			//Note !
+			//Here only one objct for any s,p pair alllowed
+			//so if anything exists then no need to add it
+
+			for (var i = 0; i < tripples.length; i++) {
+				var tr = tripples[i];
+				var objects = tripplestore.getValues(tr.s, tr.p);
+				if(objects.length){
+					// console.log('value already exist', tr.s, tr.p, objects);
+					// no need to check if it is the same object , because only one value is allowed here
+				}
+				else{
+					tripplestore.add(tr.s, tr.p, tr.o);						
+				}
 			}
 
 		};
@@ -325,6 +409,7 @@
 
 			var answers = [];
 			var cs = self.contextStack;
+			var uiid = 0;
 
 			for (var i = 0; i < cs.length; i++) {
 				var ans = {};
@@ -333,7 +418,7 @@
 				var ppredicate = ctx.parentPredicate;
 				if(ppredicate){
 					var match = ppredicate.match(/.+[\/#](.+)$/);
-					if(match)answers.push({desc:'<a href=\''+ppredicate+'\' target=\'_blank\' title=\''+ppredicate+'\'>'+match[1]+'</a><i style=\'margin-left:10px;\' class=\"fa fa-arrow-down\"></i>'});
+					if(match)answers.push({desc:'<a data-predicate=\'true\' href=\''+ppredicate+'\' target=\'_blank\' title=\''+ppredicate+'\'>'+match[1]+'</a><i style=\'margin-left:10px;\' class=\"fa fa-arrow-down\"></i>'});
 				}
 
 
@@ -355,11 +440,6 @@
 						var isimg = (s.match(/\.(jpg|png|gif|svg|JPG)$/));
 						var isdbpthumb = (s.match(/\.(jpg|png|gif|svg|JPG)\?width=/));
 						
-						if(isuri)
-							$s = $rdf.sym(s);
-						else $s = null;
-
-
 						if(isuri){
 							if(isdbpthumb){
 								ans.desc = '<img style=\'width:50%;\' src=\''+s+'\'>';
@@ -368,46 +448,56 @@
 								ans.desc = '<img style=\'width:50%;\' src=\''+s+'\'>';
 							}
 							else if(isdbr){
-								var o = sstore.any($s, RDFS('label'));
-								if(o && o.value && j==0) ans.title = o.value + ' (Context)';
-								else if(o && o.value) ans.title = o.value+ ' (Suggestions)';
+								var os = tripplestore.getValues(s, 'rdfs:label');
+								if(os.length){
+									var o = os[0];
+									ans.title = o;
+								}
 								else{
 									m = s.match(/.+[\/#](.+)$/);
 									if(m){
-										ans.title = m[1].replace('_', ' ');
+										ans.title = m[1].replace(/_/g, ' ');
 									}
 									else{
-										ans.title = s;
+										ans.title = s.replace(/_/g, ' ');
 									}
 								}
 								
 
-								o = sstore.any($s, SCARDS('termDescription'));
-								if(o && o.value) ans.desc = o.value;
+								os = tripplestore.getValues(s, 'scards:termDescription');
+								if(os.length){
+									ans.desc = os[0];
+								}
 
-
-								o = sstore.any($s, DBO('thumbnail'));
-								if(o && o.uri) ans.thumb_source = o.uri;
+								os = tripplestore.getValues(s, 'dbo:thumbnail');
+								if(os.length){
+									ans.thumb_source = os[0];
+								}
 
 							}
 							else{
 								m = s.match(/.+[\/#](.+)$/);
 								if(m){
-									ans.title = m[1].replace('_', ' ');
+									ans.title = m[1].replace(/_/g, ' ');
 								}
 								else{
-									ans.title = s;
+									ans.title = s.replace(/_/g, ' ');
 								}
 							}
 						}
 						else if(typeof(s) === 'string'){
-							ans.title = s;
+							ans.title = s.replace(/_/g, ' ');
 						}
 					}
 					else{
 						ans.desc = 'subject or object doesn\'t exist!!!!!';
 					}
-						
+					
+					if(lastContext || (i===cs.length-2 && !cs[cs.length-1].subject)){
+						ans.iscontext = true;
+						ans.id = uiid;
+						uiid++;
+					}
 					answers.push(ans);
 				}
 
@@ -418,8 +508,10 @@
 
 			}
 
-			if(termSuggestions.length)answers.push({desc:'<div style=\'width:500px; opacity:0.6; border-width:2px;\' class=\'hline\'></div>'});
+			// if(termSuggestions.length)answers.push({desc:'<div style=\'width:500px; opacity:0.6; border-width:2px;\' class=\'hline\'></div>'});
 
+			lastPPredicate = _.last(cs).parentPredicate;
+			var predicateSuggestions = '';
 			for (var i = 0; i < termSuggestions.length; i++) {
 				var s = termSuggestions[i];
 
@@ -427,32 +519,18 @@
 					var isuri = (s.match(/^https?:\/\//));
 					var isdbr = (s.match(/http:\/\/dbpedia\.org\/resource\//));
 				}
-					
-				
-				// if(isuri)
-				// 	$s = $rdf.sym(s);
-
-
-				// if($s){//namedNode
-				// 	var ans = {}
-				// 	var o = sstore.any($s, RDFS('label'));
-				// 	if(o && o.value) ans.title = o.value + '(suggestion)';
-				// 	else ans.title = s.uri;
-
-				// 	o = sstore.any($s, SCARDS('termDescription'));
-				// 	if(o && o.value) ans.desc = o.value;
-
-
-				// 	// o = sstore.any($s, DBO('thumbnail'));
-				// 	// if(o && o.uri) ans.thumb_source = o.uri;
-
-				// 	if(ans.title)answers.push(ans);
-				// }
 				
 				if(s.desc){// predicate suggestion as desc
-					answers.push(s);
+					if(s.desc.indexOf(lastPPredicate) > -1){
+						predicateSuggestions+= ' &nbsp; <span style=\'color:forestgreen;\'>'+s.desc+'</span>';
+					}
+					else predicateSuggestions+= '&nbsp; ' + s.desc;
 				}
 			}
+			if(predicateSuggestions.length > 3){
+				answers.push({desc:predicateSuggestions});
+			}
+				
 			
 
 			self.sendAnswers(answers);
@@ -475,33 +553,32 @@
 				// console.log(json);	
 
 				if(json.query && json.query.pages){
-					var statements = [];
+					var tripples = [];
 					var answers = [];
 				    $.each(json.query.pages, function(i,item){
 				    	if(item.title){
 				    		var _url = self.getDbpediaUrl(item.title);
-				        	var s = $rdf.sym(_url);
-				        	var p = RDFS('label');
+				        	var s = _url
+				        	var p = 'rdfs:label';
 				        	var o = item.title;
-				        	var w = SCARDS('wpPrefixSearch');
 
-				        	statements.push({s:s, p:p, o:o, w:w});
+				        	tripples.push({s:s, p:p, o:o});
 
 					    	if(item.thumbnail && item.thumbnail.source){
-					    		p = DBO('thumbnail');
-					    		o = $rdf.sym(item.thumbnail.source);
-				        		statements.push({s:s, p:p, o:o, w:w});
+					    		p = 'dbo:thumbnail';
+					    		o = item.thumbnail.source;
+				        		tripples.push({s:s, p:p, o:o});
 					    	}
 
 					    	if(item.terms && item.terms.description){
-						    	p = SCARDS('termDescription');
+						    	p = 'scards:termDescription';
 						    	o = item.terms.description[0];
-				        		statements.push({s:s, p:p, o:o, w:w});
+				        		tripples.push({s:s, p:p, o:o});
 					    	}
 					    	answers.push(s);
 				    	}
 				    });
-				    self.gotNewStatements(statements);
+				    self.gotNewTripplesFromPrefixSearch(tripples);
 				    self.queryAnswers[term_id] = {id:term_id, answers:answers, type: 'subject suggestions'};// answer:[NamedNode], type:'subject suggestions'
 				    self.prepareContextStack();
 				}
@@ -641,6 +718,7 @@
 			} 
 			else{
 				url = 'http://dbpedia.org/resource/' + url.replace(/ /g, '_');
+				// url = 'dbr:' + url.replace(/ /g, '_');
 				return url;
 			}
 		};
@@ -652,6 +730,7 @@
 
 		this.uriToPredicateNames = {};
 		this.contextStack = [];//{subject, parentPredicate, childPredicate, }
+		this.lastContextStack = [];// will be used to use context selection by thr user from ui, because contextStack is always built from null;
 		this.termSuggestions = [];
 		this.objectSuggestions = [];
 		this.maxSparqlQuery = 10;
@@ -720,10 +799,20 @@
 														//namedNodes
 						self.contextStack[i].subjects = [];
 						for (var j = 0; j < qanswer.answers.length; j++) {
-							self.contextStack[i].subjects.push(qanswer.answers[j].uri);
+							self.contextStack[i].subjects.push(qanswer.answers[j]);
 						}
-						self.contextStack[i].subject = qanswer.answers[0].uri;//TODO, for now only 0th
+						self.contextStack[i].subject = qanswer.answers[0];//TODO, for now only 0th
 						self.contextStack[i].built = true;
+
+						// change the context based on previous context selection by the user
+						if(self.lastContextStack.length > i){
+							var last_tok = self.lastContextStack[i].token;
+							var cur_token = self.contextStack[i].token;
+							if(last_tok === cur_token){// nothing changed in the command input, use the last context subject
+								self.contextStack[i].subject = self.lastContextStack[i].subject;
+								self.contextStack[i].uiid = self.lastContextStack[i].uiid;
+							}
+						}
 
 					}
 					else{
@@ -737,6 +826,7 @@
 					}
 				}
 				else{
+					console.log('searching for pedicates', i);
 					var ps = self.contextStack[i-1].subject;
 					var isuri = (ps.match(/^https?:\/\//));
 					if(!ps || !isuri){
@@ -770,7 +860,7 @@
 											if(match){
 												if(match[1].toLowerCase().indexOf(tokenStr.toLowerCase()) > -1){// matched the last part of the URI
 													self.contextStack[i].parentPredicates.push(p);// don't save lable. as we have to refer to full uri
-													if(lastToken) predicateLabels.push({desc:'<a href=\''+p+'\' target=\'_blank\' title=\''+p+'\'>'+match[1]+'</a>'});
+													if(lastToken) predicateLabels.push({desc:'<a data-predicate=\'true\' style=\'color:inherit;\' href=\''+p+'\' target=\'_blank\' title=\''+p+'\'>'+match[1]+'</a>'});
 												}
 											}
 										}
@@ -808,7 +898,7 @@
 													var p = param.predicates[j];
 													match = p.match(/.+[\/#](.+)$/);
 													if(match){
-														predicateLabels.push({desc:'<a href=\''+p+'\' target=\'_blank\' title=\''+p+'\'>'+match[1]+'</a>'});// if match it will have two values
+														predicateLabels.push({desc:'<a data-predicate=\'true\' style=\'color:inherit;\' href=\''+p+'\' target=\'_blank\' title=\''+p+'\'>'+match[1]+'</a>'});// if match it will have two values
 													}
 												}
 											}
@@ -841,6 +931,8 @@
 											}
 											if(self.contextStack[i].subjects.length){
 												self.contextStack[i].subject = self.contextStack[i].subjects[0];// selected subjects out of many
+												// no need to choose from previous context , as these were just pulled from sparql just now, they never had been presented to the user to chose from
+												// so they will not exist in the previous context
 											}
 											self.contextStack[i].built = true;
 										}
@@ -868,12 +960,22 @@
 									match = p.match(/.+[\/#](.+)$/);
 									if(match && match[1].toLowerCase().indexOf(tokenStr.toLowerCase()) > -1){// matched the last part of the URI
 										self.contextStack[i].parentPredicates.push(p);// insert the whole URI
-										if(lastToken) predicateLabels.push({desc:'<a href=\''+p+'\' target=\'_blank\' title=\''+p+'\'>'+match[1]+'</a>'});
+										if(lastToken) predicateLabels.push({desc:'<a data-predicate=\'true\' style=\'color:inherit;\' href=\''+p+'\' target=\'_blank\' title=\''+p+'\'>'+match[1]+'</a>'});
 									}
 								}
 
 								if(self.contextStack[i].parentPredicates.length){// atleast one matched
 									self.contextStack[i].parentPredicate = self.contextStack[i].parentPredicates[0]; // select one 
+
+									// change the context based on previous context selection by the user
+									if(self.lastContextStack.length > i){
+										var last_tok = self.lastContextStack[i].token;
+										var cur_token = self.contextStack[i].token;
+										if(last_tok === cur_token){// nothing changed in the command input, use the last context subject
+											self.contextStack[i].parentPredicate = self.lastContextStack[i].parentPredicate;
+										}
+									}
+									
 									var p = self.contextStack[i].parentPredicate;
 									console.log('showing results for predicate ' + p);
 
@@ -887,6 +989,17 @@
 											self.contextStack[i].subjects.push(o);
 										}
 										self.contextStack[i].subject = self.contextStack[i].subjects[0];// selected subjects out of many
+
+										// change the context based on previous context selection by the user
+										if(self.lastContextStack.length > i){
+											var last_tok = self.lastContextStack[i].token;
+											var cur_token = self.contextStack[i].token;
+											if(last_tok === cur_token){// nothing changed in the command input, use the last context subject
+												self.contextStack[i].subject = self.lastContextStack[i].subject;
+												self.contextStack[i].uiid = self.lastContextStack[i].uiid;
+											}
+										}
+
 									}
 									else{
 										// if(!lastToken){// dont get for last token , it will incur lot of bandwidth as the user is typing 
@@ -916,7 +1029,7 @@
 											var p = predicates[j];
 											match = p.match(/.+[\/#](.+)$/);
 											if(match){
-												predicateLabels.push({desc:'<a href=\''+p+'\' target=\'_blank\' title=\''+p+'\'>'+match[1]+'</a>'});// if match it will have two values
+												predicateLabels.push({desc:'<a data-predicate=\'true\' style=\'color:inherit;\' href=\''+p+'\' target=\'_blank\' title=\''+p+'\'>'+match[1]+'</a>'});// if match it will have two values
 											}
 										}
 									}
@@ -1010,23 +1123,45 @@
 				self.maxSparqlQuery = self.tokenStrings.length*2;// one for predicate one for object
 				self.noOfSparqlQueryMade = 0;//init
 				for (var i = 0; i < self.tokenStrings.length; i++) {
-					self.contextStack.push({});
+					self.contextStack.push({token:tokenStrings[i]});// start with the tokens used for each context
 				}
 
 				console.log('\n ------------------START---------------------------\n\n')
 				self.prepareContextStack();
+				// after context is prepared save in a safe place so that context changes from UI can be stored here
+				// so it should be same as the current context stack , which sounds different from its name
+				// but its called lasCon... because it will be old when the new context is prepared nex time
+				self.lastContextStack = self.contextStack;
+				// console.log(self.lastContextStack);
 				
 			}
 
 			//by this time do 
 		}
+		this.changeContextIndex = function(uiid, tab_id){
+			
+			var lcontextStore = _.last(self.lastContextStack);
+			if(lcontextStore.subjects && lcontextStore.subjects.length){// ther is no point in changing context if there is only one
+				if(lcontextStore.subjects.length> uiid && uiid > -1){
+					lcontextStore.uiid = uiid;
+					lcontextStore.subject = lcontextStore.subjects[uiid];
+				}
+			}
+			// console.log('changing context to ', uiid);
+		}
 
 
 		//Answer
 		this.sendAnswers = function(answers){
-			sendMSG_to_tab_byId({type:'SW:ANSWER_FROM_BACK',  msg:{answers:answers}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
+			var uiid = _.last(self.contextStack).uiid;
+			sendMSG_to_tab_byId({type:'SW:ANSWER_FROM_BACK',  msg:{answers:answers, uiid:uiid}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
+			console.log('answer sent');
 
 		}
+		this.sendHiddenwebAnsewersFactbites = function(answers){
+			sendMSG_to_tab_byId({type:'SW:HIDDEN_WEB_ANSWERS_FACTBITES',  msg:{answers:answers}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
+		}
+			
 
 		this.fastStringSearch = function(source, term){
 			var rx = new RegExp('"([^"]*'+term+'[^"]*)"','gi');
