@@ -56,6 +56,10 @@
 	tripplestore.setMapping("xds", "http://www.w3.org/2001/XMLSchema#");
 	tripplestore.setMapping("dbo", "http://dbpedia.org/ontology/");
 	tripplestore.setMapping("dbr", "http://dbpedia.org/resource/");
+	tripplestore.setMapping("owl", "http://www.w3.org/2002/07/owl#");
+	tripplestore.setMapping("skos", "http://www.w3.org/2004/02/skos/core#");
+	tripplestore.setMapping("purl", "http://purl.org/dc/terms/");
+
 	tripplestore.setMapping("scards", "http://semanticcards.org/");
 
 
@@ -152,9 +156,11 @@
 	var SemanticWeb = function(){
 		var self = this;
 
-		
+		this.analysedSentences = []; 
 		this.tokenStrings = [];
 		this.rootToken = '';// token is a list of words here 
+		this.rootTags = ''// tags for first sentence// 'DT NN WP'
+		this.andSplits = null;
 		//__________________________________________________
 		// => => => 				}						|
 		// => => => =>				}						|
@@ -199,6 +205,11 @@
 
 		this.createSparql = function(){
 			var me = this;
+			this.limitForClassObject = 10;// will have many predicates
+			this.limitForAllPredicate = 200;
+			this.limitForInstanceObject= 20;// will have only one predicate
+			this.limitForAllClassPredicate = 400;
+
 			this.results = function(json){
 				console.log('sparql results', json);
 				if(json.head && json.head.vars && json.head.vars.length){
@@ -222,7 +233,7 @@
 								self.prepareContextStack({sparqlid:sparqlid, predicates: [], type:'allPredicate', status:'zeroresults'})
 							}
 						}
-						if(variable.indexOf('object') > -1){
+						else if(variable.indexOf('object') > -1){
 							var sparqlid = variable.split('object')[1];// id to determine who made this sparql call
 							if(json.results.bindings && json.results.bindings.length){
 								var res = json.results.bindings;
@@ -235,8 +246,8 @@
 							}
 						}
 						else{
-							console.log('0 results from sparql');
-							self.prepareContextStack({sparqlid:sparqlid, obj:{}, type:'object', status:'zeroresults'})
+							console.log('no variable matched , in sparql results');
+							// self.prepareContextStack({sparqlid:sparqlid, obj:{}, type:'object', status:'zeroresults'})
 						}
 						
 					}
@@ -296,14 +307,42 @@
 				me.queryEndpoint(qu);
 			}
 
-			this.getContentForCard = function(s, types){// s must be dbr
-				s = '<'+s+'>';
-				p = '<'+p+'>';
-				o = '?object'+id;
-				var qu = 'SELECT DISTINCT ?object'+id+' WHERE {'+s+' '+p+' '+o+'. FILTER(!isLiteral('+o+') || lang('+o+') = "" || langMatches(lang('+o+'), "EN")) } LIMIT 50';
+			this.getAllEnglishPredicateForClass = function(classuri, id){
+				c = '<'+classuri+'>';
+				var qu = 'select distinct ?allPredicateForClass'+id+' where { '+
+						'?instance a '+c+' . '+
+						'?instance  ?allPredicateForClass'+id+'  ?object . '+
+				 		'} limit 600';
+				// var qu = 'SELECT DISTINCT ?allPredicateForClass'+id+' WHERE {?s a '+ c +' .  ?s  ?allPredicateForClass'+id+' ?o .} LIMIT 200';
 				console.log(qu);
-				me.queryEndpoint(qu);	
+				me.queryEndpoint(qu);
+			};
+			this.getClassObjects = function(OC, OP, o, id){
+				OC = 'dbo:'+OC;
+				OP = 'dbo:'+OP;
+				o = 'dbr:'+o;
+				var qu = 'PREFIX owl: <http://www.w3.org/2002/07/owl#>\
+							PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
+							PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
+							PREFIX dbr: <http://dbpedia.org/resource/>\
+							PREFIX dbo: <http://dbpedia.org/ontology/>\
+							PREFIX dbpprop: <http://dbpedia.org/property/>'+
+								'SELECT DISTINCT ?classObject'+id+' WHERE {\
+	  								?classObject'+id+' a '+OC+'.\
+	  								?classObject'+id+' '+OP+' '+o+'.\
+								} LIMIT 13';
+				console.log(qu);
+				me.queryEndpoint(qu);
 			}
+
+			// this.getContentForCard = function(s, types){// s must be dbr
+			// 	s = '<'+s+'>';
+			// 	p = '<'+p+'>';
+			// 	o = '?object'+id;
+			// 	var qu = 'SELECT DISTINCT ?object'+id+' WHERE {'+s+' '+p+' '+o+'. FILTER(!isLiteral('+o+') || lang('+o+') = "" || langMatches(lang('+o+'), "EN")) } LIMIT 50';
+			// 	console.log(qu);
+			// 	me.queryEndpoint(qu);	
+			// }
 
 			return this;
 		}
@@ -381,7 +420,7 @@
 		// 	self.context.predicates = predicatesUri;
 		// 	for (var i = 0; i < predicateNameArray.length; i++) {
 		// 		var name = predicateNameArray[i];
-		// 		self.context.predicateSearchString+= self.searchDelim + i + self.searchIdDelim + name + self.searchDelim;
+		// 		self.co ntext.predicateSearchString+= self.searchDelim + i + self.searchIdDelim + name + self.searchDelim;
 		// 	}
 		// };
 				
@@ -705,6 +744,112 @@
 			},
 		}
 
+		this.classContextStack = [];
+		this.rootTags = '';
+		this.classSuggestionsHtml = '';
+		this.currentSuggestedClass = null;
+
+		this.predicateSuggestionsHtml = '';
+		this.currentSuggestedPredicate = null;
+		this.prepareClassContextStack = function(param){
+
+			if(!param){
+				console.log('preparing class context');
+				var firstSentence = self.analysedSentences[0];
+				var OC = self.currentSuggestedClass;
+				var CCS = self.classContextStack;
+				if(OC){
+					var dbo = 'http://dbpedia.org/ontology/';
+					// sparql.getAllEnglishPredicateForClass(dbo+OC, CCS[0].sparqlid);
+					self.suggestPredicate(firstSentence.tokens[2].raw);
+
+					OP = self.currentSuggestedPredicate;
+					if(OP){
+						var lastTag = _.last(firstSentence.tags);
+						if(firstSentence.tokens.length > 3 && lastTag == '.'){
+
+							var and00 = self.andSplits[0][0];// all scientist born in London
+							var _tok = and00.split(' ');
+							var o = _tok.slice(2, _tok.length).join('_');// _ for dbpedia resource uri
+							CCS[0].sparqlid = Date.now().toString(36);
+							console.log('doing a sparql with OC, OP, o', OC, OP, o);
+							sparql.getClassObjects(OC, OP, o, CCS[0].sparqlid);
+						}
+					}
+				}
+			}
+			else{
+
+			}
+		}
+		this.suggestPredicate = function(str){
+			self.predicateSuggestionsHtml = '';
+			self.currentSuggestedPredicate = null;
+
+			var predicates = ontology.getMatchedProperties(str);
+			for (var i = 0; i < predicates.length; i++) {
+				var p = predicates[i];
+				if(!self.currentSuggestedPredicate  &&  str.length && (p[0] == str[0].toLowerCase())){// str could be ''
+					self.currentSuggestedPredicate = p;
+					break;
+				}
+			}
+			// if first char didn't match selecet the first class
+			if(self.currentSuggestedPredicate);
+			else if(predicates.length) self.currentSuggestedPredicate = predicates[0];
+
+			for (var i = 0; i < predicates.length; i++) {
+				var p = predicates[i];
+				var chref = 'http://dbpedia.org/ontology/'+p
+				var chtml = '<a data-class=\'true\' style=\'color:inherit;\' href=\''+chref+'\' target=\'_blank\' title=\''+chref+'\'>'+p+'</a>';
+				if(self.currentSuggestedPredicate === p){
+					chtml = chtml.replace('color:inherit', 'color:forestgreen');
+					self.predicateSuggestionsHtml = chtml +'&nbsp; '+ self.predicateSuggestionsHtml;
+				}
+				else{
+					self.predicateSuggestionsHtml+= '&nbsp; '+chtml;
+				}
+					
+			}
+
+			self.sendPredicateSuggestion(self.predicateSuggestionsHtml);
+		}
+		this.suggestClasses = function(str){
+			self.classSuggestionsHtml = '';
+			self.currentSuggestedClass = null;
+
+			var classes = ontology.getMatchedClasses(str);//'Person', 'Animal', 'Aircraft'
+			for (var i = 0; i < classes.length; i++) {
+				var c = classes[i];
+				if(!self.currentSuggestedClass  &&  str.length && (c[0] == str[0].toLowerCase())){// str could be ''
+					// matched forst character // 'scie' will match 'Scientist' and not 'spcialScientificInterest'
+					self.currentSuggestedClass = c;
+					break;
+				}
+			}
+
+			// if first char didn't match selecet the first class
+			if(self.currentSuggestedClass);
+			else if(classes.length) self.currentSuggestedClass = classes[0];
+
+
+			for (var i = 0; i < classes.length; i++) {
+				var c = classes[i];
+				var chref = 'http://dbpedia.org/ontology/'+c
+				var chtml = '<a data-class=\'true\' style=\'color:inherit;\' href=\''+chref+'\' target=\'_blank\' title=\''+chref+'\'>'+c+'</a>';
+				if(self.currentSuggestedClass === c){
+					chtml = chtml.replace('color:inherit', 'color:forestgreen');
+					self.classSuggestionsHtml = chtml +'&nbsp; '+ self.classSuggestionsHtml;
+				}
+				else{
+					self.classSuggestionsHtml+= '&nbsp; '+chtml;
+				}
+					
+			}
+
+			self.sendClassSuggestion(self.classSuggestionsHtml);
+		}
+
 		this.getDbpediaUrl = function(wikiTitleOrUrl) {
 			var url = wikiTitleOrUrl;
 			if (url.indexOf('wikipedia')!=-1) {
@@ -736,56 +881,11 @@
 		this.maxSparqlQuery = 10;
 		this.noOfSparqlQueryMade = 0;
 		var countLoop = 0;
-		this.sfind = function(st,str){
-			ss = st.each();
-			for(var i =0; i < ss.length; i++){
-				if(!ss[i]) continue;
-				var val = ss[i].uri? ss[i].uri: ss[i].value;
-				if(val.indexOf(str) > -1){
-					var statement = st.statementsMatching(ss[i], undefined , undefined);
-					console.log('subject',i, statement);
-				}; 
-				ps = st.each(ss[i]); 
-				for(var j = 0; j < ps.length; j++){
-					if(!ps[j]) continue;
-					var val = ps[j].uri? ps[j].uri: ps[j].value;
-					if(val.indexOf(str) > -1){
-						var statement = st.statementsMatching(ss[i], ps[j], undefined);
-						console.log('predicate', i, j, statement);
-					}
-				}
-			}
-		};
-		this.sany = function(st,str, pos){
-			ss = st.each();
-			for(var i = 0; i < ss.length; i++){
-				if(!ss[i]) continue;
-				var val = ss[i].uri? ss[i].uri: ss[i].value;
-				if(val.indexOf(str) > -1 && pos == 1){
-					var statement = st.statementsMatching(ss[i], undefined , undefined);
-					console.log('subject',i);
-					return statement;
-				}; 
-				ps = st.each(ss[i]); 
-				if(i == 2){
-					for(var j = 0; j < ps.length; j++){
-						if(!ps[j]) continue;
-						var val = ps[j].uri? ps[j].uri: ps[j].value;
-						if(val.indexOf(str) > -1){
-							var statement = st.statementsMatching(ss[i], ps[j], undefined);
-							console.log('predicate', i, j);
-							return statement;
-						}
-					}
-				}
-					
-			}
-		};
 
 		this.prepareContextStack = function(param){
 			countLoop++;
 
-			for (var i = 0; i < self.tokenStrings.length; i++) {
+			for (var i = 0; i < self.contextStack.length; i++) {
 				if(self.contextStack[i].built)continue;// stack already filled previously
 				
 				var tokenStr = self.tokenStrings[i];
@@ -822,7 +922,7 @@
 						// qsearch.getDuckDuckGoSuggestions(question, term_id);
 						// qsearch.getDbpediaLookupSuggestions(question, term_id);
 						
-						return;// important, as query are async . this function will be called again when data is available 
+						if(countLoop < 3)return;// important, as query are async . this function will be called again when data is available 
 					}
 				}
 				else{
@@ -1102,19 +1202,63 @@
 			// question api services
 			// and wait for them to respond
 			
-			if(question.length > 3) {// no special meaning
-				self.tokenStrings = [];
-				var analysedSentences = compendium.analyse(question);
+			if(question.length > 2) {// this makes sure that , analysis is always done
 				
-				self.tokenChainIndex = analysedSentences.length-1;
-				for (var i = 0; i < analysedSentences.length; i++) {
-					var tok = analysedSentences[i].raw;
+
+
+
+				self.tokenStrings = [];
+				// self.spaceTokens = question.replace(/\s+/g, " ").split(" ");
+				self.analysedSentences = compendium.analyse(question);
+				var analyseSs = self.analysedSentences;
+
+				for (var i = 0; i < analyseSs.length; i++) {
+					var tok = analyseSs[i].raw;
 					self.tokenStrings.push(tok.replace(/[\.?]/, ''));
 				}
 				self.rootToken = tokenStrings[0];// @asume length is > 1
-				var lastToken = tokenStrings[self.tokenChainIndex];
+				var lastToken = tokenStrings[analyseSs.length-1];
 
 				var termended = question.match(/[\.?]+[\s]*$/);// compendiun will take only valid sentences ; but we need full stops and ? marks to say that it ended
+				var spaceatend = question.match(/\s$/);
+
+				self.rootTags = analyseSs[0].tags.join(' ');
+
+				var dotSplits = question.split('.');// ['all scientist who have birthplace London and went to Oxford or Cambridge', '']
+				self.andSplits = dotSplits[0].split(' and ');
+				for (var i = 0; i < self.andSplits.length; i++) {
+					self.andSplits[i] = self.andSplits[i].split(' or ');
+				}
+
+				console.log(self.andSplits);
+
+				if(self.rootTags.match(/^DT/)){// all
+					fS = analyseSs[0];
+
+					if(fS.tokens.length>1){
+						self.suggestClasses(fS.tokens[1].raw);
+						if(fS.tokens.length>2){// all scientist knownFor
+							self.classContextStack = [{}];
+							self.prepareClassContextStack();
+						}
+					}
+						
+					
+					// if(self.rootTags.match(/^DT\sNN[PS]?/)){// all scientist
+					// 	if(self.rootTags.match(/^DT\sNN[PS]?\sWP/)){// all scientist who
+					// 	}
+					// }
+					// else{// suggest classes
+
+					// }
+
+
+					console.log(self.rootTags);
+					return;
+				}
+
+
+
 				// note that this will only match for last sentence
 				if(termended) tokenStrings.push('shdkhskdhsk');// this will search for all matches for the next possible predicates
 				
@@ -1157,11 +1301,19 @@
 			sendMSG_to_tab_byId({type:'SW:ANSWER_FROM_BACK',  msg:{answers:answers, uiid:uiid}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
 			console.log('answer sent');
 
-		}
+		};
 		this.sendHiddenwebAnsewersFactbites = function(answers){
 			sendMSG_to_tab_byId({type:'SW:HIDDEN_WEB_ANSWERS_FACTBITES',  msg:{answers:answers}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
-		}
-			
+		};
+
+		this.sendClassSuggestion = function(classSuggestionsHtml){
+			var answers = [{desc:classSuggestionsHtml}];
+			sendMSG_to_tab_byId({type:'SW:CLASS_SUGGESTIONS',  msg:{answers: answers}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
+		};
+		this.sendPredicateSuggestion = function(predicateSuggestionsHtml){
+			var answers = [{desc:predicateSuggestionsHtml}];
+			sendMSG_to_tab_byId({type:'SW:PREDICATE_SUGGESTIONS',  msg:{answers: answers}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
+		};
 
 		this.fastStringSearch = function(source, term){
 			var rx = new RegExp('"([^"]*'+term+'[^"]*)"','gi');
@@ -1171,7 +1323,7 @@
 				results.push(result[1]);
 				// console.log('match: '+ result[1]);
 			    i += 1;
-			    if (i >= 50)break;
+			    if (i >= 25)break;
 			}
 			return {results:results, count:i};
 		}

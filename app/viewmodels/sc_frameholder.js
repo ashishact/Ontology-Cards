@@ -11,7 +11,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
         $commandForm = null;// focus element to focus and get cmd value
         $commandInput = null;
         $commandSuggestions = null;
-
+        this.commandInputVal = '';
         this.commandSuggestions = ko.observableArray([]);
 
         this.frameviews_to_update_when_tab_focused = [];//fv_key1, fv_key2, //when this tab is focused these frameview should be updated, because they have changed somewhere
@@ -489,6 +489,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             },
             remove_all_cards: function(FM){
                 FM.actions.remove_all_cards();
+
             },
             copy_card: function(FM, sel_card){
                 // if(sel_card && sel_card.id){
@@ -826,6 +827,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
 
             var exploring = FM.frameview.exploring;
             var command_str = $commandInput.val();
+            self.commandInputVal = command_str;// for global use
             state.dot = (command_str.match(/\./g) || []).length;
 
             // command_str = command_str.replace('.','');
@@ -1017,7 +1019,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         // if(!commit) self.frameActions.add_command({title:'Explore', desc:cmd.slice(1, cmd.length).join(" ")});
                         // else interpreter.explore(cmd.slice(1, cmd.length).join(" "));
                         if(!commit){
-                            if(!interpreter.queryAnswers.length) self.frameActions.add_command({title:'Explore', desc:cmd.slice(1, cmd.length).join(" ")});
+                            if(!interpreter.queryAnswers.length) self.frameActions.add_command({title:'Explore', desc:cmd.slice(1, cmd.length).join(" ")+ '  cmd:explore'});
                             interpreter.explore(cmd.slice(1, cmd.length).join(" "));
                         } 
                         else{
@@ -1066,7 +1068,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         var match = command_str.toLowerCase().match(/sele?c?t?(\d+)\.?(\d+)?/);
                         if(match && match.length>1){
                             ind = parseInt(match[1])-1;
-                            if(ind < FM.cards().length)state.actions.select_this_card(state, FM.cards()[ind]);
+                            if(ind < FM.cards().length){
+                                var _card = FM.cards()[ind];
+                                state.actions.select_this_card(state, _card);
+                                FM.actions.show_card_hint(_card, 'Selected');
+                            }
                         }
                         if(FM.show_all_card_label())FM.show_all_card_label(false);
                     }
@@ -1200,6 +1206,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         self.emit_valid_commands_changed();
                     }
                         
+                }
+
+                else if(request.type === 'SW:CLASS_SUGGESTIONS' || request.type === 'SW:PREDICATE_SUGGESTIONS'){
+                    if(request.msg.answers.length){
+                        interpreter.queryAnswers = request.msg.answers;
+                        self.emit_valid_commands_changed();
+                    }
                 }
 
                 ////*****************************************************
@@ -1375,7 +1388,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             // self.commandSuggestions(self.commands);
             
             if(interpreter.filteredCardTitles.length)self.commandSuggestions(interpreter.filteredCardTitles);
-            else{
+            else if(interpreter.queryAnswers.length){
+                if(_.last(interpreter.queryAnswers).type != 'CIV'){// Command Input Value
+                    interpreter.queryAnswers.push({desc:'\"'+self.commandInputVal+'\"', type:'CIV'})
+                }
+                    
                 self.commandSuggestions(interpreter.queryAnswers);  
                 // self.commandSuggestions().splice(nos, self.commandSuggestions().length);
             }
@@ -1413,6 +1430,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             var d_pos = {x:(self.previousCardPosSize.x+self.previousCardPosSize.w)%12, y:0};//to be used next time when a card is being used
                             //12 is horizontal unit size of the grid
                             // if that is changed it also has to be changed
+            if(d_pos.x + d_size.w > 12) d_pos.x = 0;// 
+            if(self.currentFrame.frameModel.frameview.ids.length === 0) d_pos.x = 0;
+
             self.updatedPreviousCardPosSize(d_pos.x, d_pos.y, d_size.w, d_size.h);//save the current setting to be used for later
 
             return d_pos;
@@ -1461,18 +1481,17 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 FM.actions.load_cards_from_store_to_frameview([data.card_id]);
             }
 
-            if(FM.frameview.exploring){
-                if(data.iscontext && data.id > -1){// context selectable from background
-                    interpreter.changeContextIndex(data.id);
-                }
-
-                var $t = $(event.target);
-                if($t.attr('data-predicate') === 'true'){
-                    $commandInput.val($commandInput.val()+ ' ' +$t.text());
-                    self.searchSubmit(null);
-                }
-
-                    
+            
+            // if(FM.frameview.exploring){
+            // }
+            // will hapen when not exploring with cmd:explore
+            if(data.iscontext && data.id > -1){// context selectable from background
+                interpreter.changeContextIndex(data.id);
+            }
+            var $t = $(event.target);
+            if($t.attr('data-predicate') === 'true'){
+                $commandInput.val($commandInput.val().replace(/\.(?=[^.]*$)\s+.*$/, '. '+$t.text()));
+                self.searchSubmit(null);
             }
 
         }

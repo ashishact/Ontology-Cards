@@ -393,6 +393,7 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi'],  function
 
 		this.explore = function(query){
 			if(self.last_query_str === query)return;
+			if(matchIndexOf('exit', query) || matchIndexOf('exit', query)) return;
 
 			clearTimeout(self.keyUpTimeOutVar);
 			var timeOutFunction = function(){
@@ -517,7 +518,9 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi'],  function
 			}
 					
 		}
-			
+		var matchIndexOf = function(full_string , sub_string){
+			if(full_string.indexOf(sub_string) === 0) return true;
+		}
 		this.cardTitleSearchStringSource = '';
 		this.searchDelim = '"';
 		this.searchIdDelim = '~';

@@ -61,3 +61,36 @@
 		        };
 		    }
 	})()
+
+
+
+	Questions List = [
+	"When was Mozart born?",
+	" What was the monetary value of the Nobel Peace Prize in 1989",
+	"Who sells the most hybrid cars?",
+	"Which president went to war with Mexico? ",
+	" When was the internal combustion engine invented?"
+	]
+
+	Keyword Selection Algorithm
+	1. Select all non-stopwords in quotations
+	2. Select all NNP words in recognized named entities
+	3. Select all complex nominals with their adjectival modifiers
+	4. Select all other complex nominals
+	5. Select all nouns with adjectival modifiers
+	6. Select all other nouns
+	7. Select all verbs
+	8. Select the answer type word 
+
+	Who questions can have organizations as answers
+		Who sells the most hybrid cars?
+	Which questions can have people as answers
+		Which president went to war with Mexico? 
+
+
+	// this will follow all sameAs link to get the sesults
+	// preety roboust
+	select ?birthDate where { 
+	  ?x owl:sameAs? dbpedia:Ashok_Gehlot .
+	  ?x dbpedia-owl:birthDate ?birthDate .
+	}

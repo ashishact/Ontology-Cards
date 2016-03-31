@@ -271,9 +271,21 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
                         quote = json.contents.quotes[0];
                         self.bind_data.text("<div style='text-align:center;'>"+quote.quote + '<br><div></div> <div style="text-decoration:overline;">'+ quote.author+"</div></div>");
                     }
-                    else return;
                 })                
             }
+            // if(__card.card_data.card_content.text){
+            //     var match = __card.card_data.card_content.title.toLowerCase().match(/{stu}(http.*)/);
+            //     if(match){
+            //         console.log(__card.card_data.card_content.text);
+            //         $.getJSON('http://www.stumbleupon.com/services/1.01/badge.getinfo?url='+match[1], function(json){
+            //             console.log(json);
+            //             if(json.result && json.result.title){
+            //                 self.bind_data.title(json.result.title);
+            //                 self.bind_data.text(json.result.title);
+            //             }
+            //         })                
+            //     }
+            // }
         };
 
         this.clickedOnElement = function(data, event){
