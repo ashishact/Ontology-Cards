@@ -256,18 +256,6 @@
 								self.prepareClassContextStack({sparqlid:sparqlid, classObjects:classObjects, type:'classObject'});
 							}
 						}
-						else if(variable.indexOf('predicatesForClass') > -1){
-							var sparqlid = variable.split('predicatesForClass')[1];
-							if(json.results.bindings && json.results.bindings.length){
-								var res = json.results.bindings;
-								var predicatesForClass = [];
-								for (var i = 0; i < res.length; i++) {
-									predicatesForClass.push(res[i][variable]);
-								}
-								console.log('calling back with sparql results with predicatesForClass');
-								self.prepareClassContextStack({sparqlid:sparqlid, predicatesForClass:predicatesForClass, type:'predicatesForClass'});
-							}
-						}
 						else{
 							console.log('no variable matched , in sparql results');
 							self.prepareContextStack({sparqlid:sparqlid, obj:{}, type:'object', status:'zeroresults'})
@@ -330,25 +318,25 @@
 				me.queryEndpoint(qu);
 			}
 
-			this.getAllEnglishPredicateForClass = function(classuri, id){
+			// this.getAllEnglishPredicateForClass = function(classuri, id){
 
-				var qu = 'PREFIX owl: <http://www.w3.org/2002/07/owl#>'+
-							'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>'+
-							'PREFIX dbo: <http://dbpedia.org/ontology/>'+
-							'PREFIX dbpprop: <http://dbpedia.org/property/>'+
-								'SELECT DISTINCT ?predicatesForClass'+id+' WHERE {'+
-	  								'?predicatesForClass'+id+' rdfs:domain  '+classuri+' .'+
-								'} LIMIT 100';
+			// 	var qu = 'PREFIX owl: <http://www.w3.org/2002/07/owl#>'+
+			// 				'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>'+
+			// 				'PREFIX dbo: <http://dbpedia.org/ontology/>'+
+			// 				'PREFIX dbpprop: <http://dbpedia.org/property/>'+
+			// 					'SELECT DISTINCT ?predicatesForClass'+id+' WHERE {'+
+	  // 								'?predicatesForClass'+id+' rdfs:domain  '+classuri+' .'+
+			// 					'} LIMIT 100';
 
-				console.log(qu);
-				me.queryEndpoint(qu);
+			// 	console.log(qu);
+			// 	me.queryEndpoint(qu);
 
-				// var qu = 'select distinct ?allPredicateForClass'+id+' where { '+
-				// 		'?instance a '+c+' . '+
-				// 		'?instance  ?allPredicateForClass'+id+'  ?object . '+
-				//  		'} limit 600';
-				// var qu = 'SELECT DISTINCT ?allPredicateForClass'+id+' WHERE {?s a '+ c +' .  ?s  ?allPredicateForClass'+id+' ?o .} LIMIT 200';
-			};
+			// 	// var qu = 'select distinct ?allPredicateForClass'+id+' where { '+
+			// 	// 		'?instance a '+c+' . '+
+			// 	// 		'?instance  ?allPredicateForClass'+id+'  ?object . '+
+			// 	//  		'} limit 600';
+			// 	// var qu = 'SELECT DISTINCT ?allPredicateForClass'+id+' WHERE {?s a '+ c +' .  ?s  ?allPredicateForClass'+id+' ?o .} LIMIT 200';
+			// };
 			this.getClassObjects = function(OC, OP, o, id){
 				var qu = 'PREFIX owl: <http://www.w3.org/2002/07/owl#>\
 							PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
@@ -828,10 +816,10 @@
 		this.classContextStack = [];
 		this.rootTags = '';
 		this.classSuggestionsHtml = '';
-		this.currentSuggestedClass = null;
+		this.currentSuggestedClass = {}
 
 		this.predicateSuggestionsHtml = '';
-		this.currentSuggestedPredicate = null;
+		this.currentSuggestedPredicate = {};
 		this.prepareClassContextStack = function(param){
 
 			var firstSentence = self.analysedSentences[0];
@@ -840,21 +828,11 @@
 			var fullstop = (_.last(firstSentence.tags) === '.');
 			if(!param){
 				console.log('preparing class context, no param');
-				if(OC){
-
-					var predicatesForClass = tripplestore.getValues(OC, self.ALL_PREDICATES_URI);
-					if(!predicatesForClass.length){
-						CCS[0].sparqlid = Date.now().toString(36);
-						sparql.getAllEnglishPredicateForClass(OC, CCS[0].sparqlid);
-						return;
-					}
-					else{
-						console.log(predicatesForClass);
-					}
+				if(OC.iri){
 
 					if(firstSentence.tokens.length === 3) self.suggestPredicate(firstSentence.tokens[2].raw);;// don\'t suggest predicate if the tokens are beyond  predicate stage'
 					OP = self.currentSuggestedPredicate;
-					if(OP){
+					if(OP.iri){
 						var lastTag = _.last(firstSentence.tags);
 						if(firstSentence.tokens.length > 3 && lastTag == '.'){
 
@@ -862,11 +840,11 @@
 							var _tok = and00.split(' ');
 							var o = _tok.slice(3, _tok.length).join('_');// _ for dbpedia resource uri
 							o[0] = o[0].toUpperCase();
-							o = 'dbr'+o;
+							o = 'dbr:'+o;
 
 							CCS[0].sparqlid = Date.now().toString(36);
-							console.log('doing a sparql with OC, OP, o', OC, OP, o);
-							sparql.getClassObjects(OC, OP, o, CCS[0].sparqlid);
+							console.log('doing a sparql with OC, OP, o', OC.iri, OP.iri, o);
+							sparql.getClassObjects(OC.iri, OP.iri, o, CCS[0].sparqlid);
 							return;
 						}
 					}
@@ -874,19 +852,8 @@
 			}
 			else{
 				console.log('param in classObjects');
-				if(param.type === 'predicatesForClass'){
-					if(CCS[0].sparqlid === param.sparqlid){
-						delete CCS[0].sparqlid;
-						console.log(param.predicatesForClass);
 
-						var OC = self.currentSuggestedClass;
-						if(OC){
-							tripplestore.set(OC, self.ALL_PREDICATES_URI, param.predicatesForClass);
-							self.prepareClassContextStack();
-						}					
-					}
-				}
-				else if(param.type === 'classObject'){
+				if(param.type === 'classObject'){
 					if(CCS[0].sparqlid === param.sparqlid){
 						delete CCS[0].sparqlid;
 						if(param.classObjects){
@@ -923,25 +890,39 @@
 		}
 		this.suggestPredicate = function(str){
 			self.predicateSuggestionsHtml = '';
-			self.currentSuggestedPredicate = null;
+			self.currentSuggestedPredicate = {}
 
-			var predicates = ontology.getMatchedProperties(str);
+			var OC = self.currentSuggestedClass
+
+			var predicates = ontology.getMatchedProperties(str, OC.key);
 			for (var i = 0; i < predicates.length; i++) {
-				var p = predicates[i];
-				if(!self.currentSuggestedPredicate  &&  str.length && (p[0] == str[0].toLowerCase())){// str could be ''
-					self.currentSuggestedPredicate = 'dbo:'+p;
+				var _tok = predicates[i].split(ontology.searchIdDelim);//'1.0.23~dbo:almaMater~1.0.2' => domain~pedicate~range
+				var d = _tok[0]; //domain
+				var p = _tok[1]; //predicate
+				var r = _tok[2]; //range
+				var l = p.substr(4, p.length).toLowerCase(); //label
+
+				if(!self.currentSuggestedPredicate.iri  &&  str.length && (l[0] == str[0].toLowerCase())){// str could be ''
+					self.currentSuggestedPredicate.iri = p;
+					self.currentSuggestedPredicate.dkey = d;
+					self.currentSuggestedPredicate.rkey = r;
 					break;
 				}
 			}
 			// if first char didn't match selecet the first class
-			if(self.currentSuggestedPredicate);
-			else if(predicates.length) self.currentSuggestedPredicate = 'dbo:'+predicates[0];
+			if(self.currentSuggestedPredicate.iri);
+			else if(predicates.length){
+				self.currentSuggestedPredicate.dkey = predicates[0].split(ontology.searchIdDelim)[0];
+				self.currentSuggestedPredicate.iri = predicates[0].split(ontology.searchIdDelim)[1];
+				self.currentSuggestedPredicate.rkey = predicates[0].split(ontology.searchIdDelim)[2];
+			}
 
 			for (var i = 0; i < predicates.length; i++) {
-				var p = predicates[i];
-				var chref = 'http://dbpedia.org/ontology/'+p
-				var chtml = '<a data-class=\'true\' style=\'color:inherit;\' href=\''+chref+'\' target=\'_blank\' title=\''+chref+'\'>'+p+'</a>';
-				if(self.currentSuggestedPredicate === 'dbo:'+p){
+				var p = predicates[i].split(ontology.searchIdDelim)[1];
+				var l = p.substr(4, p.length);
+				var chref = 'http://dbpedia.org/ontology/'+l
+				var chtml = '<a data-class=\'true\' style=\'color:inherit;\' href=\''+chref+'\' target=\'_blank\' title=\''+chref+'\'>'+l+'</a>';
+				if(self.currentSuggestedPredicate.iri === p){
 					chtml = chtml.replace('color:inherit', 'color:forestgreen');
 					self.predicateSuggestionsHtml = chtml +'&nbsp; '+ self.predicateSuggestionsHtml;
 				}
@@ -955,28 +936,36 @@
 		}
 		this.suggestClasses = function(str){
 			self.classSuggestionsHtml = '';
-			self.currentSuggestedClass = null;
+			self.currentSuggestedClass = {}
 
-			var classes = ontology.getMatchedClasses(str);//'Person', 'Animal', 'Aircraft'
+			var classes = ontology.getMatchedClasses(str);
 			for (var i = 0; i < classes.length; i++) {
-				var c = classes[i];
-				if(!self.currentSuggestedClass  &&  str.length && (c[0].toLowerCase() == str[0].toLowerCase())){// str could be ''
+				var _tok = classes[i].split(ontology.searchIdDelim);
+				var k = _tok[0];
+				var c = _tok[1];
+				var label = c.substr(4, c.length).toLowerCase();
+				if(!self.currentSuggestedClass.iri  &&  str.length && (label[0] == str[0].toLowerCase())){// str could be ''
 					// matched forst character // 'scie' will match 'Scientist' and not 'spcialScientificInterest'
-					self.currentSuggestedClass = 'dbo:'+c;
+					self.currentSuggestedClass.iri = c;
+					self.currentSuggestedClass.key = k;
 					break;
 				}
 			}
 
 			// if first char didn't match selecet the first class
-			if(self.currentSuggestedClass);
-			else if(classes.length) self.currentSuggestedClass = 'dbo:'+classes[0];
+			if(self.currentSuggestedClass.iri);
+			else if(classes.length){
+				self.currentSuggestedClass.key = classes[0].split(ontology.searchIdDelim)[0];
+				self.currentSuggestedClass.iri = classes[0].split(ontology.searchIdDelim)[1];
+			}
 
 
 			for (var i = 0; i < classes.length; i++) {
-				var c = classes[i];
-				var chref = 'http://dbpedia.org/ontology/'+c
-				var chtml = '<a data-class=\'true\' style=\'color:inherit;\' href=\''+chref+'\' target=\'_blank\' title=\''+chref+'\'>'+c+'</a>';
-				if(self.currentSuggestedClass === 'dbo:'+c){
+				var c = classes[i].split(ontology.searchIdDelim)[1];
+				var l = c.substr(4, c.length);
+				var chref = 'http://dbpedia.org/ontology/'+ l
+				var chtml = '<a data-class=\'true\' style=\'color:inherit;\' href=\''+chref+'\' target=\'_blank\' title=\''+chref+'\'>'+l+'</a>';
+				if(self.currentSuggestedClass.iri === c){
 					chtml = chtml.replace('color:inherit', 'color:forestgreen');
 					self.classSuggestionsHtml = chtml +'&nbsp; '+ self.classSuggestionsHtml;
 				}

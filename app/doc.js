@@ -340,3 +340,26 @@
  			}
  		}
  	}
+
+
+ 	//Multiple domain conflict
+ 	Athlete,_CareerStation
+ 	Installment
+ 	MilitaryConflict,_AdministrativeRegion
+ 	Person,_PersonalEvent
+ 	Parish,_Deanery
+ 	Athlete,_CareerStation
+ 	Person,_PersonalEvent
+ 	BelgiumSettlement
+ 	BelgiumSettlement
+ 	BelgiumSettlement
+ 	Athlete,_CareerStation
+ 	Person,_PersonalEvent
+ 	Athlete,_CareerStation
+ 	BelgiumSettlement
+ 	Athlete,_CareerStation
+ 	BelgiumSettlement
+ 	TelevisionShow,_FictionalCharacter
+ 	Diocese,_Parish
+ 	BelgiumSettlement
+ 	Monastry
