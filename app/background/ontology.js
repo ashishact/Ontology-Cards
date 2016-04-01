@@ -18296,17 +18296,17 @@ var createOntology = function(){
 					dotsplit.pop();
 				}
 				idselector = '('+idselectors.join('|')+')';
+				console.log(idselector);
 			}
 			else console.log(domain);
 		}
-
-		var rx = new RegExp('"('+domain+'~dbo:[^"]*'+term+'[^"]*)"','gi');
+		var rx = new RegExp('"('+idselector+'~dbo:[^"]*'+term+'[^"]*)"','gi');
 		console.log(rx);
-
 		var results = [];
 		var i = 0;
 		while (result = rx.exec(self.dboPropertyString)) {
 			results.push(result[1]);
+			console.log(result);
 			i+=1;
 		    if (i >= 50)break;
 		}
