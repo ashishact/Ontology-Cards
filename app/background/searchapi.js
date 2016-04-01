@@ -66,6 +66,21 @@ var SEARCH_API = function(){
 	    });
 
 	};
+	this.wikipedia_shortdescriptions_and_thumbnails = function(titles, a_id, callback){
+		var limit = titles.length;
+		titles = titles.join('|');
+		var _url = 'https://en.wikipedia.org/w/api.php?action=query&format=json&version=2&titles='+titles+'&prop=pageimages%7Cpageterms&piprop=thumbnail&pithumbsize=50&pilimit='+limit;// this limits is required to get all images
+		$.getJSON(_url ,function(data) {
+		    if(callback){
+		        callback(data, a_id);
+		    }
+		    else{
+		        $.each(data.query.pages, function(i, item) {
+		            console.log(item);
+		        });
+		    }
+		});
+	}
 	this.searchDbpediaLookup = function(query, q_id, callback){
 		if(query.length){
 		    var prefix_url = 'http://lookup.dbpedia.org/api/search/PrefixSearch';

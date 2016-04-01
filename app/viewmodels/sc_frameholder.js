@@ -1215,6 +1215,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     }
                 }
 
+                else if(request.type === 'SW:CLASS_OBJECT_INSTANCES'){
+                    if(request.msg.answers.length){
+                        interpreter.queryAnswers = request.msg.answers;
+                        self.emit_valid_commands_changed();
+                    }
+                }
+
                 ////*****************************************************
                 //*****************************************************
                 

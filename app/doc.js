@@ -62,6 +62,11 @@
 		    }
 	})()
 
+	//Wikipedia get list of section
+	//https://en.wikipedia.org/w/api.php?action=parse&page=Barack_Obama&prop=sections
+	//and then get a section
+	//http://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles=Barack_Obama&rvprop=content&rvsection=15
+
 
 
 	Questions List = [
@@ -94,3 +99,83 @@
 	  ?x owl:sameAs? dbpedia:Ashok_Gehlot .
 	  ?x dbpedia-owl:birthDate ?birthDate .
 	}
+
+
+
+
+	function findanddelete(n, id){
+		delete n[id];
+
+		for (var i = 0; i < n.length; i++) {
+			findanddelete(n[i], id);
+		}
+
+		var keys = Object.keys(n);
+		for (var i = 0; i < keys.length; i++) {
+			findanddelete(n[keys[i]], id);
+		}
+		
+	}
+
+
+	function getbyid(n, id){
+		for(var i = 0; i < n.length; i++){
+			if(n[i].id == id){
+			 	return n[i];
+			}
+		}
+	}
+
+
+	function findbaseclass(cn){
+		var b = [];
+		for (var i = 0; i < cn.length; i++) {
+			var c = cn[i];
+			if(c.iri.indexOf('dbo')!=0)continue;
+			if(c.superClasses){
+				if(getbyid(cn, c.superClasses[0]).type);
+				else continue;
+			}
+			if(!c.subClasses)continue;
+			b.push(c.iri);
+		}
+		return b;
+	}		
+
+	function morethanonesuperclass(cn){
+		for (var i = 0; i < cn.length; i++) {
+			var c = cn[i];
+			if(c.superClasses && c.superClasses.length>1){
+				console.log(c.iri);
+			}
+		}
+	}
+
+	function getallsuperclasses(cn, iri){
+		for (var i = 0; i < cn.length; i++) {
+			var c = cn[i];
+			console.log('before match', c.iri);
+			if(c.iri === iri){
+				console.log(c.iri)
+				if(c.superClasses){
+					for (var i = 0; i < c.superClasses.length; i++) {
+						var sc = getbyid(cn, c.superClasses[i]);
+						getallsuperclasses(cn, sc.iri);
+					}
+				}
+			}
+		}
+	}
+
+	function createdothirarchy(pre, n, dest){
+		dest[pre] = {iri: n.name};
+		if(n.children){
+			for (var i = 0; i < n.children.length; i++) {
+				cn = n.children[i];
+				createdothirarchy(pre+'.'+i, cn, dest);
+			}
+		}
+	}
+	var dbo = {}
+	createdothirarchy('0', ontology.OntologyClassHirarchy, dbo)
+
