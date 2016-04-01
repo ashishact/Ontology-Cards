@@ -125,6 +125,13 @@
 			}
 		}
 	}
+	function getbyiri(n, iri){
+		for(var i = 0; i < n.length; i++){
+			if(n[i].iri == iri){
+			 	return n[i];
+			}
+		}
+	}
 
 
 	function findbaseclass(cn){
@@ -179,3 +186,157 @@
 	var dbo = {}
 	createdothirarchy('0', ontology.OntologyClassHirarchy, dbo)
 
+
+
+	function addcommenttoclass(dbo, n){
+		_.forIn(dbo, function(v, k){
+			var c = getbyiri(n, 'dbo:'+v.iri);
+			if(c){
+				if(c.comment && c.comment.en){
+					dbo[k]['comment'] = c.comment.en;
+				}
+			}
+			else{
+				console.log('dbo:'+v.iri +' not found');
+			}
+		})
+	}
+
+	//these classes are not there in dbpedia owl 2014 class
+		dbo:CardGame 
+		dbo:TeamSport 
+		dbo:Soccer 
+		dbo:Bank 
+		dbo:Caterer 
+		dbo:EmployersOrganisation 
+		dbo:GovernmentCabinet 
+		dbo:InternationalOrganisation 
+		dbo:ReligiousOrganisation 
+		dbo:SportsClub 
+		dbo:HockeyClub 
+		dbo:ArcherPlayer 
+		dbo:HighDiver 
+		dbo:DTMRacer 
+		dbo:WinterSportPlayer 
+		dbo:Biathlete 
+		dbo:BobsleighAthlete 
+		dbo:CrossCountrySkier 
+		dbo:NordicCombined 
+		dbo:Ski_jumper 
+		dbo:SpeedSkater 
+		dbo:MemberResistanceMovement 
+		dbo:Orphan 
+		dbo:Biologist 
+		dbo:BloodVessel 
+		dbo:Lipid 
+		dbo:Polysaccharide 
+		dbo:Engine 
+		dbo:RocketEngine 
+		dbo:MobilePhone 
+		dbo:Earthquake 
+		dbo:StormSurge 
+		dbo:AcademicConference 
+		dbo:Attack 
+		dbo:Rebellion 
+		dbo:InternationalFootballLeagueEvent 
+		dbo:MotorRace 
+		dbo:Vodka 
+		dbo:MilitaryAircraft 
+		dbo:MilitaryVehicle 
+		dbo:On-SiteTransportation 
+		dbo:ConveyorSystem 
+		dbo:Escalator 
+		dbo:MovingWalkway 
+		dbo:TrainCarriage 
+		dbo:Tram 
+		dbo:Medicine 
+		dbo:Dike 
+		dbo:RestArea 
+		dbo:ElectricalSubstation 
+		dbo:FillingStation 
+		dbo:TramStation 
+		dbo:ConcentrationCamp 
+		dbo:Mine 
+		dbo:CoalPit 
+		dbo:Beach 
+		dbo:Bay 
+		dbo:Arrondissement 
+		dbo:Canton 
+		dbo:HistoricalAreaOfAuthority 
+		dbo:Fiefdom 
+		dbo:RouteStop 
+		dbo:Cat 
+		dbo:Horse 
+		dbo:AcademicSubject 
+		dbo:CardinalDirection 
+		dbo:ArtisticGenre 
+		dbo:LiteraryGenre 
+		dbo:MathematicalConcept 
+		dbo:PhilosophicalConcept 
+		dbo:PoliticalConcept 
+		dbo:ScientificConcept 
+		dbo:Standard 
+		dbo:TheologicalConcept 
+		dbo:Article 
+		dbo:Law 
+		dbo:UndergroundJournal 
+		dbo:Quote 
+		dbo:Treaty 
+		dbo:foaf:Document 
+		dbo:cidoccrm:E4_Period 
+		dbo:d0:Activity 
+		dbo:foaf:Image 
+		dbo:foaf:Person 
+		dbo:geo:SpatialThing 
+		dbo:gml:_Feature 
+		dbo:rdf:Property 
+		dbo:skos:Concept 
+		dbo:skos:OrderedCollection 
+
+
+	//replace  domains ranges by iri
+	function replaceclasstoiri(p, c){
+		for (var i = 0; i < p.length; i++) {
+			if(p[i].domain){
+				var d = p[i].domain;
+				if(d.match(/class/)){
+					var _c = getbyid(c, d);
+					if(_c){
+						p[i].domain = _c.iri;
+					}
+					else{
+						console.log('domain '+ d + ' doesn\'t exist in classAttribute');
+					}
+				}
+			}
+			if(p[i].range){
+				var r = p[i].range;
+				if(r.match(/class/)){
+					var _c = getbyid(c, r);
+					if(_c){
+						p[i].range = _c.iri;
+					}
+					else{
+						console.log('range '+ r + ' doesn\'t exist in classAttribute');
+					}
+				}
+			}
+		}
+	}
+
+ 	function replacesubproperybyiri(p){
+ 		for (var i = 0; i < p.length; i++) {
+ 			if(p[i].subproperty && p[i].subproperty.length){
+ 				var newsubprops = [];
+ 				for (var j = 0; j < p[i].subproperty.length; j++) {
+ 					prid = p[i].subproperty[j];
+ 					var _p = getbyid(p, prid);	
+ 					if(_p && _p.iri){
+ 						newsubprops.push(_p.iri);
+ 					}
+ 				}
+ 				if(newsubprops.length)p[i].newsubproperty = newsubprops;
+ 				else console.log('@im', p[i]);
+ 			}
+ 		}
+ 	}
