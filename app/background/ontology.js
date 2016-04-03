@@ -18292,24 +18292,21 @@ var createOntology = function(){
 				var length = dotsplit.length;// array length will change on the way
 				for (var i = 0; i < length; i++) {
 					idselectors.push(dotsplit.join('\\.'));
-					console.log(dotsplit);
 					dotsplit.pop();
 				}
 				idselector = '('+idselectors.join('|')+')';
-				console.log(idselector);
 			}
 			else console.log(domain);
 		}
 		var rx = new RegExp('"('+idselector+'~dbo:[^"]*'+term+'[^"]*)"','gi');
-		console.log(rx);
 		var results = [];
 		var i = 0;
 		while (result = rx.exec(self.dboPropertyString)) {
 			results.push(result[1]);
-			console.log(result);
 			i+=1;
-		    if (i >= 50)break;
+		    if (i >= 25)break;
 		}
+		// console.log(rx, domain, results);
 		return results;
 	}
 	this.getMatchedClasses = function(term){
@@ -18319,7 +18316,7 @@ var createOntology = function(){
 		while (result = rx.exec(self.dboClassesString)) {
 			results.push(result[1]);
 			i+=1;
-		    if (i >= 50)break;
+		    if (i >= 25)break;
 		}
 		return results;
 	}

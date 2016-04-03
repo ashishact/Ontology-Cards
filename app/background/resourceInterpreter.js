@@ -159,7 +159,8 @@
 		this.tokenStrings = [];
 		this.rootToken = '';// token is a list of words here 
 		this.rootTags = ''// tags for first sentence// 'DT NN WP'
-		this.andSplits = null;
+		this.andSplits = [];
+		this.dotSplit = [];
 		//__________________________________________________
 		// => => => 				}						|
 		// => => => =>				}						|
@@ -215,7 +216,7 @@
 					if(json.head.vars.length == 1){
 						// only one variable asked
 						var variable = json.head.vars[0];
-						if(variable.indexOf('allPredicate') > -1){
+						if(variable.indexOf('allPredicate') ===0){
 							var sparqlid = variable.split('allPredicate')[1];// id to determine who made this sparql call
 							if(json.results.bindings && json.results.bindings.length){
 								var res = json.results.bindings;
@@ -232,7 +233,32 @@
 								self.prepareContextStack({sparqlid:sparqlid, predicates: [], type:'allPredicate', status:'zeroresults'})
 							}
 						}
-						else if(variable.indexOf('object') > -1){
+						else if(variable.indexOf('classInstances') ===0){
+							var sparqlid = variable.split('classInstances')[1];
+							if(json.results.bindings && json.results.bindings.length){
+								var res = json.results.bindings;
+								var classInstances = [];
+								for (var i = 0; i < res.length; i++) {
+									classInstances.push(res[i][variable]);
+								}
+								console.log('calling back with sparql results for class objects');
+								self.prepareClassContextStack({sparqlid:sparqlid, classInstances: classInstances, type:'classInstances'});
+							}
+						}
+						else if(variable.indexOf('objectSuggForClass') ===0){
+							var sparqlid = variable.split('objectSuggForClass')[1];
+							if(json.results.bindings && json.results.bindings.length){
+								var res = json.results.bindings;
+								var objectSuggForClass = [];
+								for (var i = 0; i < res.length; i++) {
+									objectSuggForClass.push(res[i][variable]);
+								}
+								console.log('calling back with sparql results for class objects');
+								self.prepareClassContextStack({sparqlid:sparqlid, objectSuggForClass:objectSuggForClass, type:'objectSuggForClass'});
+							}
+						}
+						else if(variable.indexOf('object') ===0){// this should be below objectSuggForClass 
+							//as it wil  match with object
 							var sparqlid = variable.split('object')[1];// id to determine who made this sparql call
 							if(json.results.bindings && json.results.bindings.length){
 								var res = json.results.bindings;
@@ -242,18 +268,6 @@
 								}
 								console.log('calling back with sparql results for objects');
 								self.prepareContextStack({sparqlid:sparqlid, objs:objs, type:'object'})
-							}
-						}
-						else if(variable.indexOf('classObject') > -1){
-							var sparqlid = variable.split('classObject')[1];
-							if(json.results.bindings && json.results.bindings.length){
-								var res = json.results.bindings;
-								var classObjects = [];
-								for (var i = 0; i < res.length; i++) {
-									classObjects.push(res[i][variable]);
-								}
-								console.log('calling back with sparql results for class objects');
-								self.prepareClassContextStack({sparqlid:sparqlid, classObjects:classObjects, type:'classObject'});
 							}
 						}
 						else{
@@ -318,59 +332,73 @@
 				me.queryEndpoint(qu);
 			}
 
-			// this.getAllEnglishPredicateForClass = function(classuri, id){
-
-			// 	var qu = 'PREFIX owl: <http://www.w3.org/2002/07/owl#>'+
-			// 				'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>'+
-			// 				'PREFIX dbo: <http://dbpedia.org/ontology/>'+
-			// 				'PREFIX dbpprop: <http://dbpedia.org/property/>'+
-			// 					'SELECT DISTINCT ?predicatesForClass'+id+' WHERE {'+
-	  // 								'?predicatesForClass'+id+' rdfs:domain  '+classuri+' .'+
-			// 					'} LIMIT 100';
-
-			// 	console.log(qu);
-			// 	me.queryEndpoint(qu);
-
-			// 	// var qu = 'select distinct ?allPredicateForClass'+id+' where { '+
-			// 	// 		'?instance a '+c+' . '+
-			// 	// 		'?instance  ?allPredicateForClass'+id+'  ?object . '+
-			// 	//  		'} limit 600';
-			// 	// var qu = 'SELECT DISTINCT ?allPredicateForClass'+id+' WHERE {?s a '+ c +' .  ?s  ?allPredicateForClass'+id+' ?o .} LIMIT 200';
-			// };
-			this.getClassObjects = function(OC, OP, o, id){
+	
+			this.getclassInstances = function(OC, OP, o, id){
 				var qu = 'PREFIX owl: <http://www.w3.org/2002/07/owl#>\
 							PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
 							PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
 							PREFIX dbr: <http://dbpedia.org/resource/>\
 							PREFIX dbo: <http://dbpedia.org/ontology/>\
 							PREFIX dbpprop: <http://dbpedia.org/property/>'+
-								'SELECT DISTINCT ?classObject'+id+' WHERE {\
-	  								?classObject'+id+' a '+OC+'.\
-	  								?classObject'+id+' '+OP+' '+o+'.\
-								} LIMIT 5';
+								'SELECT DISTINCT ?classInstances'+id+' WHERE {\
+	  								?classInstances'+id+' a '+OC+'.\
+	  								?classInstances'+id+' '+OP+' '+o+'.\
+								} LIMIT 13';
+				console.log(qu);
+				me.queryEndpoint(qu);
+			};
+
+			this.getObjectsGivenClassAndPredicate = function(OC, OP, id){
+				var qu = 'PREFIX owl: <http://www.w3.org/2002/07/owl#>\
+							PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
+							PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
+							PREFIX dbr: <http://dbpedia.org/resource/>\
+							PREFIX dbo: <http://dbpedia.org/ontology/>\
+							PREFIX dbpprop: <http://dbpedia.org/property/>'+
+								'SELECT DISTINCT ?objectSuggForClass'+id+' WHERE {\
+	  								?instance a '+OC+'.\
+	  								?instance ' +OP+' ?objectSuggForClass'+id+'.\
+								} LIMIT 13';
+				console.log(qu);
+				me.queryEndpoint(qu);
+			};
+
+			this.getObjectsGivenClassAndPredicateAndPartialObject = function(OC, OP, ostr, id){
+				var qu = 'PREFIX owl: <http://www.w3.org/2002/07/owl#>\
+							PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
+							PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
+							PREFIX dbr: <http://dbpedia.org/resource/>\
+							PREFIX dbo: <http://dbpedia.org/ontology/>\
+							PREFIX dbpprop: <http://dbpedia.org/property/>'+
+								'SELECT DISTINCT ?objectSuggForClass'+id+' WHERE {\
+	  								?instance a '+OC+'.\
+	  								?instance ' +OP+' ?objectSuggForClass'+id+'.\
+	  								?objectSuggForClass'+id+' rdfs:label ?label.\
+	  								FILTER regex(str(?label), \''+ostr+'\', \'i\')\
+								} LIMIT 13';
 				console.log(qu);
 				me.queryEndpoint(qu);
 			};
 
 			this.getShortDescOfObjects = function(resourceuris, id){
-				allquery = [];
-				for (var i = 0; i < resourceuris.length; i++) {
-					allquery.push(' { s dbpprop:shortDescription shortDescription'+id+' . s dbo:thumbnail thumbnail'+id+' }');
-				}
-				allquery = allquery.join(' union ');
+				// allquery = [];
+				// for (var i = 0; i < resourceuris.length; i++) {
+				// 	allquery.push(' { s dbpprop:shortDescription shortDescription'+id+' . s dbo:thumbnail thumbnail'+id+' }');
+				// }
+				// allquery = allquery.join(' union ');
 
-				var qu = 'PREFIX owl: <http://www.w3.org/2002/07/owl#>\
-							PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
-							PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
-							PREFIX dbr: <http://dbpedia.org/resource/>\
-							PREFIX dbo: <http://dbpedia.org/ontology/>\
-							PREFIX dbpprop: <http://dbpedia.org/property/>'+
-								'SELECT DISTINCT ?shortDescription'+id+' ?thumbnail'+id+' WHERE {\
-	  								?classObject'+id+' a '+OC+'.\
-	  								?classObject'+id+' '+OP+' '+o+'.\
-								} LIMIT 5';
-				console.log(qu);
-				me.queryEndpoint(qu);
+				// var qu = 'PREFIX owl: <http://www.w3.org/2002/07/owl#>\
+				// 			PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
+				// 			PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
+				// 			PREFIX dbr: <http://dbpedia.org/resource/>\
+				// 			PREFIX dbo: <http://dbpedia.org/ontology/>\
+				// 			PREFIX dbpprop: <http://dbpedia.org/property/>'+
+				// 				'SELECT DISTINCT ?shortDescription'+id+' ?thumbnail'+id+' WHERE {\
+	  	// 							?classObject'+id+' a '+OC+'.\
+	  	// 							?classObject'+id+' '+OP+' '+o+'.\
+				// 				} LIMIT 5';
+				// console.log(qu);
+				// me.queryEndpoint(qu);
 			}
 
 			// this.getContentForCard = function(s, types){// s must be dbr
@@ -477,6 +505,14 @@
 				else{
 					tripplestore.add(tr.s, tr.p, tr.o);						
 				}
+			}
+
+			var allsl = tripplestore.getSubjects().length;
+			var allpl = tripplestore.getProperties().length;
+			var allvl = tripplestore.getValues().length;
+			if(allvl > 10000 || allsl > 10000 || allpl > 10000){
+				console.log('too much cache, removing all ');
+				tripplestore.remove();
 			}
 		};
 	
@@ -656,7 +692,13 @@
 				    });
 				    self.gotNewTripplesFromPrefixSearch(tripples);
 				    self.queryAnswers[term_id] = {id:term_id, answers:answers, type: 'subject suggestions'};// answer:[NamedNode], type:'subject suggestions'
-				    self.prepareContextStack();
+				    var question_type = self.queryQuestions[term_id].type;
+				    if(question_type === 'pcc object suggestions'){
+				    	self.prepareClassContextStack();
+				    }
+				    else if(question_type === 'pc subject suggestions'){
+				    	self.prepareContextStack();
+				    }
 				}
 			},
 			gotWikipediaShortdescriptionsAndThumbnails: function(json, action_id){
@@ -813,174 +855,451 @@
 			},
 		}
 
-		this.classContextStack = [];
+		this.lastClassContextStack = null;
+		this.classContextStack = null;
 		this.rootTags = '';
 		this.classSuggestionsHtml = '';
 		this.currentSuggestedClass = {}
 
 		this.predicateSuggestionsHtml = '';
 		this.currentSuggestedPredicate = {};
+
+		this.currentObjectSuggestions = [];
 		this.prepareClassContextStack = function(param){
 
 			var firstSentence = self.analysedSentences[0];
+			var fullstop = (_.last(firstSentence.tags) === '.');
+
 			var OC = self.currentSuggestedClass;
 			var CCS = self.classContextStack;
-			var fullstop = (_.last(firstSentence.tags) === '.');
-			if(!param){
-				console.log('preparing class context, no param');
-				if(OC.iri){
 
-					if(firstSentence.tokens.length === 3) self.suggestPredicate(firstSentence.tokens[2].raw);;// don\'t suggest predicate if the tokens are beyond  predicate stage'
-					OP = self.currentSuggestedPredicate;
-					if(OP.iri){
-						var lastTag = _.last(firstSentence.tags);
-						if(firstSentence.tokens.length > 3 && lastTag == '.'){
+			for (var i = 0; i < self.andSplits.length; i++) {
+				if(i > CCS.predicates.length -1)CCS.predicates.push({});
+				if(i > CCS.objects.length -1) CCS.objects.push({});
 
-							var and00 = self.andSplits[0][0];// all scientist born in London
-							var _tok = and00.split(' ');
-							var o = _tok.slice(3, _tok.length).join('_');// _ for dbpedia resource uri
-							o[0] = o[0].toUpperCase();
-							o = 'dbr:'+o;
 
-							CCS[0].sparqlid = Date.now().toString(36);
-							console.log('doing a sparql with OC, OP, o', OC.iri, OP.iri, o);
-							sparql.getClassObjects(OC.iri, OP.iri, o, CCS[0].sparqlid);
-							return;
+				if(CCS.objects[i].built) continue;
+
+				if(!param){
+					var islastand = (i === self.andSplits.length-1)
+					var sentence = self.andSplits[i][0];
+					var classTripplePatern = {s:null, p:null, o:null};
+					if(i === 0){
+						// with class
+						classTripplePatern = self.selectClassTripplePatternFromStr(sentence, islastand);
+						CCS.class = {raw:classTripplePatern.c, iri:self.currentSuggestedClass.iri};
+					}
+					else{
+						var match = self.andSplits[0][0].match(/(all\s\w+\s)/i);
+						if(match){
+							sentence = match[1] + sentence;
+							classTripplePatern = self.selectClassTripplePatternFromStr(sentence, islastand);
 						}
 					}
-				}
-			}
-			else{
-				console.log('param in classObjects');
 
-				if(param.type === 'classObject'){
-					if(CCS[0].sparqlid === param.sparqlid){
-						delete CCS[0].sparqlid;
-						if(param.classObjects){
-							CCS[0].instances = param.classObjects;
-							var titles = [];
-							for (var i = 0; i < param.classObjects.length; i++) {
-								var uri = param.classObjects[i].value;
-								var desc = tripplestore.getValues(uri, 'scards:termDescription').length;
-								var thumb = tripplestore.getValues(uri, 'dbo:thumbnail').length;
-								if(!desc || !thumb){
-									var match = param.classObjects[i].value.match(/.+[\/](.+)$/);
-									if(match)titles.push(match[1]);
+					if(classTripplePatern.p){
+						var iri = self.currentSuggestedPredicate.iri;
+						var dkey = self.currentSuggestedPredicate.dkey;
+						var rkey = self.currentSuggestedPredicate.rkey;
+						var d = (dkey && dkey.match(/0/) && ontology.dboClasses[dkey]) ? ontology.dboClasses[dkey].iri : dkey;
+						var r = (rkey && rkey.match(/0/) && ontology.dboClasses[rkey]) ? ontology.dboClasses[rkey].iri : rkey;
+
+						CCS.predicates[i] = {raw:classTripplePatern.p, iri:iri, domain:d, range:r};
+					}
+
+					if(classTripplePatern.o){
+						CCS.objects[i] = {raw:classTripplePatern.o};
+					}
+
+
+					if(!fullstop){
+						var spaceatend = sentence.match(/\s+$/);
+						if(islastand && classTripplePatern.p && (!classTripplePatern.o) && spaceatend){// 'all scientist with birth place{\s}'
+							// suggest all possible object
+							CCS.predicates[i].sparqlid = Date.now().toString(36);
+							sparql.getObjectsGivenClassAndPredicate(CCS.class.iri, CCS.predicates[i].iri, CCS.predicates[i].sparqlid);
+							return;
+						}
+						else if(islastand && classTripplePatern.o){  //'all scientist with birth place Lon'
+							// suggest possible object filter by o
+							// 
+							var ostr = classTripplePatern.o;
+							if(false && ostr){
+								var qsearch = self.onlineSearchQuery;
+								var term_id = Date.now().toString(36);
+								var qanswer = self.gotATermToken(term_id, ostr , 'pcc object suggestions');
+								if(qanswer){
+									console.log('got a term object');
+									self.currentObjectSuggestions = [];
+									for (var j = 0; j < qanswer.answers.length; j++) {
+										self.currentObjectSuggestions.push({value:qanswer.answers[j], type:'uri'});// these are uri
+									}
+									self.suggestPossibleObjects(self.currentObjectSuggestions);
+								}
+								else{
+									if(ostr){// don't get wikipedia suggestions if not enough chars	
+										console.log('getting from wiki');
+										qsearch.getWikipediaSuggestions(ostr, term_id);
+										return;// important, as query are async . this function will be called again when data is available 
+									}
 								}
 							}
-							var action_id = 'pcc~' + Date.now().toString(36);
-							CCS[0].action_id = action_id;
-							if(titles.length)self.onlineSearchQuery.getWikipediaShortdescriptionsAndThumbnails(titles, action_id);
+
+							if(true, ostr){
+								// get from sparql with regex
+								CCS.predicates[i].sparqlid = Date.now().toString(36);
+								sparql.getObjectsGivenClassAndPredicateAndPartialObject(CCS.class.iri, CCS.predicates[i].iri, ostr, CCS.predicates[i].sparqlid);
+								return;
+							}
+						}
+					}
+					else{// fullstop
+						if(self.currentObjectSuggestions.length){
+							var o =  self.currentObjectSuggestions[0].value;// now only 0
+							var match = o.match(/.+[\/](.+)$/);
+							if(match){
+								o = 'dbr:'+match[1]
+							}
+						}
+						else{
+							//var o = 'dbr:'+CCS[0].objectStr.replace(' ', '_');// _ for dbpedia resource uri
+						}
+
+						if(o.length>3){// don't make a sparql query with less than 4 character
+							CCS.predicates[i].sparqlid = Date.now().toString(36);
+							sparql.getclassInstances(CCS.class.iri, CCS.predicates[i].iri, o, CCS.predicates[i].sparqlid);
 							return;
 						}
 					}
 				}
-				else if(param.type === 'wikipedia_shortdescriptions_and_thumbnails'){
-					if(CCS[0].action_id === param.action_id){
-						delete CCS[0].action_id;
-						console.log(' got images and short descriptions');
+				else{
+					console.log('param in ClassContext stack');
+					if(param.type === 'classInstances'){
+						if(CCS.predicates[i].sparqlid === param.sparqlid){	
+							delete CCS.predicates[i].sparqlid;
+							if(param.classInstances){
+								CCS.classInstances = param.classInstances;
+								var titles = [];
+								for (var j = 0; j < param.classInstances.length; j++) {
+									var uri = param.classInstances[j].value;
+									var desc = tripplestore.getValues(uri, 'scards:termDescription').length;
+									var thumb = tripplestore.getValues(uri, 'dbo:thumbnail').length;
+									if(!desc || !thumb){
+										var match = param.classInstances[j].value.match(/.+[\/](.+)$/);
+										if(match)titles.push(match[1]);
+									}
+								}
+								var action_id = 'pcc~' + Date.now().toString(36);
+								CCS.predicates[i].action_id = action_id;
+								if(titles.length)self.onlineSearchQuery.getWikipediaShortdescriptionsAndThumbnails(titles, action_id);
+								return;
+							}
+						}
 					}
-					else console.log('wikipedia_shortdescriptions_and_thumbnails, but id didn\'t match');
+					else if(param.type === 'wikipedia_shortdescriptions_and_thumbnails'){
+						if(CCS.predicates[i].action_id === param.action_id){
+							delete CCS.predicates[i].action_id;
+							console.log(' got images and short descriptions');
+
+						}
+						else console.log('wikipedia_shortdescriptions_and_thumbnails, but id didn\'t match');
+					}
+					else if(param.type === 'objectSuggForClass'){
+						if(CCS.predicates[i].sparqlid === param.sparqlid){
+							delete CCS.predicates[i].sparqlid;
+
+							if(param.objectSuggForClass){
+								self.currentObjectSuggestions = param.objectSuggForClass;
+								CCS.objects[i].suggestions = param.objectSuggForClass;
+								CCS.objects[i].iri = CCS.objects[i].suggestions[0].value;
+
+								var titles = [];
+								for (var j = 0; j < param.objectSuggForClass.length; j++) {
+									var uri = param.objectSuggForClass[j].value;
+									var desc = tripplestore.getValues(uri, 'scards:termDescription').length;
+									var thumb = tripplestore.getValues(uri, 'dbo:thumbnail').length;
+									if(!desc || !thumb){
+										var match = param.objectSuggForClass[j].value.match(/.+[\/](.+)$/);//whoat about _
+										if(match)titles.push(match[1]);
+									}
+								}
+								var action_id = 'pcc~' + Date.now().toString(36);
+								CCS.predicates[i].action_id = action_id;
+								if(titles.length){
+									self.onlineSearchQuery.getWikipediaShortdescriptionsAndThumbnails(titles, action_id);
+									return;
+								}
+								else{
+									// not a uri
+									 		
+								}
+							}
+
+						}
+					}
 				}
 			}
+
 
 			if(fullstop){
 				self.processAndSendClassObjectAnswers();
 			}
+			else{// end reach , must be some kind of suggestions for unfinished query
+				if(CCS.objects.length && CCS.objects[CCS.objects.length-1].iri)self.suggestPossibleObjects(self.currentObjectSuggestions);
+			}
 		}
-		this.suggestPredicate = function(str){
-			self.predicateSuggestionsHtml = '';
+
+		this.suggestPossibleObjects = function(objects){
+			var answers = [];
+			for (var i = 0; i < objects.length; i++) {
+				var s = objects[i].value;
+				var ans = {};
+				var isuri = (s.match(/^https?:\/\//));
+				var isdbr = (s.match(/http:\/\/dbpedia\.org\/resource\//));
+				var isimg = (s.match(/\.(jpg|png|gif|svg|JPG)$/));
+				var isdbpthumb = (s.match(/\.(jpg|png|gif|svg|JPG)\?width=/));
+				
+				if(isuri){
+					if(isdbpthumb){
+						ans.desc = '<img style=\'width:50%;\' src=\''+s+'\'>';
+					}
+					else if(isimg){
+						ans.desc = '<img style=\'width:50%;\' src=\''+s+'\'>';
+					}
+					else if(isdbr){
+						var os = tripplestore.getValues(s, 'rdfs:label');
+						if(os.length){
+							var o = os[0];
+							ans.title = o;
+						}
+						else{
+							m = s.match(/.+[\/#](.+)$/);
+							if(m){
+								ans.title = m[1].replace(/_/g, ' ');
+							}
+							else{
+								ans.title = s.replace(/_/g, ' ');
+							}
+						}
+						
+
+						os = tripplestore.getValues(s, 'scards:termDescription');
+						if(os.length){
+							ans.desc = os[0];
+						}
+
+						os = tripplestore.getValues(s, 'dbo:thumbnail');
+						if(os.length){
+							ans.thumb_source = os[0];
+						}
+
+					}
+					else{
+						m = s.match(/.+[\/#](.+)$/);
+						if(m){
+							ans.title = m[1].replace(/_/g, ' ');
+						}
+						else{
+							ans.title = s.replace(/_/g, ' ');
+						}
+					}
+				}
+				else if(typeof(s) === 'string'){
+					ans.title = s.replace(/_/g, ' ');
+				}
+
+				answers.push(ans);
+			}
+			self.sendClassObjectSuggestions(answers);
+
+		};
+
+
+		this.suggestPredicate = function(str, send_to_ui){
+			console.log(str);
 			self.currentSuggestedPredicate = {}
 
 			var OC = self.currentSuggestedClass
 
 			var predicates = ontology.getMatchedProperties(str, OC.key);
+			var bestMatch = -200;
 			for (var i = 0; i < predicates.length; i++) {
 				var _tok = predicates[i].split(ontology.searchIdDelim);//'1.0.23~dbo:almaMater~1.0.2' => domain~pedicate~range
 				var d = _tok[0]; //domain
 				var p = _tok[1]; //predicate
 				var r = _tok[2]; //range
-				var l = p.substr(4, p.length).toLowerCase(); //label
 
-				if(!self.currentSuggestedPredicate.iri  &&  str.length && (l[0] == str[0].toLowerCase())){// str could be ''
+				var l = p.substr(4, p.length).toLowerCase(); //label
+				var matchFactor = l.length ? str.length/l.length : 0;
+				var paddingMatch = l.indexOf(str.toLowerCase());
+				var totMatch = matchFactor - paddingMatch;
+
+				if(totMatch > bestMatch){
+					bestMatch = totMatch;
 					self.currentSuggestedPredicate.iri = p;
 					self.currentSuggestedPredicate.dkey = d;
 					self.currentSuggestedPredicate.rkey = r;
-					break;
+					if(str.toLowerCase() === l)	break;
 				}
 			}
-			// if first char didn't match selecet the first class
-			if(self.currentSuggestedPredicate.iri);
-			else if(predicates.length){
-				self.currentSuggestedPredicate.dkey = predicates[0].split(ontology.searchIdDelim)[0];
-				self.currentSuggestedPredicate.iri = predicates[0].split(ontology.searchIdDelim)[1];
-				self.currentSuggestedPredicate.rkey = predicates[0].split(ontology.searchIdDelim)[2];
-			}
+			
+			if(send_to_ui){
+				self.predicateSuggestionsHtml = '';
 
-			for (var i = 0; i < predicates.length; i++) {
-				var p = predicates[i].split(ontology.searchIdDelim)[1];
-				var l = p.substr(4, p.length);
-				var chref = 'http://dbpedia.org/ontology/'+l
-				var chtml = '<a data-class=\'true\' style=\'color:inherit;\' href=\''+chref+'\' target=\'_blank\' title=\''+chref+'\'>'+l+'</a>';
-				if(self.currentSuggestedPredicate.iri === p){
-					chtml = chtml.replace('color:inherit', 'color:forestgreen');
-					self.predicateSuggestionsHtml = chtml +'&nbsp; '+ self.predicateSuggestionsHtml;
-				}
-				else{
-					self.predicateSuggestionsHtml+= '&nbsp; '+chtml;
-				}
-					
-			}
+				for (var i = 0; i < predicates.length; i++) {
+					var _tok = predicates[i].split(ontology.searchIdDelim);//'1.0.23~dbo:almaMater~1.0.2' => domain~pedicate~range
+					var d = (d.match(/0/) && ontology.dboClasses[_tok[0]]) ? ontology.dboClasses[_tok[0]].iri : _tok[0]; //domain
+					var p = _tok[1]; //predicate
+					var r = (r.match(/0/) && ontology.dboClasses[_tok[2]]) ? ontology.dboClasses[_tok[2]].iri : _tok[2]; //range
+					var l = p.substr(4, p.length).toLowerCase(); //label
 
-			self.sendPredicateSuggestion(self.predicateSuggestionsHtml);
+					var chref = 'dbo:'+l
+					var title = chref + ' (domain=> '+d+ ' '+' | range=> '+ r +')';
+					var chtml = '<a data-class=\'true\' style=\'color:inherit;\' href=\''+chref+'\' target=\'_blank\' title=\''+title+'\'>'+l+'</a>';
+					if(self.currentSuggestedPredicate.iri === p){
+						chtml = chtml.replace('color:inherit', 'color:forestgreen');
+						self.predicateSuggestionsHtml = chtml +'&nbsp; '+ self.predicateSuggestionsHtml;
+					}
+					else{
+						self.predicateSuggestionsHtml+= '&nbsp; '+chtml;
+					}
+						
+				}
+				self.sendPredicateSuggestion(self.predicateSuggestionsHtml);
+			}
 		}
-		this.suggestClasses = function(str){
-			self.classSuggestionsHtml = '';
+		this.suggestClasses = function(str, send_to_ui){
 			self.currentSuggestedClass = {}
 
 			var classes = ontology.getMatchedClasses(str);
+			var bestMatch = -200;
 			for (var i = 0; i < classes.length; i++) {
 				var _tok = classes[i].split(ontology.searchIdDelim);
 				var k = _tok[0];
 				var c = _tok[1];
-				var label = c.substr(4, c.length).toLowerCase();
-				if(!self.currentSuggestedClass.iri  &&  str.length && (label[0] == str[0].toLowerCase())){// str could be ''
-					// matched forst character // 'scie' will match 'Scientist' and not 'spcialScientificInterest'
+				var l = c.substr(4, c.length).toLowerCase();
+				var matchFactor = l.length ? str.length/l.length : 0;
+				var paddingMatch = l.indexOf(str.toLowerCase());
+				var totMatch = matchFactor - paddingMatch;
+				if(totMatch > bestMatch){
+					bestMatch = totMatch;
 					self.currentSuggestedClass.iri = c;
 					self.currentSuggestedClass.key = k;
-					break;
+					if(str.toLowerCase() === l)	break;
 				}
 			}
 
-			// if first char didn't match selecet the first class
-			if(self.currentSuggestedClass.iri);
-			else if(classes.length){
-				self.currentSuggestedClass.key = classes[0].split(ontology.searchIdDelim)[0];
-				self.currentSuggestedClass.iri = classes[0].split(ontology.searchIdDelim)[1];
-			}
-
-
-			for (var i = 0; i < classes.length; i++) {
-				var c = classes[i].split(ontology.searchIdDelim)[1];
-				var l = c.substr(4, c.length);
-				var chref = 'http://dbpedia.org/ontology/'+ l
-				var chtml = '<a data-class=\'true\' style=\'color:inherit;\' href=\''+chref+'\' target=\'_blank\' title=\''+chref+'\'>'+l+'</a>';
-				if(self.currentSuggestedClass.iri === c){
-					chtml = chtml.replace('color:inherit', 'color:forestgreen');
-					self.classSuggestionsHtml = chtml +'&nbsp; '+ self.classSuggestionsHtml;
+			if(send_to_ui){
+				self.classSuggestionsHtml = '';
+				for (var i = 0; i < classes.length; i++) {
+					var c = classes[i].split(ontology.searchIdDelim)[1];
+					var l = c.substr(4, c.length);
+					var chref = 'dbo:'+ l
+					var chtml = '<a data-class=\'true\' style=\'color:inherit;\' href=\''+chref+'\' target=\'_blank\' title=\''+chref+'\'>'+l+'</a>';
+					if(self.currentSuggestedClass.iri === c){
+						chtml = chtml.replace('color:inherit', 'color:forestgreen');
+						self.classSuggestionsHtml = chtml +'&nbsp; '+ self.classSuggestionsHtml;
+					}
+					else{
+						self.classSuggestionsHtml+= '&nbsp; '+chtml;
+					}
 				}
-				else{
-					self.classSuggestionsHtml+= '&nbsp; '+chtml;
-				}
-					
+				self.sendClassSuggestion(self.classSuggestionsHtml);
 			}
+		}
+		this.selectClassTripplePatternFromStr = function(str, send_to_ui){
+			var sens = compendium.analyse(str);
+			var toks = str.split(' ');// note that tokens are generatd by @me and tags by compendium and 
+			// compendiun tokens are assumed to be same as @me
+			var tags = sens[0].tags;
+			var c = null;
+			var p = null;
+			var o = null;
 
-			self.sendClassSuggestion(self.classSuggestionsHtml);
+			if(tags.length && tags[0].match(/DT/)){// all
+				if(tags.length > 1 && tags[1].match(/NN/)){// scientist
+					c = toks[1];
+					c= c.charAt(0).toUpperCase() + c.slice(1, c.length);
+
+					if(tags.length > 2 && tags[2].match(/WP/)){// who
+						console.log('WP');
+						if(tags.length > 3 && tags[3].match(/VBD/)){// VBD // went/ died
+							p = toks[3];// studied
+							if(tags.length > 4 && tags[4].match(/(TO|IN)/)){// to/in
+								p = toks.slice(3, 5).join(' ');
+								if(tags.length > 5 && tags[5].match(/NN/)){// London
+									o = toks.slice(5, toks.length).join(' ');
+								}
+							}
+							else if(tags.length > 4 && tags[4].match(/NN/)){//Mathematics
+								o = toks.slice(4, toks.length).join(' ');
+							}
+						}
+						else if(tags.length > 3 && tags[3].match(/VB[ZP]/)){// VBZ => has, VBP => have
+							if(tags.length > 4 && tags[4].match(/JJ/)){// birth => this works like an adjective because of a noun ahead
+								if(tags.length > 5 && tags[5].match(/NN/)){//place
+									p = toks.slice(3,5).join(' '); // have birth place
+									if(tags.length > 6 && tags[6].match(/NN/)){//NNP=> London
+										o = toks.slice(6, toks.length).join(' ');
+									}
+								}
+							}
+						}
+						else if(tags.length > 3 && tags[3].match(/JJ/)){//live @!! somehow compendium says live is JJ
+							if(tags.length > 4 && tags[4].match(/IN/)){
+								p = toks.slice(3,5).join(' '); //live in
+								if(tags.length > 5 && tags[5].match(/NN/)){//Mexico
+									o = toks.slice(5, toks.length).join(' ');
+								}
+							}
+						}
+					}
+					else if(tags.length > 2 && tags[2].match(/VBD/)){// known 
+						if(tags.length > 3 && tags[3].match(/IN/)){// for
+							p = toks.slice(2, 4).join(' ');// known for
+							if(tags.length > 4 && tags[4].match(/NN/)){// Optics
+								o = toks.slice(4, toks.length).join(' ');
+							}
+							else{
+								self.suggestPredicate(p, send_to_ui);
+							}
+
+						}
+					}
+					else if(tags.length > 2 && tags[2].match(/IN/)){// with
+						if(tags.length > 3 && tags[3].match(/NN/)){// birthPlace
+							p = toks.slice(3, 4).join(' ');// birthplace
+
+							if(tags.length > 4 && tags[4].match(/NN/)){// London
+								o = toks.slice(4, toks.length).join(' ');
+							}
+							else{
+								self.suggestPredicate(p, send_to_ui);
+							}
+						}
+					}
+					else if(tags.length > 2 && tags[2].match(/VBG/)){// gerund 
+						p = toks.slice(2, 3).join(' ');// (Film) starring
+						if(tags.length > 3 && tags[3].match(/NN/)){// Jenifer Lawrance
+							o = toks.slice(3, toks.length).join(' ');
+						}
+						else{
+							self.suggestPredicate(p, send_to_ui);
+						}
+					}
+					else{
+						self.suggestPredicate('', send_to_ui);
+						console.log('No match');
+					}
+				}
+			}
+			console.log(toks, c,p,o);
+			return {c:c, p:p, o:o};
 		}
 		this.processAndSendClassObjectAnswers = function(){
 			var CCS = self.classContextStack;
-			if(CCS.length){
-				var instances = CCS[0].instances;// [{type:'yri', value:'http://...'}]
+			if(CCS.classInstances){
+				var instances = CCS.classInstances;
 				var answers = [];
 
 				for (var i = 0; i < instances.length; i++) {
@@ -1061,7 +1380,7 @@
 				if(i === 0){
 					var qsearch = self.onlineSearchQuery;
 					var term_id = Date.now().toString(36) + '0';// save his to ustore
-					var qanswer = self.gotATermToken(term_id, tokenStr, 'subject');
+					var qanswer = self.gotATermToken(term_id, tokenStr, 'pc subject suggestions');
 					if(qanswer){// question and answer already exists
 														//namedNodes
 						self.contextStack[i].subjects = [];
@@ -1389,38 +1708,34 @@
 				var termended = question.match(/[\.?]+[\s]*$/);// compendiun will take only valid sentences ; but we need full stops and ? marks to say that it ended
 				var spaceatend = question.match(/\s$/);
 
+
+
 				self.rootTags = analyseSs[0].tags.join(' ');
 
-				var dotSplits = question.split('.');// ['all scientist who have birthplace London and went to Oxford or Cambridge', '']
-				self.andSplits = dotSplits[0].split(' and ');
+				self.dotSplit = question.split('.');// ['all scientist who have birthplace London and went to Oxford or Cambridge', '']
+				self.andSplits = self.dotSplit[0].split(' and ');
 				for (var i = 0; i < self.andSplits.length; i++) {
 					self.andSplits[i] = self.andSplits[i].split(' or ');
 				}
 
-				// console.log(self.andSplits);
 
-				fS = dotSplits[0];
+				//    all scientist known for Physics   and   who went to Cambridge or Oxford  and  died in London
+				//[  'all scientist known for Physics',      'who went to Cambridge or Oxford',     died in London]
+				//[ ['all scientist known for Physics'],    ['who went to Cambridge', 'Oxford'],  ['died in london']]
+
+
+				fS = self.dotSplit[0];
 				var tokens = fS.split(' ');
 				if(tokens[0].toLowerCase() === 'all'){
 					if(tokens.length>1){
-						if(tokens.length==2)self.suggestClasses(tokens[1]);
+						if(tokens.length==2)self.suggestClasses(tokens[1], true);
 						if(tokens.length>2){// all scientist knownFor
-							self.classContextStack = [{}];
+							self.classContextStack = {class:self.currentSuggestedClass, predicates:[], objects:[], classInstances:[]};//and with predicates and or with orbects
 							self.prepareClassContextStack();
+							self.lastClassContextStack = self.classContextStack;
 						}
 					}
-						
-					
-					// if(self.rootTags.match(/^DT\sNN[PS]?/)){// all scientist
-					// 	if(self.rootTags.match(/^DT\sNN[PS]?\sWP/)){// all scientist who
-					// 	}
-					// }
-					// else{// suggest classes
-
-					// }
-
-
-					console.log(self.rootTags);
+					//console.log(self.rootTags);
 					return;
 				}
 
@@ -1485,6 +1800,10 @@
 			sendMSG_to_tab_byId({type:'SW:CLASS_OBJECT_INSTANCES',  msg:{answers:answers}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
 			console.log('class instances sent');
 		}
+		this.sendClassObjectSuggestions = function(answers){
+			sendMSG_to_tab_byId({type:'SW:CLASS_OBJECT_SUGGESTIONS',  msg:{answers:answers}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
+
+		};
 
 		this.fastStringSearch = function(source, term){
 			var rx = new RegExp('"([^"]*'+term+'[^"]*)"','gi');

@@ -74,7 +74,8 @@
 	" What was the monetary value of the Nobel Peace Prize in 1989",
 	"Who sells the most hybrid cars?",
 	"Which president went to war with Mexico? ",
-	" When was the internal combustion engine invented?"
+	" When was the internal combustion engine invented?",
+	'all people influenced by Isaac Newton'
 	]
 
 	Keyword Selection Algorithm
@@ -362,4 +363,3 @@
  	TelevisionShow,_FictionalCharacter
  	Diocese,_Parish
  	BelgiumSettlement
- 	Monastry
