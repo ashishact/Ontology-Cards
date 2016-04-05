@@ -1497,7 +1497,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             }
             var $t = $(event.target);
             if($t.attr('data-predicate') === 'true'){
-                $commandInput.val($commandInput.val().replace(/\.(?=[^.]*$)\s+.*$/, '. '+$t.text()));
+                var val = $commandInput.val();
+                $commandInput.val(val.replace(/\.(?=[^.]*$)\s+.*$/, '. '+$t.text()));
+                if(val === $commandInput.val()){
+                    //regex didn't match
+                    //its a hook
+                    $commandInput.val(val + '. '+$t.text());
+                }
                 self.searchSubmit(null);
             }
 

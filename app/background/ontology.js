@@ -2535,19 +2535,19 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:freeFlightTime": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Spacecraft"
 		},
 		"dbo:apskritis": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:sessionNumber": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "owl:Thing"
 		},
 		"dbo:cost": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:ArchitecturalStructure"
 		},
 		"dbo:soccerLeaguePromoted": {
@@ -2558,11 +2558,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:hairColor": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:tie": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Boxer"
 		},
 		"dbo:otherFamilyBranch": {
@@ -2581,11 +2581,11 @@ var createOntology = function(){
 		  "domain": "dbo:Person"
 		},
 		"dbo:latestPreviewDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Software"
 		},
 		"dbo:votesAgainst": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:StatedResolution"
 		},
 		"dbo:highestRegion": {
@@ -2600,11 +2600,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:note": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:AutomobileEngine"
 		},
 		"dbo:scotishName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:Planet/meanRadius": {
@@ -2619,7 +2619,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:endYearOfSales": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:Sales"
 		},
 		"dbo:Galaxy/volume": {
@@ -2627,20 +2627,20 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:imageFlag": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:impactFactor": {
 		  "comment": "The impact factor, often abbreviated IF, is a measure reflecting the average number of citations to articles published in science and social science journals.",
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:AcademicJournal"
 		},
 		"dbo:millSpan": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Mill"
 		},
 		"dbo:topSpeed": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing",
 		  "functional": true
 		},
@@ -2667,15 +2667,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:numberOfMembersAsOf": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:PoliticalParty"
 		},
 		"dbo:giniCoefficientAsOf": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:accessDate": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "owl:Thing"
 		},
 		"dbo:ceo": {
@@ -2691,7 +2691,7 @@ var createOntology = function(){
 		},
 		"dbo:giniCoefficient": {
 		  "comment": "is a measure of the inequality of a distribution. It is commonly used as a measure of inequality of income or wealth.",
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:currentProduction": {
@@ -2707,7 +2707,7 @@ var createOntology = function(){
 		  "domain": "dbo:Person"
 		},
 		"dbo:registration": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Company"
 		},
 		"dbo:Galaxy/density": {
@@ -2716,7 +2716,7 @@ var createOntology = function(){
 		},
 		"dbo:visitorsPercentageChange": {
 		  "comment": "Percentage increase or decrease.",
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:ArchitecturalStructure"
 		},
 		"dbo:frazioni": {
@@ -2734,7 +2734,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:widthQuote": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:PopulatedPlace/populationMetroDensity": {
@@ -2742,19 +2742,19 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:nflSeason": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:britishOpen": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:leadership": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:requirement": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:capitalPlace": {
@@ -2765,15 +2765,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:notableFeatures": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Galaxy"
 		},
 		"dbo:sharingOut": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:date": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "owl:Thing"
 		},
 		"dbo:lowestPosition": {
@@ -2788,7 +2788,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:wheelbase": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Automobile",
 		  "functional": true
 		},
@@ -2800,19 +2800,19 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:playerStatus": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:goalsInNationalTeam": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:SoccerPlayer"
 		},
 		"dbo:numberOfLaunches": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:MeanOfTransportation"
 		},
 		"dbo:speedLimit": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:RouteOfTransportation"
 		},
 		"dbo:features": {
@@ -2823,40 +2823,40 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:informationName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:surfaceArea": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Planet"
 		},
 		"dbo:geolocDual": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:defeat": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Boxer"
 		},
 		"dbo:filmPolskiId": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Film"
 		},
 		"dbo:identificationSymbol": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:MilitaryUnit"
 		},
 		"dbo:imageSize": {
 		  "comment": "the image size expressed in pixels",
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "owl:Thing"
 		},
 		"dbo:populationDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Place"
 		},
 		"dbo:circumcised": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:associationOfLocalGovernment": {
@@ -2867,7 +2867,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:limit": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:fuelTypeName": {
@@ -2875,23 +2875,23 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:seniunija": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:infantMortality": {
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:maximumArea": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:topic": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:dockedTime": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Spacecraft"
 		},
 		"dbo:population": {
@@ -2906,24 +2906,24 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:numberOfRestaurants": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Hotel"
 		},
 		"dbo:catholicPercentage": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:scotsName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:mgiid": {
 		  "comment": "Mouse Genomic Informatics ID",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Biomolecule"
 		},
 		"dbo:nationalRanking": {
-		  "range": "xds:positiveInteger",
+		  "range": "xsd:positiveInteger",
 		  "domain": "dbo:School"
 		},
 		"dbo:connotation": {
@@ -2953,12 +2953,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:fuelCapacity": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Automobile",
 		  "functional": true
 		},
 		"dbo:number": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "owl:Thing"
 		},
 		"dbo:SpaceMission/missionDuration": {
@@ -2966,15 +2966,15 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:previousName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:meshId": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Disease"
 		},
 		"dbo:anniversary": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:MilitaryUnit"
 		},
 		"dbo:wife": {
@@ -2986,11 +2986,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:heightAttack": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:wimbledonMixed": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:Stream/maximumDischarge": {
@@ -3002,7 +3002,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:blueSkiPisteNumber": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Place"
 		},
 		"dbo:sourceConfluence": {
@@ -3013,7 +3013,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:minimumInclination": {
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "dbo:LaunchPad"
 		},
 		"dbo:formerName": {
@@ -3029,11 +3029,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:subMunicipalityType": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:SubMunicipality"
 		},
 		"dbo:dateLastUpdated": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Document"
 		},
 		"dbo:originalStartPoint": {
@@ -3044,7 +3044,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:agglomerationPopulationTotal": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:wikiPageDisambiguates": {
@@ -3053,11 +3053,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:grossDomesticProductPerPeople": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:tag": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "owl:Thing"
 		},
 		"dbo:valvetrain": {
@@ -3119,11 +3119,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:discovery": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Island"
 		},
 		"dbo:assetUnderManagement": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Company"
 		},
 		"dbo:soccerTournamentOpeningSeason": {
@@ -3134,7 +3134,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:specialist": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:School"
 		},
 		"dbo:channel": {
@@ -3146,7 +3146,7 @@ var createOntology = function(){
 		},
 		"dbo:identifiedBy": {
 		  "comment": "An identifier used to identify this thing.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing",
 		  "subproperty": [
 		    "dbo:documentNumber",
@@ -3154,7 +3154,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:victory": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:showJudge": {
@@ -3165,15 +3165,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:buildingEndYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:ArchitecturalStructure"
 		},
 		"dbo:firstProMatch": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:speciality": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:jointCommunity": {
@@ -3195,35 +3195,35 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:ncaaSeason": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:routeDirection": {
 		  "comment": "The general direction of the route (eg. North-South).",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:RouteOfTransportation"
 		},
 		"dbo:electionMajority": {
 		  "comment": "number of votes the office holder attained",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:area": {
 		  "comment": "The area of a owl:Thing in square metre.",
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:spacewalkBegin": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:SpaceMission"
 		},
 		"dbo:shoeSize": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:dbnlCodeDutch": {
 		  "comment": "identifier in Dutch digital library (dbnl)",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Writer"
 		},
 		"dbo:PopulatedPlace/populationUrbanDensity": {
@@ -3231,7 +3231,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:abbeychurchBlessing": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:derivative": {
@@ -3242,11 +3242,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:statValue": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:nameAsOf": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "owl:Thing"
 		},
 		"dbo:congressionalDistrict": {
@@ -3258,11 +3258,11 @@ var createOntology = function(){
 		},
 		"dbo:lastElectionDate": {
 		  "comment": "The last election date for the house.",
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Legislature"
 		},
 		"dbo:currentRecord": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:CollegeCoach"
 		},
 		"dbo:senator": {
@@ -3300,21 +3300,21 @@ var createOntology = function(){
 		  "domain": "dbo:Person"
 		},
 		"dbo:jutsu": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:fileSize": {
 		  "comment": "size of a file or software",
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:foalDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Animal",
 		  "functional": true
 		},
 		"dbo:waistSize": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Person"
 		},
 		"dbo:umbrellaTitle": {
@@ -3323,20 +3323,20 @@ var createOntology = function(){
 		},
 		"dbo:groupCommemorated": {
 		  "comment": "Designates the category of people commemorated by a monument",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Monument"
 		},
 		"dbo:bronzeMedalSingle": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:averageAnnualGeneration": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:PowerStation",
 		  "functional": true
 		},
 		"dbo:shipLaunch": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Ship"
 		},
 		"dbo:breeder": {
@@ -3354,7 +3354,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:europeanChampionship": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:AutomobileEngine/displacement": {
@@ -3363,7 +3363,7 @@ var createOntology = function(){
 		},
 		"dbo:genomeDB": {
 		  "comment": "the edition of the database used (i.e. hg19)",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:GeneLocation"
 		},
 		"dbo:managerClub": {
@@ -3386,15 +3386,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:phonePrefixName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:analogChannel": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Broadcaster"
 		},
 		"dbo:yearElevationIntoNobility": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:NobleFamily"
 		},
 		"dbo:mouthRegion": {
@@ -3405,12 +3405,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:teamTitle": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:alternativeName": {
 		  "comment": "Alternative naming of anything not being a Person (for which case foaf:nick should be used).",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing",
 		  "subproperty": [
 		    "dbo:alias"
@@ -3418,16 +3418,16 @@ var createOntology = function(){
 		},
 		"dbo:numberOfSeatsInParliament": {
 		  "comment": "number of seats in House of Commons-like parliaments",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PoliticalParty"
 		},
 		"dbo:routeNumber": {
 		  "comment": "The number of the route.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:RouteOfTransportation"
 		},
 		"dbo:finalLostSingle": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:owningCompany": {
@@ -3438,36 +3438,36 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:declination": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Constellation"
 		},
 		"dbo:volume": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:numberOfDistrict": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Department"
 		},
 		"dbo:wins": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:amateurNoContest": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Boxer"
 		},
 		"dbo:longDistancePisteNumber": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Place"
 		},
 		"dbo:centuryBreaks": {
 		  "comment": "number of breaks with 100 points and more",
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:SnookerPlayer"
 		},
 		"dbo:badGuy": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:sourceConfluenceCountry": {
@@ -3478,7 +3478,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:acquirementDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Ship"
 		},
 		"dbo:SpaceMission/cmpEvaDuration": {
@@ -3486,15 +3486,15 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:absoluteMagnitude": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:CelestialBody"
 		},
 		"dbo:managerYears": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:SoccerPlayer"
 		},
 		"dbo:filmRuntime": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Film"
 		},
 		"dbo:geneLocation": {
@@ -3509,7 +3509,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:casSupplemental": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:timeZone": {
@@ -3520,7 +3520,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:volcanicType": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Island"
 		},
 		"dbo:restingPlacePosition": {
@@ -3539,7 +3539,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:gameModus": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:genus": {
@@ -3551,27 +3551,27 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:commissionerDate": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:activeYearsStartYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "owl:Thing"
 		},
 		"dbo:seasonManager": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:lastFlightEndDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:SpaceShuttle"
 		},
 		"dbo:army": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:presidentRegionalCouncilMandate": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:arabicName": {
@@ -3586,11 +3586,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:vehiclesPerDay": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:RouteOfTransportation"
 		},
 		"dbo:istat": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:lake": {
@@ -3601,7 +3601,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:dissolved": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:SoccerClub"
 		},
 		"dbo:hasVariant": {
@@ -3626,19 +3626,19 @@ var createOntology = function(){
 		},
 		"dbo:numberOfHouses": {
 		  "comment": "Count of the houses in the Protected Area",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:ProtectedArea"
 		},
 		"dbo:numberOfSilverMedalsWon": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:SportCompetitionResult"
 		},
 		"dbo:shoots": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:IceHockeyPlayer"
 		},
 		"dbo:height": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing",
 		  "functional": true
 		},
@@ -3651,7 +3651,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:localization": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Island"
 		},
 		"dbo:class": {
@@ -3662,7 +3662,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:firstLaunch": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:YearInSpaceflight"
 		},
 		"dbo:Planet/density": {
@@ -3684,7 +3684,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:missions": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:SpaceShuttle"
 		},
 		"dbo:originalTitle": {
@@ -3693,11 +3693,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:rankAgreement": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Place"
 		},
 		"dbo:modelEndDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:MeanOfTransportation"
 		},
 		"dbo:language": {
@@ -3711,7 +3711,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:numberOfSportsEvents": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:creativeDirector": {
@@ -3722,11 +3722,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:populationAsOf": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:rolandGarrosSingle": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:Stream/discharge": {
@@ -3734,7 +3734,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:distanceToEdinburgh": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:frenchName": {
@@ -3760,7 +3760,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:lethalOnRabbits": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:ChemicalSubstance"
 		},
 		"dbo:buriedPlace": {
@@ -3772,15 +3772,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:ranking": {
-		  "range": "xds:positiveInteger",
+		  "range": "xsd:positiveInteger",
 		  "domain": "dbo:School"
 		},
 		"dbo:numberOfRockets": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Aircraft"
 		},
 		"dbo:capacity": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:SoccerClub"
 		},
 		"dbo:sportGoverningBody": {
@@ -3791,15 +3791,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:imposedDanseCompetition": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:shareDate": {
-		  "range": "xds:gYearMonth",
+		  "range": "xsd:gYearMonth",
 		  "domain": "dbo:Broadcaster"
 		},
 		"dbo:port2UndockingDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Spacecraft"
 		},
 		"dbo:genre": {
@@ -3828,7 +3828,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:effectiveRadiatedPower": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Broadcaster"
 		},
 		"dbo:humanDevelopmentIndexRankingCategory": {
@@ -3839,7 +3839,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:pisciculturalPopulation": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:firstDriverTeam": {
@@ -3851,7 +3851,7 @@ var createOntology = function(){
 		},
 		"dbo:projectBudgetFunding": {
 		  "comment": "The part of the project budget that is funded by the Organistaions given in the \"FundedBy\" property.",
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:ResearchProject"
 		},
 		"dbo:administrativeHeadCity": {
@@ -3885,62 +3885,62 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:endOccupation": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:winterTemperature": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:isCityState": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:callsignMeaning": {
 		  "comment": "The out written call sign.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Broadcaster"
 		},
 		"dbo:callSign": {
 		  "comment": "A call sign is not the name of a broadcaster! In broadcasting and radio communications, a call sign (also known as a call name or call letters, or abbreviated as a call) is a unique designation for a transmitting station.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:totalTravellers": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:YearInSpaceflight"
 		},
 		"dbo:rotationPeriod": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Planet"
 		},
 		"dbo:maoriName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:sizeBlazon": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:hipSize": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Person"
 		},
 		"dbo:firstAscent": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:numberOfAlbums": {
 		  "comment": "the total number of albums released by the musical artist",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:MusicalArtist"
 		},
 		"dbo:allcinemaId": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Film"
 		},
 		"dbo:retirementDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Person",
 		  "functional": true
 		},
@@ -3953,16 +3953,16 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:floorArea": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Building"
 		},
 		"dbo:yearOfElectrification": {
 		  "comment": "Year station was electrified, if not previously at date of opening.",
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:Station"
 		},
 		"dbo:serviceStartDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:MilitaryPerson"
 		},
 		"dbo:iftaAward": {
@@ -3980,15 +3980,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:numberOfIsland": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:openingDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:ArchitecturalStructure"
 		},
 		"dbo:time": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:sameName": {
@@ -4010,11 +4010,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:ableToGrind": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Mill"
 		},
 		"dbo:maximumTemperature": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Planet"
 		},
 		"dbo:thirdDriverCountry": {
@@ -4025,11 +4025,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:amateurYear": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:scale": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:superTribus": {
@@ -4040,15 +4040,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:membershipAsOf": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "owl:Thing"
 		},
 		"dbo:lastSeason": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:FormulaOneRacer"
 		},
 		"dbo:populationPctWomen": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:nationalAffiliation": {
@@ -4059,7 +4059,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:eptFinalTable": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PokerPlayer"
 		},
 		"dbo:notableIdea": {
@@ -4070,11 +4070,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:discharge": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:MeanOfTransportation"
 		},
 		"dbo:zipCode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace",
 		  "functional": true
 		},
@@ -4086,16 +4086,16 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:productionStartDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "owl:Thing"
 		},
 		"dbo:dutchName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:bridgeCarries": {
 		  "comment": "Type of vehicles the bridge carries.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Bridge"
 		},
 		"dbo:projectParticipant": {
@@ -4115,7 +4115,7 @@ var createOntology = function(){
 		},
 		"dbo:majorityLeader": {
 		  "comment": "number of office holder",
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "owl:Thing"
 		},
 		"dbo:genereviewsname": {
@@ -4123,7 +4123,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:carNumber": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:FormulaOneRacer"
 		},
 		"dbo:aircraftInterceptor": {
@@ -4134,7 +4134,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:currentStatus": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:booster": {
@@ -4146,7 +4146,7 @@ var createOntology = function(){
 		},
 		"dbo:percentageFat": {
 		  "comment": "how much fat (in relative terms) does this unity of food contain",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Cheese"
 		},
 		"dbo:commandStructure": {
@@ -4171,16 +4171,16 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:ward": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:skiLift": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Place"
 		},
 		"dbo:quotation": {
 		  "comment": "A quotation is the repetition of one expression as part of another one, particularly when the quoted expression is well-known or explicitly attributed by citation to its original source.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:Galaxy/maximumTemperature": {
@@ -4188,7 +4188,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:redSkiPisteNumber": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Place"
 		},
 		"dbo:militaryRank": {
@@ -4200,7 +4200,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:purchasingPowerParityRank": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:promotion": {
@@ -4211,7 +4211,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:lchfDraftYear": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:IceHockeyPlayer"
 		},
 		"dbo:GrandPrix/course": {
@@ -4219,11 +4219,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:orderDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Ship"
 		},
 		"dbo:numberOfPads": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:LaunchPad"
 		},
 		"dbo:Planet/apoapsis": {
@@ -4246,11 +4246,11 @@ var createOntology = function(){
 		},
 		"dbo:totalTracks": {
 		  "comment": "the total number of tracks contained in the album",
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:Album"
 		},
 		"dbo:frequentlyUpdated": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Software"
 		},
 		"dbo:Planet/periapsis": {
@@ -4265,7 +4265,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:oversight": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:School"
 		},
 		"dbo:Canal/originalMaximumBoatBeam": {
@@ -4273,11 +4273,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:dateBudget": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "owl:Thing"
 		},
 		"dbo:wsopItm": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PokerPlayer"
 		},
 		"dbo:currentPartner": {
@@ -4288,23 +4288,23 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:depth": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Place"
 		},
 		"dbo:activeYearsEndDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "owl:Thing"
 		},
 		"dbo:numberOfParticipatingFemaleAthletes": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Olympics"
 		},
 		"dbo:numberOfPostgraduateStudents": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:University"
 		},
 		"dbo:activeYearsStartDateMgr": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Person"
 		},
 		"dbo:largestSettlement": {
@@ -4323,7 +4323,7 @@ var createOntology = function(){
 		},
 		"dbo:nutsCode": {
 		  "comment": "Nomenclature of Territorial Units for Statistics (NUTS) is a geocode  standard for referencing the subdivisions of countries  for statistical purposes. The standard is developed and regulated by the European Union, and thus only covers the member states of the EU in detail.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:associatedRocket": {
@@ -4341,19 +4341,19 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:internationalPhonePrefix": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:visitorsPerDay": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:ArchitecturalStructure"
 		},
 		"dbo:skiTow": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Place"
 		},
 		"dbo:eloRecord": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:ChessPlayer"
 		},
 		"dbo:uses": {
@@ -4367,7 +4367,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:davisCup": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:currentTeamManager": {
@@ -4400,7 +4400,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:hsvCoordinateValue": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:Colour"
 		},
 		"dbo:series": {
@@ -4411,7 +4411,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:penaltiesTeamB": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PenaltyShootOut"
 		},
 		"dbo:winterAppearances": {
@@ -4422,15 +4422,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:deliveryDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "owl:Thing"
 		},
 		"dbo:dateAct": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Canal"
 		},
 		"dbo:penaltiesTeamA": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PenaltyShootOut"
 		},
 		"dbo:metropolitanBorough": {
@@ -4446,7 +4446,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:refcul": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:spokenIn": {
@@ -4457,11 +4457,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:fight": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Boxer"
 		},
 		"dbo:mouthElevation": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:scottishName": {
@@ -4470,15 +4470,15 @@ var createOntology = function(){
 		},
 		"dbo:registryNumber": {
 		  "comment": "Identification of the registry a document is in",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Document"
 		},
 		"dbo:hraState": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:clothSize": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:satScore": {
@@ -4512,7 +4512,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:dec": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:dfE": {
@@ -4529,15 +4529,15 @@ var createOntology = function(){
 		},
 		"dbo:lastAirDate": {
 		  "comment": "The date on which the broadcaster made its last broadcast.",
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Broadcaster"
 		},
 		"dbo:lunarOrbitTime": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:SpaceMission"
 		},
 		"dbo:otherWins": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:SnookerPlayer",
 		  "superproperty": [
 		    "dbo:Wins"
@@ -4548,15 +4548,15 @@ var createOntology = function(){
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:numberOfEpisodes": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:TelevisionShow"
 		},
 		"dbo:wingArea": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Aircraft"
 		},
 		"dbo:theology": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:ChristianDoctrine"
 		},
 		"dbo:affiliation": {
@@ -4571,7 +4571,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:olympicGamesSilver": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:ladinName": {
@@ -4587,7 +4587,7 @@ var createOntology = function(){
 		},
 		"dbo:dateUnveiled": {
 		  "comment": "Designates the unveiling date",
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Monument"
 		},
 		"dbo:startReign": {
@@ -4595,7 +4595,7 @@ var createOntology = function(){
 		  "domain": "dbo:Person"
 		},
 		"dbo:closingYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "owl:Thing"
 		},
 		"dbo:aircraftHelicopterObservation": {
@@ -4606,7 +4606,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:titleDouble": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:component": {
@@ -4633,16 +4633,16 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:specialTrial": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:bronzeMedalMixed": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:facultySize": {
 		  "comment": "number of faculty members",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:EducationalInstitution"
 		},
 		"dbo:highestPlace": {
@@ -4667,12 +4667,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:office": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:dcc": {
 		  "comment": "The Dewey Decimal Classification is a proprietary system of library classification developed by Melvil Dewey in 1876.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Book"
 		},
 		"dbo:raceTrack": {
@@ -4690,11 +4690,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:politicalFunction": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:orderInOffice": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:trustee": {
@@ -4709,7 +4709,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:municipalityRenamedTo": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Municipality"
 		},
 		"dbo:reffBourgmestre": {
@@ -4717,23 +4717,23 @@ var createOntology = function(){
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:power": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:FictionalCharacter"
 		},
 		"dbo:tournamentOfChampions": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:rebuildingDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:ArchitecturalStructure"
 		},
 		"dbo:millsCodeNLVerdwenen": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Mill"
 		},
 		"dbo:causalties": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:MilitaryConflict"
 		},
 		"dbo:countryWithFirstAstronaut": {
@@ -4752,15 +4752,15 @@ var createOntology = function(){
 		},
 		"dbo:grindingCapability": {
 		  "comment": "grinding capability for Mills",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Mill"
 		},
 		"dbo:numberOfBronzeMedalsWon": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:SportCompetitionResult"
 		},
 		"dbo:artificialSnowArea": {
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "dbo:Place"
 		},
 		"dbo:vicePrimeMinister": {
@@ -4771,7 +4771,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:dissolutionYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:relation": {
@@ -4798,14 +4798,14 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:ofsCode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Settlement",
 		  "superproperty": [
 		    "dbo:isoCode"
 		  ]
 		},
 		"dbo:licenceLetter": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:grammyAward": {
@@ -4816,15 +4816,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:latestReleaseVersion": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Software"
 		},
 		"dbo:highestBreak": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:SnookerPlayer"
 		},
 		"dbo:bowlRecord": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:CollegeCoach"
 		},
 		"dbo:mouthState": {
@@ -4835,7 +4835,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:activeYear": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:sport": {
@@ -4846,7 +4846,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:startOccupation": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:leaderParty": {
@@ -4857,11 +4857,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:locusSupplementaryData": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Protein"
 		},
 		"dbo:giniCoefficientRanking": {
-		  "range": "xds:positiveInteger",
+		  "range": "xsd:positiveInteger",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:order": {
@@ -4872,12 +4872,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:draftYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "owl:Thing"
 		},
 		"dbo:reservations": {
 		  "comment": "Are reservations required for the establishment or event?",
-		  "range": "xds:boolean",
+		  "range": "xsd:boolean",
 		  "domain": "dbo:Restaurant"
 		},
 		"dbo:dam": {
@@ -4888,7 +4888,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:mainspan": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Bridge"
 		},
 		"dbo:choreographer": {
@@ -4899,15 +4899,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:day": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:virtualChannel": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Broadcaster"
 		},
 		"dbo:matchPoint": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:lowestState": {
@@ -4925,7 +4925,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:feature": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:FictionalCharacter"
 		},
 		"dbo:crewMember": {
@@ -4936,12 +4936,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:tamazightName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:ulanId": {
 		  "comment": "ULAN is an online database using a controlled vocabulary currently containing around 293,000 names and other information about artists. Names in ULAN may include given names, pseudonyms, variant spellings, names in multiple languages, and names that have changed over time (e.g., married names).",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Artist"
 		},
 		"dbo:musicBy": {
@@ -4974,7 +4974,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:asiaChampionship": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:originalLanguage": {
@@ -4987,20 +4987,20 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:managerTitle": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:SoccerClub"
 		},
 		"dbo:numberOfCantons": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:millsCodeBE": {
 		  "comment": "mills code from the Belgian database on mills",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Mill"
 		},
 		"dbo:tournamentRecord": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:CollegeCoach"
 		},
 		"dbo:largestMetro": {
@@ -5015,7 +5015,7 @@ var createOntology = function(){
 		  "domain": "dbo:Person"
 		},
 		"dbo:backhand": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:winsAtMajors": {
@@ -5026,20 +5026,20 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:sequenceNumber": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Installment"
 		},
 		"dbo:buildingStartYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:ArchitecturalStructure"
 		},
 		"dbo:bnfId": {
 		  "comment": "Authority data of people listed in the general catalogue of the National Library of France",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:averageDepth": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:painter": {
@@ -5050,7 +5050,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:releaseDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Work",
 		  "subproperty": [
 		    "dbo:premiereDate"
@@ -5072,15 +5072,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:careerPoints": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:FormulaOneRacer"
 		},
 		"dbo:orientation": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:firstLaunchDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:LaunchPad"
 		},
 		"dbo:signName": {
@@ -5107,7 +5107,7 @@ var createOntology = function(){
 		  "domain": "dbo:PowerStation"
 		},
 		"dbo:atcSuffix": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:wikiPageEditLink": {
@@ -5116,7 +5116,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:quebecerTitle": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Film"
 		},
 		"dbo:populationPlace": {
@@ -5135,19 +5135,19 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:prominence": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:numberOfSpeakers": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Language"
 		},
 		"dbo:cargoFuel": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Spacecraft"
 		},
 		"dbo:satellite": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Planet"
 		},
 		"dbo:patron": {
@@ -5172,17 +5172,17 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:schoolCode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:School"
 		},
 		"dbo:onChromosome": {
 		  "comment": "the number corresponding to the chromosome on which the gene is located",
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:GeneLocation"
 		},
 		"dbo:demolitionDate": {
 		  "comment": "The date the building was demolished.",
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:ArchitecturalStructure"
 		},
 		"dbo:webcast": {
@@ -5194,20 +5194,20 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:averageClassSize": {
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "dbo:School"
 		},
 		"dbo:foot": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:destructionDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "owl:Thing"
 		},
 		"dbo:allegiance": {
 		  "comment": "The country or other power the person served. Multiple countries may be indicated together with the corresponding dates. This field should not be used to indicate a particular service branch, which is better indicated by the branch field.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:executiveProducer": {
@@ -5225,19 +5225,19 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:numberOfOrbits": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:SpaceMission"
 		},
 		"dbo:proSince": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:rank": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:programCost": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Aircraft"
 		},
 		"dbo:source": {
@@ -5255,7 +5255,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:historicalMap": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:altitude": {
@@ -5263,11 +5263,11 @@ var createOntology = function(){
 		  "domain": "dbo:Place"
 		},
 		"dbo:wordBefore": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Country"
 		},
 		"dbo:otherLanguage": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:superFamily": {
@@ -5276,7 +5276,7 @@ var createOntology = function(){
 		},
 		"dbo:chEBI": {
 		  "comment": "A unique identifier for the drug in the Chemical Entities of Biological Interest (ChEBI) ontology",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Drug"
 		},
 		"dbo:wikiPageRedirects": {
@@ -5292,12 +5292,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:outskirts": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:firstPublicationDate": {
 		  "comment": "Date of the first publication.",
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:WrittenWork"
 		},
 		"dbo:vein": {
@@ -5308,12 +5308,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:probowlPick": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:documentNumber": {
 		  "comment": "Identification a document within a particular registry",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Document",
 		  "superproperty": [
 		    "dbo:identifiedBy"
@@ -5328,11 +5328,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:beatifiedDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Saint"
 		},
 		"dbo:lieutenancy": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:head": {
@@ -5344,14 +5344,14 @@ var createOntology = function(){
 		},
 		"dbo:hasNationalArchivesIdentifier": {
 		  "comment": "The National Archives Identifier (http://www.archives.gov/research/search/help/search-tips.html#descriptionid)",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Document",
 		  "superproperty": [
 		    "dbo:identifiedBy"
 		  ]
 		},
 		"dbo:retired": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "owl:Thing"
 		},
 		"dbo:student": {
@@ -5362,7 +5362,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:departmentCode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Municipality"
 		},
 		"dbo:honours": {
@@ -5373,7 +5373,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:maximumBoatBeam": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Canal"
 		},
 		"dbo:mountainRange": {
@@ -5392,7 +5392,7 @@ var createOntology = function(){
 		  "domain": "dbo:MeanOfTransportation"
 		},
 		"dbo:code": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing",
 		  "subproperty": [
 		    "dbo:codeMunicipalMonument",
@@ -5402,35 +5402,35 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:coastLength": {
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "dbo:Place"
 		},
 		"dbo:contractAward": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:SpaceShuttle"
 		},
 		"dbo:seniority": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:isoCodeRegion": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:deadInFightPlace": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:wimbledonDouble": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:numberOfReactors": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:NuclearPowerStation"
 		},
 		"dbo:fcRuns": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Cricketer"
 		},
 		"dbo:tradeMark": {
@@ -5441,7 +5441,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:freeProgCompetition": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:computingMedia": {
@@ -5456,22 +5456,22 @@ var createOntology = function(){
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:brainInfoNumber": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Brain"
 		},
 		"dbo:politicalSeats": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:iso6392Code": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing",
 		  "superproperty": [
 		    "dbo:LanguageCode"
 		  ]
 		},
 		"dbo:numberOfLanes": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:RouteOfTransportation"
 		},
 		"dbo:canonizedPlace": {
@@ -5482,7 +5482,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:luxembourgishName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:discipline": {
@@ -5493,16 +5493,16 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:codeDistrict": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:CityDistrict"
 		},
 		"dbo:surfaceFormOccurrenceOffset": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:reopeningDate": {
 		  "comment": "Date of reopening the architectural structure.",
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:ArchitecturalStructure"
 		},
 		"dbo:relatedMeanOfTransportation": {
@@ -5548,25 +5548,25 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:participant": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Event"
 		},
 		"dbo:wikiPageOutDegree": {
 		  "comment": "Reserved for DBpedia.",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:startDate": {
 		  "comment": "The start date of the event.",
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Event"
 		},
 		"dbo:waterPercentage": {
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "dbo:Place"
 		},
 		"dbo:numberOfCanton": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Department"
 		},
 		"odesignp:isAbout": {
@@ -5578,7 +5578,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:previousPopulationTotal": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:groundsForLiquidation": {
@@ -5587,7 +5587,7 @@ var createOntology = function(){
 		},
 		"dbo:updated": {
 		  "comment": "The last update date of a resource",
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "owl:Thing"
 		},
 		"dbo:railwayRollingStock": {
@@ -5602,11 +5602,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:mayorMandate": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Mayor"
 		},
 		"dbo:inchi": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:ChemicalCompound"
 		},
 		"dbo:alpsSubgroup": {
@@ -5618,7 +5618,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:ensembl": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Biomolecule"
 		},
 		"dbo:biggestCity": {
@@ -5626,11 +5626,11 @@ var createOntology = function(){
 		  "domain": "dbo:Place"
 		},
 		"dbo:missionDuration": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:SpaceMission"
 		},
 		"dbo:nationalTeamMatchPoint": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:coProducer": {
@@ -5656,7 +5656,7 @@ var createOntology = function(){
 		},
 		"dbo:wikiPageModified": {
 		  "comment": "Reserved for DBpedia ''''''",
-		  "range": "xds:dateTime",
+		  "range": "xsd:dateTime",
 		  "domain": "owl:Thing"
 		},
 		"dbo:territory": {
@@ -5674,11 +5674,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:lastPosition": {
-		  "range": "xds:positiveInteger",
+		  "range": "xsd:positiveInteger",
 		  "domain": "dbo:FormulaOneRacer"
 		},
 		"dbo:khlDraft": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:IceHockeyPlayer"
 		},
 		"dbo:buildingType": {
@@ -5690,7 +5690,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:extinctionDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Organisation"
 		},
 		"dbo:training": {
@@ -5727,7 +5727,7 @@ var createOntology = function(){
 		},
 		"dbo:lcc": {
 		  "comment": "The Library of Congress Classification (LCC) is a system of library classification developed by the Library of Congress.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:WrittenWork"
 		},
 		"dbo:availableSmartCard": {
@@ -5739,7 +5739,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:bestRankDouble": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:apcPresident": {
@@ -5750,11 +5750,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:discovered": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Planet"
 		},
 		"dbo:pubchem": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:magazine": {
@@ -5765,11 +5765,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:worldTournamentGold": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:material": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Island"
 		},
 		"dbo:orthologousGene": {
@@ -5795,12 +5795,12 @@ var createOntology = function(){
 		},
 		"dbo:loadLimit": {
 		  "comment": "Load limit of the bridge.",
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Bridge"
 		},
 		"dbo:ngcName": {
 		  "comment": "Name for NGC objects",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:CelestialBody"
 		},
 		"dbo:Distance": {
@@ -5822,11 +5822,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:greenSkiPisteNumber": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Place"
 		},
 		"dbo:otherActivity": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:soccerTournamentClosingSeason": {
@@ -5837,7 +5837,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:urbanArea": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:supplies": {
@@ -5848,7 +5848,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:numberOfTeams": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:SportsLeague"
 		},
 		"dbo:cpu": {
@@ -5859,7 +5859,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:ethnicGroupsInYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "owl:Thing"
 		},
 		"dbo:leftTributary": {
@@ -5877,7 +5877,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:englishName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:house": {
@@ -5892,7 +5892,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:lowest": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:school": {
@@ -5904,16 +5904,16 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:affair": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:nlaId": {
 		  "comment": "NLA Trove\u2019s People and Organisation view allows the discovery of biographical and other contextual information about people and organisations. Search also available via VIAF.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Agent"
 		},
 		"dbo:classification": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Instrument"
 		},
 		"dbo:tenant": {
@@ -5931,7 +5931,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:dischargeAverage": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:MeanOfTransportation"
 		},
 		"dbo:crosses": {
@@ -5956,16 +5956,16 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:third": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:minimumDischarge": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:minimumElevation": {
 		  "comment": "minimum elevation above the sea level",
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Place"
 		},
 		"dbo:illustrator": {
@@ -5985,15 +5985,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:neighbourRegion": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:annualTemperature": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Place"
 		},
 		"dbo:personName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PersonFunction"
 		},
 		"dbo:maintainedBy": {
@@ -6004,11 +6004,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:freeDanseScore": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:birthDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Person",
 		  "functional": true
 		},
@@ -6017,16 +6017,16 @@ var createOntology = function(){
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:creationChristianBishop": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:projectReferenceID": {
 		  "comment": "The reference identification of the project.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:ResearchProject"
 		},
 		"dbo:lunarEvaTime": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:SpaceMission"
 		},
 		"dbo:agglomerationArea": {
@@ -6059,7 +6059,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:operatingIncome": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Company",
 		  "functional": true
 		},
@@ -6072,7 +6072,7 @@ var createOntology = function(){
 		},
 		"dbo:shipDraft": {
 		  "comment": "The draft (or draught) of a ship's hull is the vertical distance between the waterline and the bottom of the hull (keel), with the thickness of the hull included; in the case of not being included the draft outline would be obtained.",
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Ship"
 		},
 		"dbo:startPoint": {
@@ -6094,20 +6094,20 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:blazonCaption": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Blazon"
 		},
 		"dbo:blazon": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:numberOfCountry": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Continent"
 		},
 		"dbo:visitorStatisticsAsOf": {
 		  "comment": "Year visitor information was gathered.",
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:ArchitecturalStructure"
 		},
 		"dbo:lastFamilyMember": {
@@ -6122,7 +6122,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:skiPisteNumber": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Place"
 		},
 		"dbo:intercommunality": {
@@ -6140,7 +6140,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:thumbnailCaption": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:makeupArtist": {
@@ -6153,7 +6153,7 @@ var createOntology = function(){
 		},
 		"dbo:numberOfVehicles": {
 		  "comment": "Number of vehicles used in the transit system.",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PublicTransitSystem"
 		},
 		"odesignp:nearTo": {
@@ -6182,7 +6182,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:eptTitle": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PokerPlayer"
 		},
 		"dbo:playRole": {
@@ -6194,15 +6194,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:drugbank": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:fullScore": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:molecularWeight": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:ChemicalSubstance"
 		},
 		"dbo:Spacecraft/port1DockedTime": {
@@ -6217,7 +6217,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:sharingOutPopulationName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:hubAirport": {
@@ -6228,7 +6228,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:worstDefeat": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:SoccerClub"
 		},
 		"dbo:screenActorsGuildAward": {
@@ -6239,7 +6239,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:playingTime": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:management": {
@@ -6250,7 +6250,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:firstFlightEndDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:SpaceShuttle"
 		},
 		"dbo:arrondissement": {
@@ -6261,12 +6261,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:isil": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Library"
 		},
 		"dbo:inseeCode": {
 		  "comment": "numerical indexing code used by the French National Institute for Statistics and Economic Studies (INSEE) to identify various entities",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Settlement",
 		  "superproperty": [
 		    "dbo:codeSettlement"
@@ -6280,7 +6280,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:populationYear": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:grandsire": {
@@ -6292,7 +6292,7 @@ var createOntology = function(){
 		},
 		"dbo:impactFactorAsOf": {
 		  "comment": "Census year of the imapct factor.",
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:AcademicJournal"
 		},
 		"dbo:blockAlloy": {
@@ -6303,11 +6303,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:elo": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:ChessPlayer"
 		},
 		"dbo:detectionMethod": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Planet"
 		},
 		"dbo:formerBandMember": {
@@ -6320,7 +6320,7 @@ var createOntology = function(){
 		},
 		"dbo:militaryUnitSize": {
 		  "comment": "the size of the military unit",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:alpsMajorSector": {
@@ -6332,7 +6332,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:areaMetro": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:detractor": {
@@ -6347,7 +6347,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:numberOfMinistries": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Country"
 		},
 		"dbo:beatifiedPlace": {
@@ -6391,7 +6391,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:filename": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:winsAtJapan": {
@@ -6402,7 +6402,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:carcinogen": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:ChemicalSubstance"
 		},
 		"dbo:currency": {
@@ -6413,11 +6413,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:landPercentage": {
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "dbo:Place"
 		},
 		"dbo:polePosition": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:jurisdiction": {
@@ -6440,11 +6440,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:pole": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:dorlandsSuffix": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:AnatomicalStructure"
 		},
 		"dbo:hasInput": {
@@ -6452,16 +6452,16 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:nrhpReferenceNumber": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:HistoricPlace"
 		},
 		"dbo:genereviewsid": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Disease"
 		},
 		"dbo:militaryCommand": {
 		  "comment": "For persons who are notable as commanding officers, the units they commanded. Dates should be given if multiple notable commands were held.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:MilitaryPerson"
 		},
 		"dbo:viceLeaderParty": {
@@ -6473,7 +6473,7 @@ var createOntology = function(){
 		},
 		"dbo:bicycleInformation": {
 		  "comment": "Information on station's bicycle facilities.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Station"
 		},
 		"dbo:alpsMainPart": {
@@ -6485,11 +6485,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:tattoo": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:landtagMandate": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:emedicineSubject": {
@@ -6498,7 +6498,7 @@ var createOntology = function(){
 		},
 		"dbo:majorityFloorLeader": {
 		  "comment": "number of office holder",
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "owl:Thing"
 		},
 		"dbo:pastor": {
@@ -6517,15 +6517,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:publicationDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "owl:Thing"
 		},
 		"dbo:captureDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Ship"
 		},
 		"dbo:numberOfSeasons": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:TelevisionShow"
 		},
 		"dbo:conflict": {
@@ -6533,12 +6533,12 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:numberOfParticipatingNations": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Olympics"
 		},
 		"dbo:vehicleCode": {
 		  "comment": "Region related vehicle code on the vehicle plates.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:ruralMunicipality": {
@@ -6549,7 +6549,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:temple": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:thirdTeam": {
@@ -6567,7 +6567,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:orbitalInclination": {
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "dbo:SpaceMission"
 		},
 		"dbo:touristicSite": {
@@ -6589,20 +6589,20 @@ var createOntology = function(){
 		  "domain": "dbo:Person"
 		},
 		"dbo:lastLaunch": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:YearInSpaceflight"
 		},
 		"dbo:olympicGamesGold": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:numberOfPlatformLevels": {
 		  "comment": "Number of levels of platforms at the station.",
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:Station"
 		},
 		"dbo:inclination": {
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "dbo:Spacecraft"
 		},
 		"dbo:officialLanguage": {
@@ -6625,11 +6625,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:numberOfStaff": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Organisation"
 		},
 		"dbo:mvp": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"odesignp:hasPart": {
@@ -6682,7 +6682,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:barangays": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:Tribus": {
@@ -6694,15 +6694,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:background": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:blazonRatio": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:numberOfIslands": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Island"
 		},
 		"odesignp:associatedWith": {
@@ -6714,7 +6714,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:largestWin": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:SoccerClub"
 		},
 		"dbo:aircraftFighter": {
@@ -6736,11 +6736,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:usOpenSingle": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:kabyleName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:silCode": {
@@ -6751,11 +6751,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:populationTotalRanking": {
-		  "range": "xds:positiveInteger",
+		  "range": "xsd:positiveInteger",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:casualties": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:MilitaryConflict"
 		},
 		"dbo:AutomobileEngine/torqueOutput": {
@@ -6770,7 +6770,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:stationVisitDuration": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:SpaceMission"
 		},
 		"dbo:canton": {
@@ -6788,21 +6788,21 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:redline": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:AutomobileEngine",
 		  "functional": true
 		},
 		"dbo:wavelength": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Colour"
 		},
 		"dbo:satellitesDeployed": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:SpaceShuttle"
 		},
 		"dbo:homeColourHexCode": {
 		  "comment": "A colour represented by its hex code (e.g.: #FF0000 or #40E0D0).",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing",
 		  "superproperty": [
 		    "dbo:colourHexCode"
@@ -6835,7 +6835,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:silverMedalMixed": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:MeanOfTransportation/height": {
@@ -6844,12 +6844,12 @@ var createOntology = function(){
 		},
 		"dbo:numberOfTracks": {
 		  "comment": "Number of tracks of a railway or railway station.",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Infrastructure"
 		},
 		"dbo:legalArticle": {
 		  "comment": "article in code book or statute book referred to in this legal case",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:LegalCase"
 		},
 		"dbo:clubsRecordGoalscorer": {
@@ -6881,19 +6881,19 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:notifyDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:SiteOfSpecialScientificInterest"
 		},
 		"dbo:activeYearsStartDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "owl:Thing"
 		},
 		"dbo:runwayWidth": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Airport"
 		},
 		"dbo:selectionYear": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:lchfDraftTeam": {
@@ -6909,7 +6909,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:startWqs": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:headOfFamily": {
@@ -6918,26 +6918,26 @@ var createOntology = function(){
 		},
 		"dbo:security": {
 		  "comment": "Safety precautions that are used in the building.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Building"
 		},
 		"dbo:codeStockExchange": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Company",
 		  "superproperty": [
 		    "dbo:code"
 		  ]
 		},
 		"dbo:pistonStroke": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:AutomobileEngine"
 		},
 		"dbo:mayorCouncillor": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:certification": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Single"
 		},
 		"dbo:capitalRegion": {
@@ -6952,11 +6952,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:moldavianName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:algerianName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:agglomeration": {
@@ -6971,23 +6971,23 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:dateOfAbandonment": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "owl:Thing"
 		},
 		"dbo:imdbId": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Film"
 		},
 		"dbo:shareSource": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Broadcaster"
 		},
 		"dbo:buildingEndDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:ArchitecturalStructure"
 		},
 		"dbo:meshNumber": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:AnatomicalStructure"
 		},
 		"odesignp:hasCommonBoundary": {
@@ -7037,7 +7037,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:colorChart": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:FictionalCharacter"
 		},
 		"dbo:diocese": {
@@ -7057,15 +7057,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:campusSize": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:School"
 		},
 		"dbo:establishment": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:ChristianDoctrine"
 		},
 		"dbo:reignName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:settlement": {
@@ -7084,12 +7084,12 @@ var createOntology = function(){
 		},
 		"dbo:wikiPageExtracted": {
 		  "comment": "Date a page was extracted ''''''",
-		  "range": "xds:dateTime",
+		  "range": "xsd:dateTime",
 		  "domain": "owl:Thing"
 		},
 		"dbo:wikiPageID": {
 		  "comment": "Reserved for DBpedia.",
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "owl:Thing"
 		},
 		"dbo:commandant": {
@@ -7101,15 +7101,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:historicalRegion": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:measurements": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:shareOfAudience": {
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "dbo:Broadcaster"
 		},
 		"dbo:LanguageCode": {
@@ -7143,12 +7143,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:populationUrban": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:lccn": {
 		  "comment": "The Library of Congress Control Number or LCCN is a serially based system of numbering cataloging records in the Library of Congress in the United States. It has nothing to do with the contents of any book, and should not be confused with Library of Congress Classification.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:WrittenWork"
 		},
 		"dbo:continent": {
@@ -7169,28 +7169,28 @@ var createOntology = function(){
 		},
 		"dbo:filmAudioType": {
 		  "comment": "specifies the audio type of the film i.e. 'sound' or 'silent'",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Film"
 		},
 		"dbo:flagCaption": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Flag"
 		},
 		"dbo:isHandicappedAccessible": {
 		  "comment": "True if the station is handicapped accessible.",
-		  "range": "xds:boolean",
+		  "range": "xsd:boolean",
 		  "domain": "dbo:Station"
 		},
 		"dbo:runwaySurface": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Airport"
 		},
 		"dbo:kanjiName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:route": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:grossDomesticProduct": {
@@ -7198,24 +7198,24 @@ var createOntology = function(){
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:bustSize": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Person"
 		},
 		"dbo:numberOfPlayers": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Activity"
 		},
 		"dbo:casNumber": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:ChemicalCompound"
 		},
 		"dbo:initiallyUsedFor": {
 		  "comment": "Initial use of the architectural structure.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:ArchitecturalStructure"
 		},
 		"dbo:bigPoolRecord": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:athletics": {
@@ -7226,7 +7226,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:capitalCoordinates": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:formerBroadcastNetwork": {
@@ -7238,11 +7238,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:populationMetro": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:min": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:olympicOathSwornByJudge": {
@@ -7254,7 +7254,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:touaregName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:governmentMountain": {
@@ -7279,20 +7279,20 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:refseq": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Protein"
 		},
 		"dbo:topLevelDomain": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Country"
 		},
 		"dbo:bioavailability": {
 		  "comment": "\"The rate and extent to which the active ingredient or active moiety is absorbed from a drug product and becomes available at the site of action. For drug products that are not intended to be absorbed into the bloodstream, bioavailability may be assessed by measurements intended to reflect the rate and extent to which the active ingredient or active moiety becomes available at the site of action (21CFR320.1).\"",
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "dbo:Drug"
 		},
 		"dbo:numberOfStars": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Constellation"
 		},
 		"dbo:otherParty": {
@@ -7311,7 +7311,7 @@ var createOntology = function(){
 		},
 		"dbo:projectBudgetTotal": {
 		  "comment": "The total budget of the research project.",
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:ResearchProject"
 		},
 		"dbo:provinceLink": {
@@ -7326,7 +7326,7 @@ var createOntology = function(){
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:sublimationPoint": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:crew": {
@@ -7359,35 +7359,35 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:eruptionYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:Volcano"
 		},
 		"dbo:command": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:MilitaryPerson"
 		},
 		"dbo:successfulLaunches": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:bestRankSingle": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:fansgroup": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:SoccerClub"
 		},
 		"dbo:escapeVelocity": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Planet"
 		},
 		"dbo:amateurTie": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Boxer"
 		},
 		"dbo:leadYear": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:city": {
@@ -7398,21 +7398,21 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:reopened": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:School"
 		},
 		"dbo:averageSpeed": {
 		  "comment": "The average speed of a thing.",
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:heightAboveAverageTerrain": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Broadcaster"
 		},
 		"dbo:graySubject": {
 		  "comment": "Refers to the famous 1918 edition of Gray's Anatomy.",
-		  "range": "xds:positiveInteger",
+		  "range": "xsd:positiveInteger",
 		  "domain": "dbo:AnatomicalStructure"
 		},
 		"dbo:provides": {
@@ -7423,7 +7423,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:lastLaunchDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:LaunchPad"
 		},
 		"dbo:knownFor": {
@@ -7434,7 +7434,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:review": {
-		  "range": "xds:anyURI",
+		  "range": "xsd:anyURI",
 		  "domain": "dbo:Album"
 		},
 		"dbo:linguisticsTradition": {
@@ -7461,12 +7461,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:sharingOutPopulation": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:ibdbId": {
 		  "comment": "The Internet Broadway Database ID (IBDB ID) from ibdb.com.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Play"
 		},
 		"odesignp:isLocationOf": {
@@ -7502,48 +7502,48 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:neighbourConstellations": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Constellation"
 		},
 		"dbo:dateOfBurial": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Person"
 		},
 		"dbo:penaltyScore": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:PenaltyShootOut"
 		},
 		"dbo:issn": {
 		  "comment": "International Standard Serial Number (ISSN)",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PeriodicalLiterature"
 		},
 		"dbo:ridId": {
 		  "comment": "An identifying system for scientific authors. The system was introduced in January 2008 by Thomson Reuters. The combined use of the Digital Object Identifier with the ResearcherID allows for a unique association of authors and scientific articles.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:filmColourType": {
 		  "comment": "specifies the colour type of the film i.e. 'colour' or 'b/w'",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Film"
 		},
 		"dbo:amateurVictory": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Boxer"
 		},
 		"dbo:sixthFormStudents": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:School"
 		},
 		"dbo:settingOfPlay": {
 		  "comment": "The places and time where the play takes place.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Play"
 		},
 		"dbo:maidenFlight": {
 		  "comment": "date of maiden flight",
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Rocket"
 		},
 		"dbo:animal": {
@@ -7554,7 +7554,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:nationalTournamentBronze": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:spacecraft": {
@@ -7565,36 +7565,36 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:solubility": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:ChemicalSubstance"
 		},
 		"dbo:modelEndYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:MeanOfTransportation"
 		},
 		"dbo:usk": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "owl:Thing"
 		},
 		"dbo:meltingPoint": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:games": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:OlympicResult"
 		},
 		"dbo:acceleration": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:AutomobileEngine",
 		  "functional": true
 		},
 		"dbo:dist_ly": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:kindOfRock": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:show": {
@@ -7605,7 +7605,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:stockExchange": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Company"
 		},
 		"dbo:crest": {
@@ -7620,11 +7620,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:mood": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:icd9": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Disease"
 		},
 		"dbo:layout": {
@@ -7635,11 +7635,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:tuition": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:School"
 		},
 		"dbo:numberOfEmployees": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Organisation"
 		},
 		"dbo:outflow": {
@@ -7655,11 +7655,11 @@ var createOntology = function(){
 		},
 		"dbo:wikiPageRevisionID": {
 		  "comment": "Reserved for DBpedia.",
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "owl:Thing"
 		},
 		"dbo:prefix": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:comic": {
@@ -7670,11 +7670,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:landtag": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:value": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:name": {
@@ -7686,11 +7686,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:activeYearsEndYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "owl:Thing"
 		},
 		"dbo:tvComId": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:TelevisionShow"
 		},
 		"dbo:map": {
@@ -7710,11 +7710,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:max": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:areaUrban": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:dynasty": {
@@ -7722,29 +7722,29 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:maximumDepthQuote": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:publication": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:co2Emission": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:AutomobileEngine",
 		  "functional": true
 		},
 		"dbo:dist_pc": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "owl:Thing"
 		},
 		"dbo:projectType": {
 		  "comment": "The type of the research project. Mostly used for the funding schemes of the European Union, for instance: Specific Targeted Research Projects (STREP), Network of Excellence (NoE) or Integrated Project.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:ResearchProject"
 		},
 		"dbo:geology": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:notableWork": {
@@ -7760,7 +7760,7 @@ var createOntology = function(){
 		},
 		"dbo:worldChampionTitleYear": {
 		  "comment": "can be one or several years",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:father": {
@@ -7771,19 +7771,19 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:populationPctMen": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:recommissioningDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Ship"
 		},
 		"dbo:rankArea": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:ascent": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:sportSpecialty": {
@@ -7802,16 +7802,16 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:crews": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:SpaceShuttle"
 		},
 		"dbo:length": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing",
 		  "functional": true
 		},
 		"dbo:aircraftType": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Aircraft"
 		},
 		"dbo:generalManager": {
@@ -7834,19 +7834,19 @@ var createOntology = function(){
 		  "domain": "dbo:Person"
 		},
 		"dbo:openingYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:ArchitecturalStructure"
 		},
 		"dbo:popularVote": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Election"
 		},
 		"dbo:cmykCoordinateYellow": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:Colour"
 		},
 		"dbo:recordDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:MusicalWork"
 		},
 		"dbo:usingCountry": {
@@ -7875,11 +7875,11 @@ var createOntology = function(){
 		},
 		"dbo:smiles": {
 		  "comment": "The Simplified Molecular-Input Line-Entry System or SMILES is a specification in form of a line notation for describing the structure of chemical molecules using short ASCII strings.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:ChemicalCompound"
 		},
 		"dbo:numberOfArrondissement": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Department"
 		},
 		"dbo:currentMember": {
@@ -7897,7 +7897,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:kindOfCriminal": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:SpaceMission/distanceTraveled": {
@@ -7909,7 +7909,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:regionalPrefecture": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:march": {
@@ -7946,11 +7946,11 @@ var createOntology = function(){
 		  "domain": "dbo:File"
 		},
 		"dbo:numberOfAcademicStaff": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:EducationalInstitution"
 		},
 		"dbo:startWct": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:soccerTournamentTopScorer": {
@@ -7968,11 +7968,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:spouseName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:usOpenDouble": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:mouthDistrict": {
@@ -7983,7 +7983,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:information": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:ethnicity": {
@@ -7995,11 +7995,11 @@ var createOntology = function(){
 		},
 		"dbo:flashPoint": {
 		  "comment": "lowest temperature at which a substance can vaporize and start burning",
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:ChemicalSubstance"
 		},
 		"dbo:unitCost": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Aircraft"
 		},
 		"dbo:formerPartner": {
@@ -8011,11 +8011,11 @@ var createOntology = function(){
 		},
 		"dbo:numberOfPiersInWater": {
 		  "comment": "Number of piers standing in a river or other water in normal conditions.",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Bridge"
 		},
 		"dbo:blackSkiPisteNumber": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Place"
 		},
 		"dbo:Automobile/fuelCapacity": {
@@ -8038,7 +8038,7 @@ var createOntology = function(){
 		},
 		"dbo:wikiPageCharacterSize": {
 		  "comment": "Needs to be removed, left at the moment to not break DBpedia Live",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:trainer": {
@@ -8049,7 +8049,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:distanceTraveled": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:SpaceMission"
 		},
 		"dbo:administrativeCollectivity": {
@@ -8064,28 +8064,28 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:sizeMap": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:bestYearWsop": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:PokerPlayer"
 		},
 		"dbo:closingDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "owl:Thing"
 		},
 		"dbo:codeBook": {
 		  "comment": "code book or statute book referred to in this legal case",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:LegalCase"
 		},
 		"dbo:rankingsDoubles": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:TennisPlayer"
 		},
 		"dbo:port1DockingDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Spacecraft"
 		},
 		"dbo:enemy": {
@@ -8096,7 +8096,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:maximumAreaQuote": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:media": {
@@ -8105,16 +8105,16 @@ var createOntology = function(){
 		},
 		"dbo:episodeNumber": {
 		  "comment": "The episode number of the TelevisionEpisode.",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:TelevisionEpisode"
 		},
 		"dbo:coachingRecord": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:CollegeCoach"
 		},
 		"dbo:seasonNumber": {
 		  "comment": "The season number to which the TelevisionEpisode belongs.",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:TelevisionEpisode"
 		},
 		"dbo:mayorTitle": {
@@ -8127,15 +8127,15 @@ var createOntology = function(){
 		},
 		"dbo:servingTemperature": {
 		  "comment": "Serving temperature for the food (e.g.: hot, cold, warm or room temperature).",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Food"
 		},
 		"dbo:distanceToDublin": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:dateConstruction": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Canal"
 		},
 		"dbo:artery": {
@@ -8154,20 +8154,20 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:handisport": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:powerOutput": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:AutomobileEngine",
 		  "functional": true
 		},
 		"dbo:representative": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Place"
 		},
 		"dbo:presentName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:FormerMunicipality"
 		},
 		"dbo:worldTournament": {
@@ -8219,16 +8219,16 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:numberOfWineries": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:WineRegion"
 		},
 		"dbo:serviceNumber": {
 		  "comment": "The service number held by the individual during military service.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:MilitaryPerson"
 		},
 		"dbo:numberOfDistricts": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Regency"
 		},
 		"dbo:activeYears": {
@@ -8243,28 +8243,28 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:citySince": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:average": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:alpsSoiusaCode": {
 		  "comment": "the Alps SOIUSA code corresponding to the mountain, according to the SOIUSA classification",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Mountain"
 		},
 		"dbo:atcSupplemental": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:stateOfOriginPoint": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:noContest": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Boxer"
 		},
 		"dbo:PopulatedPlace/areaUrban": {
@@ -8272,15 +8272,15 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:numberOfVillages": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:District"
 		},
 		"dbo:maxApparentMagnitude": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:CelestialBody"
 		},
 		"dbo:numberOfUndergraduateStudents": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:EducationalInstitution"
 		},
 		"dbo:Person/weight": {
@@ -8288,11 +8288,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:supplementalDraftRound": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:commandModule": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:SpaceMission"
 		},
 		"dbo:firstWinner": {
@@ -8304,7 +8304,7 @@ var createOntology = function(){
 		},
 		"dbo:coden": {
 		  "comment": "CODEN is a six character, alphanumeric bibliographic code, that provides concise, unique and unambiguous identification of the titles of serials and non-serial publications from all subject areas.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:WrittenWork"
 		},
 		"dbo:battle": {
@@ -8322,23 +8322,23 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:distanceToDouglas": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:emblem": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:governorate": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:crownDependency": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:City"
 		},
 		"dbo:digitalChannel": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Broadcaster"
 		},
 		"dbo:olivierAward": {
@@ -8356,15 +8356,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:coordinates": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:olympicGamesBronze": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:introduced": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Beverage"
 		},
 		"dbo:associate": {
@@ -8376,20 +8376,20 @@ var createOntology = function(){
 		},
 		"dbo:yearOfConstruction": {
 		  "comment": "The year in which construction of the Place was finished.",
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:Place"
 		},
 		"dbo:uciCode": {
 		  "comment": "Official UCI code for cycling teams",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:CyclingTeam"
 		},
 		"dbo:space": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Building"
 		},
 		"dbo:endCareer": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:federation": {
@@ -8405,7 +8405,7 @@ var createOntology = function(){
 		},
 		"dbo:ekatteCode": {
 		  "comment": "Indexing code used by the Bulgarian National Statistical Institute to identify populated places",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:debutTeam": {
@@ -8416,20 +8416,20 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:redLongDistancePisteNumber": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Place"
 		},
 		"dbo:isPartOfRoute": {
 		  "comment": "Name of another route from which the route is part of. Infobox property values are mostly given as plain text, therefore range is xsd:string.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:RouteOfTransportation"
 		},
 		"dbo:technique": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Painting"
 		},
 		"dbo:totalMass": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Spacecraft"
 		},
 		"dbo:belgiumMergedSettlement": {
@@ -8444,11 +8444,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:timeshiftChannel": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:TelevisionStation"
 		},
 		"dbo:numberOfEntrances": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Cave"
 		},
 		"dbo:sourceRegion": {
@@ -8467,11 +8467,11 @@ var createOntology = function(){
 		},
 		"dbo:elevation": {
 		  "comment": "average elevation above the sea level",
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Place"
 		},
 		"dbo:originalMaximumBoatBeam": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Canal"
 		},
 		"dbo:belgiumReffBourgmestre": {
@@ -8482,15 +8482,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:decideDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:SupremeCourtOfTheUnitedStatesCase"
 		},
 		"dbo:chaouiName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:proYear": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:stateOfOriginTeam": {
@@ -8498,12 +8498,12 @@ var createOntology = function(){
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:originalDanseScore": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:demolitionYear": {
 		  "comment": "The year the building was demolished.",
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:ArchitecturalStructure"
 		},
 		"dbo:capitalPosition": {
@@ -8514,7 +8514,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:foundation": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:oldTeamCoached": {
@@ -8522,23 +8522,23 @@ var createOntology = function(){
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:termOfOffice": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:awayColourHexCode": {
 		  "comment": "A colour represented by its hex code (e.g.: #FF0000 or #40E0D0).",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing",
 		  "superproperty": [
 		    "dbo:colourHexCode"
 		  ]
 		},
 		"dbo:protestantPercentage": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:nationalTopographicSystemMapNumber": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:wineRegion": {
@@ -8549,7 +8549,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:credit": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:influenced": {
@@ -8578,12 +8578,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:railGauge": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:RouteOfTransportation"
 		},
 		"dbo:approximateCalories": {
 		  "comment": "Approximate calories per serving.",
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Food"
 		},
 		"dbo:project": {
@@ -8591,7 +8591,7 @@ var createOntology = function(){
 		  "domain": "dbo:Person"
 		},
 		"dbo:dissolutionDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:boxerCategory": {
@@ -8619,16 +8619,16 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:upperAge": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:School"
 		},
 		"dbo:eruption": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Island"
 		},
 		"dbo:numberOfLiveAlbums": {
 		  "comment": "the number of live albums released by the musical artist",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:MusicalArtist"
 		},
 		"dbo:bodyStyle": {
@@ -8648,7 +8648,7 @@ var createOntology = function(){
 		},
 		"dbo:firstPublicationYear": {
 		  "comment": "Year of the first publication.",
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:PeriodicalLiterature"
 		},
 		"dbo:teamManager": {
@@ -8663,7 +8663,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:hsvCoordinateSaturation": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:Colour"
 		},
 		"dbo:projectCoordinator": {
@@ -8683,11 +8683,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:productionEndYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "owl:Thing"
 		},
 		"dbo:battleHonours": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:MilitaryUnit"
 		},
 		"dbo:occupation": {
@@ -8699,11 +8699,11 @@ var createOntology = function(){
 		},
 		"dbo:iobdbId": {
 		  "comment": "Lortel Archives Internet Off-Broadway database \"show id\" from lortel.org.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Play"
 		},
 		"dbo:races": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:FormulaOneRacer"
 		},
 		"dbo:depths": {
@@ -8711,22 +8711,22 @@ var createOntology = function(){
 		  "domain": "dbo:Place"
 		},
 		"dbo:bSide": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Single"
 		},
 		"dbo:coronationDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Royalty"
 		},
 		"dbo:iso6393Code": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing",
 		  "superproperty": [
 		    "dbo:LanguageCode"
 		  ]
 		},
 		"dbo:center": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:creator": {
@@ -8737,11 +8737,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:systemRequirements": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:numberOfParticipatingMaleAthletes": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Olympics"
 		},
 		"dbo:lieutenant": {
@@ -8752,16 +8752,16 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:certificationDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Single"
 		},
 		"dbo:deathYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:Person",
 		  "functional": true
 		},
 		"dbo:weddingParentsDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Person"
 		},
 		"dbo:lowestMountain": {
@@ -8772,7 +8772,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:continentalTournamentSilver": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"odesignp:hasMember": {
@@ -8795,15 +8795,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:extinctionYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:Organisation"
 		},
 		"dbo:fighter": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:watershed": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Stream"
 		},
 		"dbo:predecessor": {
@@ -8821,7 +8821,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:managerYearsEndYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "owl:Thing"
 		},
 		"dbo:notSolubleIn": {
@@ -8834,15 +8834,15 @@ var createOntology = function(){
 		},
 		"dbo:reopeningYear": {
 		  "comment": "Year of reopening the architectural structure.",
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:ArchitecturalStructure"
 		},
 		"dbo:ratio": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:School"
 		},
 		"dbo:rankPopulation": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:juniorTeam": {
@@ -8850,40 +8850,40 @@ var createOntology = function(){
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:war": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:MilitaryPerson"
 		},
 		"dbo:codeLandRegistry": {
 		  "comment": "Land Registry code designating a parcel of land",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place",
 		  "superproperty": [
 		    "dbo:Code"
 		  ]
 		},
 		"dbo:formationYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:Organisation"
 		},
 		"dbo:spike": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:VolleyballPlayer"
 		},
 		"dbo:lccnId": {
 		  "comment": "Library of Congress Control Number",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:numberOfVolunteers": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Organisation"
 		},
 		"dbo:startYearOfInsertion": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:AutomobileEngine"
 		},
 		"dbo:maxAbsoluteMagnitude": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:CelestialBody"
 		},
 		"dbo:organisationMember": {
@@ -8895,7 +8895,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:status": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:otherName": {
@@ -8904,7 +8904,7 @@ var createOntology = function(){
 		},
 		"dbo:numberOfPeopleLicensed": {
 		  "comment": "nombre de personnes ayant une license pour pratiquer cette activit\u00e9",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Activity"
 		},
 		"dbo:wikiPageExternalLink": {
@@ -8913,15 +8913,15 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:formerCallsign": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Broadcaster"
 		},
 		"dbo:lunarModule": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:SpaceMission"
 		},
 		"dbo:dateExtended": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Canal"
 		},
 		"dbo:guest": {
@@ -8932,23 +8932,23 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:sizeThumbnail": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:militaryGovernment": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:kindOfCriminalAction": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:apoapsis": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:CelestialBody"
 		},
 		"dbo:periapsis": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:CelestialBody"
 		},
 		"dbo:richestCountry": {
@@ -8979,16 +8979,16 @@ var createOntology = function(){
 		},
 		"dbo:finalPublicationYear": {
 		  "comment": "Year of the final publication.",
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:PeriodicalLiterature"
 		},
 		"dbo:refseqmrna": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Biomolecule"
 		},
 		"dbo:firstAirDate": {
 		  "comment": "The date on which regular broadcasts began.",
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Broadcaster"
 		},
 		"dbo:custodian": {
@@ -9006,12 +9006,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:birthYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:Person",
 		  "functional": true
 		},
 		"dbo:locality": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:managementPosition": {
@@ -9022,16 +9022,16 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:watercourse": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:stationStructure": {
 		  "comment": "Type of station structure (underground, at-grade, or elevated).",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Station"
 		},
 		"dbo:ithfDate": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:sourceConfluencePlace": {
@@ -9053,7 +9053,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:areaTotalRanking": {
-		  "range": "xds:positiveInteger",
+		  "range": "xsd:positiveInteger",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:bandMember": {
@@ -9079,7 +9079,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:localizationThumbnailCaption": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"odesignp:unifies": {
@@ -9091,11 +9091,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:littlePoolRecord": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:argueDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:SupremeCourtOfTheUnitedStatesCase"
 		},
 		"dbo:PopulatedPlace/area": {
@@ -9113,7 +9113,7 @@ var createOntology = function(){
 		},
 		"dbo:countryRank": {
 		  "comment": "Place of the building in the list of the highest buildings in the country",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Skyscraper"
 		},
 		"dbo:campus": {
@@ -9124,11 +9124,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:clothingSize": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:atcPrefix": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:retiredRocket": {
@@ -9147,7 +9147,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:perCapitaIncome": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:PopulatedPlace/areaMetro": {
@@ -9155,12 +9155,12 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:commissioningDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Ship"
 		},
 		"dbo:numberOfStudioAlbums": {
 		  "comment": "the number of studio albums released by the musical artist",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:MusicalArtist"
 		},
 		"odesignp:conceptualizes": {
@@ -9180,7 +9180,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:displacement": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:AutomobileEngine",
 		  "functional": true
 		},
@@ -9204,15 +9204,15 @@ var createOntology = function(){
 		},
 		"dbo:dressCode": {
 		  "comment": "The recommended dress code for an establishment or event.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Restaurant"
 		},
 		"dbo:v_hb": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:Globularswarm"
 		},
 		"dbo:numberOfLocations": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Organisation"
 		},
 		"dbo:filmVersion": {
@@ -9225,28 +9225,28 @@ var createOntology = function(){
 		},
 		"dbo:numberOfVisitorsAsOf": {
 		  "comment": "The year in which number of visitors occurred.",
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:HistoricPlace"
 		},
 		"dbo:hairColour": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:rightAscension": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Constellation"
 		},
 		"dbo:routeEndDirection": {
 		  "comment": "End of the route. The opposite of OntologyProperty:routeStartDirection.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:RouteOfTransportation"
 		},
 		"dbo:disbanded": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:MilitaryUnit"
 		},
 		"dbo:landingSite": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:SpaceMission"
 		},
 		"dbo:riverBranchOf": {
@@ -9257,7 +9257,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:fastestLap": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:FormulaOneRacer"
 		},
 		"dbo:aircraftTrainer": {
@@ -9298,19 +9298,19 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:employersCelebration": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:orbitalEccentricity": {
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "dbo:CelestialBody"
 		},
 		"dbo:parliamentaryGroup": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:nndbId": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:youthWing": {
@@ -9321,7 +9321,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:lunarSurfaceTime": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:SpaceMission"
 		},
 		"dbo:taxon": {
@@ -9329,7 +9329,7 @@ var createOntology = function(){
 		  "domain": "dbo:Species"
 		},
 		"dbo:numberOfCompetitors": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:OlympicResult"
 		},
 		"dbo:solicitorGeneral": {
@@ -9341,11 +9341,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:rolandGarrosDouble": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:numberOfGoals": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:CareerStation"
 		},
 		"dbo:growingGrape": {
@@ -9363,7 +9363,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:serviceEndYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:MilitaryPerson"
 		},
 		"dbo:created": {
@@ -9382,11 +9382,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:abstensions": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:StatedResolution"
 		},
 		"dbo:summerTemperature": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Settlement"
 		},
 		"odesignp:follows": {
@@ -9436,20 +9436,20 @@ var createOntology = function(){
 		},
 		"dbo:isbn": {
 		  "comment": "The International Standard Book Number (ISBN) is a unique numeric commercial book identifier based upon the 9-digit Standard Book Numbering (SBN) code.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Book"
 		},
 		"dbo:catch": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:marketCapitalisation": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Company",
 		  "functional": true
 		},
 		"dbo:censusYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:nationalOlympicCommittee": {
@@ -9460,7 +9460,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:mayorArticle": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:product": {
@@ -9472,11 +9472,11 @@ var createOntology = function(){
 		},
 		"dbo:atPage": {
 		  "comment": "Page # where the referenced resource is to be found in the source document",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Reference"
 		},
 		"dbo:dateClosed": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Canal"
 		},
 		"dbo:branchTo": {
@@ -9487,12 +9487,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:formerChannel": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Broadcaster"
 		},
 		"dbo:finalFlight": {
 		  "comment": "date of final flight",
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Rocket"
 		},
 		"dbo:aircraftUser": {
@@ -9503,7 +9503,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:orbitalPeriod": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Planet"
 		},
 		"dbo:picture": {
@@ -9522,7 +9522,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:runwayDesignation": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Airport"
 		},
 		"dbo:presentMunicipality": {
@@ -9530,20 +9530,20 @@ var createOntology = function(){
 		  "domain": "dbo:FormerMunicipality"
 		},
 		"dbo:foundingYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "owl:Thing"
 		},
 		"dbo:typeCoordinate": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:templeYear": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:openAccessContent": {
 		  "comment": "Availability of open access content.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PeriodicalLiterature"
 		},
 		"dbo:era": {
@@ -9554,7 +9554,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:collection": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Museum"
 		},
 		"dbo:mainCharacter": {
@@ -9562,15 +9562,15 @@ var createOntology = function(){
 		  "domain": "dbo:Work"
 		},
 		"dbo:budget": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:bloodGroup": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:starRating": {
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "dbo:Hotel"
 		},
 		"dbo:demonym": {
@@ -9578,20 +9578,20 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:nationalChampionship": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:ageRange": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:School"
 		},
 		"dbo:notes": {
 		  "comment": "additional notes that better describe the entity.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:circulation": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:WrittenWork"
 		},
 		"dbo:Spacecraft/port2DockedTime": {
@@ -9632,7 +9632,7 @@ var createOntology = function(){
 		},
 		"dbo:bpnId": {
 		  "comment": "Dutch project with material for 40,000 digitized biographies, including former colonies of the Netherlands.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:employer": {
@@ -9644,11 +9644,11 @@ var createOntology = function(){
 		},
 		"dbo:oclc": {
 		  "comment": "Online Computer Library Center number",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:WrittenWork"
 		},
 		"dbo:broadcastStationClass": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Broadcaster"
 		},
 		"dbo:prefect": {
@@ -9663,11 +9663,11 @@ var createOntology = function(){
 		  "domain": "http://purl.org/vocommons/voaf#Vocabulary"
 		},
 		"dbo:purchasingPowerParityYear": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:output": {
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "dbo:Place"
 		},
 		"dbo:jockey": {
@@ -9678,7 +9678,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:free": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:FictionalCharacter"
 		},
 		"dbo:connectsReferencedTo": {
@@ -9694,7 +9694,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:amateurKo": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Boxer"
 		},
 		"dbo:languageFamily": {
@@ -9705,16 +9705,16 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:flagLink": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:numberOfLawyers": {
 		  "comment": "Number of lawyers or attorneys in the company.",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:LawFirm"
 		},
 		"dbo:parliamentType": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"odesignp:hasConstituent": {
@@ -9727,7 +9727,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:piercing": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:parish": {
@@ -9738,7 +9738,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:primate": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:ChristianDoctrine"
 		},
 		"dbo:broadcastArea": {
@@ -9756,7 +9756,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:japanName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:politicalPartyOfLeader": {
@@ -9768,16 +9768,16 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:gnisCode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:provCode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:minorityLeader": {
 		  "comment": "number of office holder",
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "owl:Thing"
 		},
 		"dbo:generationUnits": {
@@ -9785,11 +9785,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:flyingHours": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:MilitaryUnit"
 		},
 		"dbo:picturesCommonsCategory": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:GrandPrix/distance": {
@@ -9801,11 +9801,11 @@ var createOntology = function(){
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:floorCount": {
-		  "range": "xds:positiveInteger",
+		  "range": "xsd:positiveInteger",
 		  "domain": "dbo:Building"
 		},
 		"dbo:width": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing",
 		  "functional": true
 		},
@@ -9824,15 +9824,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:income": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:typeOfGrain": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Food"
 		},
 		"dbo:aitaCode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:winsAtProTournaments": {
@@ -9843,7 +9843,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:canonizedDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Saint"
 		},
 		"dbo:meetingCity": {
@@ -9861,7 +9861,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:taste": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Food"
 		},
 		"dbo:province": {
@@ -9876,16 +9876,16 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:functionEndDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:PersonFunction"
 		},
 		"dbo:lethalOnMice": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:ChemicalSubstance"
 		},
 		"dbo:premiereYear": {
 		  "comment": "Year the play was first performed.",
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:Play",
 		  "superproperty": [
 		    "dbo:releaseYear"
@@ -9918,7 +9918,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:finalLostTeam": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:beatifiedBy": {
@@ -9944,7 +9944,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:mount": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:address": {
@@ -9952,7 +9952,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:einecsNumber": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:presidentGeneralCouncil": {
@@ -9983,7 +9983,7 @@ var createOntology = function(){
 		},
 		"dbo:icaoAirlineCode": {
 		  "comment": "ICAO designation for airline companies",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Airline"
 		},
 		"dbo:poleDriver": {
@@ -9994,20 +9994,20 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:amsterdamCode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Municipality"
 		},
 		"dbo:eptItm": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PokerPlayer"
 		},
 		"dbo:numberOfOffices": {
 		  "comment": "Number of the company's offices.",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:LawFirm"
 		},
 		"dbo:topFloorHeight": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Skyscraper"
 		},
 		"dbo:spouse": {
@@ -10019,11 +10019,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:originalDanseCompetition": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:firstMention": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:majorIsland": {
@@ -10034,7 +10034,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:gnl": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:Status": {
@@ -10052,15 +10052,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:throwingSide": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:BaseballPlayer"
 		},
 		"dbo:eyeColour": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:victoryPercentageAsMgr": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Person"
 		},
 		"dbo:finnishName": {
@@ -10068,12 +10068,12 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:youthYears": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:SoccerPlayer"
 		},
 		"dbo:passengersPerDay": {
 		  "comment": "Number of passengers per day.",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Infrastructure"
 		},
 		"dbo:principal": {
@@ -10091,11 +10091,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:numberOfDoctoralStudents": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:University"
 		},
 		"dbo:areaOfCatchmentQuote": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:operator": {
@@ -10106,7 +10106,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:subdivisionLink": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:regency": {
@@ -10149,7 +10149,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:nssdcId": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:SpaceStation"
 		},
 		"odesignp:isSpecializedBy": {
@@ -10172,15 +10172,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:capacityFactor": {
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "dbo:PowerStation"
 		},
 		"dbo:flag": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:cmykCoordinateBlack": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:Colour"
 		},
 		"dbo:Galaxy/minimumTemperature": {
@@ -10188,7 +10188,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:mozabiteName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:leagueManager": {
@@ -10201,11 +10201,11 @@ var createOntology = function(){
 		},
 		"dbo:percentageAlcohol": {
 		  "comment": "percentage of alcohol present in a beverage",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Beverage"
 		},
 		"dbo:cargoGas": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Spacecraft"
 		},
 		"dbo:mostPopulatedCountry": {
@@ -10213,11 +10213,11 @@ var createOntology = function(){
 		  "domain": "dbo:Country"
 		},
 		"dbo:numberOfRooms": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Hotel"
 		},
 		"dbo:numberOfBombs": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Aircraft"
 		},
 		"dbo:hasChannel": {
@@ -10225,7 +10225,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:foundingDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "owl:Thing"
 		},
 		"dbo:nextMission": {
@@ -10237,24 +10237,24 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:boilingPoint": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:ChemicalSubstance"
 		},
 		"dbo:trainerYears": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:SoccerPlayer"
 		},
 		"dbo:assets": {
 		  "comment": "Assets and liabilities are part of a companis balance sheet. In financial accounting, assets are economic resources. Anything tangible or intangible that is capable of being owned or controlled to produce value and that is held to have positive economic value is considered an asset.",
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Company"
 		},
 		"dbo:suborbitalFlights": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:YearInSpaceflight"
 		},
 		"dbo:causeOfDeath": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:solventWithGoodSolubility": {
@@ -10262,7 +10262,7 @@ var createOntology = function(){
 		  "domain": "dbo:ChemicalSubstance"
 		},
 		"dbo:populationDensity": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:residence": {
@@ -10315,7 +10315,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:areaOfCatchment": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Lake"
 		},
 		"dbo:mergedIntoParty": {
@@ -10327,15 +10327,15 @@ var createOntology = function(){
 		},
 		"dbo:iso31661Code": {
 		  "comment": "defines codes for the names of countries, dependent territories, and special areas of geographical interest",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:areaRank": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:strength": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:MilitaryConflict"
 		},
 		"dbo:Rocket/mass": {
@@ -10359,11 +10359,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:mukhtar": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:maximumInclination": {
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "dbo:LaunchPad"
 		},
 		"dbo:significantBuilding": {
@@ -10392,19 +10392,19 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:hairs": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:FictionalCharacter"
 		},
 		"dbo:wptFinalTable": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PokerPlayer"
 		},
 		"dbo:dutchCOROPCode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Region"
 		},
 		"dbo:dutchRKDCode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Artist"
 		},
 		"dbo:world": {
@@ -10433,7 +10433,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:swimmingStyle": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Swimmer"
 		},
 		"dbo:championInSingleMale": {
@@ -10451,16 +10451,16 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:transmission": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Automobile"
 		},
 		"dbo:epoch": {
 		  "comment": "moment in time used as a referrence point for some time-vaying astronomical quantity",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Planet"
 		},
 		"dbo:dateUse": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Canal"
 		},
 		"dbo:previousEntity": {
@@ -10471,7 +10471,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:millsCodeNLWindmotoren": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Mill"
 		},
 		"dbo:isPartOfAnatomicalStructure": {
@@ -10496,7 +10496,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:cityLink": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:leader": {
@@ -10507,11 +10507,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:frontierLength": {
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "dbo:Place"
 		},
 		"dbo:areaWater": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Place"
 		},
 		"dbo:originalEndPoint": {
@@ -10523,7 +10523,7 @@ var createOntology = function(){
 		},
 		"dbo:albedo": {
 		  "comment": "reflection coefficient",
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Planet"
 		},
 		"dbo:countySeat": {
@@ -10535,7 +10535,7 @@ var createOntology = function(){
 		},
 		"dbo:codeMunicipalMonument": {
 		  "comment": "Code assigned to (Dutch) monuments at the municipal level, deemed to be of local value",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place",
 		  "superproperty": [
 		    "dbo:code"
@@ -10563,12 +10563,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:iataLocationIdentifier": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Infrastructure"
 		},
 		"dbo:codeNationalMonument": {
 		  "comment": "Code assigned to (Dutch) monuments at the national level, deemed to be of national value",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place",
 		  "superproperty": [
 		    "dbo:code"
@@ -10597,7 +10597,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:consecration": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"odesignp:overlaps": {
@@ -10615,11 +10615,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:broadcastRepeater": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Broadcaster"
 		},
 		"dbo:mergerDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Place"
 		},
 		"dbo:routeEndLocation": {
@@ -10649,23 +10649,23 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:activeYearsStartYearMgr": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:Person"
 		},
 		"dbo:plays": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:TennisPlayer"
 		},
 		"dbo:subdivisions": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Place"
 		},
 		"dbo:cmykCoordinateMagenta": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:Colour"
 		},
 		"dbo:role": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:soccerLeagueSeason": {
@@ -10683,7 +10683,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:cmpEvaDuration": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:SpaceMission"
 		},
 		"dbo:managingEditor": {
@@ -10701,7 +10701,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:perCapitaIncomeRank": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:aircraftHelicopterAttack": {
@@ -10712,12 +10712,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:goalsInLeague": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:SoccerPlayer"
 		},
 		"dbo:continentRank": {
 		  "comment": "Place of the building in the list of the highest buildings in the continent",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Skyscraper"
 		},
 		"dbo:secondCommander": {
@@ -10735,7 +10735,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:numberOfVolumes": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:WrittenWork"
 		},
 		"dbo:mostDownPoint": {
@@ -10764,7 +10764,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:foundationDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:sourceCountry": {
@@ -10776,7 +10776,7 @@ var createOntology = function(){
 		},
 		"dbo:projectKeyword": {
 		  "comment": "A key word of the project.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Project"
 		},
 		"dbo:associatedBand": {
@@ -10801,24 +10801,24 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:port2DockedTime": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Spacecraft"
 		},
 		"dbo:squadNumber": {
 		  "comment": "The number that an athlete wears in a team sport.",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:SportsTeamMember"
 		},
 		"dbo:tessitura": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:externalOrnament": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:finalLost": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:currentLeague": {
@@ -10849,7 +10849,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:statisticValue": {
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "dbo:BaseballPlayer"
 		},
 		"dbo:Stream/dischargeAverage": {
@@ -10858,7 +10858,7 @@ var createOntology = function(){
 		},
 		"dbo:canBaggageChecked": {
 		  "comment": "Whether bags can be checked.",
-		  "range": "xds:boolean",
+		  "range": "xsd:boolean",
 		  "domain": "dbo:Station"
 		},
 		"dbo:museum": {
@@ -10869,7 +10869,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:internationally": {
-		  "range": "xds:boolean",
+		  "range": "xsd:boolean",
 		  "domain": "dbo:Company"
 		},
 		"dbo:mission": {
@@ -10880,11 +10880,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:originalMaximumBoatLength": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Canal"
 		},
 		"dbo:hopmanCup": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:teamCoached": {
@@ -10908,11 +10908,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:draft": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:access": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:ChemicalSubstance/density": {
@@ -10928,7 +10928,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:cityType": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:origo": {
@@ -10936,7 +10936,7 @@ var createOntology = function(){
 		  "domain": "dbo:Muscle"
 		},
 		"dbo:radius_ly": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:Globularswarm"
 		},
 		"dbo:lastAppearance": {
@@ -10947,7 +10947,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:issDockings": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:SpaceShuttle"
 		},
 		"dbo:viceChancellor": {
@@ -10970,15 +10970,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:coachSeason": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:aSide": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Single"
 		},
 		"dbo:numberOfGoldMedalsWon": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:SportCompetitionResult"
 		},
 		"odesignp:isExpressedBy": {
@@ -11001,7 +11001,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:australiaOpenMixed": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:rocketFunction": {
@@ -11013,7 +11013,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:demographicsAsOf": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:plant": {
@@ -11050,7 +11050,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:discontinued": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Beverage"
 		},
 		"dbo:followedBy": {
@@ -11062,7 +11062,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:amateurFight": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Boxer"
 		},
 		"dbo:firstWin": {
@@ -11088,12 +11088,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:humanDevelopmentIndexRank": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:projectObjective": {
 		  "comment": "A defined objective of the project.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Project"
 		},
 		"dbo:heritageRegister": {
@@ -11105,19 +11105,19 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:revenue": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Organisation"
 		},
 		"dbo:licenceNumber": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:bronzeMedalDouble": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:expedition": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:otherOccupation": {
@@ -11139,16 +11139,16 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:ons": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:maximumElevation": {
 		  "comment": "maximum elevation above the sea level",
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Place"
 		},
 		"dbo:iihfHof": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:autonomy": {
@@ -11188,7 +11188,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:neighbourhood": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:cornishName": {
@@ -11196,7 +11196,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:oldcode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:OlympicResult"
 		},
 		"dbo:AutomobileEngine/width": {
@@ -11218,20 +11218,20 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:priceMoney": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:SnookerPlayer"
 		},
 		"dbo:unknownOutcomes": {
 		  "comment": "number of launches with unknown outcomes (or in progress)",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Rocket"
 		},
 		"dbo:nationalYears": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:SoccerPlayer"
 		},
 		"dbo:launch": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Spacecraft"
 		},
 		"dbo:winsAtLAGT": {
@@ -11243,11 +11243,11 @@ var createOntology = function(){
 		},
 		"dbo:areaCode": {
 		  "comment": "Area code for telephone numbers.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:crewSize": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:SpaceMission"
 		},
 		"dbo:goldMedalist": {
@@ -11259,11 +11259,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:silverMedalDouble": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:size_v": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "owl:Thing"
 		},
 		"dbo:ColourName": {
@@ -11274,7 +11274,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:rating": {
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "owl:Thing"
 		},
 		"dbo:otherFunction": {
@@ -11282,11 +11282,11 @@ var createOntology = function(){
 		  "domain": "dbo:Person"
 		},
 		"dbo:danseScore": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:numberOfMatches": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:CareerStation"
 		},
 		"dbo:managementRegion": {
@@ -11311,7 +11311,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:snowParkNumber": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Place"
 		},
 		"dbo:border": {
@@ -11337,7 +11337,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:lunarLandingSite": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:SpaceMission"
 		},
 		"dbo:winsAtAsia": {
@@ -11348,7 +11348,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:productionEndDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "owl:Thing"
 		},
 		"dbo:School/campusSize": {
@@ -11371,15 +11371,15 @@ var createOntology = function(){
 		},
 		"dbo:fdaUniiCode": {
 		  "comment": "FDA Unique Ingredient Identifier (UNII) code for a DBpedia Drug",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:disappearanceDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:electionDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Person"
 		},
 		"dbo:alumni": {
@@ -11390,7 +11390,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:model": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Sales"
 		},
 		"dbo:schoolPatron": {
@@ -11405,26 +11405,26 @@ var createOntology = function(){
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:wimbledonSingle": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:trackLength": {
 		  "comment": "Length of the track. Wikipedians usually do not differentiate between track length and line lenght.",
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:RouteOfTransportation"
 		},
 		"dbo:voltageOfElectrification": {
 		  "comment": "Voltage of the electrification system.",
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:RouteOfTransportation"
 		},
 		"dbo:currentlyUsedFor": {
 		  "comment": "Current use of the architectural structure, if it is currently being used as anything other than its original purpose.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:ArchitecturalStructure"
 		},
 		"dbo:interest": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:SiteOfSpecialScientificInterest"
 		},
 		"dbo:termPeriod": {
@@ -11435,11 +11435,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:ecNumber": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Biomolecule"
 		},
 		"dbo:subtitle": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:nationality": {
@@ -11484,23 +11484,23 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:chromosome": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Protein"
 		},
 		"dbo:modelStartDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:MeanOfTransportation"
 		},
 		"dbo:numberOfNewlyIntroducedSports": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Olympics"
 		},
 		"dbo:numberBuilt": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Aircraft"
 		},
 		"dbo:endYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "owl:Thing"
 		},
 		"dbo:chairman": {
@@ -11526,11 +11526,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:managementElevation": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:overallRecord": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:CollegeCoach"
 		},
 		"dbo:mythology": {
@@ -11549,7 +11549,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:council": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:alternativeTitle": {
@@ -11563,15 +11563,15 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:arrestDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Person"
 		},
 		"dbo:areaDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Place"
 		},
 		"dbo:fauna": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:movement": {
@@ -11599,7 +11599,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:iafdId": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Film"
 		},
 		"dbo:previousMission": {
@@ -11610,12 +11610,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:torqueOutput": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:AutomobileEngine",
 		  "functional": true
 		},
 		"dbo:facilityId": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:RadioStation"
 		},
 		"dbo:organSystem": {
@@ -11627,11 +11627,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:podiums": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:FormulaOneRacer"
 		},
 		"dbo:typeOfYeast": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Food"
 		},
 		"dbo:municipalityAbsorbedBy": {
@@ -11661,23 +11661,23 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:nationalTournamentGold": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:skiPisteKilometre": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Place"
 		},
 		"dbo:militaryFunction": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:oldName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:finalLostDouble": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:astrologicalSign": {
@@ -11688,11 +11688,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:decommissioningDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Ship"
 		},
 		"dbo:killedBy": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:team": {
@@ -11703,11 +11703,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:distanceLaps": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:GrandPrix"
 		},
 		"dbo:worldTeamCup": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:Code": {
@@ -11731,11 +11731,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:particularSign": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:languageCode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:ideology": {
@@ -11746,11 +11746,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:uniprot": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Biomolecule"
 		},
 		"dbo:numberOfLaps": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:FormulaOneRacing"
 		},
 		"dbo:meshName": {
@@ -11759,19 +11759,19 @@ var createOntology = function(){
 		},
 		"dbo:symbol": {
 		  "comment": "HUGO Gene Symbol",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Biomolecule"
 		},
 		"dbo:shortProgScore": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:agglomerationPopulationYear": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:freeScoreCompetition": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:sourceConfluenceState": {
@@ -11782,11 +11782,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:stationEvaDuration": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:SpaceMission"
 		},
 		"dbo:serviceModule": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:SpaceMission"
 		},
 		"dbo:bronzeMedalist": {
@@ -11799,11 +11799,11 @@ var createOntology = function(){
 		},
 		"dbo:lastPublicationDate": {
 		  "comment": "Date of the last publication.",
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:WrittenWork"
 		},
 		"dbo:ascentDate": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:Mountain"
 		},
 		"dbo:river": {
@@ -11814,11 +11814,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:rankingsSingles": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:TennisPlayer"
 		},
 		"dbo:laterality": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:sisterNewspaper": {
@@ -11884,7 +11884,7 @@ var createOntology = function(){
 		},
 		"dbo:selibrId": {
 		  "comment": "Authority data from the National Library of Sweden",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:secondDriver": {
@@ -11907,7 +11907,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:decay": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Spacecraft"
 		},
 		"dbo:humanDevelopmentIndex": {
@@ -12101,24 +12101,24 @@ var createOntology = function(){
 		},
 		"dbo:passengersUsedSystem": {
 		  "comment": "System the passengers are using (from which the passenger statistics are).",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Station"
 		},
 		"dbo:cmykCoordinateCyanic": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:Colour"
 		},
 		"dbo:hof": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:dateAgreement": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Place"
 		},
 		"dbo:railwayPlatforms": {
 		  "comment": "Information on the type of platform(s) at the station.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Station"
 		},
 		"dbo:winsAtAlpg": {
@@ -12130,7 +12130,7 @@ var createOntology = function(){
 		},
 		"dbo:codeProvincialMonument": {
 		  "comment": "Code assigned to (Dutch) monuments at the provincial level, mostly for monuments in the countryside, or for waterworks",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place",
 		  "superproperty": [
 		    "dbo:code"
@@ -12145,7 +12145,7 @@ var createOntology = function(){
 		  "domain": "dbo:Person"
 		},
 		"dbo:refpol": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:associateStar": {
@@ -12156,7 +12156,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:wptItm": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PokerPlayer"
 		},
 		"dbo:tribus": {
@@ -12171,11 +12171,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:formationDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Organisation"
 		},
 		"dbo:numberOfOfficials": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:OlympicResult"
 		},
 		"odesignp:concretelyExpresses": {
@@ -12186,11 +12186,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:creationYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "owl:Thing"
 		},
 		"dbo:omim": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:Biomolecule"
 		},
 		"dbo:previousWork": {
@@ -12208,11 +12208,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:senior": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:victoryAsMgr": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:regionalCouncil": {
@@ -12220,11 +12220,11 @@ var createOntology = function(){
 		  "domain": "dbo:Agent"
 		},
 		"dbo:scene": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:ccaState": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:selection": {
@@ -12236,7 +12236,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:titleSingle": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:collaboration": {
@@ -12244,16 +12244,16 @@ var createOntology = function(){
 		  "domain": "dbo:Person"
 		},
 		"dbo:eventDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Place"
 		},
 		"dbo:isPeerReviewed": {
 		  "comment": "In academia peer review is often used to determine an academic papers suitability for publication.",
-		  "range": "xds:boolean",
+		  "range": "xsd:boolean",
 		  "domain": "dbo:AcademicJournal"
 		},
 		"dbo:derivedWord": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:patent": {
@@ -12264,7 +12264,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:landArea": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Place"
 		},
 		"dbo:firstFlight": {
@@ -12289,7 +12289,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:rgbCoordinateGreen": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Colour"
 		},
 		"dbo:follows": {
@@ -12297,11 +12297,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:synonym": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:hallOfFame": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:IceHockeyPlayer"
 		},
 		"dbo:leaderName": {
@@ -12313,7 +12313,7 @@ var createOntology = function(){
 		},
 		"dbo:protectionStatus": {
 		  "comment": "The sort of status that is granted to a protected Building or Monument. This is not about being protected or not, this is about the nature of the protection regime. E.g., in the Netherlands the protection status 'rijksmonument' points to more elaborate protection than other statuses.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place",
 		  "superproperty": [
 		    "dbo:Status"
@@ -12329,12 +12329,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:diameter": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing",
 		  "functional": true
 		},
 		"dbo:policeName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:mentor": {
@@ -12367,7 +12367,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:freeProgScore": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:district": {
@@ -12378,11 +12378,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:equity": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Company"
 		},
 		"dbo:numberOfMembers": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Legislature"
 		},
 		"dbo:headquarter": {
@@ -12397,7 +12397,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:artisticFunction": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:majorShrine": {
@@ -12416,11 +12416,11 @@ var createOntology = function(){
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:teamPoint": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:range": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:place": {
@@ -12431,16 +12431,16 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:conservationStatus": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Species"
 		},
 		"dbo:currencyCode": {
 		  "comment": "ISO 4217 currency designators.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:visitorsTotal": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:ArchitecturalStructure"
 		},
 		"dbo:sovereignCountry": {
@@ -12463,11 +12463,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:rolandGarrosMixed": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:endowment": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Organisation"
 		},
 		"dbo:domain": {
@@ -12478,12 +12478,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:case": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:cosparId": {
 		  "comment": "Described at http://en.wikipedia.org/wiki/International_Designator",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:fastestDriver": {
@@ -12501,7 +12501,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:icdo": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Disease"
 		},
 		"dbo:Spacecraft/cargoWater": {
@@ -12509,7 +12509,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:failedLaunches": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:origin": {
@@ -12521,7 +12521,7 @@ var createOntology = function(){
 		},
 		"dbo:individualisedGnd": {
 		  "comment": "GND (Gemeinsame Normdatei) is an international authority file for the organisation of personal names, subject headings and corporate bodies from catalogues. It is used mainly for documentation in libraries and archives. The GND is managed by the German National Library in cooperation with various library networks. The GND falls under the Creative Commons Zero(CC0) license.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:sardinianName": {
@@ -12529,12 +12529,12 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:latestReleaseDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Software",
 		  "functional": true
 		},
 		"dbo:deathDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Person",
 		  "functional": true
 		},
@@ -12543,11 +12543,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:draftRound": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:GridironFootballPlayer"
 		},
 		"dbo:deathAge": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:denomination": {
@@ -12572,11 +12572,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:motto": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:numberOfCountries": {
-		  "range": "xds:positiveInteger",
+		  "range": "xsd:positiveInteger",
 		  "domain": "dbo:AdministrativeRegion"
 		},
 		"dbo:municipality": {
@@ -12595,7 +12595,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:flagBorder": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:distributingLabel": {
@@ -12613,11 +12613,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:criteria": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:supplementalDraftYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:GridironFootballPlayer"
 		},
 		"dbo:nobelLaureates": {
@@ -12628,28 +12628,28 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:localPhonePrefix": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:landskap": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:worldTournamentSilver": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:partialFailedLaunches": {
 		  "comment": "total number of launches resulting in partial failure",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:numberOfCapitalDeputies": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:depthQuote": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:giniCoefficientCategory": {
@@ -12664,11 +12664,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:functionStartDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:PersonFunction"
 		},
 		"dbo:numberOfVineyards": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:WineRegion"
 		},
 		"dbo:militaryUnit": {
@@ -12680,7 +12680,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:titleLanguage": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Film"
 		},
 		"dbo:deFactoLanguage": {
@@ -12698,20 +12698,20 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:fileExtension": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:File"
 		},
 		"dbo:cityRank": {
 		  "comment": "Place of the building in the list of the highest buildings in the city",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Skyscraper"
 		},
 		"dbo:amateurDefeat": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Boxer"
 		},
 		"dbo:numberOfCounties": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:abstract": {
@@ -12720,7 +12720,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:numberOfIntercommunality": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Department"
 		},
 		"dbo:museumType": {
@@ -12763,19 +12763,19 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:nflCode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:statisticYear": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:BaseballPlayer"
 		},
 		"dbo:maximumDischarge": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:abbeychurchBlessingCharge": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"odesignp:coparticipatesWith": {
@@ -13011,11 +13011,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:reign": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:wsopWinYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:PokerPlayer"
 		},
 		"dbo:Medalist": {
@@ -13032,7 +13032,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:sharingOutPopulationYear": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:company": {
@@ -13058,7 +13058,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:codeSettlement": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Settlement",
 		  "subproperty": [
 		    "dbo:inseeCode"
@@ -13073,7 +13073,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:maximumDepth": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Place"
 		},
 		"dbo:dean": {
@@ -13088,11 +13088,11 @@ var createOntology = function(){
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:escalafon": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:eyes": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:FictionalCharacter"
 		},
 		"dbo:birthSign": {
@@ -13100,7 +13100,7 @@ var createOntology = function(){
 		  "domain": "dbo:Person"
 		},
 		"dbo:titleDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Person"
 		},
 		"dbo:followingEvent": {
@@ -13123,11 +13123,11 @@ var createOntology = function(){
 		},
 		"dbo:reportingMark": {
 		  "comment": "A reporting mark is a two-, three-, or four-letter alphabetic code used to identify owners or lessees of rolling stock and other equipment used on the North American railroad network.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PublicTransitSystem"
 		},
 		"dbo:brainInfoType": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Brain"
 		},
 		"dbo:manager": {
@@ -13142,7 +13142,7 @@ var createOntology = function(){
 		  "domain": "dbo:Agent"
 		},
 		"dbo:distanceToBelfast": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:neighboringMunicipality": {
@@ -13174,12 +13174,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:volcanicActivity": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Island"
 		},
 		"dbo:lowerEarthOrbitPayload": {
 		  "comment": "Payload mass in a typical Low Earth orbit",
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Rocket"
 		},
 		"dbo:wineProduced": {
@@ -13190,7 +13190,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:coastLine": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:competition": {
@@ -13222,31 +13222,31 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:port1DockedTime": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Spacecraft"
 		},
 		"dbo:deme": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:distanceToLondon": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:refseqprotein": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Biomolecule"
 		},
 		"dbo:noteOnPlaceOfBurial": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:MilitaryPerson"
 		},
 		"dbo:nationalTournamentSilver": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:visitorsPerYear": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:ArchitecturalStructure"
 		},
 		"dbo:iupacName": {
@@ -13254,11 +13254,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:totalPopulation": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:EthnicGroup"
 		},
 		"dbo:communityIsoCode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace",
 		  "superproperty": [
 		    "dbo:isoCode"
@@ -13273,7 +13273,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:serviceEndDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:MilitaryPerson"
 		},
 		"dbo:oldDistrict": {
@@ -13291,7 +13291,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:sharingOutArea": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:britishWins": {
@@ -13299,11 +13299,11 @@ var createOntology = function(){
 		  "domain": "dbo:Person"
 		},
 		"dbo:endangeredSince": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Place"
 		},
 		"dbo:qatarClassic": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:Galaxy/meanTemperature": {
@@ -13318,12 +13318,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:meanRadius": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Planet"
 		},
 		"dbo:numberOfProfessionals": {
 		  "comment": "number of people who earns his living from a specified activity.",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Activity"
 		},
 		"dbo:Galaxy/periapsis": {
@@ -13346,11 +13346,11 @@ var createOntology = function(){
 		},
 		"dbo:finalPublicationDate": {
 		  "comment": "Date of the final publication.",
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:PeriodicalLiterature"
 		},
 		"dbo:episode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:FictionalCharacter"
 		},
 		"dbo:destination": {
@@ -13368,15 +13368,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:cashPrice": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:votesFor": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:StatedResolution"
 		},
 		"dbo:europeanUnionEntranceDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Country"
 		},
 		"dbo:closingFilm": {
@@ -13388,28 +13388,28 @@ var createOntology = function(){
 		},
 		"dbo:minorityFloorLeader": {
 		  "comment": "number of office holder",
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "owl:Thing"
 		},
 		"dbo:wingspan": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Aircraft"
 		},
 		"dbo:blackLongDistancePisteNumber": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Place"
 		},
 		"dbo:activeYearsEndDateMgr": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:messierName": {
 		  "comment": "Name for Messier objects",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:CelestialBody"
 		},
 		"dbo:distanceToCharingCross": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:silverMedalist": {
@@ -13421,16 +13421,16 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:gridReference": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:phonePrefix": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:routeTypeAbbreviation": {
 		  "comment": "The route type abbreviation (eg.: I for Interstate, M for Motorway or NJ for New Jersey Route).",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:RouteOfTransportation"
 		},
 		"dbo:bodyDiscovered": {
@@ -13441,11 +13441,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:goldMedalMixed": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:kindOfCoordinate": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:Spacecraft/totalMass": {
@@ -13467,15 +13467,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:currentRank": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:SnookerPlayer"
 		},
 		"dbo:imposedDanseScore": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:mapDescription": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:peopleName": {
@@ -13484,36 +13484,36 @@ var createOntology = function(){
 		},
 		"dbo:isniId": {
 		  "comment": "ISNI is a method for uniquely identifying the public identities of contributors to media content such as books, TV programmes, and newspaper articles.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:pluviometry": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:endYearOfInsertion": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:AutomobileEngine"
 		},
 		"dbo:areaLand": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Place"
 		},
 		"dbo:netIncome": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Company",
 		  "functional": true
 		},
 		"dbo:otherChannel": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Broadcaster"
 		},
 		"dbo:avifaunaPopulation": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:numberOfFilms": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:AdultActor"
 		},
 		"dbo:Galaxy/temperature": {
@@ -13522,24 +13522,24 @@ var createOntology = function(){
 		},
 		"dbo:duration": {
 		  "comment": "The duration of the item (movie, audio recording, event, etc.) in ISO 8601 date format",
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Event"
 		},
 		"dbo:numberOfPeopleAttending": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Event"
 		},
 		"dbo:orcidId": {
 		  "comment": "Authority data on researchers, academics, etc. The ID range has been defined as a subset of the forthcoming ISNI range.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:hasNaturalBust": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:suppreddedDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Saint"
 		},
 		"dbo:administrativeDistrict": {
@@ -13547,7 +13547,7 @@ var createOntology = function(){
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:iucnCategory": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:ProtectedArea"
 		},
 		"dbo:MeanOfTransportation/width": {
@@ -13556,11 +13556,11 @@ var createOntology = function(){
 		},
 		"dbo:bibsysId": {
 		  "comment": "BIBSYS is a supplier of library and information systems for all Norwegian university Libraries, the National Library of Norway, college libraries, and a number of research libraries and institutions.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:municipalityType": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Municipality"
 		},
 		"dbo:Lake/volume": {
@@ -13568,7 +13568,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:statusManager": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:ethnicGroup": {
@@ -13586,7 +13586,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:areaRural": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:Drug/boilingPoint": {
@@ -13594,7 +13594,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:juniorYearsStartYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:Person"
 		},
 		"dbo:depictionDescription": {
@@ -13603,7 +13603,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:setupTime": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"odesignp:hasRegion": {
@@ -13623,11 +13623,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:millsCodeDutch": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Mill"
 		},
 		"dbo:roofHeight": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Skyscraper"
 		},
 		"dbo:landeshauptmann": {
@@ -13638,11 +13638,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:illiteracy": {
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:signature": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:otherMedia": {
@@ -13657,11 +13657,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:wsopWristband": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PokerPlayer"
 		},
 		"dbo:relief": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:shuttle": {
@@ -13697,7 +13697,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:departmentPosition": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:similar": {
@@ -13713,7 +13713,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:unlcCode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:chancellor": {
@@ -13732,7 +13732,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:volcanoId": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Island"
 		},
 		"dbo:explorer": {
@@ -13743,7 +13743,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:alias": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing",
 		  "superproperty": [
 		    "dbo:alternativeName"
@@ -13757,16 +13757,16 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:selectionPoint": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:shipBeam": {
 		  "comment": "The beam of a ship is its width at the widest point.",
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Ship"
 		},
 		"dbo:delegation": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:systemOfLaw": {
@@ -13782,11 +13782,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:debut": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Wrestler"
 		},
 		"dbo:gun": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Aircraft"
 		},
 		"dbo:poleDriverTeam": {
@@ -13804,12 +13804,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:portfolio": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:colourHexCode": {
 		  "comment": "A colour represented by its hex code (e.g.: #FF0000 or #40E0D0).",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing",
 		  "subproperty": [
 		    "dbo:awayColourHexCode",
@@ -13817,7 +13817,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:idNumber": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:federalState": {
@@ -13828,7 +13828,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:reference": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:routeJunction": {
@@ -13840,11 +13840,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:cannonNumber": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Place"
 		},
 		"dbo:undraftedYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:GridironFootballPlayer"
 		},
 		"dbo:AutomobileEngine/weight": {
@@ -13852,11 +13852,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:commissioner": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:locationIdentifier": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Airport"
 		},
 		"dbo:takePlace": {
@@ -13885,7 +13885,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:municipalityCode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:servingRailwayLine": {
@@ -13897,7 +13897,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:blueLongDistancePisteNumber": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Place"
 		},
 		"dbo:opponent": {
@@ -13908,7 +13908,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:gross": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Film"
 		},
 		"dbo:architect": {
@@ -13934,36 +13934,36 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:introductionDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:MeanOfTransportation"
 		},
 		"dbo:egafdId": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Film"
 		},
 		"dbo:highestPointIsland": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Island"
 		},
 		"dbo:grossDomesticProductAsOf": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:legislativePeriodName": {
 		  "comment": "The term of the on-going session (e.g.: \"40th Canadian Parliament\").",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Legislature"
 		},
 		"dbo:premiereDate": {
 		  "comment": "Date the play was first performed.",
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Play",
 		  "superproperty": [
 		    "dbo:releaseDate"
 		  ]
 		},
 		"dbo:elevatorCount": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Building"
 		},
 		"dbo:position": {
@@ -13994,15 +13994,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:conservationStatusSystem": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Species"
 		},
 		"dbo:landRegistryCode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:draftLeague": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:endReign": {
@@ -14026,15 +14026,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:lengthReference": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:RouteOfTransportation"
 		},
 		"dbo:authorityMandate": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:mirDockings": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:SpaceShuttle"
 		},
 		"dbo:season": {
@@ -14052,7 +14052,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:subsystemLink": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:greekName": {
@@ -14060,7 +14060,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:continentalTournamentBronze": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:producedBy": {
@@ -14068,15 +14068,15 @@ var createOntology = function(){
 		  "domain": "dbo:Film"
 		},
 		"dbo:pdb": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Protein"
 		},
 		"dbo:usSales": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Sales"
 		},
 		"dbo:careerPrizeMoney": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:TennisPlayer"
 		},
 		"dbo:twinCity": {
@@ -14087,7 +14087,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:ist": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:GeopoliticalOrganisation/populationDensity": {
@@ -14095,7 +14095,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:blazonLink": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:teamName": {
@@ -14108,16 +14108,16 @@ var createOntology = function(){
 		},
 		"dbo:frequencyOfPublication": {
 		  "comment": "The frequency of periodical publication (eg. Weekly, Bimonthly).",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PeriodicalLiterature"
 		},
 		"dbo:start": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:characterInPlay": {
 		  "comment": "Name of a character in play.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Play",
 		  "subproperty": [
 		    "dbo:chorusCharacterInPlay",
@@ -14140,11 +14140,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:pronunciation": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:governmentElevation": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Island"
 		},
 		"dbo:sharingOutName": {
@@ -14152,7 +14152,7 @@ var createOntology = function(){
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:density": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:otherFuelType": {
@@ -14160,11 +14160,11 @@ var createOntology = function(){
 		  "domain": "dbo:PowerStation"
 		},
 		"dbo:climbUpNumber": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Place"
 		},
 		"dbo:lunarSampleMass": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:SpaceMission"
 		},
 		"dbo:nrhpType": {
@@ -14183,11 +14183,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:goldMedalSingle": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:danseCompetition": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:constructionMaterial": {
@@ -14220,7 +14220,7 @@ var createOntology = function(){
 		},
 		"dbo:otherServingLines": {
 		  "comment": "Connecting services that serve the station such as bus, etc.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Station"
 		},
 		"dbo:namedByLanguage": {
@@ -14233,11 +14233,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:towerHeight": {
-		  "range": "xds:positiveInteger",
+		  "range": "xsd:positiveInteger",
 		  "domain": "dbo:Building"
 		},
 		"dbo:nationalTeamYear": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:musicFusionGenre": {
@@ -14255,19 +14255,19 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:olympicGamesWins": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:amateurTitle": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Boxer"
 		},
 		"dbo:australiaOpenSingle": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:dorlandsPrefix": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:AnatomicalStructure"
 		},
 		"dbo:state": {
@@ -14279,11 +14279,11 @@ var createOntology = function(){
 		},
 		"dbo:numberOfSpans": {
 		  "comment": "Number of spans or arches.",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Bridge"
 		},
 		"dbo:albumRuntime": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Album"
 		},
 		"dbo:version": {
@@ -14291,7 +14291,7 @@ var createOntology = function(){
 		  "domain": "dbo:MeanOfTransportation"
 		},
 		"dbo:numberOfVisitors": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:storyEditor": {
@@ -14302,11 +14302,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:fedCup": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:firstAppearance": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:parentOrganisation": {
@@ -14317,16 +14317,16 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:circuitLength": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:FormulaOneRacing"
 		},
 		"dbo:managerYearsStartYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "owl:Thing"
 		},
 		"dbo:mbaId": {
 		  "comment": "MusicBrainz is an open music encyclopedia that collects music metadata and makes it available to the public.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Artist"
 		},
 		"dbo:cesarAward": {
@@ -14345,19 +14345,19 @@ var createOntology = function(){
 		},
 		"dbo:jstor": {
 		  "comment": "JSTOR number (short for Journal Storage) is a United States-based online system number for archiving academic journals.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:AcademicJournal"
 		},
 		"dbo:startYearOfSales": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:Sales"
 		},
 		"dbo:nonProfessionalCareer": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:populationTotal": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:kingdom": {
@@ -14369,7 +14369,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:bgafdId": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Film"
 		},
 		"dbo:manxName": {
@@ -14384,7 +14384,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:course": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:GrandPrix"
 		},
 		"dbo:fourthCommander": {
@@ -14414,24 +14414,24 @@ var createOntology = function(){
 		},
 		"dbo:procedure": {
 		  "comment": "The name designating a formal collection of steps to be taken to complete the case",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Case"
 		},
 		"dbo:geneLocationEnd": {
 		  "comment": "the end of the gene",
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:GeneLocation"
 		},
 		"dbo:stateOfOriginYear": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:administrativeStatus": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:australiaOpenDouble": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:subdivision": {
@@ -14446,31 +14446,31 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:waterArea": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Place"
 		},
 		"dbo:water": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:lahHof": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:productionStartYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "owl:Thing"
 		},
 		"dbo:salary": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Person"
 		},
 		"dbo:modelStartYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:MeanOfTransportation"
 		},
 		"dbo:lethalOnChickens": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:ChemicalSubstance"
 		},
 		"dbo:subFamily": {
@@ -14478,7 +14478,7 @@ var createOntology = function(){
 		  "domain": "dbo:Species"
 		},
 		"dbo:meanTemperature": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Planet"
 		},
 		"dbo:anthem": {
@@ -14507,11 +14507,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:firstFlightStartDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:SpaceShuttle"
 		},
 		"dbo:numberOfSeats": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:MeanOfTransportation"
 		},
 		"dbo:Planet/mass": {
@@ -14531,11 +14531,11 @@ var createOntology = function(){
 		},
 		"dbo:iataAirlineCode": {
 		  "comment": "IATA designation for airline companies",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Airline"
 		},
 		"dbo:amgid": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Film"
 		},
 		"dbo:island": {
@@ -14554,36 +14554,36 @@ var createOntology = function(){
 		},
 		"dbo:muteCharacterInPlay": {
 		  "comment": "Name of a mute character in play.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Play",
 		  "superproperty": [
 		    "dbo:characterInPlay"
 		  ]
 		},
 		"dbo:completionDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Work"
 		},
 		"dbo:work": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:FictionalCharacter"
 		},
 		"dbo:inn": {
 		  "comment": "International Nonproprietary Name given to a pharmaceutical substance",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:ChemicalCompound"
 		},
 		"dbo:humanDevelopmentIndexAsOf": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:juniorYearsEndYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:Person"
 		},
 		"dbo:subjectOfPlay": {
 		  "comment": "The overall subject matter dealt with by the play.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Play"
 		},
 		"dbo:lunarRover": {
@@ -14595,20 +14595,20 @@ var createOntology = function(){
 		},
 		"dbo:publiclyAccessible": {
 		  "comment": "describes in what way this site is accessible for public",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:speaker": {
 		  "comment": "number of office holder",
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "owl:Thing"
 		},
 		"dbo:block": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:VolleyballPlayer"
 		},
 		"dbo:continentalTournamentGold": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:coach": {
@@ -14620,11 +14620,11 @@ var createOntology = function(){
 		},
 		"dbo:geneLocationStart": {
 		  "comment": "the start of the gene coordinates",
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:GeneLocation"
 		},
 		"dbo:heisman": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:aircraftHelicopter": {
@@ -14635,15 +14635,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:goldMedalDouble": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:areaQuote": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:germanName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"odesignp:hasQuality": {
@@ -14664,7 +14664,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:statusYear": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:campusType": {
@@ -14676,7 +14676,7 @@ var createOntology = function(){
 		  "domain": "dbo:Person"
 		},
 		"dbo:victim": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:soccerTournamentLastChampion": {
@@ -14694,11 +14694,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:battingSide": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:BaseballPlayer"
 		},
 		"dbo:highestBuildingInYear": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Skyscraper"
 		},
 		"dbo:alongside": {
@@ -14721,11 +14721,11 @@ var createOntology = function(){
 		},
 		"dbo:numberOfCollectionItems": {
 		  "comment": "Indication as to the size of the collection of this library",
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:Library"
 		},
 		"dbo:typeOfStorage": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Food"
 		},
 		"dbo:tamazightSettlementName": {
@@ -14760,11 +14760,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:tempPlace": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:ChartsPlacements"
 		},
 		"dbo:eyeColor": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:amateurTeam": {
@@ -14772,40 +14772,40 @@ var createOntology = function(){
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:combatant": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:MilitaryConflict"
 		},
 		"dbo:refgen": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:refgeo": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:networth": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Person"
 		},
 		"dbo:functionEndYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:PersonFunction"
 		},
 		"dbo:minimumAreaQuote": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:weight": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing",
 		  "functional": true
 		},
 		"dbo:ordination": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Priest"
 		},
 		"dbo:utcOffset": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:winsAtChampionships": {
@@ -14823,11 +14823,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:secondPlace": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:barPassRate": {
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "dbo:School"
 		},
 		"dbo:openingFilm": {
@@ -14853,7 +14853,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:maidenVoyage": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Ship"
 		},
 		"dbo:lastRace": {
@@ -14864,24 +14864,24 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:coalition": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:shortProgCompetition": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:hgncid": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Biomolecule"
 		},
 		"dbo:flora": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:passengersPerYear": {
 		  "comment": "Number of passengers per year.",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Infrastructure"
 		},
 		"dbo:architectualBureau": {
@@ -14892,11 +14892,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:belgiumPoliticalSeats": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:BelgiumSettlement"
 		},
 		"dbo:ceeb": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:School"
 		},
 		"dbo:prefaceBy": {
@@ -14912,7 +14912,7 @@ var createOntology = function(){
 		},
 		"dbo:parkingInformation": {
 		  "comment": "Information on station's parking facilities.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Station"
 		},
 		"dbo:poleDriverCountry": {
@@ -14941,11 +14941,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:formula": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:ChemicalSubstance"
 		},
 		"dbo:geologicPeriod": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:subsidiary": {
@@ -14992,31 +14992,31 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:kinOfLanguage": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:abbreviation": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:sizeLogo": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:shoot": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:year": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "owl:Thing"
 		},
 		"dbo:heightAgainst": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:firstGame": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:SoccerClub"
 		},
 		"dbo:assistantPrincipal": {
@@ -15031,11 +15031,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:established": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:ChristianDoctrine"
 		},
 		"dbo:distanceToCardiff": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:sexualOrientation": {
@@ -15067,7 +15067,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:homage": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:narrator": {
@@ -15093,16 +15093,16 @@ var createOntology = function(){
 		  "domain": "dbo:ChemicalSubstance"
 		},
 		"dbo:mainIslands": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Island"
 		},
 		"dbo:projectStartDate": {
 		  "comment": "The start date of the project.",
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Project"
 		},
 		"dbo:linkedSpace": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:fuelSystem": {
@@ -15113,34 +15113,34 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:distanceToCapital": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Settlement",
 		  "superproperty": [
 		    "dbo:Distance"
 		  ]
 		},
 		"dbo:thirdPlace": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:eurobabeIndexId": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Film"
 		},
 		"dbo:purchasingPowerParity": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:regime": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Spacecraft"
 		},
 		"dbo:dryCargo": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Spacecraft"
 		},
 		"dbo:purpose": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:prefecture": {
@@ -15155,27 +15155,27 @@ var createOntology = function(){
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:lethalOnRats": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:ChemicalSubstance"
 		},
 		"dbo:closed": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:EducationalInstitution"
 		},
 		"dbo:espnId": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:icd10": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Disease"
 		},
 		"dbo:nameDay": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:GivenName"
 		},
 		"dbo:schoolNumber": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:School"
 		},
 		"dbo:chairLabel": {
@@ -15186,7 +15186,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:forces": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:diploma": {
@@ -15194,7 +15194,7 @@ var createOntology = function(){
 		  "domain": "dbo:Person"
 		},
 		"dbo:believers": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:ChristianDoctrine"
 		},
 		"dbo:Galaxy/averageSpeed": {
@@ -15211,11 +15211,11 @@ var createOntology = function(){
 		},
 		"dbo:tennisSurfaceType": {
 		  "comment": "There are five types of court surface used in professional play. Each surface is different in the speed and height of the bounce of the ball.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:grave": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:unitaryAuthority": {
@@ -15226,15 +15226,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:whaDraftYear": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:IceHockeyPlayer"
 		},
 		"dbo:frozen": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Lake"
 		},
 		"dbo:worldTournamentBronze": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:title": {
@@ -15242,7 +15242,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:seatNumber": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:SpaceMission/lunarEvaTime": {
@@ -15250,40 +15250,40 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:numberOfSports": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:rankInFinalMedalCount": {
-		  "range": "xds:positiveInteger",
+		  "range": "xsd:positiveInteger",
 		  "domain": "dbo:OlympicResult"
 		},
 		"dbo:rgbCoordinateRed": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Colour"
 		},
 		"dbo:digitalSubChannel": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Broadcaster"
 		},
 		"dbo:airportUsing": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Airport"
 		},
 		"dbo:frenchNickname": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:licensee": {
 		  "comment": "Identify which company or entity holds the licence (mostly string are used in Wikipedia, therefore range is xsd:sting).",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:statName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:numberOfDependency": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Continent"
 		},
 		"dbo:vicePrincipal": {
@@ -15295,7 +15295,7 @@ var createOntology = function(){
 		},
 		"dbo:agencyStationCode": {
 		  "comment": "Agency station code (used on tickets/reservations, etc.).",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Station"
 		},
 		"dbo:region": {
@@ -15307,7 +15307,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:runwayLength": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Airport"
 		},
 		"dbo:statistic": {
@@ -15315,12 +15315,12 @@ var createOntology = function(){
 		  "domain": "dbo:Statistic"
 		},
 		"dbo:siren": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:zdb": {
 		  "comment": "Identifier for serial titles. More precise than issn",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PeriodicalLiterature"
 		},
 		"dbo:pseudonym": {
@@ -15328,7 +15328,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:testaverage": {
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "dbo:School"
 		},
 		"dbo:youthClub": {
@@ -15339,11 +15339,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:mapCaption": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:staff": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:EducationalInstitution"
 		},
 		"odesignp:isSettingFor": {
@@ -15376,15 +15376,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:areaTotal": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Place"
 		},
 		"dbo:cuisine": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Restaurant"
 		},
 		"dbo:minimumArea": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:coachClub": {
@@ -15392,7 +15392,7 @@ var createOntology = function(){
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:lifeExpectancy": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:calabrianName": {
@@ -15400,7 +15400,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:offeredClasses": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:School"
 		},
 		"dbo:legalForm": {
@@ -15423,7 +15423,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:okatoCode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:rocket": {
@@ -15448,11 +15448,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:populationMetroDensity": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:championships": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:FormulaOneRacer"
 		},
 		"dbo:languageRegulator": {
@@ -15463,11 +15463,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:toll": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:RouteOfTransportation"
 		},
 		"dbo:different": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:fastestDriverCountry": {
@@ -15478,7 +15478,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:numberOfParticipatingAthletes": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Olympics"
 		},
 		"dbo:license": {
@@ -15496,15 +15496,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:podium": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:defeatAsMgr": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:gagaouze": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:equipment": {
@@ -15522,11 +15522,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:prefectMandate": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:numberOfGraduateStudents": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:EducationalInstitution"
 		},
 		"dbo:Stream/minimumDischarge": {
@@ -15534,7 +15534,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:legalArrondissement": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:BelgiumSettlement"
 		},
 		"dbo:champion": {
@@ -15572,11 +15572,11 @@ var createOntology = function(){
 		  "domain": "dbo:MusicalArtist"
 		},
 		"dbo:productionYears": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Aircraft"
 		},
 		"dbo:greenLongDistancePisteNumber": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Place"
 		},
 		"dbo:managerSeason": {
@@ -15584,7 +15584,7 @@ var createOntology = function(){
 		  "domain": "dbo:Agent"
 		},
 		"dbo:maximumBoatLength": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Canal"
 		},
 		"dbo:boiler": {
@@ -15617,24 +15617,24 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:colonialName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:totalCargo": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Spacecraft"
 		},
 		"dbo:affiliate": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:FictionalCharacter"
 		},
 		"dbo:projectEndDate": {
 		  "comment": "The end date of the project.",
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Project"
 		},
 		"dbo:perCapitaIncomeAsOf": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"odesignp:isParticipantIn": {
@@ -15685,7 +15685,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:entrezgene": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Biomolecule"
 		},
 		"dbo:race": {
@@ -15696,7 +15696,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:sentence": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:Spacecraft/dockedTime": {
@@ -15749,15 +15749,15 @@ var createOntology = function(){
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:totalLaunches": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:authorityTitle": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:racketCatching": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:previousEvent": {
@@ -15798,11 +15798,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:proPeriod": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:hsvCoordinateHue": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:Colour"
 		},
 		"dbo:Drug/meltingPoint": {
@@ -15831,16 +15831,16 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:startCareer": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:individualisedPnd": {
 		  "comment": "PND (Personennamendatei) data about a person. PND is published by the German National Library. For each person there is a record with her/his name, birth and occupation connected with a unique identifier, the PND number.",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:restoreDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "owl:Thing"
 		},
 		"dbo:gender": {
@@ -15862,7 +15862,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:populationRural": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:sourceConfluencePosition": {
@@ -15887,7 +15887,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:pccSecretary": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:athleticsDiscipline": {
@@ -15895,7 +15895,7 @@ var createOntology = function(){
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:cylinderBore": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:AutomobileEngine"
 		},
 		"dbo:institution": {
@@ -15906,7 +15906,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:result": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:MilitaryConflict"
 		},
 		"dbo:inCemetery": {
@@ -15915,11 +15915,11 @@ var createOntology = function(){
 		},
 		"dbo:atRowNumber": {
 		  "comment": "Row # where the referenced resource is to be found in the source file",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Reference"
 		},
 		"dbo:volumeQuote": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:foundedBy": {
@@ -15931,11 +15931,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:feastDay": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Saint"
 		},
 		"dbo:month": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:varietals": {
@@ -15953,11 +15953,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:comment": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:cylinderCount": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Locomotive"
 		},
 		"dbo:performer": {
@@ -15975,7 +15975,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:nation": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:relative": {
@@ -15987,12 +15987,12 @@ var createOntology = function(){
 		},
 		"dbo:millsCodeNL": {
 		  "comment": "mills code from the central Dutch database on mills",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Mill"
 		},
 		"dbo:endDate": {
 		  "comment": "The end date of the event.",
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Event"
 		},
 		"dbo:recordLabel": {
@@ -16003,11 +16003,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:numberOfSuites": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Hotel"
 		},
 		"dbo:highestRank": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:SnookerPlayer"
 		},
 		"dbo:officialName": {
@@ -16022,7 +16022,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:populationQuote": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:translator": {
@@ -16065,7 +16065,7 @@ var createOntology = function(){
 		},
 		"dbo:mascot": {
 		  "comment": "something, especially a person or animal, used to symbolize a sports team, company, organization or other group.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:lastWin": {
@@ -16090,15 +16090,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:fibahof": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:numberOfCity": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Continent"
 		},
 		"dbo:numberOfNeighbourhood": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:enshrinedDeity": {
@@ -16121,7 +16121,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:surfaceGravity": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Planet"
 		},
 		"dbo:SpaceMission/lunarOrbitTime": {
@@ -16136,7 +16136,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:rebuildDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "owl:Thing"
 		},
 		"dbo:championInDoubleMale": {
@@ -16156,7 +16156,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:numberOfStateDeputies": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:part": {
@@ -16174,7 +16174,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:seatingCapacity": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Building"
 		},
 		"dbo:whaDraftTeam": {
@@ -16192,7 +16192,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:filmNumber": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:animator": {
@@ -16217,25 +16217,25 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:draftPosition": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:unicode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Letter"
 		},
 		"dbo:afdbId": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Film"
 		},
 		"dbo:hasSurfaceForm": {
 		  "comment": "Reserved for DBpedia.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:lineLength": {
 		  "comment": "Length of the line. Wikipedians usually do not differentiate between track length and line lenght.",
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:RouteOfTransportation"
 		},
 		"dbo:sea": {
@@ -16291,24 +16291,24 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:serviceStartYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:MilitaryPerson"
 		},
 		"dbo:diseasesdb": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Disease"
 		},
 		"dbo:numberOfStations": {
 		  "comment": "Number of stations or stops.",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:RouteOfTransportation"
 		},
 		"dbo:sex": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:wineYear": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:WineRegion"
 		},
 		"dbo:LunarCrater/diameter": {
@@ -16323,7 +16323,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:usOpenMixed": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:SpaceStation/volume": {
@@ -16335,28 +16335,28 @@ var createOntology = function(){
 		  "domain": "dbo:Person"
 		},
 		"dbo:latestPreviewVersion": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Software"
 		},
 		"dbo:shoeNumber": {
-		  "range": "xds:positiveInteger",
+		  "range": "xsd:positiveInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:sportsFunction": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:originallyUsedFor": {
 		  "comment": "Original use of the architectural structure, if it is currently being used as anything other than its original purpose.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:ArchitecturalStructure"
 		},
 		"dbo:raceLength": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:FormulaOneRacing"
 		},
 		"dbo:cargoWater": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Spacecraft"
 		},
 		"dbo:Type": {
@@ -16376,15 +16376,15 @@ var createOntology = function(){
 		},
 		"dbo:unloCode": {
 		  "comment": "UN/LOCODE, the United Nations Code for Trade and Transport Locations, is a geographic coding scheme developed and maintained by United Nations Economic Commission for Europe (UNECE), a unit of the United Nations. UN/LOCODE assigns codes to locations used in trade and transport  with functions such as seaports, rail and road terminals, airports, post offices and border crossing points.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:silverMedalSingle": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:compressionRatio": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:AutomobileEngine"
 		},
 		"dbo:voice": {
@@ -16402,7 +16402,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:scientificName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Species"
 		},
 		"dbo:currentTeamMember": {
@@ -16422,7 +16422,7 @@ var createOntology = function(){
 		},
 		"dbo:numberOfLines": {
 		  "comment": "Number of lines in the transit system.",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PublicTransitSystem"
 		},
 		"dbo:currentTeam": {
@@ -16437,24 +16437,24 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:translatedMotto": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:presidentGeneralCouncilMandate": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:bioclimate": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:subjectTerm": {
 		  "comment": "The subject as a term, possibly a term from a formal classification",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Work"
 		},
 		"dbo:raceWins": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:alpsSubsection": {
@@ -16466,30 +16466,30 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:rankingWins": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:SnookerPlayer",
 		  "superproperty": [
 		    "dbo:Wins"
 		  ]
 		},
 		"dbo:convictionDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Person"
 		},
 		"dbo:firstBroadcast": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Film"
 		},
 		"dbo:distance": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:fipsCode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:christeningDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Ship"
 		},
 		"dbo:mergedSettlement": {
@@ -16498,11 +16498,11 @@ var createOntology = function(){
 		},
 		"dbo:ruling": {
 		  "comment": "Ruling referred to in this legal case",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:LegalCase"
 		},
 		"dbo:rgbCoordinateBlue": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Colour"
 		},
 		"odesignp:specializes": {
@@ -16519,7 +16519,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:superbowlWin": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:previousDemographics": {
@@ -16527,11 +16527,11 @@ var createOntology = function(){
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:regionLink": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:numberOfCrew": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:MeanOfTransportation"
 		},
 		"dbo:highschool": {
@@ -16550,23 +16550,23 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:cableCar": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Place"
 		},
 		"dbo:buildingStartDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:ArchitecturalStructure"
 		},
 		"dbo:numberOfFederalDeputies": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:floodingDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "owl:Thing"
 		},
 		"dbo:firstAscentYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:Mountain"
 		},
 		"dbo:ground": {
@@ -16584,7 +16584,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:runtime": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Work"
 		},
 		"dbo:artist": {
@@ -16603,7 +16603,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:apparentMagnitude": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Planet"
 		},
 		"dbo:cultivatedVariety": {
@@ -16623,15 +16623,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:numberOfTerritories": {
-		  "range": "xds:positiveInteger",
+		  "range": "xsd:positiveInteger",
 		  "domain": "dbo:AdministrativeRegion"
 		},
 		"dbo:cyrilliqueName": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:isoCode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place",
 		  "subproperty": [
 		    "dbo:communityIsoCode",
@@ -16640,15 +16640,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:firstPlace": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:years": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:SoccerPlayer"
 		},
 		"dbo:airDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:RadioStation"
 		},
 		"dbo:Planet/averageSpeed": {
@@ -16671,11 +16671,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:licenceNumberLabel": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:mayorFunction": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:foundationPlace": {
@@ -16686,7 +16686,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:grossDomesticProductRank": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:field": {
@@ -16708,7 +16708,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:khlDraftYear": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:IceHockeyPlayer"
 		},
 		"dbo:premierePlace": {
@@ -16720,15 +16720,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:numberOfStudents": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:EducationalInstitution"
 		},
 		"dbo:mainBuilding": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Shrine"
 		},
 		"dbo:lengthQuote": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:orogeny": {
@@ -16740,24 +16740,24 @@ var createOntology = function(){
 		},
 		"dbo:dutchMIPCode": {
 		  "comment": "The Dutch MIP project was meant to take stock of all kinds of monuments",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing",
 		  "superproperty": [
 		    "dbo:Code"
 		  ]
 		},
 		"dbo:numberOfTurns": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:RaceTrack"
 		},
 		"dbo:numberOfPages": {
 		  "comment": "The books number of pages.",
-		  "range": "xds:positiveInteger",
+		  "range": "xsd:positiveInteger",
 		  "domain": "dbo:Book"
 		},
 		"dbo:routeStartDirection": {
 		  "comment": "End of the route. For U.S. roads, this should be either \"South\" or \"West\" per the standards set by the U.S. Roads project.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:RouteOfTransportation"
 		},
 		"dbo:MemberOfParliament": {
@@ -16797,7 +16797,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:teamSize": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:club": {
@@ -16812,7 +16812,7 @@ var createOntology = function(){
 		  "domain": "dbo:Place"
 		},
 		"dbo:wptTitle": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PokerPlayer"
 		},
 		"dbo:runningMate": {
@@ -16823,11 +16823,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:poles": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:FormulaOneRacer"
 		},
 		"dbo:populationPctChildren": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:department": {
@@ -16838,7 +16838,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:draftPick": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:GridironFootballPlayer"
 		},
 		"dbo:Planet/orbitalPeriod": {
@@ -16846,11 +16846,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:whaDraft": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:IceHockeyPlayer"
 		},
 		"dbo:fc": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Cricketer"
 		},
 		"dbo:landingVehicle": {
@@ -16930,11 +16930,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:sourceElevation": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:percentageOfAreaWater": {
-		  "range": "xds:float",
+		  "range": "xsd:float",
 		  "domain": "owl:Thing"
 		},
 		"dbo:laurenceOlivierAward": {
@@ -16945,7 +16945,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:member": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:FictionalCharacter"
 		},
 		"dbo:oldProvince": {
@@ -16965,19 +16965,19 @@ var createOntology = function(){
 		},
 		"dbo:totalDiscs": {
 		  "comment": "the total number of discs contained in the album",
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:Album"
 		},
 		"dbo:ko": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Boxer"
 		},
 		"dbo:regionType": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:committee": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:isPartOfMilitaryConflict": {
@@ -17009,11 +17009,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:launches": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:LaunchPad"
 		},
 		"dbo:faaLocationIdentifier": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Airport"
 		},
 		"dbo:nextEvent": {
@@ -17025,15 +17025,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:numberOfGraves": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Cemetery"
 		},
 		"dbo:timeInSpace": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:production": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Company"
 		},
 		"dbo:governorGeneral": {
@@ -17045,7 +17045,7 @@ var createOntology = function(){
 		},
 		"dbo:fareZone": {
 		  "comment": "The fare zone in which station is located.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Station"
 		},
 		"dbo:mainDomain": {
@@ -17065,7 +17065,7 @@ var createOntology = function(){
 		},
 		"dbo:longtype": {
 		  "comment": "can be used to include more informations e.g. the name of the artist that a tribute album is in honor of",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Album"
 		},
 		"dbo:headAlloy": {
@@ -17076,16 +17076,16 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:temperature": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:electionDateLeader": {
 		  "comment": "The date that leader was elected.",
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Legislature"
 		},
 		"dbo:bestWsopRank": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PokerPlayer"
 		},
 		"dbo:winsInEurope": {
@@ -17103,20 +17103,20 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:populationRuralDensity": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:unitedStatesNationalBridgeId": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Bridge"
 		},
 		"dbo:rocketStages": {
 		  "comment": "number of stages, not including boosters",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Rocket"
 		},
 		"dbo:id": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:WorldHeritageSite"
 		},
 		"dbo:MeanOfTransportation/length": {
@@ -17131,7 +17131,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:broadcastTranslator": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Broadcaster"
 		},
 		"dbo:Wins": {
@@ -17143,7 +17143,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:shoreLength": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Lake"
 		},
 		"dbo:voiceType": {
@@ -17169,7 +17169,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:added": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:HistoricPlace"
 		},
 		"dbo:Canal/maximumBoatBeam": {
@@ -17177,7 +17177,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:musicalKey": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:MusicalWork",
 		  "superproperty": [
 		    "dbo:Type"
@@ -17199,7 +17199,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:quote": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:royalAnthem": {
@@ -17210,20 +17210,20 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:populationUrbanDensity": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:bestLap": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:lastFlightStartDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:SpaceShuttle"
 		},
 		"dbo:postalCode": {
 		  "comment": "A postal code (known in various countries as a post code, postcode, or ZIP code) is a series of letters and/or digits appended to a postal address for the purpose of sorting mail.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:lastFlight": {
@@ -17234,12 +17234,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:partyNumber": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "owl:Thing"
 		},
 		"dbo:codeMemorial": {
 		  "comment": "Identifier for monuments of the Memorial type",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Memorial",
 		  "superproperty": [
 		    "dbo:Code"
@@ -17250,7 +17250,7 @@ var createOntology = function(){
 		  "domain": "dbo:Place"
 		},
 		"dbo:activeYearsEndYearMgr": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:Person"
 		},
 		"dbo:wholeArea": {
@@ -17265,7 +17265,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:functionStartYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:PersonFunction"
 		},
 		"dbo:governmentRegion": {
@@ -17280,15 +17280,15 @@ var createOntology = function(){
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:ncbhof": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:landingDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:SpaceMission"
 		},
 		"dbo:port2DockingDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Spacecraft"
 		},
 		"dbo:colour": {
@@ -17300,7 +17300,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:definition": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Galaxy"
 		},
 		"dbo:Lake/shoreLength": {
@@ -17316,7 +17316,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:second": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"odesignp:hasLocation": {
@@ -17414,24 +17414,24 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:frequency": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:capitalElevation": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Island"
 		},
 		"dbo:restingDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Person",
 		  "functional": true
 		},
 		"dbo:numberOfSettlement": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Department"
 		},
 		"dbo:lchfDraft": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:IceHockeyPlayer"
 		},
 		"dbo:chairmanTitle": {
@@ -17446,7 +17446,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:arm": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Protein"
 		},
 		"dbo:championInDouble": {
@@ -17464,15 +17464,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:currentSeason": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:SportsLeague"
 		},
 		"dbo:icaoLocationIdentifier": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Airport"
 		},
 		"dbo:meaning": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:countryWithFirstSatelliteLaunched": {
@@ -17483,7 +17483,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:lastProMatch": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:thumbnail": {
@@ -17500,11 +17500,11 @@ var createOntology = function(){
 		},
 		"dbo:wikiPageInDegree": {
 		  "comment": "Reserved for DBpedia.",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:fees": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:School"
 		},
 		"dbo:building": {
@@ -17515,15 +17515,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:mandate": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:logo": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:fuelConsumption": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:AutomobileEngine",
 		  "functional": true
 		},
@@ -17551,14 +17551,14 @@ var createOntology = function(){
 		},
 		"dbo:chorusCharacterInPlay": {
 		  "comment": "The name of the (Greek) chorus character in play.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Play",
 		  "superproperty": [
 		    "dbo:characterInPlay"
 		  ]
 		},
 		"dbo:port1UndockingDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Spacecraft"
 		},
 		"dbo:Weapon/diameter": {
@@ -17566,11 +17566,11 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:bedCount": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Hospital"
 		},
 		"dbo:numberOfParkingSpaces": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Hotel"
 		},
 		"dbo:profession": {
@@ -17608,7 +17608,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:appearancesInNationalTeam": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:SoccerPlayer"
 		},
 		"dbo:construction": {
@@ -17623,7 +17623,7 @@ var createOntology = function(){
 		  "domain": "dbo:NobleFamily"
 		},
 		"dbo:averageDepthQuote": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:winsAtChallenges": {
@@ -17649,12 +17649,12 @@ var createOntology = function(){
 		},
 		"dbo:wikiPageLength": {
 		  "comment": "Reserved for DBpedia.",
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "owl:Thing"
 		},
 		"dbo:officialSchoolColour": {
 		  "comment": "The official colour of the EducationalInstitution represented by the colour name (e.g.: red or green).",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:EducationalInstitution",
 		  "superproperty": [
 		    "dbo:ColourName"
@@ -17668,15 +17668,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:tu": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:longDistancePisteKilometre": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Place"
 		},
 		"dbo:installedCapacity": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:PowerStation",
 		  "functional": true
 		},
@@ -17704,7 +17704,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:sourceConfluenceElevation": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:prospectLeague": {
@@ -17712,11 +17712,11 @@ var createOntology = function(){
 		  "domain": "dbo:IceHockeyPlayer"
 		},
 		"dbo:other": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:University"
 		},
 		"dbo:otherInformation": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Settlement"
 		},
 		"dbo:administrativeCenter": {
@@ -17741,14 +17741,14 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:iso6391Code": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing",
 		  "superproperty": [
 		    "dbo:LanguageCode"
 		  ]
 		},
 		"dbo:worldOpen": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:government": {
@@ -17759,23 +17759,23 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:medlineplus": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Disease"
 		},
 		"dbo:deadInFightDate": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:circle": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:launchDate": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:SpaceMission"
 		},
 		"dbo:penisLength": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:computingInput": {
@@ -17790,7 +17790,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:fullCompetition": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:author": {
@@ -17801,15 +17801,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:lawCountry": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:feat": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:ra": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:MeanOfTransportation/mass": {
@@ -17817,7 +17817,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:comitat": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:belgiumPoliticalMajority": {
@@ -17839,11 +17839,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:retentionTime": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:noteOnRestingPlace": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:actScore": {
@@ -17869,12 +17869,12 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:bestFinish": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:SnookerPlayer"
 		},
 		"dbo:grayPage": {
 		  "comment": "Refers to the famous 1918 edition of Gray's Anatomy.",
-		  "range": "xds:positiveInteger",
+		  "range": "xsd:positiveInteger",
 		  "domain": "dbo:AnatomicalStructure"
 		},
 		"dbo:movie": {
@@ -17885,7 +17885,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:startYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "owl:Thing"
 		},
 		"dbo:approach": {
@@ -17908,7 +17908,7 @@ var createOntology = function(){
 		  "domain": "dbo:Person"
 		},
 		"dbo:rebuildingYear": {
-		  "range": "xds:gYear",
+		  "range": "xsd:gYear",
 		  "domain": "dbo:ArchitecturalStructure"
 		},
 		"dbo:daira": {
@@ -17919,7 +17919,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:trackNumber": {
-		  "range": "xds:positiveInteger",
+		  "range": "xsd:positiveInteger",
 		  "domain": "dbo:Song"
 		},
 		"dbo:instrument": {
@@ -17930,38 +17930,38 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:minimumTemperature": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Planet"
 		},
 		"dbo:workArea": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Building"
 		},
 		"dbo:vonKlitzingConstant": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:CelestialBody"
 		},
 		"dbo:mass": {
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "owl:Thing"
 		},
 		"dbo:provinceIsoCode": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace",
 		  "superproperty": [
 		    "dbo:isoCode"
 		  ]
 		},
 		"dbo:freeLabel": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:FictionalCharacter"
 		},
 		"dbo:classes": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:School"
 		},
 		"dbo:orbits": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "owl:Thing"
 		},
 		"dbo:style": {
@@ -17983,7 +17983,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:subsystem": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:format": {
@@ -17994,11 +17994,11 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:automobileModel": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:AutomobileEngine"
 		},
 		"dbo:budgetYear": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:cinematography": {
@@ -18009,7 +18009,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:architecturalMovement": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Person"
 		},
 		"dbo:stadium": {
@@ -18027,15 +18027,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:eTeatrId": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Film"
 		},
 		"dbo:numberOfMunicipalities": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:internationalPhonePrefixLabel": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:PopulatedPlace"
 		},
 		"dbo:fuelType": {
@@ -18057,15 +18057,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:spacewalkEnd": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:SpaceMission"
 		},
 		"dbo:age": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:Agent"
 		},
 		"dbo:appearancesInLeague": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:SoccerPlayer"
 		},
 		"dbo:sourceMountain": {
@@ -18076,7 +18076,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:lowerAge": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:School"
 		},
 		"dbo:musicComposer": {
@@ -18094,7 +18094,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:numberOfClubs": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Activity"
 		},
 		"dbo:regionalLanguage": {
@@ -18110,11 +18110,11 @@ var createOntology = function(){
 		},
 		"dbo:musicFormat": {
 		  "comment": "The format of the album: EP, Single etc.",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Album"
 		},
 		"dbo:layingDown": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Ship"
 		},
 		"dbo:climate": {
@@ -18140,7 +18140,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:flagSize": {
-		  "range": "xds:integer",
+		  "range": "xsd:integer",
 		  "domain": "dbo:Flag"
 		},
 		"dbo:polishFilmAward": {
@@ -18158,7 +18158,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:elevationQuote": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:targetAirport": {
@@ -18170,24 +18170,24 @@ var createOntology = function(){
 		},
 		"dbo:viafId": {
 		  "comment": "International authority data from the Online Computer Library Center (OCLC)",
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Agent"
 		},
 		"dbo:observatory": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Island"
 		},
 		"dbo:dateCompleted": {
-		  "range": "xds:date",
+		  "range": "xsd:date",
 		  "domain": "dbo:Canal"
 		},
 		"dbo:shipDisplacement": {
 		  "comment": "A ship's displacement is its mass at any given time.",
-		  "range": "xds:double",
+		  "range": "xsd:double",
 		  "domain": "dbo:Ship"
 		},
 		"dbo:collegeHof": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Athlete"
 		},
 		"dbo:cousurper": {
@@ -18203,7 +18203,7 @@ var createOntology = function(){
 		  "domain": "owl:Thing"
 		},
 		"dbo:band": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Protein"
 		},
 		"dbo:formerChoreographer": {
@@ -18214,7 +18214,7 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:subPrefecture": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "dbo:Place"
 		},
 		"dbo:secretaryGeneral": {
@@ -18225,15 +18225,15 @@ var createOntology = function(){
 		  ]
 		},
 		"dbo:numberOfRun": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:Person"
 		},
 		"dbo:documentDesignation": {
-		  "range": "xds:string",
+		  "range": "xsd:string",
 		  "domain": "owl:Thing"
 		},
 		"dbo:orbitalFlights": {
-		  "range": "xds:nonNegativeInteger",
+		  "range": "xsd:nonNegativeInteger",
 		  "domain": "dbo:YearInSpaceflight"
 		}
 	}
@@ -18304,7 +18304,7 @@ var createOntology = function(){
 		while (result = rx.exec(self.dboPropertyString)) {
 			results.push(result[1]);
 			i+=1;
-		    if (i >= 25)break;
+		    if (i >= 100)break;
 		}
 		// console.log(rx, domain, results);
 		return results;
@@ -18316,7 +18316,7 @@ var createOntology = function(){
 		while (result = rx.exec(self.dboClassesString)) {
 			results.push(result[1]);
 			i+=1;
-		    if (i >= 25)break;
+		    if (i >= 100)break;
 		}
 		return results;
 	}

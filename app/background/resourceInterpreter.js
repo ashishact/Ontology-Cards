@@ -1,58 +1,21 @@
-	//
+	var prefixMapping = {
+		"foaf": "http://xmlns.com/foaf/0.1/",
+		"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+		"rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+		"xsd": "http://www.w3.org/2001/XMLSchema#",
+		"dbo": "http://dbpedia.org/ontology/",
+		"dbr": "http://dbpedia.org/resource/",
+		"dbp": "http://dbpedia.org/property/",
+		"owl": "http://www.w3.org/2002/07/owl#",
+		"skos": "http://www.w3.org/2004/02/skos/core#",
+		"purl": "http://purl.org/dc/terms/",
+	}
 
-		// var RDF = $rdf.Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
-		// var RDFS = $rdf.Namespace("http://www.w3.org/2000/01/rdf-schema#")
-		// var FOAF = $rdf.Namespace("http://xmlns.com/foaf/0.1/")
-		// var XSD = $rdf.Namespace("http://www.w3.org/2001/XMLSchema#")
-		// var DBO = $rdf.Namespace('http://dbpedia.org/ontology/')
-		// var DBR = $rdf.Namespace('http://dbpedia.org/resource/');
-		// var SCARDS = $rdf.Namespace("http://semanticcards.org/");
-
-		// var store = $rdf.graph();// used to load complete rdf graph
-		// var ustore = $rdf.graph();// used to store important tripple for user
-		// var sstore = $rdf.graph();//used for suggestions
-
-		// var timeout = 5000;
-		// var fetcher = new $rdf.Fetcher(store, timeout);
-		// var ufetcher = new $rdf.Fetcher(ustore, timeout);
-		// var sfetcher = new $rdf.Fetcher(sstore, timeout);
-
-
-		// function loadrdf(url){
-		// 	fetcher.nowOrWhenFetched(url, function(ok, body, xhr) {
-		// 	    if (!ok) {
-		// 	        console.log("Oops, something happened and couldn't fetch data");
-		// 	    } else {
-		// 	        console.log(store);
-		// 	    }
-		// 	});
-		// }
-		// var rdf = {
-		// 	filterpredicate: function(pred){
-		// 		cms = store.statementsMatching(undefined, pred, undefined);
-		// 		$.each(cms, function(i, v){
-		// 			console.log(JSON.stringify(v.subject), JSON.stringify(v.object));
-		// 		})
-
-		// 	},
-		// 	comments: function(){
-		// 		rdf.filterpredicate(RDFS('comment'));
-		// 	},
-		// 	types: function(){
-		// 		rdf.filterpredicate(RDF('type'));
-		// 	}
-		// }
-
-//******************************//******************************//******************************//******************************
-//******************************//******************************//******************************//******************************
-//******************************//******************************//******************************//******************************
-//******************************//******************************//******************************//******************************
-//******************************//******************************//******************************//******************************
 	var tripplestore = new Triplestore();
 	tripplestore.setMapping("foaf", "http://xmlns.com/foaf/0.1/");
 	tripplestore.setMapping("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 	tripplestore.setMapping("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
-	tripplestore.setMapping("xds", "http://www.w3.org/2001/XMLSchema#");
+	tripplestore.setMapping("xsd", "http://www.w3.org/2001/XMLSchema#");
 	tripplestore.setMapping("dbo", "http://dbpedia.org/ontology/");
 	tripplestore.setMapping("dbr", "http://dbpedia.org/resource/");
 	tripplestore.setMapping("owl", "http://www.w3.org/2002/07/owl#");
@@ -213,9 +176,10 @@
 			this.results = function(json){
 				console.log('sparql results', json);
 				if(json.head && json.head.vars && json.head.vars.length){
-					if(json.head.vars.length == 1){
+					if(json.head.vars.length > 0){
 						// only one variable asked
 						var variable = json.head.vars[0];
+						console.log('variable is: ',variable);
 						if(variable.indexOf('allPredicate') ===0){
 							var sparqlid = variable.split('allPredicate')[1];// id to determine who made this sparql call
 							if(json.results.bindings && json.results.bindings.length){
@@ -270,9 +234,45 @@
 								self.prepareContextStack({sparqlid:sparqlid, objs:objs, type:'object'})
 							}
 						}
+						else if(variable.indexOf('allClassPredicates') === 0){
+							var sparqlid = variable.split('allClassPredicates')[1];// id to determine who made this sparql call
+							if(json.results.bindings && json.results.bindings.length){
+								var res = json.results.bindings;
+								var predicates = [];
+								for (var i = 0; i < res.length; i++) {
+									var predicate = res[i][variable];
+									predicates.push(predicate);
+								}
+								console.log('calling back with sparql results for all class predicates');
+								self.sparqlEvent.trigger(sparqlid, {sparqlid:sparqlid, predicates: predicates, type:'allClassPredicates'})
+							}
+							else{
+								console.log('0 results from sparql');
+								self.sparqlEvent.trigger(sparqlid, {sparqlid:sparqlid, predicates: [], type:'allClassPredicates'})
+							}
+						}
+						else if(variable.indexOf('facetedClassObjects') === 0){
+							var sparqlid = variable.split('facetedClassObjects')[1];// id to determine who made this sparql call
+							if(json.results.bindings && json.results.bindings.length){
+								var res = json.results.bindings;
+								var objects = [];
+								for (var i = 0; i < res.length; i++) {
+									var object = res[i][variable];
+									object.label = res[i]['label'].value;
+									objects.push(object);
+								}
+								console.log('calling back with sparql results for facetedClassObjectss');
+								self.sparqlEvent.trigger(sparqlid, {sparqlid:sparqlid, objects: objects, type:'facetedClassObjects'})
+							}
+							else{
+								console.log('0 results from sparql');
+								self.sparqlEvent.trigger(sparqlid, {sparqlid:sparqlid, objects: [], type:'facetedClassObjects'})
+							}
+						}
 						else{
 							console.log('no variable matched , in sparql results');
-							self.prepareContextStack({sparqlid:sparqlid, obj:{}, type:'object', status:'zeroresults'})
+
+							
 						}
 						
 					}
@@ -297,10 +297,32 @@
 				});
 			};
 
+			this.constructQuery = function(prefixes, variables, tripples, filters,  limit, offset){
+				var prefixStr = '';
+				for (var i = 0; i < prefixes.length; i++) {
+					if(prefixes[i]) prefixStr+= 'PREFIX '+prefixes[i]+': <'+ prefixMapping[prefixes[i]] + '>  ';
+				}
+				var variableStr = variables.join(' ');
+				var selectStr = 'SELECT DISTINCT ' + variableStr + ' WHERE { ';
+				var trippleStr = '';
+				for (var i = 0; i < tripples.length; i++) {
+					trippleStr+= tripples[i].s +' '+ tripples[i].p + ' ' + tripples[i].o + ' . ';
+				}
+				var filterStr = (filters && filters.length ) ? filters.join(' . ') : '';
+
+				var qu = prefixStr + selectStr + trippleStr + filterStr + ' } ' + 'LIMIT '+limit;
+				if(offset) qu+= ' OFFSET '+ offset;
+
+				return qu;
+
+			};
+
+
 			this.getEnglishAbstract = function(name){
 				var qu = 'PREFIX owl: <http://www.w3.org/2002/07/owl#>\
 							PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
 							PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
+							PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\
 							PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
 							PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\
 							PREFIX dbpedia: <http://dbpedia.org/ontology/>\
@@ -337,6 +359,7 @@
 				var qu = 'PREFIX owl: <http://www.w3.org/2002/07/owl#>\
 							PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
 							PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
+							PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\
 							PREFIX dbr: <http://dbpedia.org/resource/>\
 							PREFIX dbo: <http://dbpedia.org/ontology/>\
 							PREFIX dbpprop: <http://dbpedia.org/property/>'+
@@ -352,6 +375,7 @@
 				var qu = 'PREFIX owl: <http://www.w3.org/2002/07/owl#>\
 							PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
 							PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
+							PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\
 							PREFIX dbr: <http://dbpedia.org/resource/>\
 							PREFIX dbo: <http://dbpedia.org/ontology/>\
 							PREFIX dbpprop: <http://dbpedia.org/property/>'+
@@ -367,6 +391,7 @@
 				var qu = 'PREFIX owl: <http://www.w3.org/2002/07/owl#>\
 							PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
 							PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
+							PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\
 							PREFIX dbr: <http://dbpedia.org/resource/>\
 							PREFIX dbo: <http://dbpedia.org/ontology/>\
 							PREFIX dbpprop: <http://dbpedia.org/property/>'+
@@ -390,6 +415,7 @@
 				// var qu = 'PREFIX owl: <http://www.w3.org/2002/07/owl#>\
 				// 			PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
 				// 			PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
+				// 			PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\
 				// 			PREFIX dbr: <http://dbpedia.org/resource/>\
 				// 			PREFIX dbo: <http://dbpedia.org/ontology/>\
 				// 			PREFIX dbpprop: <http://dbpedia.org/property/>'+
@@ -489,7 +515,262 @@
 		// 		self.co ntext.predicateSearchString+= self.searchDelim + i + self.searchIdDelim + name + self.searchDelim;
 		// 	}
 		// };
+		
+		this.createSparqlEvent = function(){
+			var me = {};
+			me.mappings = {};
+			me.trigger = function(id, data){
+				var dest = me.mappings[id];
+				if(dest && dest.callback && dest.context){
+					dest.callback(id, data, dest.context);
+					delete me.mappings[id];
+				}
+			}
+			me.store = function(id, dest){
+				me.mappings[id] = dest;
+			}
+			return me;
+		};
+		this.sparqlEvent = createSparqlEvent();
+		this.getPrefixed = function(iri){
+			var match = iri.match(/(.+[\/#])(.+)$/);
+			if(match){
+				var ks = Object.keys(prefixMapping);
+				for (var i = 0; i < ks.length; i++) {
+					var k = ks[i];
+					var v = prefixMapping[k];
+					if(match[1] === v){
+						return k+':'+match[2];
+					}
+				}
 				
+			}
+		}
+		this.createExploratorySearch = function(){
+			var me = {}
+			me.currentPredicates = [];
+			me.trippleStack = [];
+			me.sparqlStack = [];
+			me.contextStack = [];
+			me.timeoutObj = null;
+			me.start = function(param){
+				for (var i = 0; i < self.andSplits.length; i++) {
+					var sentence = self.andSplits[i][0];
+					var tokens = sentence.split(' ');
+					var tokl = tokens.length;
+					var lastand = (i==self.andSplits.length-1);
+					var CS = me.contextStack[i];
+					var isfullstop = (sentence.indexOf('.') > -1 && sentence.indexOf('.') > sentence.length-2);
+					if(i == 0){
+						if(!CS.class.built && tokl>1){
+							var cstr = tokens[1];
+							me.suggestClasses(cstr, i, (lastand && tokl==2));
+						}
+						if(!CS.predicate.built && tokl>2){
+							var pstr = tokens[2];
+							me.suggestPredicates(pstr, i,  (lastand && tokl ==3))
+						}
+						if(!CS.object.built && tokl>3){
+							var ostr = tokens.slice(3, tokens.length).join(' ');
+							console.log(ostr);
+							var timeIn = 1000;
+							if(!ostr.length)timeIn = 0;// immediately act if only space at end
+							clearTimeout(me.timeoutObj);
+							function timedFunction(){
+								me.callSparql(ostr);
+							}
+							me.timeoutObj = setTimeout(timedFunction, timeIn);
+
+						}
+					}
+				}
+
+			};
+
+			me.suggestClasses = function(str, contextidx, send_to_ui){
+				self.currentSuggestedClass = {}
+				var selectediri = null;
+				var classes = ontology.getMatchedClasses(str);
+				var bestMatch = -200;
+				for (var i = 0; i < classes.length; i++) {
+					var _tok = classes[i].split(ontology.searchIdDelim);
+					var k = _tok[0];
+					var c = _tok[1];
+					var l = c.substr(4, c.length).toLowerCase();
+					var matchFactor = l.length ? str.length/l.length : 0;
+					var paddingMatch = l.indexOf(str.toLowerCase());
+					var totMatch = matchFactor - paddingMatch;
+					if(totMatch > bestMatch){
+						bestMatch = totMatch;
+						self.currentSuggestedClass.iri = c;
+						self.currentSuggestedClass.key = k;
+						selectediri = c;
+						if(str.toLowerCase() === l)	break;
+					}
+				}
+				me.contextStack[contextidx].class.iri = selectediri;
+				me.contextStack[contextidx].class.built = true;
+
+
+				if(send_to_ui){
+					self.classSuggestionsHtml = '';
+					for (var i = 0; i < classes.length; i++) {
+						var c = classes[i].split(ontology.searchIdDelim)[1];
+						var l = c.substr(4, c.length);
+						var chref = 'dbo:'+ l
+						var chtml = '<a data-class=\'true\' style=\'color:inherit;\' href=\''+chref+'\' target=\'_blank\' title=\''+chref+'\'>'+l+'</a>';
+						if(self.currentSuggestedClass.iri === c){
+							chtml = chtml.replace('color:inherit', 'color:forestgreen');
+							self.classSuggestionsHtml = chtml +'&nbsp; '+ self.classSuggestionsHtml;
+						}
+						else{
+							self.classSuggestionsHtml+= '&nbsp; '+chtml;
+						}
+					}
+					self.sendClassSuggestion(self.classSuggestionsHtml);
+				}
+			}
+			me.suggestPredicates = function(str, contextidx, send_to_ui){
+				var c = me.contextStack[contextidx].class;
+				var objects = tripplestore.getValues(c.iri, self.ALL_PREDICATES_URI);
+				if(objects.length && objects[0].length>2){
+					console.log('predicates exist');
+					var ps = objects[0];
+					str = str.toLowerCase();
+					var selected = ps[0].value
+					var bestMatch = -200;
+					for (var i = 0; i < ps.length; i++) {
+						var p = ps[i].value;
+						var match = p.match(/^\w+:(\w+)$/);
+						if(!match) match = p.match(/.+[\/#](.+)$/);
+						if(match){
+							var l = match[1].toLowerCase();
+							if(l.indexOf(str)>-1){
+								var matchFactor = l.length ? str.length/l.length : 0;
+								var paddingMatch = l.indexOf(str);
+								var totMatch = matchFactor - paddingMatch;
+
+								if(totMatch > bestMatch){
+									bestMatch = totMatch;
+									selected = p;
+									if(str === l)	break;
+								}
+							}
+						}
+					}
+					me.contextStack[contextidx].predicate.iri = selected;
+					me.contextStack[contextidx].predicate.built = true;
+
+					if(send_to_ui){
+						self.predicateSuggestionsHtml = '';
+
+						for (var i = 0; i < ps.length; i++) {
+							var p = ps[i].value;
+							var match = p.match(/^\w+:(\w+)$/);
+							if(!match) match = p.match(/.+[\/#](.+)$/);
+							if(match){
+								var l = match[1].toLowerCase();
+								if(l.indexOf(str)>-1){
+									var chref = p;
+									var title = p
+									var chtml = '<a data-class=\'true\' style=\'color:inherit;\' href=\''+chref+'\' target=\'_blank\' title=\''+title+'\'>'+l+'</a>';
+									if(selected === p){
+										chtml = chtml.replace('color:inherit', 'color:forestgreen');
+										self.predicateSuggestionsHtml = chtml +'&nbsp; '+ self.predicateSuggestionsHtml;
+									}
+									else{
+										self.predicateSuggestionsHtml+= '&nbsp; '+chtml;
+									}
+								}
+							}
+						}
+						self.sendPredicateSuggestion(self.predicateSuggestionsHtml);
+					}
+				}
+				else{
+					if(!me.contextStack[contextidx].predicate.count)me.contextStack[contextidx].predicate.count=0;
+					me.contextStack[contextidx].predicate.count++;
+					if(me.contextStack[contextidx].predicate.count<2) me.getAllClassPredicates(c, contextidx);
+					else console.log('previously query was made');
+				}
+			}
+			me.getAllClassPredicates = function(c, contextidx){
+				if(!c.iri)return;
+				var id = Date.now();
+				var prefixes = ['dbo'];
+				var allcp = '?allClassPredicates'+ id;
+				var variables = [allcp];
+				var tripples = [{s:'?instance', p:'a', o:c.iri}, {s:'?instance', p:allcp, o:'?object'}];
+				var filters = [];
+				var limit = 200;
+				var offset = null;
+				var qu = self.sparql.constructQuery(prefixes, variables, tripples, filters, limit, offset);
+				console.log(qu);
+
+				self.sparqlEvent.store(id, {callback:me.gotAllClassPredicates, context:{c:c, idx:contextidx}});
+				self.sparql.queryEndpoint(qu);
+			};
+			me.gotAllClassPredicates = function(id, param, context){
+				// console.log('got ', param.predicates);
+
+				for (var i = 0; i < param.predicates.length; i++) {
+					if(param.predicates[i].type == 'uri'){
+						var iri = param.predicates[i].value;
+						var prefixediri = self.getPrefixed(iri);
+						if(prefixediri) param.predicates[i].value = prefixediri;
+					}
+				}
+				tripplestore.set(context.c.iri, self.ALL_PREDICATES_URI, param.predicates);
+
+				me.start();
+			};
+			me.callSparql = function(ostr, contextidx){
+				var c = me.contextStack[0].class; if(!c.iri)return;
+				var p = me.contextStack[0].predicate; if(!p.iri)return; if(p.iri.match(/http/))p.iri = '<'+p.iri+'>';
+
+				var id = Date.now();
+				var prefixes = ['dbo', 'rdfs'];
+				var obj = '?facetedClassObjects'+ id;
+				var variables = [obj, '?label'];
+				var tripples = [{s:'?instance', p:'a', o:c.iri}, {s:'?instance', p:p.iri, o:obj}, {s:'?instance', p:'rdfs:label', o:'?label'}];
+				var filters = [];
+				if(ostr.replace(/\s+/g,' ').length>1) filters.push('FILTER regex(str('+obj+'), \''+ostr+'\', \'i\')');
+				filters.push('FILTER(!isLiteral(?label) || lang(?label) = "" || lang(?label) = "en" || langMatches(lang(?label), "EN"))');
+				var limit = 20;
+				var offset = null;
+				var qu = self.sparql.constructQuery(prefixes, variables, tripples, filters, limit, offset);
+				console.log(qu);
+
+				self.sparqlEvent.store(id, {callback:me.gotfacetedClassObjects, context:{c:c, p:p, idx:contextidx} });
+				self.sparql.queryEndpoint(qu);
+				
+			};
+			me.getInstances = function(){
+
+			}
+			me.gotfacetedClassObjects = function(id, param, context){
+				var answers = [];
+				for (var i = 0; i < param.objects.length; i++) {
+					var iri = param.objects[i].value;
+					if(iri.length > 4){// 'dbo:', can be * as well
+						var prefixediri = self.getPrefixed(iri);
+						if(prefixediri) param.objects[i].value = prefixediri;
+
+						if(prefixediri) answers.push({desc:param.objects[i].label, title:prefixediri.split(':')[1].replace('_', ' ')});
+						else answers.push({desc:param.objects[i].label, title:param.objects[i].value});
+					}
+				}
+				if(context.idx < me.contextStack.length){
+					me.contextStack[context.idx].object.iri = param.objects[0].value;
+					me.contextStack[context.idx].object.built = true;
+				}
+				self.sendClassObjectSuggestions(answers);
+
+			}
+
+			return me;
+		}
+		this.explore = self.createExploratorySearch();
 		this.gotNewTripplesFromPrefixSearch = function(tripples){
 			//Note !
 			//Here only one objct for any s,p pair alllowed
@@ -954,21 +1235,36 @@
 						}
 					}
 					else{// fullstop
+						
 						if(self.currentObjectSuggestions.length){
 							var o =  self.currentObjectSuggestions[0].value;// now only 0
-							var match = o.match(/.+[\/](.+)$/);
-							if(match){
-								o = 'dbr:'+match[1]
-							}
+							console.log('currentObjectSuggestions.length', self.currentObjectSuggestions.length);
 						}
 						else{
-							//var o = 'dbr:'+CCS[0].objectStr.replace(' ', '_');// _ for dbpedia resource uri
+							o = CCS.objects[i].raw;
+							console.log('current object raw', o);
 						}
 
-						if(o.length>3){// don't make a sparql query with less than 4 character
-							CCS.predicates[i].sparqlid = Date.now().toString(36);
-							sparql.getclassInstances(CCS.class.iri, CCS.predicates[i].iri, o, CCS.predicates[i].sparqlid);
-							return;
+						if(o){
+							var range = CCS.predicates[i].range;
+							console.log(CCS.predicates[i]);
+							var match = o.match(/.+[\/](.+)$/);
+							if(range.substr(0,4) === 'xsd:'){
+								o = '\"'+o+'\"'+'^^'+range;
+							}
+							else if(match){
+								o = 'dbr:'+match[1];
+							}
+							else{
+								o = 'dbr:'+o.replace(' ', '_');
+							}
+
+							if(o.length>3){// don't make a sparql query with less than 4 character
+								console.log('getting instances');
+								CCS.predicates[i].sparqlid = Date.now().toString(36);
+								sparql.getclassInstances(CCS.class.iri, CCS.predicates[i].iri, o, CCS.predicates[i].sparqlid);
+								return;
+							}
 						}
 					}
 				}
@@ -1043,6 +1339,7 @@
 
 			if(fullstop){
 				self.processAndSendClassObjectAnswers();
+				console.log('full stop , sent instances to ui');
 			}
 			else{// end reach , must be some kind of suggestions for unfinished query
 				if(CCS.objects.length && CCS.objects[CCS.objects.length-1].iri)self.suggestPossibleObjects(self.currentObjectSuggestions);
@@ -1414,8 +1711,7 @@
 				else{
 					console.log('searching for pedicates', i);
 					var ps = self.contextStack[i-1].subject;
-					var isuri = (ps.match(/^https?:\/\//));
-					if(!ps || !isuri){
+					if(!ps){
 						console.log('Subject is not defined for context', i-1, '  ' +self.contextStack[i-1]);
 						return;
 					}
@@ -1689,10 +1985,8 @@
 			// and wait for them to respond
 			
 			if(question.length > 2) {// this makes sure that , analysis is always done
-				
 
-
-
+				question = question.replace(/\s+/g, " ");// remove multipele spaces
 				self.tokenStrings = [];
 				// self.spaceTokens = question.replace(/\s+/g, " ").split(" ");
 				self.analysedSentences = compendium.analyse(question);
@@ -1723,22 +2017,31 @@
 				//[  'all scientist known for Physics',      'who went to Cambridge or Oxford',     died in London]
 				//[ ['all scientist known for Physics'],    ['who went to Cambridge', 'Oxford'],  ['died in london']]
 
+				// SEARCH BASED ON STORED ONTOLOGY
+				// fS = self.dotSplit[0];
+				// var tokens = fS.split(' ');
+				// if(tokens[0].toLowerCase() === 'all'){
+				// 	if(tokens.length>1){
+				// 		if(tokens.length==2)self.suggestClasses(tokens[1], true);
+				// 		if(tokens.length>2){// all scientist knownFor
+				// 			self.classContextStack = {class:self.currentSuggestedClass, predicates:[], objects:[], classInstances:[]};//and with predicates and or with orbects
+				// 			self.prepareClassContextStack();
+				// 			self.lastClassContextStack = self.classContextStack;
+				// 		}
+				// 	}
+				// 	//console.log(self.rootTags);
+				// 	return;
+				// }
 
-				fS = self.dotSplit[0];
-				var tokens = fS.split(' ');
+				var tokens = self.dotSplit[0].split(' ');
 				if(tokens[0].toLowerCase() === 'all'){
-					if(tokens.length>1){
-						if(tokens.length==2)self.suggestClasses(tokens[1], true);
-						if(tokens.length>2){// all scientist knownFor
-							self.classContextStack = {class:self.currentSuggestedClass, predicates:[], objects:[], classInstances:[]};//and with predicates and or with orbects
-							self.prepareClassContextStack();
-							self.lastClassContextStack = self.classContextStack;
-						}
+					self.explore.contextStack = [];
+					for (var i = 0; i < andSplits.length; i++) {
+						self.explore.contextStack.push({class:{}, predicate:{}, object:{}});
 					}
-					//console.log(self.rootTags);
+					self.explore.start();
 					return;
 				}
-
 
 
 				// note that this will only match for last sentence
@@ -1758,8 +2061,7 @@
 				// so it should be same as the current context stack , which sounds different from its name
 				// but its called lasCon... because it will be old when the new context is prepared nex time
 				self.lastContextStack = self.contextStack;
-				// console.log(self.lastContextStack);
-				
+				// console.log(self.lastContextStack);	
 			}
 
 			//by this time do 
