@@ -61,42 +61,6 @@
 	    return kb;
 	}
 
-	var getAbstract = function(name){
-		var whois = 'PREFIX owl: <http://www.w3.org/2002/07/owl#>\
-							PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
-							PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
-							PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
-							PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\
-							PREFIX dbpedia: <http://dbpedia.org/ontology/>\
-							PREFIX dbpprop: <http://dbpedia.org/property/>\
-							PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>'+
-								'SELECT DISTINCT ?abs WHERE {\
-	  								?x0 rdf:type foaf:Person.\
-	  								?x0 rdfs:label "'+name+'"@en.\
-	  								?x0 dbpedia-owl:abstract ?abs.\
-									FILTER(!isLiteral(?abs) || lang(?abs) = "" || langMatches(lang(?abs), "EN"))\
-								} LIMIT 12';
-		sims(whois);
-		
-	}
-	var getAllProps = function(title){
-		var whois = 'PREFIX owl: <http://www.w3.org/2002/07/owl#>\
-							PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
-							PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
-							PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
-							PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\
-							PREFIX dbpedia: <http://dbpedia.org/ontology/>\
-							PREFIX dbpprop: <http://dbpedia.org/property/>\
-							PREFIX dbpres: <http://dbpedia.org/resource/>\
-							PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>'+
-								'SELECT DISTINCT ?prop WHERE {\
-	  								dbpres:'+title+' ?prop ?o\
-									FILTER(!isLiteral(?o) || lang(?o) = "" || langMatches(lang(?o), "EN"))\
-								}';
-		sims(whois);
-		
-	}
-
 	function sims(query){
 		var endpoint = 'http://dbpedia.org/sparql';
 		if(!query) query = "SELECT ?s WHERE {?s ?p ?o} LIMIT 10";
