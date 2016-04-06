@@ -1,3 +1,4 @@
+	var _debug = true;
 	var prefixMapping = {
 		"foaf": "http://xmlns.com/foaf/0.1/",
 		"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
@@ -70,10 +71,10 @@
 			url: queryUrl,
 			success: function(data) {
 				if(data.results){
-					// console.log(JSON.stringify(data.results.bindings));
-					console.log(data.results.bindings);
+					// if(_debug)console.log(JSON.stringify(data.results.bindings));
+					if(_debug)console.log(data.results.bindings);
 				}
-				else console.log(data);
+				else if(_debug)console.log(data);
 			}
 		});
 	}
@@ -132,18 +133,14 @@
 
 		this.createSparql = function(){
 			var me = this;
-			this.limitForClassObject = 10;// will have many predicates
-			this.limitForAllPredicate = 200;
-			this.limitForInstanceObject= 20;// will have only one predicate
-			this.limitForAllClassPredicate = 400;
 
 			this.results = function(json){
-				console.log('sparql results', json);
+				if(_debug)console.log('sparql results', json);
 				if(json.head && json.head.vars && json.head.vars.length){
 					if(json.head.vars.length > 0){
 						// only one variable asked
 						var variable = json.head.vars[0];
-						console.log('variable is: ',variable);
+						if(_debug)console.log('variable is: ',variable);
 						if(variable.indexOf('allPredicate') ===0){
 							var sparqlid = variable.split('allPredicate')[1];// id to determine who made this sparql call
 							if(json.results.bindings && json.results.bindings.length){
@@ -153,11 +150,11 @@
 									var predicate = res[i][variable].value;
 									predicatesUri.push(predicate);
 								}
-								console.log('calling back with sparql results for all predicates');
+								if(_debug)console.log('calling back with sparql results for all predicates');
 								self.prepareContextStack({sparqlid:sparqlid, predicates: predicatesUri, type:'allPredicate'})
 							}
 							else{
-								console.log('0 results from sparql');
+								if(_debug)console.log('0 results from sparql');
 								self.prepareContextStack({sparqlid:sparqlid, predicates: [], type:'allPredicate', status:'zeroresults'})
 							}
 						}
@@ -169,7 +166,7 @@
 								for (var i = 0; i < res.length; i++) {
 									classInstances.push(res[i][variable]);
 								}
-								console.log('calling back with sparql results for class objects');
+								if(_debug)console.log('calling back with sparql results for class objects');
 								self.prepareClassContextStack({sparqlid:sparqlid, classInstances: classInstances, type:'classInstances'});
 							}
 						}
@@ -181,7 +178,7 @@
 								for (var i = 0; i < res.length; i++) {
 									objectSuggForClass.push(res[i][variable]);
 								}
-								console.log('calling back with sparql results for class objects');
+								if(_debug)console.log('calling back with sparql results for class objects');
 								self.prepareClassContextStack({sparqlid:sparqlid, objectSuggForClass:objectSuggForClass, type:'objectSuggForClass'});
 							}
 						}
@@ -194,7 +191,7 @@
 								for (var i = 0; i < res.length; i++) {
 									objs.push(res[i][variable]);
 								}
-								console.log('calling back with sparql results for objects');
+								if(_debug)console.log('calling back with sparql results for objects');
 								self.prepareContextStack({sparqlid:sparqlid, objs:objs, type:'object'})
 							}
 						}
@@ -207,11 +204,11 @@
 									var predicate = res[i][variable];
 									predicates.push(predicate);
 								}
-								console.log('calling back with sparql results for all class predicates');
+								if(_debug)console.log('calling back with sparql results for all class predicates');
 								self.sparqlEvent.trigger(sparqlid, {sparqlid:sparqlid, predicates: predicates, type:'allClassPredicates'})
 							}
 							else{
-								console.log('0 results from sparql');
+								if(_debug)console.log('0 results from sparql');
 								self.sparqlEvent.trigger(sparqlid, {sparqlid:sparqlid, predicates: [], type:'allClassPredicates'})
 							}
 						}
@@ -222,27 +219,42 @@
 								var objects = [];
 								for (var i = 0; i < res.length; i++) {
 									var object = res[i][variable];
-									object.label = res[i]['label'].value;
+									if(res[i]['label']) object.label = res[i]['label'].value;// its making distict as a group
 									objects.push(object);
 								}
-								console.log('calling back with sparql results for facetedClassObjectss');
+								if(_debug)console.log('calling back with sparql results for facetedClassObjectss');
 								self.sparqlEvent.trigger(sparqlid, {sparqlid:sparqlid, objects: objects, type:'facetedClassObjects'})
 							}
 							else{
-								console.log('0 results from sparql');
+								if(_debug)console.log('0 results from sparql');
 								self.sparqlEvent.trigger(sparqlid, {sparqlid:sparqlid, objects: [], type:'facetedClassObjects'})
 							}
 						}
+						else if(variable.indexOf('instance') === 0){
+							var sparqlid = variable.split('instance')[1];// id to determine who made this sparql call
+							if(json.results.bindings && json.results.bindings.length){
+								var res = json.results.bindings;
+								var instances = [];
+								for (var i = 0; i < res.length; i++) {
+									var instance = res[i][variable];
+									instances.push(instance);
+								}
+								if(_debug)console.log('calling back with sparql results for instance');
+								self.sparqlEvent.trigger(sparqlid, {sparqlid:sparqlid, instances: instances, type:'instances'})
+							}
+							else{
+								if(_debug)console.log('0 results from sparql');
+								self.sparqlEvent.trigger(sparqlid, {sparqlid:sparqlid, instances: [], type:'instances'})
+							}
+						}
 						else{
-							console.log('no variable matched , in sparql results');
+							if(_debug)console.log('no variable matched , in sparql results');
 
 							
 						}
 						
 					}
 				}
-						
-
 			}
 			this.endpoint = 'http://dbpedia.org/sparql';
 			this.queryEndpoint = function(query){
@@ -254,9 +266,9 @@
 					success: function(json) {
 						if(json.results){
 							me.results(json);
-							// console.log(json);
+							// if(_debug)console.log(json);
 						}
-						else console.log(json);
+						else if(_debug)console.log(json);
 					}
 				});
 			};
@@ -278,34 +290,12 @@
 				if(offset) qu+= ' OFFSET '+ offset;
 
 				return qu;
-
-			};
-
-
-			this.getEnglishAbstract = function(name){
-				var qu = 'PREFIX owl: <http://www.w3.org/2002/07/owl#>\
-							PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
-							PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
-							PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\
-							PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
-							PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\
-							PREFIX dbpedia: <http://dbpedia.org/ontology/>\
-							PREFIX dbpprop: <http://dbpedia.org/property/>\
-							PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>'+
-								'SELECT DISTINCT ?abs WHERE {\
-	  								?x0 rdf:type foaf:Person.\
-	  								?x0 rdfs:label "'+name+'"@en.\
-	  								?x0 dbpedia-owl:abstract ?abs.\
-									FILTER(!isLiteral(?abs) || lang(?abs) = "" || langMatches(lang(?abs), "EN"))\
-								} LIMIT 1';
-				qu = qu.replace(/\s+/g, " ");
-				me.queryEndpoint(qu);
 			};
 
 			this.getAllEnglishPredicate = function(s, id){// s is a $rdf Named node
 				s = '<'+s+'>';
 				var qu = 'SELECT DISTINCT ?allPredicate'+id+' WHERE {'+s+' ?allPredicate'+id+' ?o.} LIMIT 200';
-				console.log(qu);
+				if(_debug)console.log(qu);
 				me.queryEndpoint(qu);
 			};
 
@@ -314,7 +304,7 @@
 				p = '<'+p+'>';
 				o = '?object'+id;
 				var qu = 'SELECT DISTINCT ?object'+id+' WHERE {'+s+' '+p+' '+o+'. FILTER(!isLiteral('+o+') || lang('+o+') = "" || langMatches(lang('+o+'), "EN")) } LIMIT 50';
-				console.log(qu);
+				if(_debug)console.log(qu);
 				me.queryEndpoint(qu);
 			}
 
@@ -331,7 +321,7 @@
 	  								?classInstances'+id+' a '+OC+'.\
 	  								?classInstances'+id+' '+OP+' '+o+'.\
 								} LIMIT 13';
-				console.log(qu);
+				if(_debug)console.log(qu);
 				me.queryEndpoint(qu);
 			};
 
@@ -347,7 +337,7 @@
 	  								?instance a '+OC+'.\
 	  								?instance ' +OP+' ?objectSuggForClass'+id+'.\
 								} LIMIT 13';
-				console.log(qu);
+				if(_debug)console.log(qu);
 				me.queryEndpoint(qu);
 			};
 
@@ -365,7 +355,7 @@
 	  								?objectSuggForClass'+id+' rdfs:label ?label.\
 	  								FILTER regex(str(?label), \''+ostr+'\', \'i\')\
 								} LIMIT 13';
-				console.log(qu);
+				if(_debug)console.log(qu);
 				me.queryEndpoint(qu);
 			};
 
@@ -387,7 +377,7 @@
 	  	// 							?classObject'+id+' a '+OC+'.\
 	  	// 							?classObject'+id+' '+OP+' '+o+'.\
 				// 				} LIMIT 5';
-				// console.log(qu);
+				// if(_debug)console.log(qu);
 				// me.queryEndpoint(qu);
 			}
 
@@ -396,7 +386,7 @@
 			// 	p = '<'+p+'>';
 			// 	o = '?object'+id;
 			// 	var qu = 'SELECT DISTINCT ?object'+id+' WHERE {'+s+' '+p+' '+o+'. FILTER(!isLiteral('+o+') || lang('+o+') = "" || langMatches(lang('+o+'), "EN")) } LIMIT 50';
-			// 	console.log(qu);
+			// 	if(_debug)console.log(qu);
 			// 	me.queryEndpoint(qu);	
 			// }
 
@@ -440,7 +430,7 @@
 											text = $(n).text();
 											if(text.length < 10) $(n).remove();
 											if(text.match(/words\)/) && text.match(/^\s*(http|www|en.wiki)/)){
-												console.log(text);
+												if(_debug)console.log(text);
 												$(n).remove();
 											}
 											var $i = $(n).find('i');// Site not responding. Last check: 2007-11-07)
@@ -472,13 +462,6 @@
 			return this;
 		}
 		this.hiddenweb = self.createHiddenWeb();
-		// this.gotAllPredicates = function(predicatesUri, predicateNameArray){
-		// 	self.context.predicates = predicatesUri;
-		// 	for (var i = 0; i < predicateNameArray.length; i++) {
-		// 		var name = predicateNameArray[i];
-		// 		self.co ntext.predicateSearchString+= self.searchDelim + i + self.searchIdDelim + name + self.searchDelim;
-		// 	}
-		// };
 		
 		this.createSparqlEvent = function(){
 			var me = {};
@@ -515,42 +498,127 @@
 			me.currentPredicates = [];
 			me.trippleStack = [];
 			me.sparqlStack = [];
+			me.lastContextStack = [];
 			me.contextStack = [];
 			me.timeoutObj = null;
-			me.start = function(param){
+			me.start = function(){
+				if(_debug)console.log('start explore');
 				for (var i = 0; i < self.andSplits.length; i++) {
 					var sentence = self.andSplits[i][0];
+					if(i > 0) sentence = self.andSplits[0][0].split(' ').slice(0,2).join(' ') + ' '+ sentence;
 					var tokens = sentence.split(' ');
+					if(tokens.length > 2){
+						if(tokens[2] === 'with') tokens.splice(2,1);
+					}
 					var tokl = tokens.length;
 					var lastand = (i==self.andSplits.length-1);
+					var lcexist = (me.lastContextStack.length > i);
 					var CS = me.contextStack[i];
-					var isfullstop = (sentence.indexOf('.') > -1 && sentence.indexOf('.') > sentence.length-2);
-					if(i == 0){
-						if(!CS.class.built && tokl>1){
-							var cstr = tokens[1];
+					var isfullstop = (self.dotSplit.length>1);
+					if(!CS.class.built && tokl>1){
+						var cstr = tokens[1];
+						var go = true;
+						if(lcexist && cstr.toLowerCase() === me.lastContextStack[i].class.raw){
+							var lc = me.lastContextStack[i];
+							if(lc.class.iri){
+								me.contextStack[i].class.iri = lc.class.iri;
+								me.contextStack[i].class.built = true;
+								me.contextStack[i].class.raw = cstr.toLowerCase();
+								go = false;
+								// if(_debug)console.log('same as lastContext', lc.class.iri )	
+							}
+							
+						}
+						if(go){
+							me.contextStack[i].class.raw = cstr.toLowerCase();
 							me.suggestClasses(cstr, i, (lastand && tokl==2));
 						}
-						if(!CS.predicate.built && tokl>2){
-							var pstr = tokens[2];
-							me.suggestPredicates(pstr, i,  (lastand && tokl ==3))
-						}
-						if(!CS.object.built && tokl>3){
-							var ostr = tokens.slice(3, tokens.length).join(' ');
-							console.log(ostr);
-							var timeIn = 1000;
-							if(!ostr.length)timeIn = 0;// immediately act if only space at end
-							clearTimeout(me.timeoutObj);
-							function timedFunction(){
-								me.callSparql(ostr);
+					}
+					if(!CS.predicate.built && tokl>2){
+						var pstr = tokens[2];
+						var go = true;
+						if(lcexist &&  pstr.toLowerCase() === me.lastContextStack[i].predicate.raw){
+							var lc = me.lastContextStack[i];
+							if(lc.predicate.iri){
+								me.contextStack[i].predicate.iri = lc.predicate.iri;
+								me.contextStack[i].predicate.built = true;
+								me.contextStack[i].predicate.raw = pstr.toLowerCase();
+								go = false;
+								// if(_debug)console.log('same as lastContext', lc.predicate.iri )
 							}
-							me.timeoutObj = setTimeout(timedFunction, timeIn);
+						}
+						if(go){
+							me.contextStack[i].predicate.raw = pstr.toLowerCase();
+							var async = me.suggestPredicates(pstr, i,  (lastand && tokl ==3));
+							if(async) return;
+						}
+					}
+					if(!CS.object.built && tokl>3){
+						var ostr = tokens.slice(3, tokens.length).join(' ');
+						var go = true;
+						if(lcexist && me.lastContextStack[i].object.hasOwnProperty('raw') && ostr.toLowerCase().replace(/\san?d?/,'').replace(/\s+/g, '') === me.lastContextStack[i].object.raw.replace(/\san?d?/,'').replace(/\s+/g, '') ){// replace all spaces while checking
+							var lc = me.lastContextStack[i];
+							if(lc.object.iri){
+								me.contextStack[i].object.iri = lc.object.iri;
+								me.contextStack[i].object.type = lc.object.type;
+								me.contextStack[i].object.suggestions = lc.object.suggestions;// list of suggestions
+								me.contextStack[i].object.built = true;
+								me.contextStack[i].object.raw = ostr.toLowerCase();
+								go = false;
+								if(lastand && !isfullstop) me.sendSuggestions(me.contextStack[i].object.suggestions, i);
+							}
+						}
+						if(go){
+							var found = false;
+							if(lcexist) found = me.filterObjectFromSuggestions(ostr, i);
+							me.contextStack[i].object.raw = ostr.toLowerCase();
+							if(_debug)console.log('found', found);
+							if(!found){
+								var timeIn = 1000;
+								var contextidx = i;// the timer function may get another id
+								clearTimeout(me.timeoutObj);
+								function timedFunction(){
+									me.callSparql(ostr, contextidx);
+								}
+								me.timeoutObj = setTimeout(timedFunction, timeIn);
+								return;
+							}
+						}
+					}
+					else{
+						if(lastand && !isfullstop && me.contextStack[i].object.suggestions && me.contextStack[i].object.suggestions.length) me.sendSuggestions(me.contextStack[i].object.suggestions, i);
+					}
 
+					if(lastand && isfullstop){// dont get instance in between // get only at the end of the stack
+						if(lcexist && (me.contextStack.length === me.lastContextStack.length)){
+							var lc = me.contextStack[me.contextStack.length-1];
+							var plc = me.lastContextStack[me.lastContextStack.length-1];
+							if(lc.object.iri === plc.object.iri && lc.predicate.iri === plc.predicate.iri && lc.class.iri === plc.class.iri){
+								if(_debug)console.log('a');
+								if(plc.instance.iri){
+									lc.instance.iri = plc.instance.iri;
+									lc.instance.suggestions = plc.instance.suggestions;
+									me.sendInstances(lc.instance.suggestions, i);
+								}
+								else{
+									var async = me.getInstances(i);
+									if(async)return;	
+								}
+							}
+							else{
+								if(_debug)console.log('b');
+								var async = me.getInstances(i);
+								if(async)return;
+							}
+						}
+						else{
+								if(_debug)console.log('c');
+							var async = me.getInstances(i);
+							if(async)return;
 						}
 					}
 				}
-
 			};
-
 			me.suggestClasses = function(str, contextidx, send_to_ui){
 				self.currentSuggestedClass = {}
 				var selectediri = null;
@@ -580,8 +648,9 @@
 					self.classSuggestionsHtml = '';
 					for (var i = 0; i < classes.length; i++) {
 						var c = classes[i].split(ontology.searchIdDelim)[1];
-						var l = c.substr(4, c.length);
-						var chref = 'dbo:'+ l
+						var colsplit = c.split(':');
+						var l = colsplit.slice(1, 10).join('/');
+						var chref = prefixMapping[colsplit[0]] + l;
 						var chtml = '<a data-class=\'true\' style=\'color:inherit;\' href=\''+chref+'\' target=\'_blank\' title=\''+chref+'\'>'+l+'</a>';
 						if(self.currentSuggestedClass.iri === c){
 							chtml = chtml.replace('color:inherit', 'color:forestgreen');
@@ -598,7 +667,7 @@
 				var c = me.contextStack[contextidx].class;
 				var objects = tripplestore.getValues(c.iri, self.ALL_PREDICATES_URI);
 				if(objects.length && objects[0].length>2){
-					console.log('predicates exist');
+					if(_debug)console.log('predicates exist');
 					var ps = objects[0];
 					str = str.toLowerCase();
 					var selected = ps[0].value
@@ -652,10 +721,13 @@
 					}
 				}
 				else{
-					if(!me.contextStack[contextidx].predicate.count)me.contextStack[contextidx].predicate.count=0;
-					me.contextStack[contextidx].predicate.count++;
-					if(me.contextStack[contextidx].predicate.count<2) me.getAllClassPredicates(c, contextidx);
-					else console.log('previously query was made');
+					if(!me.contextStack[contextidx].predicate.sparql_call_count)me.contextStack[contextidx].predicate.sparql_call_count=0;
+					me.contextStack[contextidx].predicate.sparql_call_count++;
+					if(me.contextStack[contextidx].predicate.sparql_call_count<2){
+						me.getAllClassPredicates(c, contextidx);
+						return true;
+					}
+					else if(_debug)console.log('previously query was made');
 				}
 			}
 			me.getAllClassPredicates = function(c, contextidx){
@@ -669,14 +741,12 @@
 				var limit = 200;
 				var offset = null;
 				var qu = self.sparql.constructQuery(prefixes, variables, tripples, filters, limit, offset);
-				console.log(qu);
+				if(_debug)console.log(qu);
 
 				self.sparqlEvent.store(id, {callback:me.gotAllClassPredicates, context:{c:c, idx:contextidx}});
 				self.sparql.queryEndpoint(qu);
 			};
 			me.gotAllClassPredicates = function(id, param, context){
-				// console.log('got ', param.predicates);
-
 				for (var i = 0; i < param.predicates.length; i++) {
 					if(param.predicates[i].type == 'uri'){
 						var iri = param.predicates[i].value;
@@ -685,56 +755,384 @@
 					}
 				}
 				tripplestore.set(context.c.iri, self.ALL_PREDICATES_URI, param.predicates);
-
 				me.start();
 			};
 			me.callSparql = function(ostr, contextidx){
-				var c = me.contextStack[0].class; if(!c.iri)return;
-				var p = me.contextStack[0].predicate; if(!p.iri)return; if(p.iri.match(/http/))p.iri = '<'+p.iri+'>';
 
 				var id = Date.now();
-				var prefixes = ['dbo', 'rdfs'];
+				var prefixes = ['dbo', 'rdfs', 'dbp', 'owl'];
 				var obj = '?facetedClassObjects'+ id;
-				var variables = [obj, '?label'];
-				var tripples = [{s:'?instance', p:'a', o:c.iri}, {s:'?instance', p:p.iri, o:obj}, {s:'?instance', p:'rdfs:label', o:'?label'}];
+				// var variables = [obj, '?label'];
+				var variables = [obj];
+				var tripples = [];
 				var filters = [];
-				if(ostr.replace(/\s+/g,' ').length>1) filters.push('FILTER regex(str('+obj+'), \''+ostr+'\', \'i\')');
-				filters.push('FILTER(!isLiteral(?label) || lang(?label) = "" || lang(?label) = "en" || langMatches(lang(?label), "EN"))');
+				for (var i = 0; i < me.contextStack.length; i++) {
+					
+					var c = me.contextStack[contextidx].class; if(!c.iri)return;
+					var p = me.contextStack[contextidx].predicate; if(!p.iri)return; if(p.iri.match(/http/))p.iri = '<'+p.iri+'>';
+
+
+					var con = me.contextStack[i];
+					var islast = (i == me.contextStack.length-1);
+					if(!con.class.iri || !con.predicate.iri)break;
+					if(i==0)tripples.push({s:'?instance', p:'a', o:con.class.iri});
+					if(!islast){
+						if(!con.object.iri){
+							var ostr = con.object.raw;
+							if(ostr && ostr.length){
+								tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+								tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
+
+								
+
+							}
+							else{
+								tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+								tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
+								filters.push('FILTER(!isLiteral(?label) || lang(?label) = "" || lang(?label) = "en" || langMatches(lang(?label), "EN"))');
+							}
+							break;
+						}
+						else{
+							var o = con.object.iri;
+							if(o.match(/http/))o = '<'+o+'>';
+							else if(!o.match(/\w+:\w+/))o = '\"'+o+'\"'+'@en';
+							tripples.push({s:'?instance', p:con.predicate.iri , o:o});
+						}
+					}
+					else{//last
+						var ostr = con.object.raw;
+						if(ostr && ostr.length){
+							tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+							tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
+
+							var ostrtokens = ostr.replace(/\s+/g,' ').split(' ');
+							var ostrfilters = [];
+							for (var j = 0; j < ostrtokens.length; j++) {
+								var o = ostrtokens[j];
+								if(o.length)ostrfilters.push('regex(str('+obj+'), \''+o+'\', \'i\')');
+							}
+							if(ostrfilters.length){
+								filters.push('FILTER( '+ ostrfilters.join(' && ') + ' )');
+								filters.push('FILTER(!isLiteral(?label) || lang(?label) = "" || lang(?label) = "en" || langMatches(lang(?label), "EN"))');
+							}
+						}
+						else{
+							tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+							tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
+							filters.push('FILTER(!isLiteral(?label) || lang(?label) = "" || lang(?label) = "en" || langMatches(lang(?label), "EN"))');
+
+						}
+					}
+
+				}
+				if(!(tripples.length>1))return;
+				
 				var limit = 20;
 				var offset = null;
 				var qu = self.sparql.constructQuery(prefixes, variables, tripples, filters, limit, offset);
-				console.log(qu);
+				if(_debug)console.log(qu);
 
 				self.sparqlEvent.store(id, {callback:me.gotfacetedClassObjects, context:{c:c, p:p, idx:contextidx} });
 				self.sparql.queryEndpoint(qu);
-				
+				return true;
 			};
-			me.getInstances = function(){
-
-			}
 			me.gotfacetedClassObjects = function(id, param, context){
-				var answers = [];
-				for (var i = 0; i < param.objects.length; i++) {
-					var iri = param.objects[i].value;
-					if(iri.length > 4){// 'dbo:', can be * as well
-						var prefixediri = self.getPrefixed(iri);
-						if(prefixediri) param.objects[i].value = prefixediri;
+				if(param.objects.length){
+					var answers = [];
+					var islastcontext = (context.idx === me.contextStack.length-1);
+					for (var i = 0; i < param.objects.length; i++) {
+						var iri = param.objects[i].value;
+						if(iri.length > 3){// 'dbo:', can be * as well
+							var prefixediri = self.getPrefixed(iri);
+							if(prefixediri) param.objects[i].iri = prefixediri;
+							else param.objects[i].iri = param.objects[i].value;
+						}
+						else{
+							if(_debug)console.log(iri, param.objects[i]);
+							param.objects.splice(i,1);
+						}
+					}
 
-						if(prefixediri) answers.push({desc:param.objects[i].label, title:prefixediri.split(':')[1].replace('_', ' ')});
-						else answers.push({desc:param.objects[i].label, title:param.objects[i].value});
+					if(context.idx < me.contextStack.length && param.objects.length){
+						me.contextStack[context.idx].object.iri = param.objects[0].iri;
+						me.contextStack[context.idx].object.type = param.objects[0].type;
+						me.contextStack[context.idx].object.suggestions = param.objects;
+						me.contextStack[context.idx].object.built = true;
+					}
+					if(islastcontext) me.sendSuggestions(me.contextStack[context.idx].object.suggestions, context.idx);
+					me.start();// for the next and token
+				}
+				else{
+					if(_debug)console.log('No objects to suggest');
+					 me.sendSuggestions(false);
+				}
+			};
+			me.sendSuggestions = function(suggestions, idx){
+				if(suggestions){
+					var answers = [];
+					var titles = [];
+					for (var i = 0; i < suggestions.length; i++) {
+						var match = suggestions[i].iri ? suggestions[i].iri.match(/dbr:(.*)/) : null;// for some reason iri doesn't exist
+						if(match){
+							var desc = tripplestore.getValues(suggestions[i].iri, 'scards:termDescription').length;
+							var thumb = tripplestore.getValues(suggestions[i].iri, 'dbo:thumbnail').length;
+							if(!desc || !thumb){
+								titles.push(match[1]);
+							}
+						}
+					}
+
+
+					if(!me.contextStack[idx].object.got_wiki_thumb  && titles.length>0){
+						var action_id = 'explore~' + Date.now().toString(36);
+						me.contextStack[idx].object.got_wiki_thumb = true;
+						self.onlineSearchQuery.getWikipediaShortdescriptionsAndThumbnails(titles, action_id);
+					}
+					else{
+						for (var i = 0; i < suggestions.length; i++) {
+							var iri = suggestions[i].iri ? suggestions[i].iri : (suggestions[i].value ? suggestions[i].value : 'blank results');
+							var label = suggestions[i].label? suggestions[i].label: null;
+
+							var match = iri.match(/dbr:(.*)/);
+							var ans = {};
+							if(match){
+								var s = iri;
+								var os = tripplestore.getValues(s, 'rdfs:label');
+								if(os.length){
+									var o = os[0];
+									ans.title = o;
+								}
+
+								os = tripplestore.getValues(s, 'scards:termDescription');
+								if(os.length && os[0]){
+									ans.desc = os[0];
+								}
+
+								os = tripplestore.getValues(s, 'dbo:thumbnail');
+								if(os.length && os[0]){
+									ans.thumb_source = os[0];
+								}
+
+								ans.id = i;
+								ans.iscontext = true;
+								if(label)ans.desc = ans.desc + '<br>' + '<span style=\"font-weight:bold\">'+label+ '</span>';
+
+							}
+							else{
+								//match(/.+[\/#](.+)$/)
+								ans = {title:iri, id:i, iscontext:true};
+								if(label)ans.desc = '<span style=\"font-weight:bold\">'+label+ '</span>';
+							}
+							answers.push(ans);
+						}
+
+						self.sendClassObjectSuggestions(answers);
 					}
 				}
-				if(context.idx < me.contextStack.length){
-					me.contextStack[context.idx].object.iri = param.objects[0].value;
-					me.contextStack[context.idx].object.built = true;
+				else{
+						self.sendClassObjectSuggestions([{desc:'no results found'}]);
 				}
-				self.sendClassObjectSuggestions(answers);
+			};
+			me.sendInstances = function(instances, idx){
+				if(instances){// could be false for no results
+					var answers = [];
+					var titles = [];
+					for (var i = 0; i < instances.length; i++) {
+						var match = instances[i].iri.match(/dbr:(.*)/);
+						if(match){
+							var desc = tripplestore.getValues(instances[i].iri, 'scards:termDescription').length;
+							var thumb = tripplestore.getValues(instances[i].iri, 'dbo:thumbnail').length;
+							if(!desc || !thumb){
+								titles.push(match[1]);
+							}
+						}
+					}
 
+
+					if(!me.contextStack[idx].instance.got_wiki_thumb  && titles.length>0){
+						var action_id = 'explore~' + Date.now().toString(36);
+						me.contextStack[idx].instance.got_wiki_thumb = true;
+						self.onlineSearchQuery.getWikipediaShortdescriptionsAndThumbnails(titles, action_id);
+					}
+					else{
+						for (var i = 0; i < instances.length; i++) {
+							var match = instances[i].iri.match(/dbr:(.*)/);
+							var ans = {};
+							if(match){
+								var s = instances[i].iri;
+								var os = tripplestore.getValues(s, 'rdfs:label');
+								if(os.length){
+									var o = os[0];
+									ans.title = o;
+								}
+
+								os = tripplestore.getValues(s, 'scards:termDescription');
+								if(os.length){
+									ans.desc = os[0];
+								}
+
+								os = tripplestore.getValues(s, 'dbo:thumbnail');
+								if(os.length){
+									ans.thumb_source = os[0];
+								}
+
+								ans.id = i;
+								ans.iscontext = true;
+							}
+							else{
+								ans = {title:instances[i].iri.replace(/\w+:/, '').replace(/\_/g,' '), id:i, iscontext:true};
+							}
+							answers.push(ans);
+						}
+
+						self.sendClassObjectInstances(answers);
+					}
+				}
+				else{
+						self.sendClassObjectInstances([{desc:'No results found'}]);
+				}
 			}
+			me.filterObjectFromSuggestions = function(ostr, idx){
+				if(me.lastContextStack.length > idx){
+					var cs = me.lastContextStack[idx];
+					if(cs.object.suggestions && cs.object.suggestions.length){
+						ostr = ostr.toLowerCase();
+						var filtered = null;
+						var bestMatch = -2000;
+						for (var i = 0; i < cs.object.suggestions.length; i++) {
+							var iri = cs.object.suggestions[i].iri ? cs.object.suggestions[i].iri : (cs.object.suggestions[i].value ? cs.object.suggestions[i].value : '');
+							var text = iri.replace(/\w+:/g,'').replace(/\_/g,' ').toLowerCase();
+							if(text.indexOf(ostr)>-1){
+								var matchFactor = text.length ? ostr.length/text.length : 0;
+								var paddingMatch = text.indexOf(ostr);
+								var totMatch = matchFactor - paddingMatch;
+
+								if(totMatch > bestMatch){
+									bestMatch = totMatch;
+									filtered = i+1;//subtract later
+									if(ostr === text) break;
+								}
+							}
+						}
+						if(filtered){
+							var new_s = cs.object.suggestions[filtered-1];//one added to avoid zero
+							cs.object.suggestions.splice(filtered-1,1);
+							cs.object.suggestions.unshift(new_s);
+							me.contextStack[idx].object.iri = new_s.iri;
+							me.contextStack[idx].object.type = new_s.type;
+							me.contextStack[idx].object.built = true;
+							me.contextStack[idx].object.suggestions = cs.object.suggestions;
+
+							if(_debug)console.log('filtering');
+							me.sendSuggestions(me.contextStack[idx].object.suggestions, idx);
+							return true;
+						}
+					}
+				}
+			}
+			me.getInstances = function(idx){
+				var id = Date.now();
+				var prefixes = ['dbo', 'rdfs', 'dbp', 'owl'];
+				var instance = '?instance'+ id;
+				var variables = [instance];
+				var tripples = [];
+				var filters = [];
+				for (var i = 0; i < me.contextStack.length; i++) {
+					var con = me.contextStack[i];
+					var otype = con.object.type;
+					if(!con.class.iri || !con.predicate.iri  || !con.object.iri){
+						if(_debug)console.log('break', me.contextStack,  con);
+						break;
+					}
+					if(i==0)tripples.push({s:instance, p:'a', o:con.class.iri});
+					
+					var o = con.object.iri;
+					if(otype && otype=='uri'){
+						if(o.match(/http/))o = '<'+o+'>';
+						tripples.push({s:instance, p:con.predicate.iri , o:o});
+					}
+					else if(otype && otype=='literal'){
+						var ostr = con.object.raw;
+						if(ostr && ostr.length){
+							var objvar = '?obj'+i;
+							tripples.push({s:instance, p:con.predicate.iri , o:objvar});
+							var ostrtokens = ostr.replace(/\s+/g,' ').split(' ');
+							var ostrfilters = [];
+							for (var j = 0; j < ostrtokens.length; j++) {
+								var otok = ostrtokens[j];
+								if(otok.length)ostrfilters.push('regex(str('+objvar+'), \''+otok+'\', \'i\')');
+							}
+							if(ostrfilters.length){
+								filters.push('FILTER( '+ ostrfilters.join(' && ') + ' )');
+								filters.push('FILTER(!isLiteral('+objvar+') || lang('+objvar+') = "" || lang('+objvar+') = "en" || langMatches(lang('+objvar+'), "EN"))');
+							}
+						}
+						else{
+							o = '\"'+o+'\"'+'@en';
+							tripples.push({s:instance, p:con.predicate.iri , o:o});
+						}
+
+					}
+					else{
+						tripples.push({s:instance, p:con.predicate.iri , o:o});
+					}
+
+
+				}
+				if(!tripples.length)return;
+				var limit = 20;
+				var offset = null;
+				var qu = self.sparql.constructQuery(prefixes, variables, tripples, filters, limit, offset);
+				if(_debug)console.log(qu);
+
+				self.sparqlEvent.store(id, {callback:me.gotInstances, context:{idx:idx} });
+				self.sparql.queryEndpoint(qu);
+				return true;
+			};
+			me.gotInstances = function(id, param, context){
+				if(param.instances.length){
+					for (var i = 0; i < param.instances.length; i++) {
+						var iri = param.instances[i].value;
+						if(iri.length > 4){// 'dbo:', can be * as well
+							var prefixediri = self.getPrefixed(iri);
+							if(prefixediri) param.instances[i].value = prefixediri;
+							param.instances[i].iri = param.instances[i].value;
+
+
+						}
+					}
+					if( (me.contextStack.length > context.idx) && param.instances.length){
+						me.contextStack[context.idx].instance.suggestions = param.instances;
+						me.contextStack[context.idx].instance.iri = me.contextStack[context.idx].instance.suggestions[0].iri;
+					}
+					// send answers even if no data available. to empty the ui 
+					me.sendInstances(me.contextStack[context.idx].instance.suggestions, context.idx);
+				}
+				else{
+					if(_debug)console.log('no instance found');
+					me.sendInstances(false);
+				}
+			};
 
 			return me;
 		}
 		this.explore = self.createExploratorySearch();
+
+//***********************************************************************************************************************************
+//***********************************************************************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
 		this.gotNewTripplesFromPrefixSearch = function(tripples){
 			//Note !
 			//Here only one objct for any s,p pair alllowed
@@ -744,7 +1142,7 @@
 				var tr = tripples[i];
 				var objects = tripplestore.getValues(tr.s, tr.p);
 				if(objects.length){
-					// console.log('value already exist', tr.s, tr.p, objects);
+					// if(_debug)console.log('value already exist', tr.s, tr.p, objects);
 					// no need to check if it is the same object , because only one value is allowed here
 				}
 				else{
@@ -756,7 +1154,7 @@
 			var allpl = tripplestore.getProperties().length;
 			var allvl = tripplestore.getValues().length;
 			if(allvl > 10000 || allsl > 10000 || allpl > 10000){
-				console.log('too much cache, removing all ');
+				if(_debug)console.log('too much cache, removing all ');
 				tripplestore.remove();
 			}
 		};
@@ -907,7 +1305,7 @@
 				// self.sc_holdder_ref.emit_valid_commands_changed();
 			},
 			gotWikipediaSuggestions: function(json, term_id){
-				// console.log(json);	
+				// if(_debug)console.log(json);	
 
 				if(json.query && json.query.pages){
 					var tripples = [];
@@ -972,16 +1370,21 @@
 				    	}
 				    });
 				    self.gotNewTripplesFromPrefixSearch(tripples);
-				    self.prepareClassContextStack({type:'wikipedia_shortdescriptions_and_thumbnails', action_id:action_id});
+				    if(action_id.indexOf('explore~')>-1){
+				    	self.explore.start();
+				    }
+				    else if(action_id.indexOf('pcc~')>-1){
+				    	self.prepareClassContextStack({type:'wikipedia_shortdescriptions_and_thumbnails', action_id:action_id});
+				    }
 				}
 			},
 			gotUmbelConcept: function(json, term_id){
 				if(!json.results) return;
-				console.log(json);
+				if(_debug)console.log(json);
 				self.queryAnswers = [];
 				$.each(json.results, function(i, item){
 				    _tok = item['pref-label'];
-				    // console.log(_tok);
+				    // if(_debug)console.log(_tok);
 				    if(_tok)self.queryAnswers.push({title:_tok, desc:item.description});
 				});
 
@@ -992,7 +1395,7 @@
 
 				self.queryAnswers = [];
 				$.each(json.RelatedTopics, function(i, item){
-					console.log(item);
+					if(_debug)console.log(item);
 				    if(item.hasOwnProperty('Name')){
 				        $.each(item.Topics, function(j, childItem){
 				            var _tok = childItem.FirstURL.split('/');
@@ -1017,7 +1420,7 @@
 			},
 
 			gotDbpediaLookupSuggestions: function(json, term_id){
-				console.log(json);
+				if(_debug)console.log(json);
 				self.queryAnswers = [];
 				if(json.results && json.results.length){
 				    $.each(json.results, function(i, item){
@@ -1048,7 +1451,7 @@
 				}
 
 				if(!json.list || !json.list.document || !json.list.document.length)return;
-				// console.log(json);
+				// if(_debug)console.log(json);
 
 				self.queryAnswers = [];
 				for (var i = 0; i < json.list.document.length; i++) {
@@ -1068,7 +1471,7 @@
 							bind_data.classes.push({label:conts[j].text.replace(/<[^>]*>/g, "")});
 						}
 					}
-					console.log(bind_data);
+					if(_debug)console.log(bind_data);
 					self.queryAnswers.push(bind_data);
 				}
 				
@@ -1099,7 +1502,7 @@
 				searchapi.searchMedlinePlusSuggestions(query, self.onlineSearchReply.gotMedlinePlusSuggestions);
 			},
 		}
-
+		this.uiContextType = 'object:search';
 		this.lastClassContextStack = null;
 		this.classContextStack = null;
 		this.rootTags = '';
@@ -1174,7 +1577,7 @@
 								var term_id = Date.now().toString(36);
 								var qanswer = self.gotATermToken(term_id, ostr , 'pcc object suggestions');
 								if(qanswer){
-									console.log('got a term object');
+									if(_debug)console.log('got a term object');
 									self.currentObjectSuggestions = [];
 									for (var j = 0; j < qanswer.answers.length; j++) {
 										self.currentObjectSuggestions.push({value:qanswer.answers[j], type:'uri'});// these are uri
@@ -1183,7 +1586,7 @@
 								}
 								else{
 									if(ostr){// don't get wikipedia suggestions if not enough chars	
-										console.log('getting from wiki');
+										if(_debug)console.log('getting from wiki');
 										qsearch.getWikipediaSuggestions(ostr, term_id);
 										return;// important, as query are async . this function will be called again when data is available 
 									}
@@ -1202,16 +1605,16 @@
 						
 						if(self.currentObjectSuggestions.length){
 							var o =  self.currentObjectSuggestions[0].value;// now only 0
-							console.log('currentObjectSuggestions.length', self.currentObjectSuggestions.length);
+							if(_debug)console.log('currentObjectSuggestions.length', self.currentObjectSuggestions.length);
 						}
 						else{
 							o = CCS.objects[i].raw;
-							console.log('current object raw', o);
+							if(_debug)console.log('current object raw', o);
 						}
 
 						if(o){
 							var range = CCS.predicates[i].range;
-							console.log(CCS.predicates[i]);
+							if(_debug)console.log(CCS.predicates[i]);
 							var match = o.match(/.+[\/](.+)$/);
 							if(range.substr(0,4) === 'xsd:'){
 								o = '\"'+o+'\"'+'^^'+range;
@@ -1224,7 +1627,7 @@
 							}
 
 							if(o.length>3){// don't make a sparql query with less than 4 character
-								console.log('getting instances');
+								if(_debug)console.log('getting instances');
 								CCS.predicates[i].sparqlid = Date.now().toString(36);
 								sparql.getclassInstances(CCS.class.iri, CCS.predicates[i].iri, o, CCS.predicates[i].sparqlid);
 								return;
@@ -1233,7 +1636,7 @@
 					}
 				}
 				else{
-					console.log('param in ClassContext stack');
+					if(_debug)console.log('param in ClassContext stack');
 					if(param.type === 'classInstances'){
 						if(CCS.predicates[i].sparqlid === param.sparqlid){	
 							delete CCS.predicates[i].sparqlid;
@@ -1259,10 +1662,10 @@
 					else if(param.type === 'wikipedia_shortdescriptions_and_thumbnails'){
 						if(CCS.predicates[i].action_id === param.action_id){
 							delete CCS.predicates[i].action_id;
-							console.log(' got images and short descriptions');
+							if(_debug)console.log(' got images and short descriptions');
 
 						}
-						else console.log('wikipedia_shortdescriptions_and_thumbnails, but id didn\'t match');
+						else if(_debug)console.log('wikipedia_shortdescriptions_and_thumbnails, but id didn\'t match');
 					}
 					else if(param.type === 'objectSuggForClass'){
 						if(CCS.predicates[i].sparqlid === param.sparqlid){
@@ -1303,7 +1706,7 @@
 
 			if(fullstop){
 				self.processAndSendClassObjectAnswers();
-				console.log('full stop , sent instances to ui');
+				if(_debug)console.log('full stop , sent instances to ui');
 			}
 			else{// end reach , must be some kind of suggestions for unfinished query
 				if(CCS.objects.length && CCS.objects[CCS.objects.length-1].iri)self.suggestPossibleObjects(self.currentObjectSuggestions);
@@ -1377,7 +1780,7 @@
 
 
 		this.suggestPredicate = function(str, send_to_ui){
-			console.log(str);
+			if(_debug)console.log(str);
 			self.currentSuggestedPredicate = {}
 
 			var OC = self.currentSuggestedClass
@@ -1483,7 +1886,7 @@
 					c= c.charAt(0).toUpperCase() + c.slice(1, c.length);
 
 					if(tags.length > 2 && tags[2].match(/WP/)){// who
-						console.log('WP');
+						if(_debug)console.log('WP');
 						if(tags.length > 3 && tags[3].match(/VBD/)){// VBD // went/ died
 							p = toks[3];// studied
 							if(tags.length > 4 && tags[4].match(/(TO|IN)/)){// to/in
@@ -1550,11 +1953,11 @@
 					}
 					else{
 						self.suggestPredicate('', send_to_ui);
-						console.log('No match');
+						if(_debug)console.log('No match');
 					}
 				}
 			}
-			console.log(toks, c,p,o);
+			if(_debug)console.log(toks, c,p,o);
 			return {c:c, p:p, o:o};
 		}
 		this.processAndSendClassObjectAnswers = function(){
@@ -1673,18 +2076,18 @@
 					}
 				}
 				else{
-					console.log('searching for pedicates', i);
+					if(_debug)console.log('searching for pedicates', i);
 					var ps = self.contextStack[i-1].subject;
 					if(!ps){
-						console.log('Subject is not defined for context', i-1, '  ' +self.contextStack[i-1]);
+						if(_debug)console.log('Subject is not defined for context', i-1, '  ' +self.contextStack[i-1]);
 						return;
 					}
 					else{
-						console.log(' now start working with context', i);
+						if(_debug)console.log(' now start working with context', i);
 						if(param){// result from sparql query 
-							console.log('got a param in context ', param,  i);
+							if(_debug)console.log('got a param in context ', param,  i);
 							if(param.sparqlid === self.contextStack[i].sparqlid){// this is for me(i)
-								console.log('this sparqlid is for me', i);
+								if(_debug)console.log('this sparqlid is for me', i);
 								delete self.contextStack[i].sparqlid;
 
 								if(param.type === 'allPredicate'){
@@ -1693,7 +2096,7 @@
 										self.contextStack[i].built = true;// no need to come to this index again
 									}
 									else{
-										console.log('got all predicates from sparql for ', ps);
+										if(_debug)console.log('got all predicates from sparql for ', ps);
 
 										// first remove all predicates for ps; and add the new ones from sparql results
 										tripplestore.set(ps, self.ALL_PREDICATES_URI, param.predicates);//o is an arry of predicates URI
@@ -1715,7 +2118,7 @@
 											// set the selected predicate, here its is the first one
 											self.contextStack[i].parentPredicate = self.contextStack[i].parentPredicates[0]; 
 										}
-										// console.log('stringMatchedPredicate', stringMatchedPredicate);
+										// if(_debug)console.log('stringMatchedPredicate', stringMatchedPredicate);
 									
 										if(self.contextStack[i].parentPredicate){
 											// if(!lastToken){// dont get for last token , it will incur lot of bandwidth as the user is typing 
@@ -1724,7 +2127,7 @@
 												var p = self.contextStack[i].parentPredicate;
 												if(self.maxSparqlQuery - self.noOfSparqlQueryMade > 0){
 													var sparqlid = self.contextStack[i].sparqlid = Date.now().toString(36);
-													console.log('_________________  Getting Object  _______________param')
+													if(_debug)console.log('_________________  Getting Object  _______________param')
 													self.sparql.getObject(ps, p, sparqlid);
 													self.noOfSparqlQueryMade++;
 
@@ -1755,7 +2158,7 @@
 
 								else if(param.type === 'object'){
 									if(param.objs){
-										console.log(param.objs);	
+										if(_debug)console.log(param.objs);	
 										if(param.status === 'zeroresults'){
 											self.contextStack[i].object = '0 Results';
 											self.contextStack[i].built = true;// no need to come to this index again
@@ -1786,18 +2189,18 @@
 								}
 							}
 							else{
-								if(self.contextStack[i].sparqlid)console.log(' sparql id doesn\'t match, but exist');
+								if(self.contextStack[i].sparqlid)if(_debug)console.log(' sparql id doesn\'t match, but exist');
 							}
 						}
 						else{// when comming with param there is no need to check this// as with the above if (param) => everything is done to get the object for this context
-							console.log('No param', i);	
+							if(_debug)console.log('No param', i);	
 
 							var predicateLabels = [];
 							var predicates = tripplestore.getValues(ps, self.ALL_PREDICATES_URI);
 							// which is [[p1, p2, p3....]]
 							if(predicates.length) predicates = predicates[0];
 							else{
-								console.log('all predicate list not found');
+								if(_debug)console.log('all predicate list not found');
 							}
 							if(predicates.length > 2){
 								self.contextStack[i].parentPredicates = [];// list of all matched predicates for a given tokenStr
@@ -1823,10 +2226,10 @@
 									}
 									
 									var p = self.contextStack[i].parentPredicate;
-									console.log('showing results for predicate ' + p);
+									if(_debug)console.log('showing results for predicate ' + p);
 
 									var objects = tripplestore.getValues(ps, p);
-									// console.log(objects, j);
+									// if(_debug)console.log(objects, j);
 									self.contextStack[i].subjects = [];
 
 									if(objects.length){// atleast one object exists
@@ -1850,10 +2253,10 @@
 									else{
 										// if(!lastToken){// dont get for last token , it will incur lot of bandwidth as the user is typing 
 														// once the user presses a dot// a random lastToken will be inserted to the  list and will then fetch the objects
-											console.log(ps, p , 'Object doesn\'t exits', j);
+											if(_debug)console.log(ps, p , 'Object doesn\'t exits', j);
 											if(self.maxSparqlQuery - self.noOfSparqlQueryMade > 0){
 												var sparqlid = self.contextStack[i].sparqlid = Date.now().toString(36);
-												console.log('_________________  Getting Object  _______________no param')
+												if(_debug)console.log('_________________  Getting Object  _______________no param')
 												self.sparql.getObject(ps, p, sparqlid);
 												self.noOfSparqlQueryMade++;
 												
@@ -1883,10 +2286,10 @@
 								}
 							}
 							else{
-								console.log(ps, 'doesnot have enough predicates');
+								if(_debug)console.log(ps, 'doesnot have enough predicates');
 								if(self.maxSparqlQuery - self.noOfSparqlQueryMade > 0){
 									self.contextStack[i].sparqlid = Date.now().toString(36);
-									console.log("---------------Getting All Predicate---------- for " + i);
+									if(_debug)console.log("---------------Getting All Predicate---------- for " + i);
 									sparql.getAllEnglishPredicate(ps, self.contextStack[i].sparqlid);
 									self.noOfSparqlQueryMade++;
 
@@ -1901,9 +2304,9 @@
 				}
 
 				if(lastToken){// every part of the stack is filled now
-					console.log(self.contextStack);
+					if(_debug)console.log(self.contextStack);
 					self.processAndSendAnswers();
-					console.log('came inside function, prepare  context ' + countLoop+ ' times' );
+					if(_debug)console.log('came inside function, prepare  context ' + countLoop+ ' times' );
 					countLoop=0;
 				}
 			}
@@ -1916,7 +2319,7 @@
 		this.gotATermToken = function(term_id, question, question_type){
 			// first check if a similar question was already asked
 			var qs =  self.fastStringSearch(self.questionSearchStringSource, question);
-			// console.log(qs);
+			// if(_debug)console.log(qs);
 			//qs : {results:[Strings], count:Int}
 			for (var i = 0; i < qs.results.length; i++) {
 				var id = qs.results[i].split(self.searchIdDelim)[0];
@@ -1934,7 +2337,7 @@
 				self.questionSearchStringSource = self.questionSearchStringSource.slice(10000, 20000);
 				// var f = self.questionSearchStringSource.indexOf('"');
 				// remove half formatted string in the pattern
-				console.log('removing some sreach cache');
+				if(_debug)console.log('removing some sreach cache');
 				// if search sting is greater than 20000 remove initial questions
 			}
 			
@@ -1993,7 +2396,7 @@
 				// 			self.lastClassContextStack = self.classContextStack;
 				// 		}
 				// 	}
-				// 	//console.log(self.rootTags);
+				// 	//if(_debug)console.log(self.rootTags);
 				// 	return;
 				// }
 
@@ -2001,9 +2404,11 @@
 				if(tokens[0].toLowerCase() === 'all'){
 					self.explore.contextStack = [];
 					for (var i = 0; i < andSplits.length; i++) {
-						self.explore.contextStack.push({class:{}, predicate:{}, object:{}});
+						self.explore.contextStack.push({class:{}, predicate:{}, object:{}, instance:{}});
 					}
 					self.explore.start();
+					explore.lastContextStack = explore.contextStack;
+					self.uiContextType = 'class:search';
 					return;
 				}
 
@@ -2019,27 +2424,35 @@
 					self.contextStack.push({token:tokenStrings[i]});// start with the tokens used for each context
 				}
 
-				console.log('\n ------------------START---------------------------\n\n')
+				if(_debug)console.log('\n ------------------START---------------------------\n\n')
 				self.prepareContextStack();
 				// after context is prepared save in a safe place so that context changes from UI can be stored here
 				// so it should be same as the current context stack , which sounds different from its name
 				// but its called lasCon... because it will be old when the new context is prepared nex time
 				self.lastContextStack = self.contextStack;
-				// console.log(self.lastContextStack);	
+				self.uiContextType = 'object:search';
+				// if(_debug)console.log(self.lastContextStack);	
 			}
 
 			//by this time do 
 		}
 		this.changeContextIndex = function(uiid, tab_id){
-			
-			var lcontextStore = _.last(self.lastContextStack);
-			if(lcontextStore.subjects && lcontextStore.subjects.length){// ther is no point in changing context if there is only one
-				if(lcontextStore.subjects.length> uiid && uiid > -1){
-					lcontextStore.uiid = uiid;
-					lcontextStore.subject = lcontextStore.subjects[uiid];
+			if(self.uiContextType === 'object:search'){
+				var lcontextStore = _.last(self.lastContextStack);
+				if(lcontextStore.subjects && lcontextStore.subjects.length){// ther is no point in changing context if there is only one
+					if(lcontextStore.subjects.length> uiid && uiid > -1){
+						lcontextStore.uiid = uiid;
+						lcontextStore.subject = lcontextStore.subjects[uiid];
+					}
 				}
 			}
-			// console.log('changing context to ', uiid);
+			else if(self.uiContextType === 'class:search'){
+				var lcontext = _.last(explore.lastContextStack);
+				if(lcontext.object.suggestions && lcontext.object.suggestions.length > uiid && uiid> -1){
+					lcontext.object.iri = lcontext.object.suggestions[uiid].iri? lcontext.object.suggestions[uiid].iri : lcontext.object.suggestions[uiid].value;
+					lcontext.object.type = lcontext.object.suggestions[uiid].type;
+				}
+			}
 		}
 
 
@@ -2047,7 +2460,7 @@
 		this.sendAnswers = function(answers){
 			var uiid = _.last(self.contextStack).uiid;
 			sendMSG_to_tab_byId({type:'SW:ANSWER_FROM_BACK',  msg:{answers:answers, uiid:uiid}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
-			console.log('answer sent');
+			if(_debug)console.log('answer sent');
 
 		};
 		this.sendHiddenwebAnsewersFactbites = function(answers){
@@ -2064,7 +2477,7 @@
 		};
 		this.sendClassObjectInstances = function(answers){
 			sendMSG_to_tab_byId({type:'SW:CLASS_OBJECT_INSTANCES',  msg:{answers:answers}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
-			console.log('class instances sent');
+			if(_debug)console.log('class instances sent');
 		}
 		this.sendClassObjectSuggestions = function(answers){
 			sendMSG_to_tab_byId({type:'SW:CLASS_OBJECT_SUGGESTIONS',  msg:{answers:answers}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
@@ -2077,7 +2490,7 @@
 			var results = [];
 			while (result = rx.exec(source)) {
 				results.push(result[1]);
-				// console.log('match: '+ result[1]);
+				// if(_debug)console.log('match: '+ result[1]);
 			    i += 1;
 			    if (i >= 25)break;
 			}
@@ -2099,11 +2512,3 @@
 	}
 
 	var SW = SemanticWeb();
-	
-
-
-
-
-
-
-

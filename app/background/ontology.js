@@ -18244,44 +18244,45 @@ var createOntology = function(){
 
 	console.log("Preparing string source at : ", Date.now());
 	_.forIn(self.dboClasses, function(v, k){
-		if(v.iri.indexOf('dbo:')==0){
+		if(v.iri.indexOf(':')>0){
 			self.dboClassesString+= self.searchDelim + k + self.searchIdDelim + v.iri + self.searchDelim;
 		}
 		else{
 			self.dboClassesString+= self.searchDelim + k + self.searchIdDelim + 'dbo:'+ v.iri + self.searchDelim;
 		}
 	});
-	var allClassKeys = Object.keys(self.dboClasses);
-	function findclasskeybyiri(iri){
-		for (var i = 0; i < allClassKeys.length; i++) {
-			var k = allClassKeys[i];
-			var v = self.dboClasses[k];
-			if(v.iri === iri){
-				return k;
-			}
-		}
-		console.log('iri not found in obj', iri);
-	}
 
-	_.forIn(self.dboProperty, function(v, k){
-		var domain = v.domain;
-		if(domain && domain.indexOf('dbo:')==0){
-			var iri = domain.substr(4, domain.length);// class don\'t have dbo prefix , as that is the default'
-			var key = findclasskeybyiri(iri);
-			if(key)domain = key;
-		}
-		var range = v.range;
-		if(range && range.indexOf('dbo:')==0){
-			var iri = range.substr(4, range.length);// class don\'t have dbo prefix , as that is the default'
-			var key = findclasskeybyiri(iri);
-			if(key) range = key;
-		}
-		self.dboPropertyString+= self.searchDelim + domain + self.searchIdDelim + k + self.searchIdDelim + range + self.searchDelim;
-		
-	})
-	delete allClassKeys;
-	console.log("Finished preparing string source at : ", Date.now());
+	// prepare predicate strings
+		// var allClassKeys = Object.keys(self.dboClasses);
+		// function findclasskeybyiri(iri){
+		// 	for (var i = 0; i < allClassKeys.length; i++) {
+		// 		var k = allClassKeys[i];
+		// 		var v = self.dboClasses[k];
+		// 		if(v.iri === iri){
+		// 			return k;
+		// 		}
+		// 	}
+		// 	console.log('iri not found in obj', iri);
+		// }
 
+		// _.forIn(self.dboProperty, function(v, k){
+		// 	var domain = v.domain;
+		// 	if(domain && domain.indexOf('dbo:')==0){
+		// 		var iri = domain.substr(4, domain.length);// class don\'t have dbo prefix , as that is the default'
+		// 		var key = findclasskeybyiri(iri);
+		// 		if(key)domain = key;
+		// 	}
+		// 	var range = v.range;
+		// 	if(range && range.indexOf('dbo:')==0){
+		// 		var iri = range.substr(4, range.length);// class don\'t have dbo prefix , as that is the default'
+		// 		var key = findclasskeybyiri(iri);
+		// 		if(key) range = key;
+		// 	}
+		// 	self.dboPropertyString+= self.searchDelim + domain + self.searchIdDelim + k + self.searchIdDelim + range + self.searchDelim;
+			
+		// })
+		// delete allClassKeys;
+		// console.log("Finished preparing string source at : ", Date.now());
 
 	this.getMatchedProperties = function(term, domain){
 		var idselector = '[^"]*';
@@ -18310,7 +18311,7 @@ var createOntology = function(){
 		return results;
 	}
 	this.getMatchedClasses = function(term){
-		var rx = new RegExp('"([^"]*dbo:[^"]*'+term+'[^"]*)"','gi');
+		var rx = new RegExp('"([^"]*(dbo|skos|foaf|owl):[^"]*'+term+'[^"]*)"','gi');
 		var results = [];
 		var i = 0;
 		while (result = rx.exec(self.dboClassesString)) {

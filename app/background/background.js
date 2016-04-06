@@ -16,7 +16,7 @@ var orphan_frameviewkey = 'orphan_frameviewkey_';
 var framepouch = null;
 framepouch =  PouchDB('semanticcardsDB', function(err, db){
 	if(err){
-		console.log(err);
+		if(_debug)console.log(err);
 	}
 	else{
 		framepouch = db;
@@ -39,13 +39,13 @@ var tab_id = null;
 
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
-		// console.log(sender.tab ?
+		// if(_debug)console.log(sender.tab ?
 		// 	"from a content script:" + sender.tab.url :
 		// 	"from the extension");
 		tab_id = sender.tab.id;
 	//*******************************************************
 		if(request.type == 'LOAD_ALL_FROM_STORE_TO_FV'){
-			console.log("logging request.msg.frameview_key", request.msg.frameview_key);
+			if(_debug)console.log("logging request.msg.frameview_key", request.msg.frameview_key);
 			get_frameview_full(request.msg.frameview_key, tab_id);
 		}
 		else if(request.type == 'SAVE_NEW_CARD_FROM_FV_TO_STORE'){
@@ -130,7 +130,7 @@ chrome.runtime.onMessage.addListener(
 
 chrome.tabs.onActivated.addListener(
 	function(activeInfo){
-		//console.log(activeInfo);
+		//if(_debug)console.log(activeInfo);
 		sendMSG_to_tab_byId({type:'UPDATE_CHANGED_FRAMES_NOW'}, activeInfo.tabId);
 	}
 );
@@ -144,7 +144,7 @@ function sendMSG_to_tab_byId(_msg, tabId){
 function toggleMSG(_msg){
 	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 		chrome.tabs.sendMessage(tabs[0].id, _msg, function(response) {
-			console.log(response);
+			if(_debug)console.log(response);
 		});
 	});
 }
@@ -210,7 +210,7 @@ function load_frame_config_from_store(tab_id){
 	framepouch.get(frame_config_id, function(err, doc){
 		var frame_config = null;
 		if(err){
-			console.log('frame_config has not been created yet, you will receive a null value');
+			if(_debug)console.log('frame_config has not been created yet, you will receive a null value');
 		}
 		else{
 			frame_config = doc.farme_config;
@@ -223,11 +223,11 @@ function save_frame_config_to_store(frame_config, tab_id){
 	//PouchDB
 	framepouch.get(frame_config_id, function(err, doc){
 		if(err){
-			console.log('frame_config has not been created yet, I will creat one for you and update it with what you have provided');
+			if(_debug)console.log('frame_config has not been created yet, I will creat one for you and update it with what you have provided');
 			framepouch.put({_id:frame_config_id, frame_config: frame_config});
 		}
 		else{
-			console.log('updating your frame_config');
+			if(_debug)console.log('updating your frame_config');
 			doc.farme_config = frame_config;//update
 			framepouch.put(doc);//save
 		}
@@ -239,13 +239,13 @@ function get_frameview_full(frameview_key, tab_id){
 
 	framepouch.get(frameview_key, function(err, doc){
 		if(err){//may be the doc never existed
-			console.log('frameview with key:', frameview_key + 'doesn\'t exists');
+			if(_debug)console.log('frameview with key:', frameview_key + 'doesn\'t exists');
 		}
 		else{
 			if(doc.fvids){
 				var ids = doc.fvids;
 				var _cs = {};//{'fg903hshjhsiaj-658HGH': _card1, 'hshduuey-HJJJHK:_card2'}
-				console.log("no of card in this frameview should be"+ ids.length);
+				if(_debug)console.log("no of card in this frameview should be"+ ids.length);
 				framepouch.allDocs(
 					{
 						include_docs: true,
@@ -260,11 +260,11 @@ function get_frameview_full(frameview_key, tab_id){
 					    		}
 					    			
 					    	});
-					    	console.log("no of card actually is"+ res.rows.length);
+					    	if(_debug)console.log("no of card actually is"+ res.rows.length);
 							chromeReply.get_frameview_full(_cs, frameview_key,  tab_id);
 					    }
 					    else{
-					    	console.log(err);
+					    	if(_debug)console.log(err);
 					    }
 					}
 				);
@@ -293,14 +293,14 @@ function load_all_cards_from_pouchdb(frameview_key, tab_id){// the fv_key which 
 		    	chromeReply.load_all_cards_from_pouchdb(all_cards, frameview_key,  tab_id);
 		    }
 		    else{
-		    	console.log('Couldn\'t get any card. Not even One, because of ', err);
+		    	if(_debug)console.log('Couldn\'t get any card. Not even One, because of ', err);
 		    }
 		}
 	);
 }
 
 function load_cards_from_pouchdb(ids, frameview_key, tab_id){// frameview_key will be used to filter where to finally load at front end
-	// console.log('will try to load', ids);
+	// if(_debug)console.log('will try to load', ids);
 	framepouch.allDocs(
 		{
 			include_docs: true,
@@ -316,10 +316,10 @@ function load_cards_from_pouchdb(ids, frameview_key, tab_id){// frameview_key wi
 		    			
 		    	});
 				chromeReply.load_cards_from_pouchdb(_cards, frameview_key, tab_id);
-				// console.log("found", _cards);
+				// if(_debug)console.log("found", _cards);
 		    }
 		    else{
-		    	console.log(err);
+		    	if(_debug)console.log(err);
 		    }
 		}
 	);
@@ -327,7 +327,7 @@ function load_cards_from_pouchdb(ids, frameview_key, tab_id){// frameview_key wi
 function save_data_element_to_pouchdb(id, data, tab_id){
 	framepouch.get(id, function(err, doc){
 		if(err){
-			console.log('creating new instance');
+			if(_debug)console.log('creating new instance');
 			framepouch.put({_id:id, data:data});
 		}
 		else{
@@ -339,12 +339,12 @@ function save_data_element_to_pouchdb(id, data, tab_id){
 function get_data_element_from_pouchdb(id, tab_id){
 	framepouch.get(id, function(err, doc){
 		if(err){
-			console.log('no such element with id ' + id + ' exist');
+			if(_debug)console.log('no such element with id ' + id + ' exist');
 			// create_and_send_data_element_if_needed(id, tab_id);
 			chromeReply.send_data_element(id, null, tab_id);
 		}
 		else{
-			console.log('got you: ', id,  doc.data);
+			if(_debug)console.log('got you: ', id,  doc.data);
 			chromeReply.send_data_element(id, doc.data, tab_id);// send even if data is not existenent			 
 
 		}
@@ -374,7 +374,7 @@ function get_allcard_and_frameview_titles(tab_id){
 				chromeReply.get_allcard_and_frameview_titles(_card_fv_titles, tab_id);
 		    }
 		    else{
-		    	console.log(err);
+		    	if(_debug)console.log(err);
 		    }
 		}
 	);
@@ -414,11 +414,11 @@ function save_new_card_from_frameview_to_store(frameview_key, _card, tab_id){
 		//   	},
 		//   	function (err, res) {
 		//   		if(err){
-		//   			console.log(err);
+		//   			if(_debug)console.log(err);
 		//   		}
 		//   		else{
 		//   			res.rows.forEach(function(obj, i){
-		//   				console.log('search result->', obj.doc, '\nhighlighting +>', obj.highlighting);
+		//   				if(_debug)console.log('search result->', obj.doc, '\nhighlighting +>', obj.highlighting);
 		//   			})
 
 		//   		}
@@ -448,15 +448,15 @@ function search_store(msg, tab_id){
 	  	},
 	  	function (err, res) {
 	  		if(err){
-	  			console.log(err);
+	  			if(_debug)console.log(err);
 	  		}
 	  		else{
 	  			var search_results = [];
 	  			res.rows.forEach(function(obj, i){
 	  				search_results.push({id:obj.id});
-	  				console.log(obj.id);
-	  				if(obj.doc)console.log('search result->', obj.doc);
-	  				if(obj.highlighting)console.log('obj.highlighting=>', obj.highlighting);
+	  				if(_debug)console.log(obj.id);
+	  				if(obj.doc)if(_debug)console.log('search result->', obj.doc);
+	  				if(obj.highlighting)if(_debug)console.log('obj.highlighting=>', obj.highlighting);
 	  			})
 	  			chromeReply.search_store(search_results, tab_id);
 	  		}
@@ -492,7 +492,7 @@ function update_card_from_frameview_to_store(_card, tab_id){
 	// 	//PouchDb
 	// 	framepouch.get(id, function(err, doc){
 	// 		if(err){//@impossible I am removing it so it must already exit in the db
-	// 			console.log('trying to remove , what doesn\'t exits');
+	// 			if(_debug)console.log('trying to remove , what doesn\'t exits');
 	// 		}
 	// 		else{
 	// 			//if it is a parent first deal with the child frameview
@@ -510,7 +510,7 @@ function update_card_from_frameview_to_store(_card, tab_id){
 	// 	//update current frameview , by removing this card id from its list of ids
 	// 	framepouch.get(frameview_key, function(err, doc){
 	// 		if(err){//may be the doc never existed
-	// 			console.log('frameview with key' + frameview_key + 'doesn\'t exists');
+	// 			if(_debug)console.log('frameview with key' + frameview_key + 'doesn\'t exists');
 	// 		}
 	// 		else{
 	// 			_.remove(doc.fvids, function(v){return v == id;});// remove the card id  from fvids
@@ -522,12 +522,12 @@ function update_card_from_frameview_to_store(_card, tab_id){
 
 	// function remove_frameview_from_store(frameview_key){
 
-	// 	console.log('removing frameview '+frameview_key);
+	// 	if(_debug)console.log('removing frameview '+frameview_key);
 
 	// 	//PouchDB
 	// 	framepouch.get(frameview_key, function(err, doc){
 	// 		if(err){//may be this key belongs to a parent which never had a frameview created// @pos
-	// 			console.log('frameview with key' + frameview_key + 'doesn\'t exists');
+	// 			if(_debug)console.log('frameview with key' + frameview_key + 'doesn\'t exists');
 	// 		}
 	// 		else{
 	// 			var ids = doc.fvids;
@@ -553,7 +553,7 @@ function remove_card_from_store(frameview_key, id, tab_id){
 	//PouchDb
 	framepouch.get(id, function(err, doc){
 		if(err){//@impossible I am removing it so it must already exit in the db
-			console.log('trying to remove , what doesn\'t exits');
+			if(_debug)console.log('trying to remove , what doesn\'t exits');
 		}
 		else{
 			//if it is a parent first deal with the child frameview
@@ -571,7 +571,7 @@ function remove_card_from_store(frameview_key, id, tab_id){
 	//update current frameview , by removing this card id from its list of ids
 	framepouch.get(frameview_key, function(err, doc){
 		if(err){//may be the doc never existed
-			console.log('frameview with key' + frameview_key + 'doesn\'t exists');
+			if(_debug)console.log('frameview with key' + frameview_key + 'doesn\'t exists');
 		}
 		else{
 			_.remove(doc.fvids, function(v){return v == id;});// remove the card id  from fvids
@@ -584,18 +584,18 @@ function remove_card_from_store(frameview_key, id, tab_id){
 function send_frameview_to_orphan(frameview_key){
 	//this is not recurcive anymore
 	//as we don't have to remove anymore card , there will not be any more framview removal
-	console.log('sending frameview '+frameview_key + 'to orphan');
+	if(_debug)console.log('sending frameview '+frameview_key + 'to orphan');
 
 	//PouchDB
 	framepouch.get(frameview_key, function(err, doc){
 		if(err){//may be this key belongs to a parent which never had a frameview created// @pos
-			console.log('frameview with key' + frameview_key + 'doesn\'t exists');
+			if(_debug)console.log('frameview with key' + frameview_key + 'doesn\'t exists');
 		}
 		else{
 			var lostids = doc.fvids;
 			framepouch.get(orphan_frameviewkey , function(err, doc){
 				if(err){
-					console.log('orphan doesn\'t exist . will create and use');
+					if(_debug)console.log('orphan doesn\'t exist . will create and use');
 					framepouch.put({_id:orphan_frameviewkey, fvids:lostids });
 				}
 				else{
@@ -623,7 +623,7 @@ function transfer_cards_between_frameview(msg, tab_id){
 	//remove id from from_fv =>
 	framepouch.get(from_fv_key, function(err, doc){
 		if(err){//may be the doc never existed
-			console.log('frameview with key' + from_fv_key + 'doesn\'t exists');
+			if(_debug)console.log('frameview with key' + from_fv_key + 'doesn\'t exists');
 		}
 		else{
 			for(var i =0; i < ids.length; i++){
@@ -640,7 +640,7 @@ function transfer_cards_between_frameview(msg, tab_id){
 	//then add those ids to to_frameveiew, the cards need not be changed as they are stored separately
 	framepouch.get(to_fv_key, function(err, doc){
 		if(err){
-			console.log('frameview with key' + to_fv_key + 'doesn\'t exists');
+			if(_debug)console.log('frameview with key' + to_fv_key + 'doesn\'t exists');
 		}
 		else{
 			for(var i =0; i < ids.length; i++){
@@ -684,13 +684,13 @@ function save_all_data_to_firebase(){
 		    if(!err){
 		    	if(res.rows.length){
 		    		firebase_whole_store.set(res.rows, function(err){
-		    			if(!err)console.log("Saved to ffirebase");
-		    			else console.log('Couldn\'t save to firebase');
+		    			if(!err)if(_debug)console.log("Saved to ffirebase");
+		    			else if(_debug)console.log('Couldn\'t save to firebase');
 		    		});
 		    	}		    	
 		    }
 		    else{
-		    	console.log(err);
+		    	if(_debug)console.log(err);
 		    }
 		}
 	);
@@ -699,8 +699,8 @@ function save_all_data_to_firebase(){
 //*****************************************************************
 //*****************************************************************
 //*****************************************************************
-    //$.get('http://www.factbites.com/topics/tower%20of%20hanoi', function(data){console.log((data).replace(/<(?:.|\n)*?>/gm, ''))})
-    //$.get('http://www.factbites.com/topics/tower%20of%20hanoi', function(data){var el = document.createElement('html'); el.innerHTML = data; console.log(el)})
+    //$.get('http://www.factbites.com/topics/tower%20of%20hanoi', function(data){if(_debug)console.log((data).replace(/<(?:.|\n)*?>/gm, ''))})
+    //$.get('http://www.factbites.com/topics/tower%20of%20hanoi', function(data){var el = document.createElement('html'); el.innerHTML = data; if(_debug)console.log(el)})
 //     var el = $( '<div></div>' );
 // el.html("<html><head><title>titleTest</title></head><body><a href='test0'>test01</a><a href='test1'>test02</a><a href='test2'>test03</a></body></html>");
 
@@ -710,7 +710,7 @@ function removenlr(r){
 	_.forIn(r, function(v,k){
 		if(k=='left' || k=='right'){
 			for(var i = 0; i <v.length; i++){
-				console.log(v[i].raw);
+				if(_debug)console.log(v[i].raw);
 				removenlr(v[i].left);
 				removenlr(v[i].right);
 			}
