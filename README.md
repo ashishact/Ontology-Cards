@@ -1,6 +1,6 @@
-# Semanticcards-Chrome-Extension
-Semantic Query in client web browser
+# Ontology-Cards
+Ontological Semantic Query in web browser
 
-Uses sparql with Dbpedia graph
+Uses dbpedia owl specification to query the dbpedia graph
 
 
