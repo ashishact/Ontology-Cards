@@ -480,7 +480,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     if(instance.htmltext){
                         instance.text = instance.htmltext;
                         delete instance.htmltext;
-                        var _card_data = self.frameActions.generate_card_data(3, 5, instance, FM.defaultView , FM.default_sctype);                  
+                        var _card_data = self.frameActions.generate_card_data(3, 5, instance, 'views/cards/infobox.html' , FM.default_sctype);                  
                     }
                     else{
                         if(!instance.abstract && instance.comment) instance.abstract = instance.comment;
@@ -1239,21 +1239,22 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         //request.msg.answers:{id:'im34nxls', answers:[], source:''}
                         interpreter.queryAnswers = request.msg.answers;
                         if(request.msg.uiid > -1) self.selectedCommandId(request.msg.uiid);
-                        console.log(self.selectedCommandId());
+                        // console.log(self.selectedCommandId());
                         self.emit_valid_commands_changed();
                     }
                         
                 }
 
-                else if(request.type === 'SW:CLASS_SUGGESTIONS' || request.type === 'SW:PREDICATE_SUGGESTIONS' || request.type === 'SW:CLASS_OBJECT_SUGGESTIONS'){
+                else if(request.type === 'SW:CLASS_SUGGESTIONS' || request.type === 'SW:PREDICATE_SUGGESTIONS'){
                     if(request.msg.answers.length){
                         interpreter.queryAnswers = request.msg.answers;
                         self.emit_valid_commands_changed();
                     }
                 }
 
-                else if(request.type === 'SW:CLASS_OBJECT_INSTANCES'){
+                else if(request.type === 'SW:CLASS_OBJECT_INSTANCES' || request.type === 'SW:CLASS_OBJECT_SUGGESTIONS'){
                     if(request.msg.answers.length){
+                        if(request.msg.uiid > -1) self.selectedCommandId(request.msg.uiid);
                         interpreter.queryAnswers = request.msg.answers;
                         self.emit_valid_commands_changed();
                     }

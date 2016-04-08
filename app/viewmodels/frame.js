@@ -39,7 +39,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             this.activeView = "views/cards/default.html";
 
             this.defaultModel = "viewmodels/card";
-            this.defaultView = "views/cards/default.html";
+            this.defaultView = "views/cards/infobox.html";
             this.default_sctype = card_props.TYPE.SIMPLE_TEXT;
             
 

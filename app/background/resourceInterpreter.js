@@ -1,4 +1,4 @@
-	var _debug = true;
+	var _debug = false;
 	
 	//***********************************************************************************************************************************
 	//                        ONTOLOGY PREFIX MAPPING
@@ -615,6 +615,7 @@
 							if(lc.object.iri){
 								me.contextStack[i].object.iri = lc.object.iri;
 								me.contextStack[i].object.type = lc.object.type;
+								me.contextStack[i].object.uiid = lc.object.uiid;
 								me.contextStack[i].object.suggestions = lc.object.suggestions;// list of suggestions
 								me.contextStack[i].object.built = true;
 								me.contextStack[i].object.raw = ostr.toLowerCase();
@@ -654,6 +655,7 @@
 									if(_debug)console.log('a.yes.iri', me.additionalDotCount);
 									lc.instance.iri = plc.instance.iri;
 									lc.instance.type = plc.instance.type;
+									lc.instance.uiid = plc.instance.uiid;
 									lc.instance.suggestions = plc.instance.suggestions;
 									lc.instance.built = true;
 									if(!me.additionalDotCount){
@@ -689,11 +691,10 @@
 
 							}
 							else{// cards don't exist yet
-								var dotindex = me.additionalDotCount-1;
+								var dotindex = instance.uiid + me.additionalDotCount-1;
 								if(instance.suggestions.length > dotindex){
 									if(_debug)console.log('getcards');
 									var inst = instance.suggestions[dotindex];
-									// me.getCard(inst, i);
 									me.getCardFromWikipedia(inst, i);
 								}
 								else{
@@ -967,6 +968,7 @@
 					if(context.idx < me.contextStack.length && param.objects.length){
 						me.contextStack[context.idx].object.iri = param.objects[0].iri;
 						me.contextStack[context.idx].object.type = param.objects[0].type;
+						me.contextStack[context.idx].object.uiid = 0;
 						me.contextStack[context.idx].object.suggestions = param.objects;
 						me.contextStack[context.idx].object.built = true;
 					}
@@ -1112,10 +1114,10 @@
 				for (var i = 0; i < me.contextStack.length; i++) {
 					//UI CONTEXT LABEL
 					//
-					var ct = me.contextStack[i].class.iri ? me.contextStack[i].class.iri+' > ':'';
+					var ct = me.contextStack[i].class.iri ? me.contextStack[i].class.iri.replace(/\w+:/, '') +' . ':'';
 					var ppt = me.uiContextLabels[i].prepredicate ? me.uiContextLabels[i].prepredicate+' ':'';
-					var pt = me.contextStack[i].predicate.iri ? me.contextStack[i].predicate.iri+' > ':'';
-					var ot = me.contextStack[i].object.iri ? self.getTitleFromUrl(me.contextStack[i].object.iri)+' ':'';
+					var pt = me.contextStack[i].predicate.iri ? me.contextStack[i].predicate.iri.replace(/\w+:/, '') +' . ':'';
+					var ot = me.contextStack[i].object.iri ? self.getTitleFromUrl(me.contextStack[i].object.iri) +' ':'';
 					if(i===0) me.uiContextLabels[i].text = 'all '+ ct  + ppt + pt  + ot;
 					else me.uiContextLabels[i].text = 'and '+ ct  + ppt + pt  + ot;
 				}
@@ -1236,6 +1238,7 @@
 						me.contextStack[context.idx].instance.built = true;
 						me.contextStack[context.idx].instance.iri = me.contextStack[context.idx].instance.suggestions[0].iri;
 						me.contextStack[context.idx].instance.type = me.contextStack[context.idx].instance.suggestions[0].type;
+						me.contextStack[context.idx].instance.uiid = 0;
 					}
 					// send answers even if no data available. to empty the ui 
 					me.sendInstances(me.contextStack[context.idx].instance.suggestions, context.idx);
@@ -2241,6 +2244,8 @@
 
 		this.uriToPredicateNames = {};
 		this.contextStack = [];//{subject, parentPredicate, childPredicate, }
+		this.CSaddtionaldotcount = 0;
+		this.PCSaddtionaldotcount = 0;
 		this.lastContextStack = [];// will be used to use context selection by thr user from ui, because contextStack is always built from null;
 		this.termSuggestions = [];
 		this.objectSuggestions = [];
@@ -2544,11 +2549,28 @@
 					self.processAndSendAnswers();
 					if(_debug)console.log('came inside function, prepare  context ' + countLoop+ ' times' );
 					countLoop=0;
+
 				}
 			}
 		}
 	
-
+		this.getIndividualCardForContext = function(){
+			//***********************************************
+			if( (self.CSaddtionaldotcount == 1) && (self.CSaddtionaldotcount > self.PCSaddtionaldotcount) ){
+				for (var idxx = self.contextStack.length - 1; idxx >= 0; idxx--) {
+					var s = self.contextStack[idxx].subject;
+					if(typeof(s) === 'string'){
+						if(s.length > 250) continue;
+						var match = s.match(/.+[\/](.+)$/);
+						if(match){
+							self.explore.getCardFromWikipedia({ iri: 'dbr:'+match[1] }, null);// null here is idx for the explore context , i am just using this function here so idx should not be used inside this function as of now							
+							break;
+						}
+					}
+				}
+			}
+			//***********************************************
+		}
 	
 		this.gotATermToken = function(term_id, question, question_type){
 			// first check if a similar question was already asked
@@ -2695,6 +2717,21 @@
 				}
 
 
+				//**************************************************************
+				//To get cards from wikipedia
+				var lastdotm = question.match(/[^\.]*\w\.(\.+)$/);
+				if(lastdotm){
+					console.log(lastdotm[1]);
+					self.PCSaddtionaldotcount = self.CSaddtionaldotcount;
+					self.CSaddtionaldotcount = lastdotm[1].length;
+				}
+				else{
+					self.CSaddtionaldotcount = 0;
+				}
+				//**************************************************************
+				
+				
+
 				// if came from exploratory search
 				if(individualsearchmatch){
 					if(self.contextStack.length){
@@ -2710,6 +2747,10 @@
 				self.lastContextStack = self.contextStack;
 				self.uiContextType = 'object:search';
 				// if(_debug)console.log(self.lastContextStack);	
+
+
+				self.getIndividualCardForContext();// this will check if additional dots are there and act accordingly
+
 				if(_debug)console.log('\n ------------------INDIVIDUAL SEARCH END---------------------------')
 			}
 
@@ -2732,16 +2773,18 @@
 					if(lcontext.instance.suggestions && lcontext.instance.suggestions.length > uiid && uiid> -1){
 						lcontext.instance.iri = lcontext.instance.suggestions[uiid].iri? lcontext.instance.suggestions[uiid].iri : lcontext.instance.suggestions[uiid].value;
 						lcontext.instance.type = lcontext.instance.suggestions[uiid].type;
+						lcontext.instance.uiid = uiid;
 					}
-					console.log(lcontext.instance.iri);
+					if(_debug)console.log(lcontext.instance.iri);
 				}
 				else{
 					var lcontext = _.last(self.explore.lastContextStack);
 					if(lcontext.object.suggestions && lcontext.object.suggestions.length > uiid && uiid> -1){
 						lcontext.object.iri = lcontext.object.suggestions[uiid].iri? lcontext.object.suggestions[uiid].iri : lcontext.object.suggestions[uiid].value;
 						lcontext.object.type = lcontext.object.suggestions[uiid].type;
+						lcontext.object.uiid = uiid;
 					}
-					console.log(lcontext.object.iri);
+					if(_debug)console.log(lcontext.object.iri);
 				}
 				//uiContextLabels
 				self.explore.sendUiContextLabels();
@@ -2775,12 +2818,16 @@
 			var answers = [{desc:predicateSuggestionsHtml}];
 			sendMSG_to_tab_byId({type:'SW:PREDICATE_SUGGESTIONS',  msg:{answers: answers}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
 		};
+
+
 		this.sendClassObjectInstances = function(answers){
-			sendMSG_to_tab_byId({type:'SW:CLASS_OBJECT_INSTANCES',  msg:{answers:answers}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
+			var uiid = _.last(self.explore.contextStack).instance.uiid;
+			sendMSG_to_tab_byId({type:'SW:CLASS_OBJECT_INSTANCES',  msg:{answers:answers, uiid:uiid}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
 			if(_debug)console.log('class instances sent');
 		}
 		this.sendClassObjectSuggestions = function(answers){
-			sendMSG_to_tab_byId({type:'SW:CLASS_OBJECT_SUGGESTIONS',  msg:{answers:answers}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
+			var uiid = _.last(self.explore.contextStack).object.uiid;
+			sendMSG_to_tab_byId({type:'SW:CLASS_OBJECT_SUGGESTIONS',  msg:{answers:answers, uiid:uiid}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
 
 		};
 

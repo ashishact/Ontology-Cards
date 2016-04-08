@@ -18242,7 +18242,6 @@ var createOntology = function(){
 	this.dboClassesString = '';
 	this.dboPropertyString = '';
 
-	console.log("Preparing string source at : ", Date.now());
 	_.forIn(self.dboClasses, function(v, k){
 		if(v.iri.indexOf(':')>0){
 			self.dboClassesString+= self.searchDelim + k + self.searchIdDelim + v.iri + self.searchDelim;
