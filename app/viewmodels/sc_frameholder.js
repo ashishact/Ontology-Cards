@@ -463,12 +463,37 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             },
             add_card_with_title_and_text: function(FM, title, text){
                 if(!FM) FM = self.currentFrame.frameModel;
+                if(!text)text = 'no text';
+                if(!title)title = '<Untitled></Untitled>';
                 var _card_data = self.frameActions.generate_card_data(3, 5, {title:title, text:text},  FM.defaultView , FM.default_sctype);
                 _card_data.volatile = true;
                 _card_data.non_editable = true;
 
                 card_ = FM.actions.add_new_card(_card_data);
                 state.actions.select_this_card(state, card_);
+                // return card_;
+            },
+
+            add_sw_instance_card: function(instance, dbo_class){
+                FM = self.currentFrame.frameModel;
+                if(dbo_class === 'dbo:Person'){
+                    if(instance.htmltext){
+                        instance.text = instance.htmltext;
+                        delete instance.htmltext;
+                        var _card_data = self.frameActions.generate_card_data(3, 5, instance, FM.defaultView , FM.default_sctype);                  
+                    }
+                    else{
+                        if(!instance.abstract && instance.comment) instance.abstract = instance.comment;
+                        if(!instance.depiction && instance.thumbnail) instance.depiction = instance.thumbnail;
+                        var _card_data = self.frameActions.generate_card_data(3, 5, instance,  'views/cards/newton.html' , card_props.TYPE.DBO_PERSON);                        
+                    }
+                    _card_data.volatile = true;
+                    _card_data.non_editable = true;
+
+                    card_ = FM.actions.add_new_card(_card_data);
+                    state.actions.select_this_card(state, card_);
+                    state.dotcards.push(card_);
+                }
                 // return card_;
             },
 
@@ -811,9 +836,21 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 // interpreter.filteredCardTitles = [];
                 // interpreter.queryQuestions = [];
                 // interpreter.queryAnswers = [];
+            },
+
+            set_explore_context_in_navigation_ui : function(uiContextLabels) {
+                var FM = self.currentFrame.frameModel;
+                if(FM.frameview.exploring){
+                    var navs = [{key:'home', title: 'Home'}, {key:'$explore', title: '$explore'} ];
+                    for (var i = 0; i < uiContextLabels.length; i++) {
+                        if(uiContextLabels[i].text) navs.push({key:null, title: uiContextLabels[i].text});
+                    }
+                    if(navs.length > 2) FM.navigation(navs);
+                }
             }
 
-        }
+
+        };
         this.searchSubmit = function(commit){// commit is a complete misnomer , its actauly a dom element
             if(self.framesData().length){
                 FM = self.framesData()[0].frameModel;
@@ -1222,6 +1259,23 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     }
                 }
 
+                else if(request.type === 'SW:INSTANCE_CARDS'){
+                    if(request.msg.instanceCards.length){
+                        var icards = request.msg.instanceCards;
+                        var dbo_class = request.msg.dbo_class;
+                        console.log(icards);
+                        for (var i = 0; i < icards.length; i++) {
+                            self.frameActions.add_sw_instance_card(icards[i], dbo_class);
+                        }
+                    }
+                }
+
+                else if(request.type == 'SW:UI_CONTEXT_LABEL'){
+                    if(request.msg.uiContextLabels.length){
+                        self.frameActions.set_explore_context_in_navigation_ui(request.msg.uiContextLabels);
+                    }
+                }
+
                 ////*****************************************************
                 //*****************************************************
                 
@@ -1237,6 +1291,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     }
                         
                 }
+
                 //*****************************************************
                 //*****************************************************
             });
@@ -1450,7 +1505,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 self.addFrame({frameview_key:frameview_key, title:card.card_data.card_content.title, bgColor:'cadetblue'});
             },
             hidecommandSuggestions : function(){
-                $commandSuggestions.hide(100);
+                if($commandSuggestions.is(':visible')) $commandSuggestions.hide(100);
             },
             showcommandSuggestions : function(){
                 if(!$commandSuggestions.is(':visible')) $commandSuggestions.show(100);
@@ -1692,7 +1747,36 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     }
 
                 }
-                self.appActions.showcommandSuggestions();// could have been hidden 
+
+                //****************************************************************************
+                    var comm_str = $commandInput.val();
+                    var dotm = comm_str.match(/\.(\.+)$/);
+                    if(dotm){
+                        var addtionaldotcount = dotm[1].length;
+                        var diffdotcount = addtionaldotcount - state.addtionaldotcount;
+                        if(diffdotcount < 0){
+                            var FM = self.currentFrame.frameModel;
+                            var oldcards = state.dotcards.splice(0, state.dotcards.length - addtionaldotcount);
+                            for (var i = 0; i < oldcards.length; i++) {
+                                self.frameActions.remove_card(FM, oldcards[i]);
+                            }
+                        }
+                        state.addtionaldotcount = addtionaldotcount;
+                        self.appActions.hidecommandSuggestions();
+                    }
+                    else{
+                        state.addtionaldotcount = 0;
+                        self.appActions.showcommandSuggestions();// could have been hidden 
+                        
+                        for (var i = 0; i < state.dotcards.length; i++) {
+                            var FM = self.currentFrame.frameModel;
+                            self.frameActions.remove_card(FM, state.dotcards[i]);
+                        }
+                        state.dotcards = [];
+                    }
+                //****************************************************************************
+
+
                 return true;
             }
 

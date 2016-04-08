@@ -80,7 +80,17 @@ var SEARCH_API = function(){
 		        });
 		    }
 		});
-	}
+	};
+
+	this.wikipedia_mobile_view = function(title, a_id, callback){
+		$.getJSON('https://en.wikipedia.org/w/api.php?action=mobileview&format=json&page='+title+'&redirect=no&sections=0&prop=text&sectionprop=toclevel%7Clevel%7Cline%7Cnumber%7Cindex%7Cfromtitle%7Canchor', function(json) {
+			if(callback){
+				callback(json, a_id);
+			}
+			else console.log(json);
+		})
+	};
+
 	this.searchDbpediaLookup = function(query, q_id, callback){
 		if(query.length){
 		    var prefix_url = 'http://lookup.dbpedia.org/api/search/PrefixSearch';

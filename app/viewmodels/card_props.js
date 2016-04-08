@@ -17,6 +17,9 @@ define([], function(){
 			SEETINGS:11,
 			ARTICLE_LIST:12,
 			LEAF_EDITOR:13,
+
+			DBO_PERSON:50,
+			DBO_PLACE:51,
 		}
 	}
 

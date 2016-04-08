@@ -1,15 +1,29 @@
 <div style="overflow-y: auto; background-color: white; box-sizing: border-box; font-stretch: inherit; font-size: 13px; line-height: 13px; font-family: 'Open Sans', sans-serif; outline-style: none; color: rgb(142, 128, 113); text-align: center;height: 100%;" data-view="views/cards/newton" data-active-view="true">
+	<!-- ko if: bind_data.depiction -->
+		<div style="box-sizing: border-box; margin-bottom: 18px; padding-top: 40px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; outline-style: none;">
 
-	<div style="box-sizing: border-box; margin-bottom: 18px; padding-top: 40px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; outline-style: none;">
-
-		<img src="https://tse1.mm.bing.net/th?id=Aafbdbd082025fc8c7d556b71f4e56f0f&amp;w=132&amp;h=183&amp;c=7&amp;rs=1&amp;qlt=90&amp;pid=3.1&amp;rm=2" alt="" style="box-sizing: border-box; margin-right: auto; margin-left: auto; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; font-family: inherit; display: block; width: 112px; height: 112px; border-radius: 50%;">
-	</div>
+			<img data-bind="attr:{src:bind_data.depiction}" src="https://tse1.mm.bing.net/th?id=Aafbdbd082025fc8c7d556b71f4e56f0f&amp;w=132&amp;h=183&amp;c=7&amp;rs=1&amp;qlt=90&amp;pid=3.1&amp;rm=2" alt="" style="box-sizing: border-box; margin-right: auto; margin-left: auto; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; font-family: inherit; display: block; width: 112px; height: 112px; border-radius: 50%;">
+		</div>
+	<!-- /ko -->
 
 	<div class="team-text" style="box-sizing: border-box; padding-right: 30px; padding-bottom: 24px; padding-left: 30px; font-style: inherit; font-variant: inherit; font-weight: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; outline-style: none;">
+	<!-- ko if: bind_data.title -->
+		<div 
+			class="sc-editable"
+			data-bind="sc_contenteditable:bind_data.title"
+			contenteditable="true"
 
-	<h4 style="box-sizing: border-box; font-family: inherit; line-height: 1.2em; margin-bottom: 19px; font-size: 25px; font-style: inherit; font-variant: inherit; font-stretch: inherit; color: rgb(92, 81, 70); letter-spacing: -1px;">Sir Issac Newton</h4>
+		style="box-sizing: border-box; font-family: inherit; line-height: 1.2em; margin-bottom: 19px; font-size: 25px; font-style: inherit; font-variant: inherit; font-stretch: inherit; color: rgb(92, 81, 70); letter-spacing: -1px;">Sir Issac Newton</div>
+	<!-- /ko -->
 
-	<p style="box-sizing: border-box; margin-bottom: 10px; font-style: italic; font-variant: inherit; font-weight: inherit; font-stretch: inherit; font-size: 15px; line-height: 23px; font-family: inherit;">Sir Isaac Newton was an English physicist and mathematician who is widely recognised as one of the most influential scientists of all time and as a key figure in the scientific revolution. His book Philosophiæ Naturalis Principia Mathematica, first published in 1687, laid the foundations for classical mechanics. Newton made seminal contributions to optics, and he shares credit with Gottfried Leibniz for the development of calculus</p>
+	<!-- ko if: bind_data.abstract -->
+		<div 
+		     class="sc-editable"
+		     data-bind="sc_contenteditable:bind_data.abstract"
+		     contenteditable="true"
+
+		style="box-sizing: border-box; margin-bottom: 10px; font-style: italic; font-variant: inherit; font-weight: inherit; font-stretch: inherit; font-size: 15px; line-height: 23px; font-family: inherit;">Sir Isaac Newton was an English physicist and mathematician who is widely recognised as one of the most influential scientists of all time and as a key figure in the scientific revolution. His book Philosophiæ Naturalis Principia Mathematica, first published in 1687, laid the foundations for classical mechanics. Newton made seminal contributions to optics, and he shares credit with Gottfried Leibniz for the development of calculus</div>
+	<!-- /ko -->
 
 	</div>
 </div>

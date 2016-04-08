@@ -196,15 +196,6 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
                     self.bind_data = self.create_card_type(self.sctype, {html: res._html, title:res._title});
                     //console.log(self.bind_data.html());
                 }
-                //Working
-	                // var callb = function(res) {
-	                //     self.bind_data.html(res);
-	                // }
-	                //mediawiki.WD("barack obama", callb);
-
-                // mediawiki.WD_i("unicorn", function(res) {
-                //     self.bind_data.html(res);
-                // });
                 
             }
             else if(self.sctype == card_props.TYPE.QUOTE){
@@ -240,6 +231,14 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
                     self.bind_data = self.create_card_type(self.sctype, {title:_t, list:_l});
                     
                 }
+            }
+            else if(self.sctype == card_props.TYPE.DBO_PERSON){
+                var cc = __card.card_data.card_content;
+                var bind_data = {};
+                _.forIn(cc, function(v, k){
+                    if(v) bind_data[k] = ko.observable(v);
+                });
+                self.bind_data = bind_data;
             }
 
             //If Settings

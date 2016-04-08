@@ -252,6 +252,18 @@ html{
     margin:0px;
 }
 
+
+#SEMANTICCARDS-05041993 table{
+    width: 100%;
+}
+#SEMANTICCARDS-05041993 table img{
+    max-width: 300px;
+    width: 100%;
+    height: auto;
+}
+#SEMANTICCARDS-05041993 li{
+    list-style-type: none;
+}
 //******************************************************
 //******************************************************
 //  .listholder{

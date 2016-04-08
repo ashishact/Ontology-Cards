@@ -1,83 +1,38 @@
 	var _debug = true;
-	var prefixMapping = {
-		"foaf": "http://xmlns.com/foaf/0.1/",
-		"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-		"rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-		"xsd": "http://www.w3.org/2001/XMLSchema#",
-		"dbo": "http://dbpedia.org/ontology/",
-		"dbr": "http://dbpedia.org/resource/",
-		"dbp": "http://dbpedia.org/property/",
-		"owl": "http://www.w3.org/2002/07/owl#",
-		"skos": "http://www.w3.org/2004/02/skos/core#",
-		"purl": "http://purl.org/dc/terms/",
-	}
+	
+	//***********************************************************************************************************************************
+	//                        ONTOLOGY PREFIX MAPPING
+	//***********************************************************************************************************************************
 
-	var tripplestore = new Triplestore();
-	tripplestore.setMapping("foaf", "http://xmlns.com/foaf/0.1/");
-	tripplestore.setMapping("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-	tripplestore.setMapping("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
-	tripplestore.setMapping("xsd", "http://www.w3.org/2001/XMLSchema#");
-	tripplestore.setMapping("dbo", "http://dbpedia.org/ontology/");
-	tripplestore.setMapping("dbr", "http://dbpedia.org/resource/");
-	tripplestore.setMapping("owl", "http://www.w3.org/2002/07/owl#");
-	tripplestore.setMapping("skos", "http://www.w3.org/2004/02/skos/core#");
-	tripplestore.setMapping("purl", "http://purl.org/dc/terms/");
+		var prefixMapping = {
+			"foaf": "http://xmlns.com/foaf/0.1/",
+			"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+			"rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+			"xsd": "http://www.w3.org/2001/XMLSchema#",
+			"dbo": "http://dbpedia.org/ontology/",
+			"dbr": "http://dbpedia.org/resource/",
+			"dbp": "http://dbpedia.org/property/",
+			"owl": "http://www.w3.org/2002/07/owl#",
+			"skos": "http://www.w3.org/2004/02/skos/core#",
+			"purl": "http://purl.org/dc/terms/",
+		}
 
-	tripplestore.setMapping("scards", "http://semanticcards.org/");
+		var tripplestore = new Triplestore();
+		tripplestore.setMapping("foaf", "http://xmlns.com/foaf/0.1/");
+		tripplestore.setMapping("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+		tripplestore.setMapping("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
+		tripplestore.setMapping("xsd", "http://www.w3.org/2001/XMLSchema#");
+		tripplestore.setMapping("dbo", "http://dbpedia.org/ontology/");
+		tripplestore.setMapping("dbr", "http://dbpedia.org/resource/");
+		tripplestore.setMapping("owl", "http://www.w3.org/2002/07/owl#");
+		tripplestore.setMapping("skos", "http://www.w3.org/2004/02/skos/core#");
+		tripplestore.setMapping("purl", "http://purl.org/dc/terms/");
 
+		tripplestore.setMapping("scards", "http://semanticcards.org/");
 
-
-	function roughSizeOfObject( object ) {
-
-	    var objectList = [];
-	    var stack = [ object ];
-	    var bytes = 0;
-
-	    while ( stack.length ) {
-	        var value = stack.pop();
-
-	        if ( typeof value === 'boolean' ) {
-	            bytes += 4;
-	        }
-	        else if ( typeof value === 'string' ) {
-	            bytes += value.length * 2;
-	        }
-	        else if ( typeof value === 'number' ) {
-	            bytes += 8;
-	        }
-	        else if
-	        (
-	            typeof value === 'object'
-	            && objectList.indexOf( value ) === -1
-	        )
-	        {
-	            objectList.push( value );
-
-	            for( var i in value ) {
-	                stack.push( value[ i ] );
-	            }
-	        }
-	    }
-	    var kb = bytes/1024;
-	    return kb;
-	}
-
-	function sims(query){
-		var endpoint = 'http://dbpedia.org/sparql';
-		if(!query) query = "SELECT ?s WHERE {?s ?p ?o} LIMIT 10";
-		var queryUrl = endpoint + "?query="+ encodeURIComponent(query) +"&format=json";
-		$.ajax({
-			dataType: 'json',
-			url: queryUrl,
-			success: function(data) {
-				if(data.results){
-					// if(_debug)console.log(JSON.stringify(data.results.bindings));
-					if(_debug)console.log(data.results.bindings);
-				}
-				else if(_debug)console.log(data);
-			}
-		});
-	}
+	//***********************************************************************************************************************************
+	//                        ONTOLOGY PREFIX MAPPING ENDS
+	//***********************************************************************************************************************************
 
 
 	var SemanticWeb = function(){
@@ -89,6 +44,7 @@
 		this.rootTags = ''// tags for first sentence// 'DT NN WP'
 		this.andSplits = [];
 		this.dotSplit = [];
+		this.card_per_dot = 1;
 		//__________________________________________________
 		// => => => 				}						|
 		// => => => =>				}						|
@@ -130,6 +86,9 @@
 		this.subjects = [];
 		this.subjectsString = '';
 
+	//***********************************************************************************************************************************
+	//                        SPARQL STARTS
+	//***********************************************************************************************************************************
 
 		this.createSparql = function(){
 			var me = this;
@@ -247,6 +206,33 @@
 								self.sparqlEvent.trigger(sparqlid, {sparqlid:sparqlid, instances: [], type:'instances'})
 							}
 						}
+						else if(variable.indexOf('cardiri') === 0){
+							var sparqlid = variable.split('cardiri')[1];// id to determine who made this sparql call
+							if(json.results.bindings && json.results.bindings.length){
+								var res = json.results.bindings;
+								var cards = [];
+								for (var i = 0; i < res.length; i++) {
+									var card = {};
+									for (var j = 0; j < json.head.vars.length; j++) {
+										var varj = json.head.vars[j];
+										if(j===0){
+											card['cardiri'] = res[i][varj];
+										}
+										else{
+											card[varj] = res[i][varj];
+										}
+									}
+									cards.push(card);
+								}
+							
+								if(_debug)console.log('calling back with sparql results for cards');
+								self.sparqlEvent.trigger(sparqlid, {sparqlid:sparqlid, cards: cards, type:'cards'})
+							}
+							else{
+								if(_debug)console.log('0 cards from sparql');
+								self.sparqlEvent.trigger(sparqlid, {sparqlid:sparqlid, cards: [], type:'cards'})
+							}
+						}
 						else{
 							if(_debug)console.log('no variable matched , in sparql results');
 
@@ -256,7 +242,8 @@
 					}
 				}
 			}
-			this.endpoint = 'http://dbpedia.org/sparql';
+			// this.endpoint = 'http://dbpedia.org/sparql';
+			this.endpoint = 'http://live.dbpedia.org/sparql';
 			this.queryEndpoint = function(query){
 				if(!query || !(query.length>3))return;
 				var queryUrl = me.endpoint + "?query="+ encodeURIComponent(query) +"&format=json";
@@ -273,7 +260,7 @@
 				});
 			};
 
-			this.constructQuery = function(prefixes, variables, tripples, filters,  limit, offset){
+			this.constructQuery = function(prefixes, variables, tripples, opttripples, filters,  limit, offset){
 				var prefixStr = '';
 				for (var i = 0; i < prefixes.length; i++) {
 					if(prefixes[i]) prefixStr+= 'PREFIX '+prefixes[i]+': <'+ prefixMapping[prefixes[i]] + '>  ';
@@ -284,9 +271,21 @@
 				for (var i = 0; i < tripples.length; i++) {
 					trippleStr+= tripples[i].s +' '+ tripples[i].p + ' ' + tripples[i].o + ' . ';
 				}
+
+
+				var optTrippleStr = '';
+				if(opttripples){
+					for (var i = 0; i < opttripples.length; i++) {
+						optTrippleStr+= opttripples[i].s +' '+ opttripples[i].p + ' ' + opttripples[i].o + ' . ';
+					}
+					optTrippleStr = 'OPTIONAL { '+ optTrippleStr +' }'
+				}
+
+
+
 				var filterStr = (filters && filters.length ) ? filters.join(' . ') : '';
 
-				var qu = prefixStr + selectStr + trippleStr + filterStr + ' } ' + 'LIMIT '+limit;
+				var qu = prefixStr + selectStr + trippleStr + optTrippleStr + filterStr + ' } ' + 'LIMIT '+limit;
 				if(offset) qu+= ' OFFSET '+ offset;
 
 				return qu;
@@ -394,6 +393,36 @@
 		}
 		this.sparql = self.createSparql();
 
+
+		//*********************************************
+		//     SPARQLEVENT BUS
+		//*********************************************
+			this.createSparqlEvent = function(){
+				var me = {};
+				me.mappings = {};
+				me.trigger = function(id, data){
+					var dest = me.mappings[id];
+					if(dest && dest.callback && dest.context){
+						dest.callback(id, data, dest.context);
+						delete me.mappings[id];
+					}
+				}
+				me.store = function(id, dest){
+					me.mappings[id] = dest;
+				}
+				return me;
+			};
+			this.sparqlEvent = createSparqlEvent();
+	//***********************************************************************************************************************************
+	//                        SPARQL ENDS
+	//***********************************************************************************************************************************
+
+
+
+	//***********************************************************************************************************************************
+	//                        HIDDEN WEB
+	//***********************************************************************************************************************************
+
 		this.createHiddenWeb = function(){
 			var me = this;
 
@@ -463,22 +492,11 @@
 		}
 		this.hiddenweb = self.createHiddenWeb();
 		
-		this.createSparqlEvent = function(){
-			var me = {};
-			me.mappings = {};
-			me.trigger = function(id, data){
-				var dest = me.mappings[id];
-				if(dest && dest.callback && dest.context){
-					dest.callback(id, data, dest.context);
-					delete me.mappings[id];
-				}
-			}
-			me.store = function(id, dest){
-				me.mappings[id] = dest;
-			}
-			return me;
-		};
-		this.sparqlEvent = createSparqlEvent();
+
+
+	//***********************************************************************************************************************************
+	//                        UTILITY
+	//***********************************************************************************************************************************
 		this.getPrefixed = function(iri){
 			var match = iri.match(/(.+[\/#])(.+)$/);
 			if(match){
@@ -493,8 +511,38 @@
 				
 			}
 		}
+		this.getFullIRI = function(iri){
+			var splits = iri.split(':');
+			if(splits.length == 2){//dbr:Isaac_Newton
+				return iri.replace(splits[0]+':', prefixMapping[splits[0]]);
+			}
+		}
+
+		this.fastStringSearch = function(source, term){
+			var rx = new RegExp('"([^"]*'+term+'[^"]*)"','gi');
+			var i = 0;
+			var results = [];
+			while (result = rx.exec(source)) {
+				results.push(result[1]);
+				// if(_debug)console.log('match: '+ result[1]);
+			    i += 1;
+			    if (i >= 25)break;
+			}
+			return {results:results, count:i};
+		}
+
+
+
+	//*****************************************************************************************************************************************
+	//                 EXPLORATORY SEARCH START
+	//*****************************************************************************************************************************************
 		this.createExploratorySearch = function(){
 			var me = {}
+
+			me.uiContextLabels = [];
+			me.additionalDotCount = 0;
+			me.prevAdditionalDotCount = 0;
+
 			me.currentPredicates = [];
 			me.trippleStack = [];
 			me.sparqlStack = [];
@@ -507,9 +555,14 @@
 					var sentence = self.andSplits[i][0];
 					if(i > 0) sentence = self.andSplits[0][0].split(' ').slice(0,2).join(' ') + ' '+ sentence;
 					var tokens = sentence.split(' ');
+
 					if(tokens.length > 2){
-						if(tokens[2] === 'with') tokens.splice(2,1);
+						if(tokens[2] === 'with'){
+							tokens.splice(2,1);
+							me.uiContextLabels[i].prepredicate = 'with';
+						}
 					}
+					
 					var tokl = tokens.length;
 					var lastand = (i==self.andSplits.length-1);
 					var lcexist = (me.lastContextStack.length > i);
@@ -525,7 +578,7 @@
 								me.contextStack[i].class.built = true;
 								me.contextStack[i].class.raw = cstr.toLowerCase();
 								go = false;
-								// if(_debug)console.log('same as lastContext', lc.class.iri )	
+								// if(_debug)console.log('same as lastContext', lc.class.iri )									
 							}
 							
 						}
@@ -545,6 +598,7 @@
 								me.contextStack[i].predicate.raw = pstr.toLowerCase();
 								go = false;
 								// if(_debug)console.log('same as lastContext', lc.predicate.iri )
+								
 							}
 						}
 						if(go){
@@ -565,15 +619,15 @@
 								me.contextStack[i].object.built = true;
 								me.contextStack[i].object.raw = ostr.toLowerCase();
 								go = false;
-								if(lastand && !isfullstop) me.sendSuggestions(me.contextStack[i].object.suggestions, i);
+								if(lastand && !isfullstop) me.sendSuggestions(me.contextStack[i].object.suggestions, i);								
 							}
 						}
 						if(go){
-							var found = false;
-							if(lcexist) found = me.filterObjectFromSuggestions(ostr, i);
+							var foundiri = false;
+							if(lcexist) foundiri = me.filterObjectFromSuggestions(ostr, i);
 							me.contextStack[i].object.raw = ostr.toLowerCase();
-							if(_debug)console.log('found', found);
-							if(!found){
+							if(_debug)console.log('foundiri', foundiri);
+							if(!foundiri){
 								var timeIn = 1000;
 								var contextidx = i;// the timer function may get another id
 								clearTimeout(me.timeoutObj);
@@ -583,22 +637,30 @@
 								me.timeoutObj = setTimeout(timedFunction, timeIn);
 								return;
 							}
+
 						}
 					}
 					else{
 						if(lastand && !isfullstop && me.contextStack[i].object.suggestions && me.contextStack[i].object.suggestions.length) me.sendSuggestions(me.contextStack[i].object.suggestions, i);
 					}
 
-					if(lastand && isfullstop){// dont get instance in between // get only at the end of the stack
+					if(lastand && isfullstop ){// dont get instance in between // get only at the end of the stack
 						if(lcexist && (me.contextStack.length === me.lastContextStack.length)){
 							var lc = me.contextStack[me.contextStack.length-1];
 							var plc = me.lastContextStack[me.lastContextStack.length-1];
 							if(lc.object.iri === plc.object.iri && lc.predicate.iri === plc.predicate.iri && lc.class.iri === plc.class.iri){
 								if(_debug)console.log('a');
 								if(plc.instance.iri){
+									if(_debug)console.log('a.yes.iri', me.additionalDotCount);
 									lc.instance.iri = plc.instance.iri;
+									lc.instance.type = plc.instance.type;
 									lc.instance.suggestions = plc.instance.suggestions;
-									me.sendInstances(lc.instance.suggestions, i);
+									lc.instance.built = true;
+									if(!me.additionalDotCount){
+										if(_debug)console.log('a.dot');
+										me.sendInstances(lc.instance.suggestions, i);
+									}
+									// don\'t send suggestions is asked for details suggestions'
 								}
 								else{
 									var async = me.getInstances(i);
@@ -617,11 +679,42 @@
 							if(async)return;
 						}
 					}
+					if(lastand && me.additionalDotCount && (me.prevAdditionalDotCount < me.additionalDotCount) && me.contextStack[i].instance.built){
+						if(_debug)console.log('additionalDotCount');
+						var instance = me.contextStack[i].instance;
+						if(instance.suggestions && instance.suggestions.length){
+							if(_debug)console.log('additionalDotCount.sugg');
+							var cards = instance.suggestionCards;
+							if(cards && cards.length){
+
+							}
+							else{// cards don't exist yet
+								var dotindex = me.additionalDotCount-1;
+								if(instance.suggestions.length > dotindex){
+									if(_debug)console.log('getcards');
+									var inst = instance.suggestions[dotindex];
+									// me.getCard(inst, i);
+									me.getCardFromWikipedia(inst, i);
+								}
+								else{
+									if(_debug)console.log('get more suggestions');
+									//get more suggestion instances
+								}
+							}
+						}
+					}
+
+
+					
 				}
+				if(_debug)console.log('end explore');	
+				me.sendUiContextLabels();
+
 			};
 			me.suggestClasses = function(str, contextidx, send_to_ui){
 				self.currentSuggestedClass = {}
 				var selectediri = null;
+				var selectedkey = null;
 				var classes = ontology.getMatchedClasses(str);
 				var bestMatch = -200;
 				for (var i = 0; i < classes.length; i++) {
@@ -637,10 +730,12 @@
 						self.currentSuggestedClass.iri = c;
 						self.currentSuggestedClass.key = k;
 						selectediri = c;
+						selectedkey = k
 						if(str.toLowerCase() === l)	break;
 					}
 				}
 				me.contextStack[contextidx].class.iri = selectediri;
+				me.contextStack[contextidx].class.key = selectedkey;
 				me.contextStack[contextidx].class.built = true;
 
 
@@ -740,7 +835,8 @@
 				var filters = [];
 				var limit = 200;
 				var offset = null;
-				var qu = self.sparql.constructQuery(prefixes, variables, tripples, filters, limit, offset);
+				var opttripples = null;
+				var qu = self.sparql.constructQuery(prefixes, variables, tripples, opttripples,  filters, limit, offset);
 				if(_debug)console.log(qu);
 
 				self.sparqlEvent.store(id, {callback:me.gotAllClassPredicates, context:{c:c, idx:contextidx}});
@@ -830,7 +926,8 @@
 				
 				var limit = 20;
 				var offset = null;
-				var qu = self.sparql.constructQuery(prefixes, variables, tripples, filters, limit, offset);
+				var opttripples = null;
+				var qu = self.sparql.constructQuery(prefixes, variables, tripples, opttripples, filters, limit, offset);
 				if(_debug)console.log(qu);
 
 				self.sparqlEvent.store(id, {callback:me.gotfacetedClassObjects, context:{c:c, p:p, idx:contextidx} });
@@ -844,9 +941,22 @@
 					for (var i = 0; i < param.objects.length; i++) {
 						var iri = param.objects[i].value;
 						if(iri.length > 3){// 'dbo:', can be * as well
-							var prefixediri = self.getPrefixed(iri);
-							if(prefixediri) param.objects[i].iri = prefixediri;
-							else param.objects[i].iri = param.objects[i].value;
+							
+							var otype = param.objects[i].type;
+							if(otype == 'uri'){
+								if(iri.indexOf('(')>-1 || iri.indexOf(')')>-1 || iri.indexOf(',')>-1){
+									param.objects[i].iri = iri;
+								}
+								else{
+									var prefixediri = self.getPrefixed(iri);
+									if(prefixediri) param.objects[i].iri = prefixediri;
+									else param.objects[i].iri = iri;
+								}
+							}
+							else{
+								param.objects[i].iri = iri;
+							}
+							
 						}
 						else{
 							if(_debug)console.log(iri, param.objects[i]);
@@ -920,8 +1030,13 @@
 
 							}
 							else{
-								//match(/.+[\/#](.+)$/)
-								ans = {title:iri, id:i, iscontext:true};
+								var match = iri.match(/.+[\/#](.+)$/);
+								if(match){
+									ans = {title:match[1].replace(/_/g, ' '), id:i, iscontext:true};
+								}
+								else{
+									ans = {title:iri, id:i, iscontext:true};
+								}
 								if(label)ans.desc = '<span style=\"font-weight:bold\">'+label+ '</span>';
 							}
 							answers.push(ans);
@@ -992,7 +1107,20 @@
 				else{
 						self.sendClassObjectInstances([{desc:'No results found'}]);
 				}
-			}
+			};
+			me.sendUiContextLabels = function(){
+				for (var i = 0; i < me.contextStack.length; i++) {
+					//UI CONTEXT LABEL
+					//
+					var ct = me.contextStack[i].class.iri ? me.contextStack[i].class.iri+' > ':'';
+					var ppt = me.uiContextLabels[i].prepredicate ? me.uiContextLabels[i].prepredicate+' ':'';
+					var pt = me.contextStack[i].predicate.iri ? me.contextStack[i].predicate.iri+' > ':'';
+					var ot = me.contextStack[i].object.iri ? self.getTitleFromUrl(me.contextStack[i].object.iri)+' ':'';
+					if(i===0) me.uiContextLabels[i].text = 'all '+ ct  + ppt + pt  + ot;
+					else me.uiContextLabels[i].text = 'and '+ ct  + ppt + pt  + ot;
+				}
+				self.sendUiContextLabels(me.uiContextLabels);
+			};
 			me.filterObjectFromSuggestions = function(ostr, idx){
 				if(me.lastContextStack.length > idx){
 					var cs = me.lastContextStack[idx];
@@ -1026,7 +1154,7 @@
 
 							if(_debug)console.log('filtering');
 							me.sendSuggestions(me.contextStack[idx].object.suggestions, idx);
-							return true;
+							return new_s.iri;
 						}
 					}
 				}
@@ -1083,7 +1211,8 @@
 				if(!tripples.length)return;
 				var limit = 20;
 				var offset = null;
-				var qu = self.sparql.constructQuery(prefixes, variables, tripples, filters, limit, offset);
+				var opttripples = null;
+				var qu = self.sparql.constructQuery(prefixes, variables, tripples, opttripples,  filters, limit, offset);
 				if(_debug)console.log(qu);
 
 				self.sparqlEvent.store(id, {callback:me.gotInstances, context:{idx:idx} });
@@ -1104,7 +1233,9 @@
 					}
 					if( (me.contextStack.length > context.idx) && param.instances.length){
 						me.contextStack[context.idx].instance.suggestions = param.instances;
+						me.contextStack[context.idx].instance.built = true;
 						me.contextStack[context.idx].instance.iri = me.contextStack[context.idx].instance.suggestions[0].iri;
+						me.contextStack[context.idx].instance.type = me.contextStack[context.idx].instance.suggestions[0].type;
 					}
 					// send answers even if no data available. to empty the ui 
 					me.sendInstances(me.contextStack[context.idx].instance.suggestions, context.idx);
@@ -1114,25 +1245,209 @@
 					me.sendInstances(false);
 				}
 			};
+			me.getCards = function(instances, idx){
+				var dboPersonKey = '0.1.4';
+
+				var id = Date.now();
+				var prefixes = ['dbo', 'rdfs', 'dbp', 'owl', 'foaf'];
+				var cardiri = '?cardiri'+ id;
+				var variables = [cardiri, '?depiction ?abstract'];
+				var tripples = [];
+				var opttripples = [];
+				opttripples.push({s:cardiri, p:'foaf:depiction', o:'?depiction'});
+				opttripples.push({s:cardiri, p:'dbo:abstract', o:'?abstract'});
+				
+				var cardirivalues = [];
+				for (var i = 0; i < instances.length; i++) {
+					var iri = instances[i].iri;
+					if(iri){
+						if(iri.indexOf('(')>-1 || iri.indexOf(')')>-1){
+							fulliri = self.getFullIRI(iri);
+							if(fulliri) cardirivalues.push('(<'+fulliri+'>)');
+						}
+						else{
+							cardirivalues.push('('+iri+')');
+						}
+					}
+				}
+				var filters = [];
+					filters.push('VALUES ('+cardiri+') { '+cardirivalues.join(' ')+' }');
+					filters.push('FILTER(!isLiteral(?abstract) || lang(?abstract) = "" || lang(?abstract) = "en" || langMatches(lang(?abstract), "EN"))');
+				
+				
+
+				var limit = 20;
+				var offset = null;
+				var qu = self.sparql.constructQuery(prefixes, variables, tripples, opttripples,  filters, limit, offset);
+				if(_debug)console.log(qu);
+
+				self.sparqlEvent.store(id, {callback:me.gotCards, context:{idx:idx} });
+				self.sparql.queryEndpoint(qu);
+
+
+				return true;
+			}
+			me.gotCards = function(id, param, context){
+				if(_debug)console.log(param);
+				var instanceCards = [];
+				for (var i = 0; i < param.cards.length; i++) {
+					var card_content = param.cards[i];
+					var card = {};
+					if(card_content.cardiri && card_content.cardiri.value) card.title = self.getTitleFromUrl(card_content.cardiri.value);
+					if(card_content.depiction && card_content.depiction.value) card.depiction = card_content.depiction.value;
+					if(card_content.comment && card_content.comment.value) card.comment = card_content.comment.value;
+					if(card_content.abstract && card_content.abstract.value) card.abstract = card_content.abstract.value;
+					if(card_content.label && card_content.label.value) card.label = card_content.label.value;
+
+					instanceCards.push(card);
+					break;
+				}
+				var dbo_class = me.contextStack[0].class.iri;
+				self.sendInstanceCards(instanceCards, dbo_class);
+			};
+
+			me.getCard = function(instance, idx){
+				var dboPersonKey = '0.1.4';
+
+				var id = Date.now();
+				var prefixes = ['dbo', 'rdfs', 'dbp', 'owl', 'foaf'];
+				var cardiri = '?cardiri'+ id;
+				var variables = [cardiri];
+
+				var tripples = [];
+				var opttripples = [];
+				var filters = [];
+
+				var iri = instance.iri;
+				if(iri.indexOf('(')>-1 || iri.indexOf(')')>-1 || iri.indexOf(',')>-1){
+					iri = self.getFullIRI(iri);
+					if(!iri) return;
+					iri = '<'+iri+'>';
+				}
+
+				tripples.push({s:iri, p:'rdfs:label', o:cardiri});
+				filters.push('FILTER(!isLiteral('+cardiri+') || lang('+cardiri+') = "" || lang('+cardiri+') = "en" || langMatches(lang('+cardiri+'), "EN"))');
+
+
+				// variables.push('?depiction');
+				// opttripples.push({s:iri, p:'foaf:depiction', o:'?depiction'});
+				
+				variables.push('?thumbnail');
+				opttripples.push({s:iri, p:'dbo:thumbnail', o:'?thumbnail'});
+
+				
+				// variables.push('?abstract');
+				// opttripples.push({s:iri, p:'dbo:abstract', o:'?abstract'});
+				// filters.push('FILTER(!isLiteral(?abstract) || lang(?abstract) = "" || lang(?abstract) = "en" || langMatches(lang(?abstract), "EN"))');
+				
+				
+				variables.push('?comment');
+				opttripples.push({s:iri, p:'rdfs:comment', o:'?comment'});
+				filters.push('FILTER(!isLiteral(?comment) || lang(?comment) = "" || lang(?comment) = "en" || langMatches(lang(?comment), "EN"))');
+
+
+				
+
+				var limit = 1;
+				var offset = null;
+				var qu = self.sparql.constructQuery(prefixes, variables, tripples, opttripples, filters, limit, offset);
+				if(_debug)console.log(qu);
+
+				self.sparqlEvent.store(id, {callback:me.gotCard, context:{idx:idx, iri:instance.iri} });
+				self.sparql.queryEndpoint(qu);
+
+				return true;
+			}
+			me.gotCard = function(id, param, context){
+				if(_debug)console.log(param);
+				var instanceCards = [];
+				for (var i = 0; i < param.cards.length; i++) {
+					var card_content = param.cards[i];
+					var card = {};
+					card.title = self.getTitleFromPrefixed(context.iri);
+					if(card_content.depiction && card_content.depiction.value) card.depiction = card_content.depiction.value;
+					if(card_content.thumbnail && card_content.thumbnail.value) card.thumbnail = card_content.thumbnail.value;
+					if(card_content.comment && card_content.comment.value) card.comment = card_content.comment.value;
+					if(card_content.abstract && card_content.abstract.value) card.abstract = card_content.abstract.value;
+					if(card_content.label && card_content.label.value) card.label = card_content.label.value;
+
+					instanceCards.push(card);
+				}
+				// var dbo_class = 'owlThing';
+				// var dbo_class_key = me.contextStack[0].class.key;
+				// console.log(dbo_class_key);
+				// var dboPersonKey = '0.1.4';
+				// if(dbo_class_key.indexOf(dboPersonKey)===0) dbo_class = 'dbo:Person';
+				self.sendInstanceCards(instanceCards, 'dbo:Person');
+			}
+			me.getCardFromWikipedia = function(instance, idx){
+				var title = self.getWikipediaTitle(instance.iri);
+				var action_id = 'gotCardFromWikipedia~'+instance.iri;
+				self.onlineSearchQuery.getWikipediaMobileView(title, action_id);
+			}
+			me.gotCardFromWikipedia = function(htmltext, action_id){
+				var title = self.getTitleFromPrefixed(action_id.split('~')[1]);
+				os = tripplestore.getValues(action_id.split('~')[1], 'scards:termDescription');
+				var desc = os.length ? os[0] : null;
+					
+
+				$('#result').html(htmltext);
+				$('table.metadata').remove();
+				$('metadata').remove();
+				$('sup').remove();
+				$('.hatnote').remove();
+
+				$('#result').find('*').each(function(i, el){
+					var jel = $(el);
+					jel.removeAttr('style');
+					jel.removeAttr('href');
+
+					// if(jel.attr('href') && jel.attr('href').match(/#cite/)) jel.remove();
+				});
+
+				$('#result').find('tr').each(function(i, el){
+					var jel = $(el);
+					var text = jel.text();
+					if(text.indexOf(title)>-1){
+						if(jel.nodeName != 'IMG'){
+							jel.remove();
+							//console.log(jel);
+						}
+					}
+				});
+
+				//Additional
+				$('img').css("borderRadius", "3px");
+
+
+				var infoboxhtml = $('#result').html();	
+				
+				infoboxhtml = infoboxhtml.replace(/[^:]\/\/upload\.wikimedia\.org/g, '\"https://upload.wikimedia.org');
+				infoboxhtml = infoboxhtml.replace(/[^:]\/wiki\//g, '\"https://en.wikipedia.org/wiki/');
+
+				console.log(infoboxhtml);
+				// infoboxhtml = infoboxhtml.replace(/\"/g, '\'');	
+				// var worngimagematch = infoboxhtml.match(/\.jpg\"\"/)
+				// infoboxhtml = infoboxhtml.replace(/\.jpg\"\"/g, '\.jpg\"');
+
+
+				title = '<div style=\" font-weight: 700; color: rgb(100, 67, 112);  font-size: 22px;\">'+title+'</div>';				
+				if(desc) title = title + '<div style=\"color: rgb(152, 89, 101); font-family: Allerta, sans-serif; font-size: 18px; \">'+desc+'</div>';
+				self.sendInstanceCards([{title:title, desc:desc, htmltext:infoboxhtml}], 'dbo:Person');
+			}
 
 			return me;
 		}
 		this.explore = self.createExploratorySearch();
-
-//***********************************************************************************************************************************
-//***********************************************************************************************************************************
-
-
+	//***********************************************************************************************************************************
+	//                 EXPLORATORY SEARCH END
+	//***********************************************************************************************************************************
 
 
 
-
-
-
-
-
-
-
+	//***********************************************************************************************************************************
+	//                        WIKI PREFIX SEARCH
+	//***********************************************************************************************************************************
 		this.gotNewTripplesFromPrefixSearch = function(tripples){
 			//Note !
 			//Here only one objct for any s,p pair alllowed
@@ -1378,6 +1693,13 @@
 				    }
 				}
 			},
+			gotWikipediaMobileView: function(json, action_id){
+				if(json.mobileview && json.mobileview.sections && json.mobileview.sections.length)
+				if(action_id.split('~')[0] === 'gotCardFromWikipedia'){
+					explore.gotCardFromWikipedia(json.mobileview.sections[0].text, action_id);
+				}
+			},
+
 			gotUmbelConcept: function(json, term_id){
 				if(!json.results) return;
 				if(_debug)console.log(json);
@@ -1489,6 +1811,9 @@
 			getWikipediaShortdescriptionsAndThumbnails: function(titles, action_id){
 				searchapi.wikipedia_shortdescriptions_and_thumbnails(titles, action_id, self.onlineSearchReply.gotWikipediaShortdescriptionsAndThumbnails)
 			},
+			getWikipediaMobileView: function(title, action_id){
+            	searchapi.wikipedia_mobile_view(title, action_id, self.onlineSearchReply.gotWikipediaMobileView)
+			},
 			getUmbelConcept: function(question, term_id){
 				searchapi.searchUmbelConcept(question, term_id, self.onlineSearchReply.gotUmbelConcept);
 			},
@@ -1502,7 +1827,18 @@
 				searchapi.searchMedlinePlusSuggestions(query, self.onlineSearchReply.gotMedlinePlusSuggestions);
 			},
 		}
+
 		this.uiContextType = 'object:search';
+	//***********************************************************************************************************************************
+	//                        WIKI PREFIX SEARCH ENDS
+	//***********************************************************************************************************************************
+
+
+
+	//***********************************************************************************************************************************
+	//                        PREPARE CLASS CONTEXTSTACK
+	//***********************************************************************************************************************************
+
 		this.lastClassContextStack = null;
 		this.classContextStack = null;
 		this.rootTags = '';
@@ -1994,7 +2330,15 @@
 				self.sendClassObjectInstances(answers);
 			}
 		}
+	//***********************************************************************************************************************************
+	//                        PREPARE CLASS CONTEXTSTACK ENDS
+	//***********************************************************************************************************************************
 
+
+
+	//***********************************************************************************************************************************
+	//                        PREPARE CONTEXT FOR INDIVIDUAL SEARCH STARTS
+	//***********************************************************************************************************************************
 		this.getDbpediaUrl = function(wikiTitleOrUrl) {
 			var url = wikiTitleOrUrl;
 			if (url.indexOf('wikipedia')!=-1) {
@@ -2014,8 +2358,20 @@
 		};
 		this.getTitleFromUrl = function(url){
 			var match = url.match(/.+[\/](.+)$/);
-			if(match) return match[1].replace('_', ' ');
-			else url.replace('_', ' ');
+			if(match) return match[1].replace(/_/g, ' ');
+			else{
+				return url.replace(/\w+:/,'').replace(/_/g, ' ');
+			}
+		};
+		this.getWikipediaTitle = function(iri){
+			var match = iri.match(/.+[\/](.+)$/);
+			if(match) return match[1];
+			else{
+				return iri.replace(/\w+:/,'');
+			}
+		}
+		this.getTitleFromPrefixed = function(iri){
+			return iri.replace(/\w+:/, '').replace(/_/g, ' ');
 		}
 		this.removeQuestions =  function(){
 			console.warn('complete TODO, Remove Questions');
@@ -2042,37 +2398,57 @@
 				var lastToken = (i === tokenStrings.length-1);
 
 				if(i === 0){
-					var qsearch = self.onlineSearchQuery;
-					var term_id = Date.now().toString(36) + '0';// save his to ustore
-					var qanswer = self.gotATermToken(term_id, tokenStr, 'pc subject suggestions');
-					if(qanswer){// question and answer already exists
-														//namedNodes
+
+					if(self.contextStack[i].camefromexploratorysearch){// subject for the first one comes from exploratory search
+						// so no need to find from wikipedia prefix serach
+						var ecs = self.explore.contextStack;
+						var instance = _.last(ecs).instance;
+						console.log('instance', instance);
+
 						self.contextStack[i].subjects = [];
-						for (var j = 0; j < qanswer.answers.length; j++) {
-							self.contextStack[i].subjects.push(qanswer.answers[j]);
+						for (var j = 0; j < instance.suggestions.length; j++) {
+							var s = self.getFullIRI(instance.suggestions[j].iri);
+							self.contextStack[i].subjects.push(s);
 						}
-						self.contextStack[i].subject = qanswer.answers[0];//TODO, for now only 0th
+						self.contextStack[i].subject = self.getFullIRI(instance.iri);
 						self.contextStack[i].built = true;
 
-						// change the context based on previous context selection by the user
-						if(self.lastContextStack.length > i){
-							var last_tok = self.lastContextStack[i].token;
-							var cur_token = self.contextStack[i].token;
-							if(last_tok === cur_token){// nothing changed in the command input, use the last context subject
-								self.contextStack[i].subject = self.lastContextStack[i].subject;
-								self.contextStack[i].uiid = self.lastContextStack[i].uiid;
-							}
-						}
 
 					}
 					else{
-						qsearch.getWikipediaSuggestions(tokenStr, term_id);
-						// qsearch.getGoogleSuggestions(question, term_id);
-						// qsearch.getUmbelConcept(question, term_id);
-						// qsearch.getDuckDuckGoSuggestions(question, term_id);
-						// qsearch.getDbpediaLookupSuggestions(question, term_id);
+						var qsearch = self.onlineSearchQuery;
+						var term_id = Date.now().toString(36) + '0';// save his to ustore
+						var qanswer = self.gotATermToken(term_id, tokenStr, 'pc subject suggestions');
+						if(qanswer){// question and answer already exists
+															//namedNodes
+							self.contextStack[i].subjects = [];
+							for (var j = 0; j < qanswer.answers.length; j++) {
+								self.contextStack[i].subjects.push(qanswer.answers[j]);
+							}
+							self.contextStack[i].subject = qanswer.answers[0];//TODO, for now only 0th
+							self.contextStack[i].built = true;
+
+							// change the context based on previous context selection by the user
+							if(self.lastContextStack.length > i){
+								var last_tok = self.lastContextStack[i].token;
+								var cur_token = self.contextStack[i].token;
+								if(last_tok === cur_token){// nothing changed in the command input, use the last context subject
+									self.contextStack[i].subject = self.lastContextStack[i].subject;
+									self.contextStack[i].uiid = self.lastContextStack[i].uiid;
+								}
+							}
+
+						}
+						else{
+							qsearch.getWikipediaSuggestions(tokenStr, term_id);
+							// qsearch.getGoogleSuggestions(question, term_id);
+							// qsearch.getUmbelConcept(question, term_id);
+							// qsearch.getDuckDuckGoSuggestions(question, term_id);
+							// qsearch.getDbpediaLookupSuggestions(question, term_id);
+							
+							if(countLoop < 3)return;// important, as query are async . this function will be called again when data is available 
+						}
 						
-						if(countLoop < 3)return;// important, as query are async . this function will be called again when data is available 
 					}
 				}
 				else{
@@ -2312,10 +2688,8 @@
 			}
 		}
 	
-		this.gotAPredicateToken = function(subject_index, str){
 
-		};
-
+	
 		this.gotATermToken = function(term_id, question, question_type){
 			// first check if a similar question was already asked
 			var qs =  self.fastStringSearch(self.questionSearchStringSource, question);
@@ -2343,7 +2717,15 @@
 			
 			self.questionSearchStringSource+= self.searchDelim + term_id + self.searchIdDelim + question.toLowerCase() + self.searchDelim;//'"23 who is Isaac Newton"'
 		};
+	//***********************************************************************************************************************************
+	//                        PREPARE CONTEXT FOR INDIVIDUAL SEARCH ENDS
+	//***********************************************************************************************************************************
+		
 
+
+	//***********************************************************************************************************************************
+	//                        QUESTION FROM TAB
+	//***********************************************************************************************************************************
 		this.last_subject_query_str = '';
 		this.questionFromTab = function(question, tab_id){
 			self.tab_id = tab_id;
@@ -2402,14 +2784,42 @@
 
 				var tokens = self.dotSplit[0].split(' ');
 				if(tokens[0].toLowerCase() === 'all'){
-					self.explore.contextStack = [];
-					for (var i = 0; i < andSplits.length; i++) {
-						self.explore.contextStack.push({class:{}, predicate:{}, object:{}, instance:{}});
+
+					var dotm = question.match(/[^\.]*\.(\.+)$/);
+					self.explore.prevAdditionalDotCount = self.explore.additionalDotCount;
+					if(dotm) self.explore.additionalDotCount = dotm[1].length;
+					else self.explore.additionalDotCount = 0;
+					if(_debug)console.log('explore.additionalDotCount', self.explore.additionalDotCount);
+
+					
+					if(!dotm) var individualsearchmatch = question.match(/[^\.]*\.\s+.*/);
+					// after exploratory search is done go to individual search 
+					// 
+					if(!individualsearchmatch){
+						if(_debug)console.log("----------------------EXPLORATORY SEARCH START-------------------------")
+						self.explore.contextStack = [];
+						self.explore.uiContextLabels = [];
+						for (var i = 0; i < andSplits.length; i++) {
+							self.explore.contextStack.push({class:{}, predicate:{}, object:{}, instance:{}});
+							self.explore.uiContextLabels.push({text:andSplits[0][0]});
+						}
+						self.explore.start();
+						self.explore.lastContextStack = self.explore.contextStack;
+						self.uiContextType = 'class:search';
+						if(_debug)console.log("----------------------EXPLORATORY SEARCH END-------------------------")
+						return;
 					}
-					self.explore.start();
-					explore.lastContextStack = explore.contextStack;
-					self.uiContextType = 'class:search';
-					return;
+					else{
+						var lc = _.last(self.explore.contextStack);
+						if(lc.instance.iri && lc.instance.suggestions && lc.instance.suggestions.length){
+							if(_debug)console.log('exploratory search instances available, going to individualsearch');
+						}
+						else{
+							console.log('not exploratory search or individual search matched , going back');
+							return;
+						}
+					}
+
 				}
 
 
@@ -2424,7 +2834,15 @@
 					self.contextStack.push({token:tokenStrings[i]});// start with the tokens used for each context
 				}
 
-				if(_debug)console.log('\n ------------------START---------------------------\n\n')
+
+				// if came from exploratory search
+				if(individualsearchmatch){
+					if(self.contextStack.length){
+						self.contextStack[0].camefromexploratorysearch = true;
+					}
+				}	
+
+				if(_debug)console.log('\n ------------------INDIVIDUAL SEARCH START---------------------------')
 				self.prepareContextStack();
 				// after context is prepared save in a safe place so that context changes from UI can be stored here
 				// so it should be same as the current context stack , which sounds different from its name
@@ -2432,6 +2850,7 @@
 				self.lastContextStack = self.contextStack;
 				self.uiContextType = 'object:search';
 				// if(_debug)console.log(self.lastContextStack);	
+				if(_debug)console.log('\n ------------------INDIVIDUAL SEARCH END---------------------------')
 			}
 
 			//by this time do 
@@ -2447,15 +2866,36 @@
 				}
 			}
 			else if(self.uiContextType === 'class:search'){
-				var lcontext = _.last(explore.lastContextStack);
-				if(lcontext.object.suggestions && lcontext.object.suggestions.length > uiid && uiid> -1){
-					lcontext.object.iri = lcontext.object.suggestions[uiid].iri? lcontext.object.suggestions[uiid].iri : lcontext.object.suggestions[uiid].value;
-					lcontext.object.type = lcontext.object.suggestions[uiid].type;
+				var isfullstop = (self.dotSplit.length>1);
+				if(isfullstop){// change instance context
+					var lcontext = _.last(self.explore.lastContextStack);
+					if(lcontext.instance.suggestions && lcontext.instance.suggestions.length > uiid && uiid> -1){
+						lcontext.instance.iri = lcontext.instance.suggestions[uiid].iri? lcontext.instance.suggestions[uiid].iri : lcontext.instance.suggestions[uiid].value;
+						lcontext.instance.type = lcontext.instance.suggestions[uiid].type;
+					}
+					console.log(lcontext.instance.iri);
 				}
+				else{
+					var lcontext = _.last(self.explore.lastContextStack);
+					if(lcontext.object.suggestions && lcontext.object.suggestions.length > uiid && uiid> -1){
+						lcontext.object.iri = lcontext.object.suggestions[uiid].iri? lcontext.object.suggestions[uiid].iri : lcontext.object.suggestions[uiid].value;
+						lcontext.object.type = lcontext.object.suggestions[uiid].type;
+					}
+					console.log(lcontext.object.iri);
+				}
+				//uiContextLabels
+				self.explore.sendUiContextLabels();
 			}
 		}
+	//***********************************************************************************************************************************
+	//                        QUESTION FROM TAB ENDS
+	//***********************************************************************************************************************************
 
 
+
+	//***********************************************************************************************************************************
+	//                        CHROME COMMUNICATION
+	//***********************************************************************************************************************************
 		//Answer
 		this.sendAnswers = function(answers){
 			var uiid = _.last(self.contextStack).uiid;
@@ -2484,31 +2924,76 @@
 
 		};
 
-		this.fastStringSearch = function(source, term){
-			var rx = new RegExp('"([^"]*'+term+'[^"]*)"','gi');
-			var i = 0;
-			var results = [];
-			while (result = rx.exec(source)) {
-				results.push(result[1]);
-				// if(_debug)console.log('match: '+ result[1]);
-			    i += 1;
-			    if (i >= 25)break;
-			}
-			return {results:results, count:i};
-		}
+		this.sendInstanceCards = function(instanceCards, dbo_class){
+			sendMSG_to_tab_byId({type:'SW:INSTANCE_CARDS',  msg:{instanceCards:instanceCards, dbo_class: dbo_class}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
+		};
 
+		this.sendUiContextLabels = function(uiContextLabels){
+			sendMSG_to_tab_byId({type:'SW:UI_CONTEXT_LABEL',  msg:{uiContextLabels:uiContextLabels}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
+		};
 
-
-
-
-
-
-
-
+	//***********************************************************************************************************************************
+	//                        COMMUNICATION ENDS
+	//***********************************************************************************************************************************
 
 
 
 		return this;
 	}
-
 	var SW = SemanticWeb();
+
+
+	//***********************************************************************************************************************************
+	//                        ADDITIONAL
+	//***********************************************************************************************************************************
+		function roughSizeOfObject( object ) {
+
+		    var objectList = [];
+		    var stack = [ object ];
+		    var bytes = 0;
+
+		    while ( stack.length ) {
+		        var value = stack.pop();
+
+		        if ( typeof value === 'boolean' ) {
+		            bytes += 4;
+		        }
+		        else if ( typeof value === 'string' ) {
+		            bytes += value.length * 2;
+		        }
+		        else if ( typeof value === 'number' ) {
+		            bytes += 8;
+		        }
+		        else if
+		        (
+		            typeof value === 'object'
+		            && objectList.indexOf( value ) === -1
+		        )
+		        {
+		            objectList.push( value );
+
+		            for( var i in value ) {
+		                stack.push( value[ i ] );
+		            }
+		        }
+		    }
+		    var kb = bytes/1024;
+		    return kb;
+		}
+
+		function sims(query){
+			var endpoint = 'http://dbpedia.org/sparql';
+			if(!query) query = "SELECT ?s WHERE {?s ?p ?o} LIMIT 10";
+			var queryUrl = endpoint + "?query="+ encodeURIComponent(query) +"&format=json";
+			$.ajax({
+				dataType: 'json',
+				url: queryUrl,
+				success: function(data) {
+					if(data.results){
+						// if(_debug)console.log(JSON.stringify(data.results.bindings));
+						if(_debug)console.log(data.results.bindings);
+					}
+					else if(_debug)console.log(data);
+				}
+			});
+		}

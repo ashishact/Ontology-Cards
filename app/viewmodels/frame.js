@@ -1504,6 +1504,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
         
         //Frameview
             this.goto_frameview = function(frameview_key, title){
+
+                if(!frameview_key)return; // used to show context ffrom SW, only title is provides to view context 
+                // and no key is provided so , when clicked nothing will happen
+
+
                 if(self.frameview.key() === frameview_key){
                     console.log("you are already in frame " + frameview_key);
                     return;

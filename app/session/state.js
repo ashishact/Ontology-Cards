@@ -154,6 +154,8 @@ define(['lodash'],  function (_) {
 
         valid_commands:  [],
         dot:0,
+        addtionaldotcount:0,
+        dotcards:[],
 
 
         issearchbar_focused:false,
