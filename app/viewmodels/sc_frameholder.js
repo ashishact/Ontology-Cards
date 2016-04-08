@@ -464,7 +464,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             add_card_with_title_and_text: function(FM, title, text){
                 if(!FM) FM = self.currentFrame.frameModel;
                 if(!text)text = 'no text';
-                if(!title)title = '<Untitled></Untitled>';
+                if(!title)title = 'Untitled';
                 var _card_data = self.frameActions.generate_card_data(3, 5, {title:title, text:text},  FM.defaultView , FM.default_sctype);
                 _card_data.volatile = true;
                 _card_data.non_editable = true;
@@ -621,6 +621,16 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         }                            
                          _cd.bind_data.text(_text);
                         FM.actions.save_card_content(_cd, true);
+                    }
+                }
+            },
+            set_default_view: function(FM, text){
+                var sel_id = self.selectedCommandId();
+                if(sel_id > -1 && sel_id < interpreter.stringFilters.length){
+                    var view_id = parseInt(interpreter.stringFilters[sel_id].view_id);
+                    if(view_id != undefined && view_id > -1 && view_id < interpreter.knockoutViewList.length){
+                        FM.defaultView = interpreter.knockoutViewList[view_id];
+                        console.log(FM.defaultView);
                     }
                 }
             },
@@ -1007,6 +1017,15 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     else if('settext'.indexOf(c0) === 0){
                         if(!commit) self.frameActions.add_command({title:'settext ' + "\"" + cmd.slice(1, cmd.length).join(" ") + "\"", desc:'set text '});
                         else if(c1) self.frameActions.set_text_of_selected_card(FM, ctx.sel_card, cmd.slice(1, cmd.length).join(" "));
+                    }
+                    else if('setview'.indexOf(c0) === 0){
+                        if(!commit){
+                            self.frameActions.add_command({title:'set default view for this session', desc:'cmd: setview'});
+                            if(c1) interpreter.getMatchedViews(c1);
+                        }
+                        else if(c1){
+                            self.frameActions.set_default_view(FM, c1);
+                        }
                     }
                     else if('addtext'.indexOf(c0) === 0){
                         if(!commit) self.frameActions.add_command({title:'addtext ' + "\"" + cmd.slice(1, cmd.length).join(" ") + "\"", desc:'add text '});
@@ -1422,35 +1441,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
         }
         this.emit_valid_commands_changed=function(){
 
-                        
-            // self.commandSuggestions.removeAll();
-
-
-
-            // var cmds = self.commands;
-            // for(var i = 0; i < cmds.length; i++){
-            //     if(cmds[i].title)self.commandSuggestions.push(cmds[i]);
-            // }
-
-            // var cmds = interpreter.filteredCardTitles;
-            // for(var i = 0; i < cmds.length; i++){
-            //     if(cmds[i].title)self.commandSuggestions.push(cmds[i]);
-            // }
-
-            // var cmds = interpreter.queryQuestions;
-            // for(var i = 0; i < cmds.length; i++){
-            //     if(cmds[i].title)self.commandSuggestions.push(cmds[i]);
-            // }
-
-            
-            
-            // for(var i = 0; i < cmds.length; i++){
-            //     if(cmds[i].title)self.commandSuggestions.push(cmds[i]);
-            // }
-            
-            // self.commandSuggestions(self.commands);
             
             if(interpreter.filteredCardTitles.length)self.commandSuggestions(interpreter.filteredCardTitles);
+            else if(interpreter.stringFilters.length)self.commandSuggestions(interpreter.stringFilters);
             else if(interpreter.queryAnswers.length){
                 if(_.last(interpreter.queryAnswers).type != 'CIV'){// Command Input Value
                     interpreter.queryAnswers.push({desc:'\"'+self.commandInputVal+'\"', type:'CIV'})
@@ -1755,7 +1748,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     if(dotm){
                         var addtionaldotcount = dotm[1].length;
                         var diffdotcount = addtionaldotcount - state.addtionaldotcount;
-                        if(diffdotcount < 0){
+                        if(diffdotcount < 0 && state.dotcards.length){
                             var FM = self.currentFrame.frameModel;
                             var oldcards = state.dotcards.splice(0, state.dotcards.length - addtionaldotcount);
                             for (var i = 0; i < oldcards.length; i++) {

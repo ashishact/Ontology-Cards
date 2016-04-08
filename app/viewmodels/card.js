@@ -262,6 +262,19 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
             
             //*******************************//
             //EXTRAS
+            if(__card.card_data.card_content.text && __card.card_data.card_content.text.toLowerCase().match(/{verse\s?.*}/)){
+                self.bind_data.text("Getting verse");
+                self.bind_data.verse = ko.observable(''+Date());
+                $.getJSON('https://getbible.net/json?passage=1Jn3:13', function(json){
+                    console.log(json);
+                    // if(json){
+                    //     if(json && json.length){
+                    //         self.bind_data.text(json[0].text);
+                    //         self.bind_data.verse(json[0].bookname + ' '+ json[0].chapter + ':' + json[0].verse);
+                    //     }
+                    // }
+                })              
+            }
             if(__card.card_data.card_content.text && __card.card_data.card_content.text.toLowerCase().indexOf('{quote}')>-1){
 
                 console.log(__card.card_data.card_content.text);
@@ -272,19 +285,7 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
                     }
                 })                
             }
-            // if(__card.card_data.card_content.text){
-            //     var match = __card.card_data.card_content.title.toLowerCase().match(/{stu}(http.*)/);
-            //     if(match){
-            //         console.log(__card.card_data.card_content.text);
-            //         $.getJSON('http://www.stumbleupon.com/services/1.01/badge.getinfo?url='+match[1], function(json){
-            //             console.log(json);
-            //             if(json.result && json.result.title){
-            //                 self.bind_data.title(json.result.title);
-            //                 self.bind_data.text(json.result.title);
-            //             }
-            //         })                
-            //     }
-            // }
+            
         };
 
         this.clickedOnElement = function(data, event){

@@ -36,6 +36,41 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi'],  function
 			successivepartialmatch_cmds : [],
 			exactmatch_cmds : [],
 		}
+		this.stringFilters = [];
+
+		this.knockoutViewList = [
+			'views/cards/articlewithintro.html',
+			'views/cards/barackobama.html',
+			'views/cards/bibleverse.html',
+			'views/cards/bigquote.html',
+			'views/cards/cardmaker.html',
+			'views/cards/default.html',
+			'views/cards/despicableme.html',
+			'views/cards/followed.html',
+			'views/cards/freebirds.html',
+			'views/cards/image.html',
+			'views/cards/infobox.html',
+			'views/cards/leafeditor.html',
+			'views/cards/listwidget.html',
+			'views/cards/newton.html',
+			'views/cards/postlistwidget.html',
+			'views/cards/reflections.html',
+			'views/cards/snowman.html',
+			'views/cards/summary.html',
+			'views/cards/todo.html',
+			'views/cards/uptab.html'
+		];
+
+		this.knockoutViewListString = {source:''};
+		this.getMatchedViews = function(str){
+			self.stringFilters = [];
+			res = self.fastStringSearch(this.knockoutViewListString.source, str);
+			for (var i = 0; i < res.results.length; i++) {
+				var _t = res.results[i].split(self.searchIdDelim)[1];
+				var _id = res.results[i].split(self.searchIdDelim)[0];
+				self.stringFilters.push({view_id:_id, title:_t, desc:'', id:i});
+			}
+		}
 
 		this.preetyJson = {
 			replacer: function(match, pIndent, pKey, pVal, pEnd) {
@@ -458,32 +493,14 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi'],  function
 				// self.sc_data_space.frameview_titles = stored_data.frameview_titles;
 			}
 
-			// if(stored_data.thisframeview_ids){
-			// 	self.sc_data_space.thisframeview_ids = stored_data.thisframeview_ids;
-			// }
+			
 
-			// if(self.cardTitleSearchEngine){
-			// 	self.cardTitleSearchEngine.clear();
-			// 	self.cardTitleSearchEngine = null;
-			// }
-			// if(self.frameviewSearchEngine){
-			// 	self.frameviewSearchEngine.clear();
-			// 	self.frameviewSearchEngine = null;
-			// }
-
-			// self.cardTitleSearchEngine = new Bloodhound({
-			//     local: self.sc_data_space.card_titles,
-			//     identify: function(obj) { return obj.id; },
-			//     queryTokenizer: Bloodhound.tokenizers.whitespace,
-			//     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
-			// });
-			 	
-			// self.frameviewSearchEngine = new Bloodhound({
-			//     local: self.sc_data_space.frameview_titles,
-			//     identify: function(obj) { return obj.id; },
-			//     queryTokenizer: Bloodhound.tokenizers.whitespace,
-			//     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
-			// });
+			for (var i = 0; i < self.knockoutViewList.length; i++) {
+				var s = self.knockoutViewList[i];
+				var m = s.match(/.*\/(\w+)\.html$/);
+				if(m) self.createSearchStringSource(self.knockoutViewListString, i, m[1], 'insert');
+			}
+			// console.log(self.knockoutViewListString);
 
 		};
 
@@ -518,6 +535,27 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi'],  function
 			}
 					
 		}
+
+		this.createSearchStringSource = function(obj, id, term, mode){
+			if(mode === 'insert')
+				obj.source+= self.searchDelim + id + self.searchIdDelim + term + self.searchDelim;
+			else if(mode === 'remove'){
+				var res = self.fastStringSearch(obj.source, id);
+				if(res.results.length){
+					term = res.results[0].split(self.searchIdDelim)[1];
+					obj.source = obj.source.replace(self.searchDelim + id + self.searchIdDelim + term + self.searchDelim,'');
+				}
+			}
+			else if(mode === 'update'){
+				var res = self.fastStringSearch(obj.source, id);
+				if(res.results.length){
+					var str = res.results[0];
+					obj.source = obj.source.replace(str, id + self.searchIdDelim + term);
+				}
+			}
+					
+		};
+
 		var matchIndexOf = function(full_string , sub_string){
 			if(full_string.indexOf(sub_string) === 0) return true;
 		}

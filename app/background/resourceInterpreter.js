@@ -1,4 +1,4 @@
-	var _debug = false;
+	var _debug = true;
 	
 	//***********************************************************************************************************************************
 	//                        ONTOLOGY PREFIX MAPPING
@@ -605,7 +605,7 @@
 							me.contextStack[i].predicate.raw = pstr.toLowerCase();
 							var async = me.suggestPredicates(pstr, i,  (lastand && tokl ==3));
 							if(async) return;
-						}
+						}	
 					}
 					if(!CS.object.built && tokl>3){
 						var ostr = tokens.slice(3, tokens.length).join(' ');
@@ -1032,13 +1032,7 @@
 
 							}
 							else{
-								var match = iri.match(/.+[\/#](.+)$/);
-								if(match){
-									ans = {title:match[1].replace(/_/g, ' '), id:i, iscontext:true};
-								}
-								else{
-									ans = {title:iri, id:i, iscontext:true};
-								}
+								ans = {title:self.getTitleFromUrl(iri), id:i, iscontext:true};
 								if(label)ans.desc = '<span style=\"font-weight:bold\">'+label+ '</span>';
 							}
 							answers.push(ans);
@@ -1098,7 +1092,7 @@
 								ans.iscontext = true;
 							}
 							else{
-								ans = {title:instances[i].iri.replace(/\w+:/, '').replace(/\_/g,' '), id:i, iscontext:true};
+								ans = {title:self.getTitleFromUrl(instances[i].iri) , id:i, iscontext:true};
 							}
 							answers.push(ans);
 						}
@@ -1114,9 +1108,9 @@
 				for (var i = 0; i < me.contextStack.length; i++) {
 					//UI CONTEXT LABEL
 					//
-					var ct = me.contextStack[i].class.iri ? me.contextStack[i].class.iri.replace(/\w+:/, '') +' . ':'';
+					var ct = me.contextStack[i].class.iri ? self.getTitleFromUrl(me.contextStack[i].class.iri) + ' . ':'';
 					var ppt = me.uiContextLabels[i].prepredicate ? me.uiContextLabels[i].prepredicate+' ':'';
-					var pt = me.contextStack[i].predicate.iri ? me.contextStack[i].predicate.iri.replace(/\w+:/, '') +' . ':'';
+					var pt = me.contextStack[i].predicate.iri ? self.getTitleFromUrl(me.contextStack[i].predicate.iri) + ' . ':'';
 					var ot = me.contextStack[i].object.iri ? self.getTitleFromUrl(me.contextStack[i].object.iri) +' ':'';
 					if(i===0) me.uiContextLabels[i].text = 'all '+ ct  + ppt + pt  + ot;
 					else me.uiContextLabels[i].text = 'and '+ ct  + ppt + pt  + ot;
@@ -1132,7 +1126,7 @@
 						var bestMatch = -2000;
 						for (var i = 0; i < cs.object.suggestions.length; i++) {
 							var iri = cs.object.suggestions[i].iri ? cs.object.suggestions[i].iri : (cs.object.suggestions[i].value ? cs.object.suggestions[i].value : '');
-							var text = iri.replace(/\w+:/g,'').replace(/\_/g,' ').toLowerCase();
+							var text = self.getTitleFromUrl(iri).toLowerCase();
 							if(text.indexOf(ostr)>-1){
 								var matchFactor = text.length ? ostr.length/text.length : 0;
 								var paddingMatch = text.indexOf(ostr);
@@ -1294,8 +1288,8 @@
 				infoboxhtml = infoboxhtml.replace(/[^:]\/wiki\//g, '\"https://en.wikipedia.org/wiki/');
 
 
-				title = '<div style=\" font-weight: 700; color: rgb(100, 67, 112);  font-size: 22px;\">'+title+'</div>';				
-				if(desc) title = title + '<div style=\"color: rgb(152, 89, 101); font-family: Allerta, sans-serif; font-size: 18px; \">'+desc+'</div>';
+				title = '<div style=\" font-weight: 700; color: rgb(100, 67, 112);  font-size: 22px; letter-spacing: initial;\">'+title+'</div>';				
+				if(desc) title = title + '<div style=\"color: rgb(152, 89, 101); font-family: Allerta, sans-serif; font-size: 18px; letter-spacing: initial; \">'+desc+'</div>';
 				self.sendInstanceCards([{title:title, desc:desc, htmltext:infoboxhtml}], 'dbo:Person');
 			}
 
@@ -1387,13 +1381,7 @@
 									ans.title = o;
 								}
 								else{
-									m = s.match(/.+[\/#](.+)$/);
-									if(m){
-										ans.title = m[1].replace(/_/g, ' ');
-									}
-									else{
-										ans.title = s.replace(/_/g, ' ');
-									}
+									ans.title = self.getTitleFromUrl(s);
 								}
 								
 
@@ -1409,17 +1397,11 @@
 
 							}
 							else{
-								m = s.match(/.+[\/#](.+)$/);
-								if(m){
-									ans.title = m[1].replace(/_/g, ' ');
-								}
-								else{
-									ans.title = s.replace(/_/g, ' ');
-								}
+								ans.title = self.getTitleFromUrl(s);
 							}
 						}
 						else if(typeof(s) === 'string'){
-							ans.title = s.replace(/_/g, ' ');
+							ans.title = self.getTitleFromUrl(s);
 						}
 					}
 					else{
@@ -1936,13 +1918,7 @@
 							ans.title = o;
 						}
 						else{
-							m = s.match(/.+[\/#](.+)$/);
-							if(m){
-								ans.title = m[1].replace(/_/g, ' ');
-							}
-							else{
-								ans.title = s.replace(/_/g, ' ');
-							}
+							ans.title = self.getTitleFromUrl(s);
 						}
 						
 
@@ -1958,13 +1934,7 @@
 
 					}
 					else{
-						m = s.match(/.+[\/#](.+)$/);
-						if(m){
-							ans.title = m[1].replace(/_/g, ' ');
-						}
-						else{
-							ans.title = s.replace(/_/g, ' ');
-						}
+						ans.title = self.getTitleFromUrl(s);
 					}
 				}
 				else if(typeof(s) === 'string'){
@@ -2220,6 +2190,8 @@
 			}
 		};
 		this.getTitleFromUrl = function(url){
+			if(url.match(/%/))url = decodeURIComponent(url);
+
 			var match = url.match(/.+[\/](.+)$/);
 			if(match) return match[1].replace(/_/g, ' ');
 			else{
