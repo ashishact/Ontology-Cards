@@ -1,4 +1,4 @@
-define(['jquery','qwest'], function ($, qwest) {
+define(['jquery','qwest'], function ($) {
     var createapi = function(){
         var self = this;
         /* PRINCIPLES ############################################ */

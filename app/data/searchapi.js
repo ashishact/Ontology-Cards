@@ -1,5 +1,5 @@
 
-	define(['jquery','qwest', 'xml2json'], function ($, qwest, xml2json) {
+	define(['jquery', 'xml2json'], function ($,  xml2json) {
 		var searchapi = function(){
 			this.searchDuckDuckGo = function(query, callback){			
 				

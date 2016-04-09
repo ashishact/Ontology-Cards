@@ -1,4 +1,4 @@
-define(['knockout', 'jquery', 'mediawiki', 'searchapi'], function (ko, $, mediawiki, searchapi) {
+define(['knockout', 'jquery',  'searchapi'], function (ko, $,  searchapi) {
     var sc_popup = function(){
     	var self = this;
 
@@ -132,7 +132,7 @@ define(['knockout', 'jquery', 'mediawiki', 'searchapi'], function (ko, $, mediaw
 			    			var query = str;
 			    			if(str.slice)query = str.slice(2,str.length-1);
 			    			else if(str.substr)query = str.substr(2,str.length-1);
-			    			mediawiki.wikipedia_suggest(query, _callb);
+			    			searchapi.wikipedia_suggest(query, _callb);
 			    		}
 
 			    		else if(str.indexOf('g ')==0){//'g ' -> google suggestions
