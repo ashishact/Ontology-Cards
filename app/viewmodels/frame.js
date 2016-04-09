@@ -570,8 +570,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 };
                 //@
                 this._remove_card_from_frameview_only = function(card){
-                    console.log(self.cards.remove(card));
-                    console.log(self.grid.remove_widget(card.el));
+                    self.cards.remove(card);
+                    if(card.el) self.grid.remove_widget(card.el);
                     _.remove(self.frameview.ids, function(i){return i === card.id});
 
                     app.trigger('card:removed_from_frameview', card.id);

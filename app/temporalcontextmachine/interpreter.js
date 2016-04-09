@@ -1,4 +1,4 @@
-define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi'],  function (app, _, state, Bloodhound, searchapi) {
+define(['durandal/app', 'lodash', 'state', 'searchapi'],  function (app, _, state, searchapi) {
 	// interpretes intention from string 
 	function unique() {
 	    var a = [];

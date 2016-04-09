@@ -1,6 +1,6 @@
 //Todos
 //remove event handler on detach
-define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki', 'qwest', 'state'], function (app, ko, $, _, card_props, mediawiki, qwest, state) {
+define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props',  'state'], function (app, ko, $, _, card_props, state) {
 
     var card = function(){
         var self=this;
@@ -169,17 +169,6 @@ define(['durandal/app', 'knockout', 'jquery', 'lodash', 'card_props', 'mediawiki
 
         
         this.load_card_content_from_wikimedia = function(title){
-            // var _callb = function(res) {
-            //     self.bind_data.text(res);
-            // }
-            
-            
-            // if(/^[a-zA-Z\s]*$/.test(title)){
-            //     //mediawiki.WD(title, _callb);//works
-            //     //mediawiki.wikipedia_suggest(title, _callb);//works
-            // }
-            // mediawiki.WikiSum(title, _callb);
-
 
         };
         this.activate = function (activationData){

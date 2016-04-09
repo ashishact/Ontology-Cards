@@ -1,4 +1,4 @@
-	var _debug = true;
+	var _debug = false;
 	
 	//***********************************************************************************************************************************
 	//                        ONTOLOGY PREFIX MAPPING
@@ -588,7 +588,7 @@
 					}
 
 					if(tokens.length>4){
-						if(tokens[3]=='greater' || tokens[3]=='less'){
+						if(tokens[3].match(/(greater|more|less|smaller)/)){
 							if(tokens[4] === 'than'){
 								me.uiContextLabels[i].preobject = tokens[3]+ ' ' + tokens[4];
 								me.contextStack[i].object.comparator = tokens[3];
@@ -898,6 +898,9 @@
 
 				self.sparqlEvent.store(id, {callback:me.gotAllClassPredicates, context:{c:c, idx:contextidx}});
 				self.sparql.queryEndpoint(qu);
+				
+				if(_debug) self.sendUiFrameHint('query sent to sparql server: --- '+ qu);
+				else self.sendUiFrameHint('query sent to sparql server: --- ');
 			};
 			me.gotAllClassPredicates = function(id, param, context){
 				for (var i = 0; i < param.predicates.length; i++) {
@@ -909,6 +912,8 @@
 				}
 				tripplestore.set(context.c.iri, self.ALL_PREDICATES_URI, param.predicates);
 				me.start();
+
+				self.sendUiFrameHint(param.predicates.length+' predicates found');
 			};
 			me.callSparql = function(ostr, contextidx){
 
@@ -948,12 +953,12 @@
 					var ostr = con.object.raw;
 					var otype = con.object.type;
 
-					console.log('not last, type is ', otype);
+					if(_debug)console.log('not last, type is ', otype);
 					if(otype === 'typed-literal'){
 						var odatatype = con.object.datatype;
 						if(odatatype && odatatype.match(/xsd:/)){
-							if(con.object.comparator === 'greater'){// greater than , less than
-								console.log('greater comparator');
+							if(con.object.comparator.match(/(greater|more)/)){// greater than , less than
+								if(_debug)console.log('greater comparator');
 								if(!ostr){
 									ostr = o;// use iri if ostr doesn't exist
 									if(!ostr){// non of them are defined
@@ -977,8 +982,8 @@
 								}
 							}
 
-							else if(con.object.comparator === 'less'){
-								console.log('less comparator');
+							else if(con.object.comparator.match(/(smaller|less)/)){
+								if(_debug)console.log('less comparator');
 								if(!ostr){
 									ostr = o;// use iri if ostr doesn't exist
 									if(!ostr){// non of them are defined
@@ -1001,7 +1006,7 @@
 							}
 
 							else{
-								console.log('no comparator');
+								if(_debug)console.log('no comparator');
 								if(!ostr){
 									ostr = o;
 								}
@@ -1021,7 +1026,7 @@
 								}
 								else{
 									if(!islast){
-										console.log('no iri or no raw, not last');
+										if(_debug)console.log('no iri or no raw, not last');
 									}
 									else{//last
 										tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
@@ -1030,7 +1035,7 @@
 							}
 						}
 						else{
-							console.log('not xsd but datatype is ', odatatype);
+							if(_debug)console.log('not xsd but datatype is ', odatatype);
 							if(!ostr){
 								ostr = o;
 							}
@@ -1050,7 +1055,7 @@
 							}
 							else{
 								if(!islast){
-									console.log('no raw or no raw, not last');
+									if(_debug)console.log('no raw or no raw, not last');
 								}
 								else{
 									tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
@@ -1094,7 +1099,7 @@
 							}
 							else{
 								if(!islast){
-									console.log('not iri or raw exist, not last');
+									if(_debug)console.log('not iri or raw exist, not last');
 								}
 								else{//last
 									tripples.push({s:'?instance', p:con.predicate.iri, o:obj});
@@ -1137,7 +1142,7 @@
 							}
 							else{
 								if(!islast){
-									console.log('not iri or raw exist, not last');
+									if(_debug)console.log('not iri or raw exist, not last');
 								}
 								else{//last
 									tripples.push({s:'?instance', p:con.predicate.iri, o:obj});
@@ -1151,7 +1156,7 @@
 
 
 					// else{//last
-					// 	console.log('last');
+					// 	if(_debug)console.log('last');
 					// 	if(con.object.type === 'typed-literal'){//even if it is the last context dtype may still exist from previous search (beacuse i am storing the type and datatype if there has been no changes to subject and predicate)
 					// 		// means i have got range
 					// 		console.log('typed-literal', con.object.datatype);
@@ -1159,7 +1164,7 @@
 					// 		var o = con.object.iri;
 					// 		var odatatype = con.object.datatype;
 					// 		if(con.object.iri){
-					// 			console.log('yes iri');
+					// 			if(_debug)console.log('yes iri');
 					// 			if(odatatype && odatatype.match(/xsd:/)){
 					// 				if(con.object.comparator === 'greater'){// greater than , less than
 					// 					var o = con.object.raw ? con.object.raw : 0;
@@ -1181,34 +1186,34 @@
 					// 			}
 					// 			else{
 								
-					// 				console.log('datatype is ', odatatype);
+					// 				if(_debug)console.log('datatype is ', odatatype);
 					// 				tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
 					// 			}
 					// 		}
 					// 		else{// when no iri => meaning didn't get any iri from raw string
 					// 			// actualy its always comming here because 
-					// 			console.log('no iri');
+					// 			if(_debug)console.log('no iri');
 					// 			var ostr = con.object.raw;
 					// 			if(ostr && ostr.length){
-					// 				console.log('yes ostr');
+					// 				if(_debug)console.log('yes ostr');
 
 					// 				var odatatype = con.object.datatype;
 					// 				if(odatatype && odatatype.match(/xsd:/)){
-					// 					console.log('odatatype match xsd');
+					// 					if(_debug)console.log('odatatype match xsd');
 					// 					if(con.object.comparator === 'greater'){// greater than , less than
-					// 						console.log('greater comparator');
+					// 						if(_debug)console.log('greater comparator');
 					// 						tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
 					// 						filters.push('FILTER ( '+odatatype+'('+obj+') > '+ostr+' )');
 					// 						if(con.object.raw.match(/\d+/)) con.object.iri = con.object.raw;
 					// 					}
 					// 					else if(con.object.comparator === 'less'){
-					// 						console.log('less comparator');
+					// 						if(_debug)console.log('less comparator');
 					// 						tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
 					// 						filters.push('FILTER ( '+odatatype+'('+obj+') < '+ostr+' )');
 					// 						if(con.object.raw.match(/\d+/)) con.object.iri = con.object.raw;
 					// 					}
 					// 					else{
-					// 						console.log('no comparator');
+					// 						if(_debug)console.log('no comparator');
 					// 						tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
 					// 						tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
 
@@ -1225,7 +1230,7 @@
 					// 					}
 					// 				}
 					// 				else{
-					// 					console.log('datatype is ', odatatype);
+					// 					if(_debug)console.log('datatype is ', odatatype);
 					// 					tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
 					// 					tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
 
@@ -1244,7 +1249,7 @@
 									
 					// 			}
 					// 			else{
-					// 				console.log('no ostr');
+					// 				if(_debug)console.log('no ostr');
 					// 				tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
 					// 				tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
 					// 				filters.push('FILTER(!isLiteral(?label) || lang(?label) = "" || lang(?label) = "en" || langMatches(lang(?label), "EN"))');
@@ -1253,10 +1258,10 @@
 					// 		}
 					// 	}
 					// 	else{
-					// 		console.log('not tiped literal');
+					// 		if(_debug)console.log('not tiped literal');
 					// 		var ostr = con.object.raw;
 					// 		if(ostr && ostr.length){
-					// 			console.log('yes ostr');
+					// 			if(_debug)console.log('yes ostr');
 					// 			tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
 					// 			tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
 
@@ -1272,7 +1277,7 @@
 					// 			}
 					// 		}
 					// 		else{
-					// 			console.log('no ostr');
+					// 			if(_debug)console.log('no ostr');
 					// 			tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
 					// 			tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
 					// 			filters.push('FILTER(!isLiteral(?label) || lang(?label) = "" || lang(?label) = "en" || langMatches(lang(?label), "EN"))');
@@ -1295,6 +1300,11 @@
 
 				self.sparqlEvent.store(id, {callback:me.gotfacetedClassObjects, context:{c:c, p:p, idx:contextidx} });
 				self.sparql.queryEndpoint(qu);
+
+				if(_debug) self.sendUiFrameHint('query sent to sparql server: --- '+ qu);
+				else self.sendUiFrameHint('query sent to sparql server: --- ');
+
+
 				return true;
 			};
 			me.gotfacetedClassObjects = function(id, param, context){
@@ -1352,6 +1362,8 @@
 					if(_debug)console.log('No objects to suggest');
 					 me.sendSuggestions(false);
 				}
+
+				self.sendUiFrameHint(param.objects.length + ' objects found');
 			};
 			me.sendSuggestions = function(suggestions, idx){
 				if(suggestions){
@@ -1593,13 +1605,13 @@
 						}
 					}
 					else if(otype && otype=== 'typed-literal'){
-						console.log('typed-literal', con.object.datatype);
+						if(_debug)console.log('typed-literal', con.object.datatype);
 						prefixes.push('xsd');
 						var odatatype = con.object.datatype;
 						if(odatatype && odatatype.match(/xsd:/)){
-							if(con.object.comparator === 'greater'){// greater than , less than
+							if(con.object.comparator.match(/(greater|more)/)){// greater than , less than
 								
-								console.log('greater comparator');
+								if(_debug)console.log('greater comparator');
 								if(!ostr){
 									ostr = o;// use iri if ostr doesn't exist
 									if(!ostr){// non of them are defined
@@ -1614,10 +1626,10 @@
 								tripples.push({s:instance, p:con.predicate.iri , o:'?o_comp'+i});
 								filters.push('FILTER ( '+odatatype+'(?o_comp'+i+') > '+ostr+' )');
 							}
-							else if(con.object.comparator === 'less'){
+							else if(con.object.comparator.match(/(smaller|less)/)){
 								
 								// when doing comparision compare it with raw
-								console.log('less comparator');
+								if(_debug)console.log('less comparator');
 								if(!ostr){
 									ostr = o;// use iri if ostr doesn't exist
 									if(!ostr){// non of them are defined
@@ -1648,7 +1660,7 @@
 							}
 						}
 						else{
-							console.log('datatype is ', odatatype);
+							if(_debug)console.log('datatype is ', odatatype);
 							var isdecimal = o.match(/\./); if(isdecimal) o = '\"'+o+'\"';
 							if(ostr){
 								var objvar = '?obj'+i;
@@ -1683,6 +1695,11 @@
 
 				self.sparqlEvent.store(id, {callback:me.gotInstances, context:{idx:idx} });
 				self.sparql.queryEndpoint(qu);
+
+
+				if(_debug) self.sendUiFrameHint('query sent to sparql server: --- '+ qu);
+				else self.sendUiFrameHint('query sent to sparql server: --- ');
+
 				return true;
 			};
 			me.gotInstances = function(id, param, context){
@@ -1711,14 +1728,18 @@
 					if(_debug)console.log('no instance found');
 					me.sendInstances(false);
 				}
+
+				self.sendUiFrameHint(param.instances.length + ' instances found');
 			};
 			me.getCardFromWikipedia = function(instance, idx){
 				var title = self.getWikipediaTitle(instance.iri);
 				var action_id = 'gotCardFromWikipedia~'+instance.iri;
 				self.onlineSearchQuery.getWikipediaMobileView(title, action_id);
+				self.sendUiFrameHint('getting card about '+ title);
 			}
 			me.gotCardFromWikipedia = function(htmltext, action_id){
 				var title = self.getTitleFromPrefixed(action_id.split('~')[1]);
+				var titletext = title;// title will be modified later
 				os = tripplestore.getValues(action_id.split('~')[1], 'scards:termDescription');
 				var desc = os.length ? os[0] : null;
 					
@@ -1743,7 +1764,7 @@
 					if(text.indexOf(title)>-1){
 						if(jel.nodeName != 'IMG'){
 							jel.remove();
-							//console.log(jel);
+							//if(_debug)console.log(jel);
 						}
 					}
 				});
@@ -1761,6 +1782,8 @@
 				title = '<div style=\" font-weight: 700; color: rgb(100, 67, 112);  font-size: 22px; letter-spacing: initial;\">'+title+'</div>';				
 				if(desc) title = title + '<div style=\"color: rgb(152, 89, 101); font-family: Allerta, sans-serif; font-size: 18px; letter-spacing: initial; \">'+desc+'</div>';
 				self.sendInstanceCards([{title:title, desc:desc, htmltext:infoboxhtml}], 'dbo:Person');
+
+				self.sendUiFrameHint(titletext);
 			}
 
 			return me;
@@ -3286,6 +3309,10 @@
 
 		this.sendUiContextLabels = function(uiContextLabels){
 			sendMSG_to_tab_byId({type:'SW:UI_CONTEXT_LABEL',  msg:{uiContextLabels:uiContextLabels}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
+		};
+
+		this.sendUiFrameHint = function(framehint){
+			sendMSG_to_tab_byId({type:'SW:UI_FRAME_HINT',  msg:{framehint:framehint}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
 		};
 
 	//***********************************************************************************************************************************

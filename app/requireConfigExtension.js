@@ -19,10 +19,7 @@ requirejs.config({
         'state':'session/state',
         'detect':'../lib/htmlscrape/detect',
         'card_props':'viewmodels/card_props',
-        'mediawiki':'data/mediawiki',
         'searchapi':'data/searchapi',
-        'qwest':'../lib/qwest/qwest.min',
-        'bloodhound':'temporalcontextmachine/bloodhound',
         'interpreter':'temporalcontextmachine/interpreter',
 
     },

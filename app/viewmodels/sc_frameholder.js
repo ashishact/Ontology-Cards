@@ -1,4 +1,4 @@
-define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'state', 'mediawiki', 'searchapi', 'interpreter'], function (http, app, ko, $, card_props, state, mediawiki, searchapi, interpreter) {
+define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'state',  'searchapi', 'interpreter'], function (http, app, ko, $, card_props, state, searchapi, interpreter) {
     var sc_frameholder = function(){
         var self = this;
         this.name = "Semanticcards";
@@ -857,7 +857,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     }
                     if(navs.length > 2) FM.navigation(navs);
                 }
-            }
+            },
+            show_frame_hint : function(framehint, timeout) {
+                self.currentFrame.frameModel.actions.show_frame_hint(framehint, timeout);
+            },
 
 
         };
@@ -1294,6 +1297,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     if(request.msg.uiContextLabels.length){
                         self.frameActions.set_explore_context_in_navigation_ui(request.msg.uiContextLabels);
                     }
+                }
+                else if(request.type == 'SW:UI_FRAME_HINT'){
+                        self.frameActions.show_frame_hint(request.msg.framehint);
                 }
 
                 ////*****************************************************
@@ -1757,7 +1763,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         self.commandSuggestions.push({desc:'\"'+self.commandInputVal+'\"', type:'CIV'});
                     }
                     else{
-                        state.addtionaldotcount = 0;
                         self.appActions.showcommandSuggestions();// could have been hidden 
                         
                         for (var i = 0; i < state.dotcards.length; i++) {
@@ -1765,6 +1770,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                             self.frameActions.remove_card(FM, state.dotcards[i]);
                         }
                         state.dotcards = [];
+                        state.addtionaldotcount = 0;
                     }
                 //****************************************************************************
 
