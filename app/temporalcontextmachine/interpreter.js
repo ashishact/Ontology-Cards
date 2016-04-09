@@ -423,7 +423,7 @@ define(['durandal/app', 'lodash', 'state', 'bloodhound', 'searchapi'],  function
 		}
 
 		this.keyUpTimeOutVar = null;// used for timer event
-		minTimeIntervalForQuery = 100; // ms
+		minTimeIntervalForQuery = 200; // ms
 		this.last_query_str = '';
 
 		this.explore = function(query){

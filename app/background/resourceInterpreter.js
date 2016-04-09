@@ -15,6 +15,7 @@
 			"owl": "http://www.w3.org/2002/07/owl#",
 			"skos": "http://www.w3.org/2004/02/skos/core#",
 			"purl": "http://purl.org/dc/terms/",
+			'dbpdatatype': 'http://dbpedia.org/datatype/',
 		}
 
 		var tripplestore = new Triplestore();
@@ -269,14 +270,36 @@
 				var selectStr = 'SELECT DISTINCT ' + variableStr + ' WHERE { ';
 				var trippleStr = '';
 				for (var i = 0; i < tripples.length; i++) {
-					trippleStr+= tripples[i].s +' '+ tripples[i].p + ' ' + tripples[i].o + ' . ';
+					var keys = Object.keys(tripples[i]);
+					if(keys.length > 3){
+						var orTripples = [];
+						for (var j = 0; j < keys.length/3; j++) {
+							orTripples.push('{' + tripples[i]['s'+j] + ' ' + tripples[i]['p'+j] + ' ' + tripples[i]['o'+j] + '. }')
+						}
+						var orString = '{ ' + orTripples.join(' UNION ') + '}. ' ;
+						trippleStr+= orString;
+					}
+					else{
+						trippleStr+= tripples[i].s +' '+ tripples[i].p + ' ' + tripples[i].o + '. ';
+					}
 				}
 
 
 				var optTrippleStr = '';
 				if(opttripples){
 					for (var i = 0; i < opttripples.length; i++) {
-						optTrippleStr+= opttripples[i].s +' '+ opttripples[i].p + ' ' + opttripples[i].o + ' . ';
+						var keys = Object.keys(opttripples[i]);
+						if(keys.length > 3){
+							var orOptTripples = [];
+							for (var j = 0; j < keys.length/3; j++) {
+								orOptTripples.push('{' + opttripples[i]['s'+j] + ' ' + opttripples[i]['p'+j] + ' ' + opttripples[i]['o'+j] + '. }')
+							}
+							var orOptString = '{ ' + orOptTripples.join(' UNION ') + '}. ' ;
+							optTrippleStr+= orOptString;
+						}
+						else{
+							optTrippleStr+= opttripples[i].s +' '+ opttripples[i].p + ' ' + opttripples[i].o + '. ';
+						}
 					}
 					optTrippleStr = 'OPTIONAL { '+ optTrippleStr +' }'
 				}
@@ -498,6 +521,7 @@
 	//                        UTILITY
 	//***********************************************************************************************************************************
 		this.getPrefixed = function(iri){
+			if(!iri) return;
 			var match = iri.match(/(.+[\/#])(.+)$/);
 			if(match){
 				var ks = Object.keys(prefixMapping);
@@ -562,12 +586,23 @@
 							me.uiContextLabels[i].prepredicate = 'with';
 						}
 					}
+
+					if(tokens.length>4){
+						if(tokens[3]=='greater' || tokens[3]=='less'){
+							if(tokens[4] === 'than'){
+								me.uiContextLabels[i].preobject = tokens[3]+ ' ' + tokens[4];
+								me.contextStack[i].object.comparator = tokens[3];
+								tokens.splice(3,2);
+							}
+						}
+					}
 					
 					var tokl = tokens.length;
 					var lastand = (i==self.andSplits.length-1);
 					var lcexist = (me.lastContextStack.length > i);
 					var CS = me.contextStack[i];
 					var isfullstop = (self.dotSplit.length>1);
+
 					if(!CS.class.built && tokl>1){
 						var cstr = tokens[1];
 						var go = true;
@@ -608,6 +643,25 @@
 						}	
 					}
 					if(!CS.object.built && tokl>3){
+
+						//******************************
+						//Get datatype from the previous ones to be used as range
+						//Get it if previous predicate and class are same 
+						//as for a class and a predicate combination only one range is possible (unless otherwise explicitly given)
+						if(lcexist){
+							var con = me.contextStack[i];
+							var lcon = me.lastContextStack[i];
+							if(con.class.iri === lcon.class.iri && con.predicate.iri === lcon.predicate.iri){
+								//no need to check if they are undefined 
+								//because if they are then datatype will not be used anyway
+								con.object.type = lcon.object.type;
+								con.object.datatype = lcon.object.datatype;
+
+							}
+							// me.contextStack[i].predicate.iri = lc.predicate.iri
+						}
+						//********************************
+
 						var ostr = tokens.slice(3, tokens.length).join(' ');
 						var go = true;
 						if(lcexist && me.lastContextStack[i].object.hasOwnProperty('raw') && ostr.toLowerCase().replace(/\san?d?/,'').replace(/\s+/g, '') === me.lastContextStack[i].object.raw.replace(/\san?d?/,'').replace(/\s+/g, '') ){// replace all spaces while checking
@@ -615,6 +669,7 @@
 							if(lc.object.iri){
 								me.contextStack[i].object.iri = lc.object.iri;
 								me.contextStack[i].object.type = lc.object.type;
+								me.contextStack[i].object.datatype = lc.object.datatype;
 								me.contextStack[i].object.uiid = lc.object.uiid;
 								me.contextStack[i].object.suggestions = lc.object.suggestions;// list of suggestions
 								me.contextStack[i].object.built = true;
@@ -773,16 +828,16 @@
 						var match = p.match(/^\w+:(\w+)$/);
 						if(!match) match = p.match(/.+[\/#](.+)$/);
 						if(match){
-							var l = match[1].toLowerCase();
-							if(l.indexOf(str)>-1){
-								var matchFactor = l.length ? str.length/l.length : 0;
-								var paddingMatch = l.indexOf(str);
+							var l = match[1];
+							lm = l.toLowerCase();
+							if(lm.indexOf(str)>-1){
+								var matchFactor = lm.length ? str.length/lm.length : 0;
+								var paddingMatch = lm.indexOf(str);
 								var totMatch = matchFactor - paddingMatch;
-
 								if(totMatch > bestMatch){
 									bestMatch = totMatch;
 									selected = p;
-									if(str === l)	break;
+									if(str === lm)	break;
 								}
 							}
 						}
@@ -798,8 +853,9 @@
 							var match = p.match(/^\w+:(\w+)$/);
 							if(!match) match = p.match(/.+[\/#](.+)$/);
 							if(match){
-								var l = match[1].toLowerCase();
-								if(l.indexOf(str)>-1){
+								var l = match[1];
+								var lm = l.toLowerCase();
+								if(lm.indexOf(str)>-1){
 									var chref = p;
 									var title = p
 									var chtml = '<a data-class=\'true\' style=\'color:inherit;\' href=\''+chref+'\' target=\'_blank\' title=\''+title+'\'>'+l+'</a>';
@@ -863,66 +919,371 @@
 				var variables = [obj];
 				var tripples = [];
 				var filters = [];
+
+
 				for (var i = 0; i < me.contextStack.length; i++) {
 					
 					var c = me.contextStack[contextidx].class; if(!c.iri)return;
-					var p = me.contextStack[contextidx].predicate; if(!p.iri)return; if(p.iri.match(/http/))p.iri = '<'+p.iri+'>';
+					var p = me.contextStack[contextidx].predicate; if(!p.iri)return; if(p.iri.match(/^http/))p.iri = '<'+p.iri+'>';
 
 
 					var con = me.contextStack[i];
 					var islast = (i == me.contextStack.length-1);
 					if(!con.class.iri || !con.predicate.iri)break;
+					
+					var pushRegexFilter = function(ostr, objvar){
+						var ostrtokens = ostr.replace(/\s+/g,' ').split(' ');
+						var ostrfilters = [];
+						for (var j = 0; j < ostrtokens.length; j++) {
+							var otok = ostrtokens[j];
+							if(otok.length)ostrfilters.push('regex(str('+objvar+'), \''+otok+'\', \'i\')');
+						}
+						if(ostrfilters.length){
+							filters.push('FILTER( '+ ostrfilters.join(' && ') + ' )');
+						}						
+					}
+
 					if(i==0)tripples.push({s:'?instance', p:'a', o:con.class.iri});
-					if(!islast){
-						if(!con.object.iri){
-							var ostr = con.object.raw;
-							if(ostr && ostr.length){
-								tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
-								tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
+					var o = con.object.iri;
+					var ostr = con.object.raw;
+					var otype = con.object.type;
 
+					console.log('not last, type is ', otype);
+					if(otype === 'typed-literal'){
+						var odatatype = con.object.datatype;
+						if(odatatype && odatatype.match(/xsd:/)){
+							if(con.object.comparator === 'greater'){// greater than , less than
+								console.log('greater comparator');
+								if(!ostr){
+									ostr = o;// use iri if ostr doesn't exist
+									if(!ostr){// non of them are defined
+										ostr = '0';
+										con.object.iri = '0';
+										con.object.raw = '0';
+									}
+								}
+								else{
+									if(con.object.raw.match(/\d+/)) con.object.iri = con.object.raw;
+								}
 								
+								if(!islast){
+									tripples.push({s:'?instance', p:con.predicate.iri , o:'?obj'+i});
+									filters.push('FILTER ( '+odatatype+'('+'?obj'+i+') > '+ostr+' )');
+								}
+								else{//last
+									tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+									filters.push('FILTER ( '+odatatype+'('+obj+') > '+ostr+' )');
 
+								}
+							}
+
+							else if(con.object.comparator === 'less'){
+								console.log('less comparator');
+								if(!ostr){
+									ostr = o;// use iri if ostr doesn't exist
+									if(!ostr){// non of them are defined
+										ostr = '0';
+										con.object.iri = '0';
+										con.object.raw = '0';
+									}
+								}
+								else{
+									if(con.object.raw.match(/\d+/)) con.object.iri = con.object.raw;
+								}
+								if(!islast){
+									tripples.push({s:'?instance', p:con.predicate.iri , o:'?obj'+i});
+									filters.push('FILTER ( '+odatatype+'('+'?obj'+i+') < '+ostr+' )');
+								}
+								else{
+									tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+									filters.push('FILTER ( '+odatatype+'('+obj+') < '+ostr+' )');										
+								}
+							}
+
+							else{
+								console.log('no comparator');
+								if(!ostr){
+									ostr = o;
+								}
+								else{
+									con.object.iri = con.object.raw;
+								}
+
+								if(ostr){
+									if(!islast){
+										tripples.push({s:'?instance', p:con.predicate.iri , o:'?obj'+i});
+										pushRegexFilter(ostr, '?obj'+i);
+									}
+									else{//last
+										tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+										pushRegexFilter(ostr, obj);	
+									}
+								}
+								else{
+									if(!islast){
+										console.log('no iri or no raw, not last');
+									}
+									else{//last
+										tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+									}
+								}
+							}
+						}
+						else{
+							console.log('not xsd but datatype is ', odatatype);
+							if(!ostr){
+								ostr = o;
 							}
 							else{
-								tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
-								tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
-								filters.push('FILTER(!isLiteral(?label) || lang(?label) = "" || lang(?label) = "en" || langMatches(lang(?label), "EN"))');
+								con.object.iri = con.object.raw;
 							}
-							break;
-						}
-						else{
-							var o = con.object.iri;
-							if(o.match(/http/))o = '<'+o+'>';
-							else if(!o.match(/\w+:\w+/))o = '\"'+o+'\"'+'@en';
-							tripples.push({s:'?instance', p:con.predicate.iri , o:o});
+
+							if(ostr){
+								if(!islast){
+									tripples.push({s:'?instance', p:con.predicate.iri , o:'?obj'+i});
+									pushRegexFilter(ostr, '?obj'+i);
+								}
+								else{//last
+									tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+									pushRegexFilter(ostr, obj);	
+								}
+							}
+							else{
+								if(!islast){
+									console.log('no raw or no raw, not last');
+								}
+								else{
+									tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+								}
+							}
 						}
 					}
-					else{//last
-						var ostr = con.object.raw;
-						if(ostr && ostr.length){
-							tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
-							tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
+					else if(otype === 'uri'){
+						if(o){
+							if(o.match(/^http/))o = '<'+o+'>';
 
-							var ostrtokens = ostr.replace(/\s+/g,' ').split(' ');
-							var ostrfilters = [];
-							for (var j = 0; j < ostrtokens.length; j++) {
-								var o = ostrtokens[j];
-								if(o.length)ostrfilters.push('regex(str('+obj+'), \''+o+'\', \'i\')');
+							if(ostr){
+								if(!islast){
+									tripples.push({s0:'?instance', p0:con.predicate.iri, o0:o, s1:'?instance', p1:con.predicate.iri, o1:'?obj'+i});
+									pushRegexFilter(ostr, '?obj'+i);
+								}
+								else{//last
+									tripples.push({s0:'?instance', p0:con.predicate.iri, o0:o, s1:'?instance', p1:con.predicate.iri, o1:obj});
+									pushRegexFilter(ostr, obj);
+								}
 							}
-							if(ostrfilters.length){
-								filters.push('FILTER( '+ ostrfilters.join(' && ') + ' )');
-								filters.push('FILTER(!isLiteral(?label) || lang(?label) = "" || lang(?label) = "en" || langMatches(lang(?label), "EN"))');
+							else{
+								if(!islast){
+									tripples.push({s:'?instance', p:con.predicate.iri, o:o});
+								}
+								else{//last
+									tripples.push({s:'?instance', p:con.predicate.iri, o:obj});
+								}
 							}
 						}
 						else{
-							tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
-							tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
-							filters.push('FILTER(!isLiteral(?label) || lang(?label) = "" || lang(?label) = "en" || langMatches(lang(?label), "EN"))');
-
+							if(ostr){
+								if(!islast){
+									tripples.push({s:'?instance', p:con.predicate.iri, o:'?obj'+i});
+									pushRegexFilter(ostr, '?obj'+i);
+								}
+								else{//last
+									tripples.push({s:'?instance', p:con.predicate.iri, o:obj});
+									pushRegexFilter(ostr, obj);
+								}
+							}
+							else{
+								if(!islast){
+									console.log('not iri or raw exist, not last');
+								}
+								else{//last
+									tripples.push({s:'?instance', p:con.predicate.iri, o:obj});
+								}
+							}
 						}
 					}
+					else{
+						// literal or something else
+						if(o){
+							if(ostr){
+								if(!islast){
+									tripples.push({s0:'?instance', p0:con.predicate.iri, o0:'\"'+o+'\"', s1:'?instance', p1:con.predicate.iri, o1:'?obj'+i})
+									pushRegexFilter(ostr, '?obj'+i);
+								}
+								else{//lsat
+									tripples.push({s0:'?instance', p0:con.predicate.iri, o0:'\"'+o+'\"', s1:'?instance', p1:con.predicate.iri, o1:obj})
+									pushRegexFilter(ostr, obj);
+								}
+							}
+							else{
+								if(!islast){
+									tripples.push({s:'?instance', p:con.predicate.iri, o:'\"'+o+'\"'});
+								}
+								else{//lsat
+									tripples.push({s:'?instance', p:con.predicate.iri, o:obj});
+								}
+							}
+						}
+						else{
+							if(ostr){
+								if(!islast){
+									tripples.push({s:'?instance', p:con.predicate.iri, o:'?obj'+i});
+									pushRegexFilter(ostr, '?obj'+i);
+								}
+								else{//last
+									tripples.push({s:'?instance', p:con.predicate.iri, o:obj});
+									pushRegexFilter(ostr, obj);
+								}
+							}
+							else{
+								if(!islast){
+									console.log('not iri or raw exist, not last');
+								}
+								else{//last
+									tripples.push({s:'?instance', p:con.predicate.iri, o:obj});
+								}
+							}
+						}
+					}
+
+
+
+
+
+					// else{//last
+					// 	console.log('last');
+					// 	if(con.object.type === 'typed-literal'){//even if it is the last context dtype may still exist from previous search (beacuse i am storing the type and datatype if there has been no changes to subject and predicate)
+					// 		// means i have got range
+					// 		console.log('typed-literal', con.object.datatype);
+					// 		prefixes.push('xsd');
+					// 		var o = con.object.iri;
+					// 		var odatatype = con.object.datatype;
+					// 		if(con.object.iri){
+					// 			console.log('yes iri');
+					// 			if(odatatype && odatatype.match(/xsd:/)){
+					// 				if(con.object.comparator === 'greater'){// greater than , less than
+					// 					var o = con.object.raw ? con.object.raw : 0;
+					// 					// when doing comparision compare it with raw
+					// 					tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+					// 					filters.push('FILTER ( '+odatatype+'('+obj+') > '+o+' )');
+					// 					if(con.object.raw.match(/\d+/)) con.object.iri = con.object.raw;
+					// 				}
+					// 				else if(con.object.comparator === 'less'){
+					// 					var o = con.object.raw ? con.object.raw : 0;
+					// 					// when doing comparision compare it with raw
+					// 					tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+					// 					filters.push('FILTER ( '+odatatype+'('+obj+') < '+o+' )');
+					// 					if(con.object.raw.match(/\d+/)) con.object.iri = con.object.raw;
+					// 				}
+					// 				else{
+					// 					tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+					// 				}
+					// 			}
+					// 			else{
+								
+					// 				console.log('datatype is ', odatatype);
+					// 				tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+					// 			}
+					// 		}
+					// 		else{// when no iri => meaning didn't get any iri from raw string
+					// 			// actualy its always comming here because 
+					// 			console.log('no iri');
+					// 			var ostr = con.object.raw;
+					// 			if(ostr && ostr.length){
+					// 				console.log('yes ostr');
+
+					// 				var odatatype = con.object.datatype;
+					// 				if(odatatype && odatatype.match(/xsd:/)){
+					// 					console.log('odatatype match xsd');
+					// 					if(con.object.comparator === 'greater'){// greater than , less than
+					// 						console.log('greater comparator');
+					// 						tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+					// 						filters.push('FILTER ( '+odatatype+'('+obj+') > '+ostr+' )');
+					// 						if(con.object.raw.match(/\d+/)) con.object.iri = con.object.raw;
+					// 					}
+					// 					else if(con.object.comparator === 'less'){
+					// 						console.log('less comparator');
+					// 						tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+					// 						filters.push('FILTER ( '+odatatype+'('+obj+') < '+ostr+' )');
+					// 						if(con.object.raw.match(/\d+/)) con.object.iri = con.object.raw;
+					// 					}
+					// 					else{
+					// 						console.log('no comparator');
+					// 						tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+					// 						tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
+
+					// 						var ostrtokens = ostr.replace(/\s+/g,' ').split(' ');
+					// 						var ostrfilters = [];
+					// 						for (var j = 0; j < ostrtokens.length; j++) {
+					// 							var o = ostrtokens[j];
+					// 							if(o.length)ostrfilters.push('regex(str('+obj+'), \''+o+'\', \'i\')');
+					// 						}
+					// 						if(ostrfilters.length){
+					// 							filters.push('FILTER( '+ ostrfilters.join(' && ') + ' )');
+					// 							filters.push('FILTER(!isLiteral(?label) || lang(?label) = "" || lang(?label) = "en" || langMatches(lang(?label), "EN"))');
+					// 						}
+					// 					}
+					// 				}
+					// 				else{
+					// 					console.log('datatype is ', odatatype);
+					// 					tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+					// 					tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
+
+					// 					var ostrtokens = ostr.replace(/\s+/g,' ').split(' ');
+					// 					var ostrfilters = [];
+					// 					for (var j = 0; j < ostrtokens.length; j++) {
+					// 						var o = ostrtokens[j];
+					// 						if(o.length)ostrfilters.push('regex(str('+obj+'), \''+o+'\', \'i\')');
+					// 					}
+					// 					if(ostrfilters.length){
+					// 						filters.push('FILTER( '+ ostrfilters.join(' && ') + ' )');
+					// 						filters.push('FILTER(!isLiteral(?label) || lang(?label) = "" || lang(?label) = "en" || langMatches(lang(?label), "EN"))');
+					// 					}
+
+					// 				}
+									
+					// 			}
+					// 			else{
+					// 				console.log('no ostr');
+					// 				tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+					// 				tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
+					// 				filters.push('FILTER(!isLiteral(?label) || lang(?label) = "" || lang(?label) = "en" || langMatches(lang(?label), "EN"))');
+
+					// 			}
+					// 		}
+					// 	}
+					// 	else{
+					// 		console.log('not tiped literal');
+					// 		var ostr = con.object.raw;
+					// 		if(ostr && ostr.length){
+					// 			console.log('yes ostr');
+					// 			tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+					// 			tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
+
+					// 			var ostrtokens = ostr.replace(/\s+/g,' ').split(' ');
+					// 			var ostrfilters = [];
+					// 			for (var j = 0; j < ostrtokens.length; j++) {
+					// 				var o = ostrtokens[j];
+					// 				if(o.length)ostrfilters.push('regex(str('+obj+'), \''+o+'\', \'i\')');
+					// 			}
+					// 			if(ostrfilters.length){
+					// 				filters.push('FILTER( '+ ostrfilters.join(' && ') + ' )');
+					// 				filters.push('FILTER(!isLiteral(?label) || lang(?label) = "" || lang(?label) = "en" || langMatches(lang(?label), "EN"))');
+					// 			}
+					// 		}
+					// 		else{
+					// 			console.log('no ostr');
+					// 			tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+					// 			tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
+					// 			filters.push('FILTER(!isLiteral(?label) || lang(?label) = "" || lang(?label) = "en" || langMatches(lang(?label), "EN"))');
+
+					// 		}
+							
+					// 	}
+					// }
 
 				}
+
 				if(!(tripples.length>1))return;
 				
 				var limit = 20;
@@ -930,6 +1291,7 @@
 				var opttripples = null;
 				var qu = self.sparql.constructQuery(prefixes, variables, tripples, opttripples, filters, limit, offset);
 				if(_debug)console.log(qu);
+				// console.log(qu);
 
 				self.sparqlEvent.store(id, {callback:me.gotfacetedClassObjects, context:{c:c, p:p, idx:contextidx} });
 				self.sparql.queryEndpoint(qu);
@@ -941,7 +1303,7 @@
 					var islastcontext = (context.idx === me.contextStack.length-1);
 					for (var i = 0; i < param.objects.length; i++) {
 						var iri = param.objects[i].value;
-						if(iri.length > 3){// 'dbo:', can be * as well
+						if(iri.length  && iri != '*'){// 'dbo:', can be * as well
 							
 							var otype = param.objects[i].type;
 							if(otype == 'uri'){
@@ -958,16 +1320,27 @@
 								param.objects[i].iri = iri;
 							}
 							
+							var prefixedDatatype = self.getPrefixed(param.objects[i].datatype);
+							if(prefixedDatatype){
+								prefixedDatatype = prefixedDatatype.replace('nonNegativeInteger', 'integer');
+								// sparql query is gving error with nonNegativeInteger
+								// so populationTotal  which is nonNegativeInteger will be viewd as integer for the time being
+								param.objects[i].datatype = prefixedDatatype;
+							}
+							
 						}
 						else{
 							if(_debug)console.log(iri, param.objects[i]);
-							param.objects.splice(i,1);
+							// param.objects.splice(i,1);
+							//was giving errors
 						}
+
 					}
 
 					if(context.idx < me.contextStack.length && param.objects.length){
 						me.contextStack[context.idx].object.iri = param.objects[0].iri;
 						me.contextStack[context.idx].object.type = param.objects[0].type;
+						me.contextStack[context.idx].object.datatype = param.objects[0].datatype;
 						me.contextStack[context.idx].object.uiid = 0;
 						me.contextStack[context.idx].object.suggestions = param.objects;
 						me.contextStack[context.idx].object.built = true;
@@ -1005,6 +1378,12 @@
 						for (var i = 0; i < suggestions.length; i++) {
 							var iri = suggestions[i].iri ? suggestions[i].iri : (suggestions[i].value ? suggestions[i].value : 'blank results');
 							var label = suggestions[i].label? suggestions[i].label: null;
+							var datatype = suggestions[i].datatype? suggestions[i].datatype: null;
+							if(datatype){
+								var m = datatype.match(/dbpdatatype:(.*)/);
+								if(m) datatype = m[1];
+								else datatype = null;// xsd:double
+							}
 
 							var match = iri.match(/dbr:(.*)/);
 							var ans = {};
@@ -1029,10 +1408,10 @@
 								ans.id = i;
 								ans.iscontext = true;
 								if(label)ans.desc = ans.desc + '<br>' + '<span style=\"font-weight:bold\">'+label+ '</span>';
-
 							}
 							else{
 								ans = {title:self.getTitleFromUrl(iri), id:i, iscontext:true};
+								if(datatype) ans.title+= '  '+datatype+'\'';
 								if(label)ans.desc = '<span style=\"font-weight:bold\">'+label+ '</span>';
 							}
 							answers.push(ans);
@@ -1111,9 +1490,10 @@
 					var ct = me.contextStack[i].class.iri ? self.getTitleFromUrl(me.contextStack[i].class.iri) + ' . ':'';
 					var ppt = me.uiContextLabels[i].prepredicate ? me.uiContextLabels[i].prepredicate+' ':'';
 					var pt = me.contextStack[i].predicate.iri ? self.getTitleFromUrl(me.contextStack[i].predicate.iri) + ' . ':'';
+					var pot = me.uiContextLabels[i].preobject ? me.uiContextLabels[i].preobject+' ':'';
 					var ot = me.contextStack[i].object.iri ? self.getTitleFromUrl(me.contextStack[i].object.iri) +' ':'';
-					if(i===0) me.uiContextLabels[i].text = 'all '+ ct  + ppt + pt  + ot;
-					else me.uiContextLabels[i].text = 'and '+ ct  + ppt + pt  + ot;
+					if(i===0) me.uiContextLabels[i].text = 'all '+ ct  + ppt + pt + pot + ot;
+					else me.uiContextLabels[i].text = 'and ' + ppt + pt + pot + ot;
 				}
 				self.sendUiContextLabels(me.uiContextLabels);
 			};
@@ -1145,6 +1525,7 @@
 							cs.object.suggestions.unshift(new_s);
 							me.contextStack[idx].object.iri = new_s.iri;
 							me.contextStack[idx].object.type = new_s.type;
+							me.contextStack[idx].object.datatype = new_s.datatype;
 							me.contextStack[idx].object.built = true;
 							me.contextStack[idx].object.suggestions = cs.object.suggestions;
 
@@ -1164,42 +1545,131 @@
 				var filters = [];
 				for (var i = 0; i < me.contextStack.length; i++) {
 					var con = me.contextStack[i];
-					var otype = con.object.type;
 					if(!con.class.iri || !con.predicate.iri  || !con.object.iri){
 						if(_debug)console.log('break', me.contextStack,  con);
 						break;
 					}
+
+					var pushRegexFilter = function(ostr, objvar){
+						var ostrtokens = ostr.replace(/\s+/g,' ').split(' ');
+						var ostrfilters = [];
+						for (var j = 0; j < ostrtokens.length; j++) {
+							var otok = ostrtokens[j];
+							if(otok.length)ostrfilters.push('regex(str('+objvar+'), \''+otok+'\', \'i\')');
+						}
+						if(ostrfilters.length){
+							filters.push('FILTER( '+ ostrfilters.join(' && ') + ' )');
+						}						
+					}
+
+
 					if(i==0)tripples.push({s:instance, p:'a', o:con.class.iri});
 					
 					var o = con.object.iri;
-					if(otype && otype=='uri'){
+					var ostr = con.object.raw;
+					var otype = con.object.type;
+
+					if(otype ==='uri'){
 						if(o.match(/http/))o = '<'+o+'>';
-						tripples.push({s:instance, p:con.predicate.iri , o:o});
-					}
-					else if(otype && otype=='literal'){
+
 						var ostr = con.object.raw;
-						if(ostr && ostr.length){
+						if(ostr){
+							tripples.push({s0:instance, p0:con.predicate.iri , o0:o,    s1:instance, p1:con.predicate.iri, o1:'?o1'+i});
+							pushRegexFilter(ostr, '?o1'+i);
+						}
+						else{
+							tripples.push({s:instance, p:con.predicate.iri , o:o});
+						}
+					}
+					else if(otype ===' literal'){
+						if(ostr){
 							var objvar = '?obj'+i;
-							tripples.push({s:instance, p:con.predicate.iri , o:objvar});
-							var ostrtokens = ostr.replace(/\s+/g,' ').split(' ');
-							var ostrfilters = [];
-							for (var j = 0; j < ostrtokens.length; j++) {
-								var otok = ostrtokens[j];
-								if(otok.length)ostrfilters.push('regex(str('+objvar+'), \''+otok+'\', \'i\')');
+							tripples.push({s0:instance, p0:con.predicate.iri , o0:'\"'+o+'\"', s1:instance, p1:con.predicate.iri, o1:objvar});
+							pushRegexFilter(ostr, objvar);
+						}
+						else{
+							o = '\"'+o+'\"';
+							tripples.push({s:instance, p:con.predicate.iri , o:o});
+						}
+					}
+					else if(otype && otype=== 'typed-literal'){
+						console.log('typed-literal', con.object.datatype);
+						prefixes.push('xsd');
+						var odatatype = con.object.datatype;
+						if(odatatype && odatatype.match(/xsd:/)){
+							if(con.object.comparator === 'greater'){// greater than , less than
+								
+								console.log('greater comparator');
+								if(!ostr){
+									ostr = o;// use iri if ostr doesn't exist
+									if(!ostr){// non of them are defined
+										ostr = '0';
+										con.object.iri = '0';
+										con.object.raw = '0';
+									}
+								}
+								else{
+									if(con.object.raw.match(/\d+/)) con.object.iri = con.object.raw;
+								}
+								tripples.push({s:instance, p:con.predicate.iri , o:'?o_comp'+i});
+								filters.push('FILTER ( '+odatatype+'(?o_comp'+i+') > '+ostr+' )');
 							}
-							if(ostrfilters.length){
-								filters.push('FILTER( '+ ostrfilters.join(' && ') + ' )');
-								filters.push('FILTER(!isLiteral('+objvar+') || lang('+objvar+') = "" || lang('+objvar+') = "en" || langMatches(lang('+objvar+'), "EN"))');
+							else if(con.object.comparator === 'less'){
+								
+								// when doing comparision compare it with raw
+								console.log('less comparator');
+								if(!ostr){
+									ostr = o;// use iri if ostr doesn't exist
+									if(!ostr){// non of them are defined
+										ostr = '0';
+										con.object.iri = '0';
+										con.object.raw = '0';
+									}
+								}
+								else{
+									if(con.object.raw.match(/\d+/)) con.object.iri = con.object.raw;
+								}
+
+								tripples.push({s:instance, p:con.predicate.iri , o:'?o_comp'+i});
+								filters.push('FILTER ( '+odatatype+'(?o_comp'+i+') < '+ostr+' )');
+							}
+							else{
+								if(ostr){
+									var isdecimal = o.match(/\./); if(isdecimal) o = '\"'+o+'\"';
+									
+									var objvar = '?obj'+i;
+									tripples.push({s0:instance, p0:con.predicate.iri , o:o, s1:instance, p1:con.predicate.iri , o1:objvar});
+									pushRegexFilter(ostr, objvar);
+								}
+								else{
+									o = '\"'+o+'\"';
+									tripples.push({s:instance, p:con.predicate.iri , o:o});
+								}
 							}
 						}
 						else{
-							o = '\"'+o+'\"'+'@en';
-							tripples.push({s:instance, p:con.predicate.iri , o:o});
+							console.log('datatype is ', odatatype);
+							var isdecimal = o.match(/\./); if(isdecimal) o = '\"'+o+'\"';
+							if(ostr){
+								var objvar = '?obj'+i;
+								tripples.push({s0:instance, p0:con.predicate.iri , o:o, s1:instance, p1:con.predicate.iri , o1:objvar});
+								pushRegexFilter(ostr, objvar);
+							}
+							else{
+								//split by space and check if multiple tokens
+								tripples.push({s:instance, p:con.predicate.iri , o:o});
+							}
 						}
-
 					}
 					else{
-						tripples.push({s:instance, p:con.predicate.iri , o:o});
+						if(ostr){
+							var objvar = '?obj'+i;
+							tripples.push({s0:instance, p0:con.predicate.iri , o:o, s1:instance, p1:con.predicate.iri , o1:objvar});
+							pushRegexFilter(ostr, objvar);
+						}
+						else{
+							tripples.push({s:instance, p:con.predicate.iri , o:o});
+						}
 					}
 
 
@@ -2609,7 +3079,13 @@
 
 				self.rootTags = analyseSs[0].tags.join(' ');
 
-				self.dotSplit = question.split('.');// ['all scientist who have birthplace London and went to Oxford or Cambridge', '']
+				self.dotSplit = question.split(/\.[^\d]/);// ['all scientist who have birthplace London and went to Oxford or Cambridge', '']
+				if(question.match(/\.$/)){
+					self.dotSplit[self.dotSplit.length-1] = self.dotSplit[self.dotSplit.length-1].substr(0, self.dotSplit[self.dotSplit.length-1].length-1);
+					// remove the last \.
+					self.dotSplit.push('');// this is because if there is a \. at end regex [^\d] won't recognise that and the last 
+				}
+												// values like 0.45 should be considered floating point value
 				self.andSplits = self.dotSplit[0].split(' and ');
 				for (var i = 0; i < self.andSplits.length; i++) {
 					self.andSplits[i] = self.andSplits[i].split(' or ');
@@ -2754,6 +3230,7 @@
 					if(lcontext.object.suggestions && lcontext.object.suggestions.length > uiid && uiid> -1){
 						lcontext.object.iri = lcontext.object.suggestions[uiid].iri? lcontext.object.suggestions[uiid].iri : lcontext.object.suggestions[uiid].value;
 						lcontext.object.type = lcontext.object.suggestions[uiid].type;
+						lcontext.object.datatype = lcontext.object.suggestions[uiid].datatype;
 						lcontext.object.uiid = uiid;
 					}
 					if(_debug)console.log(lcontext.object.iri);

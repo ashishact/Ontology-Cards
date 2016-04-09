@@ -480,7 +480,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     if(instance.htmltext){
                         instance.text = instance.htmltext;
                         delete instance.htmltext;
-                        var _card_data = self.frameActions.generate_card_data(3, 5, instance, 'views/cards/infobox.html' , FM.default_sctype);                  
+                        var _card_data = self.frameActions.generate_card_data(4, 5, instance, 'views/cards/infobox.html' , FM.default_sctype);                  
                     }
                     else{
                         if(!instance.abstract && instance.comment) instance.abstract = instance.comment;
@@ -1445,9 +1445,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             if(interpreter.filteredCardTitles.length)self.commandSuggestions(interpreter.filteredCardTitles);
             else if(interpreter.stringFilters.length)self.commandSuggestions(interpreter.stringFilters);
             else if(interpreter.queryAnswers.length){
-                if(_.last(interpreter.queryAnswers).type != 'CIV'){// Command Input Value
-                    interpreter.queryAnswers.push({desc:'\"'+self.commandInputVal+'\"', type:'CIV'})
-                }
                     
                 self.commandSuggestions(interpreter.queryAnswers);  
                 // self.commandSuggestions().splice(nos, self.commandSuggestions().length);
@@ -1756,7 +1753,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                             }
                         }
                         state.addtionaldotcount = addtionaldotcount;
-                        self.appActions.hidecommandSuggestions();
+                        self.commandSuggestions.removeAll();  // self.appActions.hidecommandSuggestions();
+                        self.commandSuggestions.push({desc:'\"'+self.commandInputVal+'\"', type:'CIV'});
                     }
                     else{
                         state.addtionaldotcount = 0;
