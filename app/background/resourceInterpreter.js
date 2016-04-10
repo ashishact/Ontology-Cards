@@ -1,4 +1,4 @@
-	var _debug = true;
+	var _debug = false;
 	
 	//***********************************************************************************************************************************
 	//                        ONTOLOGY PREFIX MAPPING
@@ -91,8 +91,14 @@
 	//                        SPARQL STARTS
 	//***********************************************************************************************************************************
 
+		this.endpoints = ['http://dbpedia.org/sparql', 'http://live.dbpedia.org/sparql'];
+		this.endpoint = 'http://live.dbpedia.org/sparql';
+
 		this.createSparql = function(){
 			var me = this;
+
+			var endpointo = tripplestore.getValues('SC:app', 'SC:sparqlendpoint');
+			if(endpointo.length) self.endpoint = endpointo[0];
 
 			this.results = function(json){
 				if(_debug)console.log('sparql results', json);
@@ -243,8 +249,7 @@
 					}
 				}
 			}
-			// this.endpoint = 'http://dbpedia.org/sparql';
-			this.endpoint = 'http://live.dbpedia.org/sparql';
+
 			this.queryEndpoint = function(query){
 				if(!query || !(query.length>3))return;
 				var queryUrl = me.endpoint + "?query="+ encodeURIComponent(query) +"&format=json";
@@ -1139,142 +1144,6 @@
 						}
 					}
 
-
-
-
-
-					// else{//last
-					// 	if(_debug)console.log('last');
-					// 	if(con.object.type === 'typed-literal'){//even if it is the last context dtype may still exist from previous search (beacuse i am storing the type and datatype if there has been no changes to subject and predicate)
-					// 		// means i have got range
-					// 		console.log('typed-literal', con.object.datatype);
-					// 		prefixes.push('xsd');
-					// 		var o = con.object.iri;
-					// 		var odatatype = con.object.datatype;
-					// 		if(con.object.iri){
-					// 			if(_debug)console.log('yes iri');
-					// 			if(odatatype && odatatype.match(/xsd:/)){
-					// 				if(con.object.comparator === 'greater'){// greater than , less than
-					// 					var o = con.object.raw ? con.object.raw : 0;
-					// 					// when doing comparision compare it with raw
-					// 					tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
-					// 					filters.push('FILTER ( '+odatatype+'('+obj+') > '+o+' )');
-					// 					if(con.object.raw.match(/\d+/)) con.object.iri = con.object.raw;
-					// 				}
-					// 				else if(con.object.comparator === 'less'){
-					// 					var o = con.object.raw ? con.object.raw : 0;
-					// 					// when doing comparision compare it with raw
-					// 					tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
-					// 					filters.push('FILTER ( '+odatatype+'('+obj+') < '+o+' )');
-					// 					if(con.object.raw.match(/\d+/)) con.object.iri = con.object.raw;
-					// 				}
-					// 				else{
-					// 					tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
-					// 				}
-					// 			}
-					// 			else{
-								
-					// 				if(_debug)console.log('datatype is ', odatatype);
-					// 				tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
-					// 			}
-					// 		}
-					// 		else{// when no iri => meaning didn't get any iri from raw string
-					// 			// actualy its always comming here because 
-					// 			if(_debug)console.log('no iri');
-					// 			var ostr = con.object.raw;
-					// 			if(ostr && ostr.length){
-					// 				if(_debug)console.log('yes ostr');
-
-					// 				var odatatype = con.object.datatype;
-					// 				if(odatatype && odatatype.match(/xsd:/)){
-					// 					if(_debug)console.log('odatatype match xsd');
-					// 					if(con.object.comparator === 'greater'){// greater than , less than
-					// 						if(_debug)console.log('greater comparator');
-					// 						tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
-					// 						filters.push('FILTER ( '+odatatype+'('+obj+') > '+ostr+' )');
-					// 						if(con.object.raw.match(/\d+/)) con.object.iri = con.object.raw;
-					// 					}
-					// 					else if(con.object.comparator === 'less'){
-					// 						if(_debug)console.log('less comparator');
-					// 						tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
-					// 						filters.push('FILTER ( '+odatatype+'('+obj+') < '+ostr+' )');
-					// 						if(con.object.raw.match(/\d+/)) con.object.iri = con.object.raw;
-					// 					}
-					// 					else{
-					// 						if(_debug)console.log('no comparator');
-					// 						tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
-					// 						tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
-
-					// 						var ostrtokens = ostr.replace(/\s+/g,' ').split(' ');
-					// 						var ostrfilters = [];
-					// 						for (var j = 0; j < ostrtokens.length; j++) {
-					// 							var o = ostrtokens[j];
-					// 							if(o.length)ostrfilters.push('regex(str('+obj+'), \''+o+'\', \'i\')');
-					// 						}
-					// 						if(ostrfilters.length){
-					// 							filters.push('FILTER( '+ ostrfilters.join(' && ') + ' )');
-					// 							filters.push('FILTER(!isLiteral(?label) || lang(?label) = "" || lang(?label) = "en" || langMatches(lang(?label), "EN"))');
-					// 						}
-					// 					}
-					// 				}
-					// 				else{
-					// 					if(_debug)console.log('datatype is ', odatatype);
-					// 					tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
-					// 					tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
-
-					// 					var ostrtokens = ostr.replace(/\s+/g,' ').split(' ');
-					// 					var ostrfilters = [];
-					// 					for (var j = 0; j < ostrtokens.length; j++) {
-					// 						var o = ostrtokens[j];
-					// 						if(o.length)ostrfilters.push('regex(str('+obj+'), \''+o+'\', \'i\')');
-					// 					}
-					// 					if(ostrfilters.length){
-					// 						filters.push('FILTER( '+ ostrfilters.join(' && ') + ' )');
-					// 						filters.push('FILTER(!isLiteral(?label) || lang(?label) = "" || lang(?label) = "en" || langMatches(lang(?label), "EN"))');
-					// 					}
-
-					// 				}
-									
-					// 			}
-					// 			else{
-					// 				if(_debug)console.log('no ostr');
-					// 				tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
-					// 				tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
-					// 				filters.push('FILTER(!isLiteral(?label) || lang(?label) = "" || lang(?label) = "en" || langMatches(lang(?label), "EN"))');
-
-					// 			}
-					// 		}
-					// 	}
-					// 	else{
-					// 		if(_debug)console.log('not tiped literal');
-					// 		var ostr = con.object.raw;
-					// 		if(ostr && ostr.length){
-					// 			if(_debug)console.log('yes ostr');
-					// 			tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
-					// 			tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
-
-					// 			var ostrtokens = ostr.replace(/\s+/g,' ').split(' ');
-					// 			var ostrfilters = [];
-					// 			for (var j = 0; j < ostrtokens.length; j++) {
-					// 				var o = ostrtokens[j];
-					// 				if(o.length)ostrfilters.push('regex(str('+obj+'), \''+o+'\', \'i\')');
-					// 			}
-					// 			if(ostrfilters.length){
-					// 				filters.push('FILTER( '+ ostrfilters.join(' && ') + ' )');
-					// 				filters.push('FILTER(!isLiteral(?label) || lang(?label) = "" || lang(?label) = "en" || langMatches(lang(?label), "EN"))');
-					// 			}
-					// 		}
-					// 		else{
-					// 			if(_debug)console.log('no ostr');
-					// 			tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
-					// 			tripples.push({s:'?instance', p:'rdfs:label', o:'?label'});
-					// 			filters.push('FILTER(!isLiteral(?label) || lang(?label) = "" || lang(?label) = "en" || langMatches(lang(?label), "EN"))');
-
-					// 		}
-							
-					// 	}
-					// }
-
 				}
 
 				if(!(tripples.length>1))return;
@@ -1394,6 +1263,9 @@
 									var o = os[0];
 									ans.title = o;
 								}
+								else{
+									ans.title = self.getTitleFromUrl(iri);
+								}
 
 								os = tripplestore.getValues(s, 'scards:termDescription');
 								if(os.length && os[0]){
@@ -1416,7 +1288,6 @@
 							}
 							answers.push(ans);
 						}
-
 						self.sendClassObjectSuggestions(answers);
 					}
 				}
@@ -1447,14 +1318,18 @@
 					}
 					else{
 						for (var i = 0; i < instances.length; i++) {
-							var match = instances[i].iri.match(/dbr:(.*)/);
+							var iri = instances[i].iri;
+							var match = iri ? iri.match(/dbr:(.*)/) : null;
 							var ans = {};
 							if(match){
-								var s = instances[i].iri;
+								var s = iri;
 								var os = tripplestore.getValues(s, 'rdfs:label');
 								if(os.length){
 									var o = os[0];
 									ans.title = o;
+								}
+								else{
+									ans.title = self.getTitleFromUrl(iri);
 								}
 
 								os = tripplestore.getValues(s, 'scards:termDescription');
@@ -1528,6 +1403,7 @@
 							me.contextStack[idx].object.datatype = new_s.datatype;
 							me.contextStack[idx].object.built = true;
 							me.contextStack[idx].object.suggestions = cs.object.suggestions;
+							me.contextStack[idx].object.uiid = 0;
 
 							if(_debug)console.log('filtering');
 							me.sendSuggestions(me.contextStack[idx].object.suggestions, idx);
@@ -1674,10 +1550,20 @@
 							tripples.push({s:instance, p:con.predicate.iri , o:o});
 						}
 					}
-
-
 				}
-				if(!tripples.length)return;
+
+				// just get instances without any restriction
+				if(!tripples.length){
+					if(me.contextStack.length){
+						if(me.contextStack[0].class.iri){
+							tripples.push({s:instance, p:'a', o:me.contextStack[0].class.iri});
+						}
+					}
+				}
+
+				if(!tripples.length) return;
+
+
 				var limit = 20;
 				var offset = null;
 				var opttripples = null;
@@ -2674,7 +2560,12 @@
 			}
 		};
 		this.getTitleFromUrl = function(url){
-			if(url.match(/%/))url = decodeURIComponent(url);
+			if(url.match(/%/)){
+				try {
+					url = decodeURIComponent(url);
+				}
+				catch(err) {}
+			}
 
 			var match = url.match(/.+[\/](.+)$/);
 			if(match) return match[1].replace(/_/g, ' ');
@@ -2724,7 +2615,7 @@
 						// so no need to find from wikipedia prefix serach
 						var ecs = self.explore.contextStack;
 						var instance = _.last(ecs).instance;
-						console.log('instance', instance);
+						if(_debug) console.log('instance', instance);
 
 						self.contextStack[i].subjects = [];
 						for (var j = 0; j < instance.suggestions.length; j++) {
@@ -3218,7 +3109,12 @@
 
 			//by this time do 
 		}
+	//***********************************************************************************************************************************
+	//                        QUESTION FROM TAB ENDS
+	//***********************************************************************************************************************************
+
 		this.changeContextIndex = function(uiid, tab_id){
+			self.tab_id = tab_id;
 			if(self.uiContextType === 'object:search'){
 				var lcontextStore = _.last(self.lastContextStack);
 				if(lcontextStore.subjects && lcontextStore.subjects.length){// ther is no point in changing context if there is only one
@@ -3253,11 +3149,23 @@
 				self.explore.sendUiContextLabels();
 			}
 		}
-	//***********************************************************************************************************************************
-	//                        QUESTION FROM TAB ENDS
-	//***********************************************************************************************************************************
+		this.valueAskedFromTab = function(values, tab_id){
+			self.tab_id = tab_id;
+			if(values.id === 'endpoint'){
+				self.sendAskedValues({id:'endpoint', name:'sparql endpoint', value:self.endpoint, possible: self.endpoints});
+			}
+		}
 
-
+		this.setValueRequestFromTab = function(values, tab_id){
+			self.tab_id = tab_id;
+			if(values.id === 'endpoint'){
+				var m = (values.value && values.value.match(/http/));
+				if(m){
+					self.endpoint = values.value;
+					tripplestore.set('SC:app', 'SC:sparqlendpoint', self.endpoint);
+				}
+			}
+		}
 
 	//***********************************************************************************************************************************
 	//                        CHROME COMMUNICATION
@@ -3305,6 +3213,9 @@
 		this.sendUiFrameHint = function(framehint){
 			sendMSG_to_tab_byId({type:'SW:UI_FRAME_HINT',  msg:{framehint:framehint}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
 		};
+		this.sendAskedValues = function(values){
+			sendMSG_to_tab_byId({type:'SW:REPLY_OF_ASKED_VALUES',  msg:{values:values}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
+		}
 
 	//***********************************************************************************************************************************
 	//                        COMMUNICATION ENDS

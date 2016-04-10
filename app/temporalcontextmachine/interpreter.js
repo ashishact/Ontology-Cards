@@ -441,6 +441,12 @@ define(['durandal/app', 'lodash', 'state', 'searchapi'],  function (app, _, stat
 			// console.log('changing context to ', uiid);
 			self.send_msg_to_background("SW:CHANGE_CONTEXT_INDEX", {uiid:uiid});
 		}
+		this.askForValue = function(values){
+			self.send_msg_to_background("SW:VALUE_ASKED_FROM_TAB", {values:values});
+		}
+		this.setValueRequest = function(values){
+			self.send_msg_to_background("SW:SET_VALUE_REQUEST_FROM_TAB", {values:values});
+		}
 
 
 		//******************************************************

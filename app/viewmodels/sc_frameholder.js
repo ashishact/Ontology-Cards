@@ -20,6 +20,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
         this.currentColorId = 0;
 
 
+        this.dataDump = {};
 
 
         this.previousCardPosSize = {x:-2, y:0, w:2, h:2};
@@ -862,6 +863,20 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 self.currentFrame.frameModel.actions.show_frame_hint(framehint, timeout);
             },
 
+            set_sparql_cmd_suggestions: function(c1){
+                var values = self.dataDump['endpoint'];
+                var curr_endpoint = '?';
+                var all_possible = '';
+                if(values){
+                    all_possible = '<div>&nbsp;&nbsp;&nbsp;'+values.possible.join('</div><div>&nbsp;&nbsp;&nbsp;')+'</div>';
+                    curr_endpoint = values.value;
+                }
+                else{
+                    interpreter.askForValue({id:'endpoint'});
+                }
+                self.frameActions.add_command({title:'set sparql endpoint to: ' + "\"" + c1 + "\"", desc:'current endpoint at: '+ curr_endpoint +' <div>All possible: </div>'+ all_possible +' <div>cmd: setsparqlendpoint<div>'});
+            }
+
 
         };
         this.searchSubmit = function(commit){// commit is a complete misnomer , its actauly a dom element
@@ -1028,6 +1043,15 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         }
                         else if(c1){
                             self.frameActions.set_default_view(FM, c1);
+                        }
+                    }
+                    else if('setsparqlendpoint'.indexOf(c0) === 0){
+                        if(!commit){
+                            self.frameActions.set_sparql_cmd_suggestions(c1);
+                        }
+                        else if(c1){
+                            interpreter.setValueRequest({id:'endpoint', value:c1});
+                            delete self.dataDump['endpoint'];
                         }
                     }
                     else if('addtext'.indexOf(c0) === 0){
@@ -1302,7 +1326,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         self.frameActions.show_frame_hint(request.msg.framehint);
                 }
 
-                ////*****************************************************
+                //*****************************************************
                 //*****************************************************
                 
                 else if(request.type == 'SW:HIDDEN_WEB_ANSWERS_FACTBITES'){
@@ -1318,6 +1342,15 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         
                 }
 
+                //*****************************************************
+                //*****************************************************
+                
+                else if(request.type == 'SW:REPLY_OF_ASKED_VALUES'){
+                    var values = request.msg.values;
+                    if(values.id) self.dataDump[values.id] = values;
+                    // self.frameActions.add_command({title:values.name, desc:values.value});
+                    // self.emit_valid_commands_changed();
+                }
                 //*****************************************************
                 //*****************************************************
             });

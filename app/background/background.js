@@ -117,6 +117,13 @@ chrome.runtime.onMessage.addListener(
 		else if(request.type == 'SW:CHANGE_CONTEXT_INDEX'){
 			SW.changeContextIndex(request.msg.uiid, tab_id);
 		}
+
+		else if(request.type == 'SW:VALUE_ASKED_FROM_TAB'){
+			SW.valueAskedFromTab(request.msg.values, tab_id);
+		}
+		else if(request.type == 'SW:SET_VALUE_REQUEST_FROM_TAB'){
+			SW.setValueRequestFromTab(request.msg.values, tab_id);
+		}
 		//Hidden web
 		//*********************************************************
 		else if(request.type == 'SW:GET_FACT_BITES_RESULTS'){
