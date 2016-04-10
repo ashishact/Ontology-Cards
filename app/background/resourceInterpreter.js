@@ -1,4 +1,4 @@
-	var _debug = false;
+	var _debug = true;
 	
 	//***********************************************************************************************************************************
 	//                        ONTOLOGY PREFIX MAPPING
@@ -955,93 +955,80 @@
 
 					if(_debug)console.log('not last, type is ', otype);
 					if(otype === 'typed-literal'){
+						prefixes.push('xsd');
 						var odatatype = con.object.datatype;
-						if(odatatype && odatatype.match(/xsd:/)){
-							if(con.object.comparator.match(/(greater|more)/)){// greater than , less than
-								if(_debug)console.log('greater comparator');
-								if(!ostr){
-									ostr = o;// use iri if ostr doesn't exist
-									if(!ostr){// non of them are defined
-										ostr = '0';
-										con.object.iri = '0';
-										con.object.raw = '0';
-									}
-								}
-								else{
-									if(con.object.raw.match(/\d+/)) con.object.iri = con.object.raw;
-								}
-								
-								if(!islast){
-									tripples.push({s:'?instance', p:con.predicate.iri , o:'?obj'+i});
-									filters.push('FILTER ( '+odatatype+'('+'?obj'+i+') > '+ostr+' )');
-								}
-								else{//last
-									tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
-									filters.push('FILTER ( '+odatatype+'('+obj+') > '+ostr+' )');
-
+						if(con.object.comparator && con.object.comparator.match(/(greater|more)/)){// greater than , less than
+							if(_debug)console.log('greater comparator');
+							if(!ostr){
+								ostr = o;// use iri if ostr doesn't exist
+								if(!ostr){// non of them are defined
+									ostr = '0';
+									con.object.iri = '0';
+									con.object.raw = '0';
 								}
 							}
-
-							else if(con.object.comparator.match(/(smaller|less)/)){
-								if(_debug)console.log('less comparator');
-								if(!ostr){
-									ostr = o;// use iri if ostr doesn't exist
-									if(!ostr){// non of them are defined
-										ostr = '0';
-										con.object.iri = '0';
-										con.object.raw = '0';
-									}
-								}
-								else{
-									if(con.object.raw.match(/\d+/)) con.object.iri = con.object.raw;
-								}
-								if(!islast){
-									tripples.push({s:'?instance', p:con.predicate.iri , o:'?obj'+i});
-									filters.push('FILTER ( '+odatatype+'('+'?obj'+i+') < '+ostr+' )');
-								}
-								else{
-									tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
-									filters.push('FILTER ( '+odatatype+'('+obj+') < '+ostr+' )');										
-								}
-							}
-
 							else{
-								if(_debug)console.log('no comparator');
-								if(!ostr){
-									ostr = o;
-								}
-								else{
-									con.object.iri = con.object.raw;
-								}
+								if(con.object.raw.match(/\d+/)) con.object.iri = con.object.raw;
+							}
 
-								if(ostr){
-									if(!islast){
-										tripples.push({s:'?instance', p:con.predicate.iri , o:'?obj'+i});
-										pushRegexFilter(ostr, '?obj'+i);
-									}
-									else{//last
-										tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
-										pushRegexFilter(ostr, obj);	
-									}
-								}
-								else{
-									if(!islast){
-										if(_debug)console.log('no iri or no raw, not last');
-									}
-									else{//last
-										tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
-									}
-								}
+							if(odatatype && odatatype.match(/xsd:/)){
+							}
+							else{
+								odatatype = 'str';
+								ostr = '\''+ostr+'\'';
+							}
+							
+							if(!islast){
+								tripples.push({s:'?instance', p:con.predicate.iri , o:'?obj'+i});
+								filters.push('FILTER ( '+odatatype+'('+'?obj'+i+') > '+ostr+' )');
+							}
+							else{//last
+								tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+								filters.push('FILTER ( '+odatatype+'('+obj+') > '+ostr+' )');
+
 							}
 						}
+
+						else if(con.object.comparator && con.object.comparator.match(/(smaller|less)/)){
+							if(_debug)console.log('less comparator');
+							if(!ostr){
+								ostr = o;// use iri if ostr doesn't exist
+								if(!ostr){// non of them are defined
+									ostr = '0';
+									con.object.iri = '0';
+									con.object.raw = '0';
+								}
+							}
+							else{
+								if(con.object.raw.match(/\d+/)) con.object.iri = con.object.raw;
+							}
+
+							if(odatatype && odatatype.match(/xsd:/)){
+							}
+							else{
+								odatatype = 'str';
+								ostr = '\''+ostr+'\'';
+							}
+
+							if(!islast){
+								tripples.push({s:'?instance', p:con.predicate.iri , o:'?obj'+i});
+								filters.push('FILTER ( '+odatatype+'('+'?obj'+i+') < '+ostr+' )');
+							}
+							else{
+								tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
+								filters.push('FILTER ( '+odatatype+'('+obj+') < '+ostr+' )');										
+							}
+						}
+
 						else{
-							if(_debug)console.log('not xsd but datatype is ', odatatype);
+							if(_debug)console.log('no comparator');
 							if(!ostr){
 								ostr = o;
 							}
 							else{
 								con.object.iri = con.object.raw;
 							}
+
 
 							if(ostr){
 								if(!islast){
@@ -1055,13 +1042,14 @@
 							}
 							else{
 								if(!islast){
-									if(_debug)console.log('no raw or no raw, not last');
+									if(_debug)console.log('no iri or no raw, not last');
 								}
-								else{
+								else{//last
 									tripples.push({s:'?instance', p:con.predicate.iri , o:obj});
 								}
 							}
 						}
+						
 					}
 					else if(otype === 'uri'){
 						if(o){
@@ -1606,77 +1594,80 @@
 					}
 					else if(otype && otype=== 'typed-literal'){
 						if(_debug)console.log('typed-literal', con.object.datatype);
-						prefixes.push('xsd');
 						var odatatype = con.object.datatype;
-						if(odatatype && odatatype.match(/xsd:/)){
-							if(con.object.comparator.match(/(greater|more)/)){// greater than , less than
-								
-								if(_debug)console.log('greater comparator');
-								if(!ostr){
-									ostr = o;// use iri if ostr doesn't exist
-									if(!ostr){// non of them are defined
-										ostr = '0';
-										con.object.iri = '0';
-										con.object.raw = '0';
-									}
+						prefixes.push('xsd');
+						if(con.object.comparator && con.object.comparator.match(/(greater|more)/)){// greater than , less than
+							
+							if(_debug)console.log('greater comparator');
+							if(!ostr){
+								ostr = o;// use iri if ostr doesn't exist
+								if(!ostr){// non of them are defined
+									ostr = '0';
+									con.object.iri = '0';
+									con.object.raw = '0';
 								}
-								else{
-									if(con.object.raw.match(/\d+/)) con.object.iri = con.object.raw;
-								}
-								tripples.push({s:instance, p:con.predicate.iri , o:'?o_comp'+i});
-								filters.push('FILTER ( '+odatatype+'(?o_comp'+i+') > '+ostr+' )');
-							}
-							else if(con.object.comparator.match(/(smaller|less)/)){
-								
-								// when doing comparision compare it with raw
-								if(_debug)console.log('less comparator');
-								if(!ostr){
-									ostr = o;// use iri if ostr doesn't exist
-									if(!ostr){// non of them are defined
-										ostr = '0';
-										con.object.iri = '0';
-										con.object.raw = '0';
-									}
-								}
-								else{
-									if(con.object.raw.match(/\d+/)) con.object.iri = con.object.raw;
-								}
-
-								tripples.push({s:instance, p:con.predicate.iri , o:'?o_comp'+i});
-								filters.push('FILTER ( '+odatatype+'(?o_comp'+i+') < '+ostr+' )');
 							}
 							else{
-								if(ostr){
-									var isdecimal = o.match(/\./); if(isdecimal) o = '\"'+o+'\"';
-									
-									var objvar = '?obj'+i;
-									tripples.push({s0:instance, p0:con.predicate.iri , o:o, s1:instance, p1:con.predicate.iri , o1:objvar});
-									pushRegexFilter(ostr, objvar);
-								}
-								else{
-									o = '\"'+o+'\"';
-									tripples.push({s:instance, p:con.predicate.iri , o:o});
+								if(con.object.raw.match(/\d+/)) con.object.iri = con.object.raw;
+							}
+
+							if(odatatype && odatatype.match(/xsd:/)){
+							}
+							else{
+								odatatype = 'str';
+								ostr = '\''+ostr+'\'';
+							}
+
+							tripples.push({s:instance, p:con.predicate.iri , o:'?o_comp'+i});
+							filters.push('FILTER ( '+odatatype+'(?o_comp'+i+') > '+ostr+' )');
+						}
+						else if(con.object.comparator && con.object.comparator.match(/(smaller|less)/)){
+							
+							// when doing comparision compare it with raw
+							if(_debug)console.log('less comparator');
+							if(!ostr){
+								ostr = o;// use iri if ostr doesn't exist
+								if(!ostr){// non of them are defined
+									ostr = '0';
+									con.object.iri = '0';
+									con.object.raw = '0';
 								}
 							}
+							else{
+								if(con.object.raw.match(/\d+/)) con.object.iri = con.object.raw;
+							}
+
+							if(odatatype && odatatype.match(/xsd:/)){
+							}
+							else{
+								odatatype = 'str';
+								ostr = '\''+ostr+'\'';
+							}
+
+							tripples.push({s:instance, p:con.predicate.iri , o:'?o_comp'+i});
+							filters.push('FILTER ( '+odatatype+'(?o_comp'+i+') < '+ostr+' )');
 						}
 						else{
-							if(_debug)console.log('datatype is ', odatatype);
-							var isdecimal = o.match(/\./); if(isdecimal) o = '\"'+o+'\"';
 							if(ostr){
+								var isdecimal = o.match(/\./);
+								if(isdecimal) o = '\"'+o+'\"';
+								else if(odatatype === 'xsd:string') o = '\"'+o+'\"';
+								
 								var objvar = '?obj'+i;
-								tripples.push({s0:instance, p0:con.predicate.iri , o:o, s1:instance, p1:con.predicate.iri , o1:objvar});
+								tripples.push({s0:instance, p0:con.predicate.iri , o0:o, s1:instance, p1:con.predicate.iri , o1:objvar});
 								pushRegexFilter(ostr, objvar);
 							}
 							else{
-								//split by space and check if multiple tokens
+								o = '\"'+o+'\"';
 								tripples.push({s:instance, p:con.predicate.iri , o:o});
 							}
 						}
+						
 					}
 					else{
 						if(ostr){
 							var objvar = '?obj'+i;
-							tripples.push({s0:instance, p0:con.predicate.iri , o:o, s1:instance, p1:con.predicate.iri , o1:objvar});
+							tripples.push({s0:instance, p0:con.predicate.iri , o0:o, s1:instance, p1:con.predicate.iri , o1:objvar});
 							pushRegexFilter(ostr, objvar);
 						}
 						else{
