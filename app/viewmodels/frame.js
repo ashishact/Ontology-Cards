@@ -933,13 +933,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     var card_ = null;
 
                     if(self.get_fc_value('card_auto_position')==true){
-                        console.log('auto p true');
+                        // console.log('auto p true');
                         self.auto_position = true;
                         card_ = me.add_new_card_autoposition(card_data);
                         self.auto_position = false;// set default to false so that stored card from store are positioned in their given position and not in 0,0
                     }
                     else{
-                        console.log('auto p false');
+                        // console.log('auto p false');
                         card_ = me.add_new_card_autoposition(card_data);
                     }
                     return card_;
@@ -1458,7 +1458,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 
                 // var dw = Math.ceil( (content_size.w/card_px) - card.width);
                 
-                console.log('h', h, 'dh',dh);
+                // console.log('h', h, 'dh',dh);
                 if(dh > 0){// only expand, don't contract
                     // var area = (h+dh) * w;
                     // h = Math.round( Math.sqrt(area/1.5));

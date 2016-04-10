@@ -1816,7 +1816,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         state.dotcards = [];
                         state.addtionaldotcount = 0;
                     }
-                    console.log(state.dotcards);
                 //****************************************************************************
 
 

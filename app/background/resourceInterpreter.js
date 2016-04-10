@@ -316,11 +316,11 @@
 					optTrippleStr = 'OPTIONAL { '+ optTrippleStr +' }'
 				}
 
-
+				var orderByStr = ' ORDER BY '+ variables[0] + ' ';
 
 				var filterStr = (filters && filters.length ) ? filters.join(' . ') : '';
 
-				var qu = prefixStr + selectStr + trippleStr + optTrippleStr + filterStr + ' } ' + 'LIMIT '+limit;
+				var qu = prefixStr + selectStr + trippleStr + optTrippleStr + filterStr + ' } ' + orderByStr + 'LIMIT '+limit;
 				if(offset) qu+= ' OFFSET '+ offset;
 
 				return qu;
@@ -1725,6 +1725,7 @@
 
 			//Additional
 			$('img').css("borderRadius", "3px");
+			$('img:first').css("width", "100%");
 
 
 			var infoboxhtml = $('#result').html();	
