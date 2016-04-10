@@ -203,6 +203,13 @@
 								var instances = [];
 								for (var i = 0; i < res.length; i++) {
 									var instance = res[i][variable];
+
+									instance.extra = {};
+									for (var j = 1; j < json.head.vars.length; j++) {
+										var varj = json.head.vars[j];
+										instance.extra[varj] = res[i][varj];
+									}
+
 									instances.push(instance);
 								}
 								if(_debug)console.log('calling back with sparql results for instance');
@@ -452,22 +459,26 @@
 	//***********************************************************************************************************************************
 
 		this.createHiddenWeb = function(){
-			var me = this;
-
-			this.last_query = '';
-			this.last_answers = null;
-			this.getFactbitesResults = function(query, tab_id){
+			var me = {};
+			me.last_query = '';
+			me.last_answers = null;
+			me.prev_no_of_dots = 0;
+			me.no_of_dots = 0;
+			me.card_per_dot = 1;
+			me.getFactbitesResults = function(query, tab_id){
 				
-				var match = query.match(/([\w\s]+)(\.+)$/);
-				if(match){
-					var no_of_dot = match[2].length;
+				var match = query.match(/([\w\s]+)\.(\.+)$/);
+				me.no_of_dots = match ? match[2].length : 0;
+
+				if(match && (me.no_of_dots > me.prev_no_of_dots)){
 					var answers = [];
+					me.prev_no_of_dots = me.no_of_dots;
 
 					if((match[1] == me.last_query) &&  me.last_answers){
-						if(no_of_dot*4 < me.last_answers.length){
-							self.sendHiddenwebAnsewersFactbites(me.last_answers.slice(4*(no_of_dot-1), 4*(no_of_dot)));
+						if(me.no_of_dots*me.card_per_dot < me.last_answers.length){
+							self.sendHiddenwebAnsewersFactbites(me.last_answers.slice(me.card_per_dot * (me.no_of_dots-1),  me.card_per_dot * (me.no_of_dots)));
 						}
-							
+
 						return;
 					}
 
@@ -509,14 +520,18 @@
 								}
 							})
 							me.last_answers = answers;
-							if(no_of_dot==1){
-								self.sendHiddenwebAnsewersFactbites(answers.slice(0, 4));
+							if(me.no_of_dots == 1){
+								self.sendHiddenwebAnsewersFactbites(answers.slice(0, me.card_per_dot));
 							}
 						}
 					)
 				}
+
+				me.prev_no_of_dots = me.no_of_dots;
+
+
 			}
-			return this;
+			return me;
 		}
 		this.hiddenweb = self.createHiddenWeb();
 		
@@ -925,7 +940,7 @@
 				var id = Date.now();
 				var prefixes = ['dbo', 'rdfs', 'dbp', 'owl'];
 				var obj = '?facetedClassObjects'+ id;
-				// var variables = [obj, '?label'];
+				
 				var variables = [obj];
 				var tripples = [];
 				var filters = [];
@@ -959,6 +974,7 @@
 					var otype = con.object.type;
 
 					if(_debug)console.log('not last, type is ', otype);
+
 					if(otype === 'typed-literal'){
 						prefixes.push('xsd');
 						var odatatype = con.object.datatype;
@@ -1054,7 +1070,6 @@
 								}
 							}
 						}
-						
 					}
 					else if(otype === 'uri'){
 						if(o){
@@ -1348,6 +1363,22 @@
 							else{
 								ans = {title:self.getTitleFromUrl(instances[i].iri) , id:i, iscontext:true};
 							}
+
+							//Extra *****************
+							// if comparator was used to fetch values than extra results from sparql will be available
+							// which would be better to show here
+							// e.g. river length greater than 4564 then, each river's length will be shown here
+							 var extra = instances[i].extra;
+							 _.forIn(extra, function(v,k){
+							 	if(k && v){
+							 		var m = k.match(/o_comp_(.*)_\d+/);
+							 		if(m){
+							 			if(ans.desc) ans.desc = '<div>'+ans.desc+'</div>' + '<div>'+ '<b>'+ m[1] + '</b>' + ' : ' + v.value +'</div>';
+							 			else ans.desc = '<div>'+ '<b>'+ m[1] + '</b>' + ' : ' + v.value +'</div>';
+							 		}
+							 	}
+							 });
+							//************************
 							answers.push(ans);
 						}
 
@@ -1457,7 +1488,7 @@
 							tripples.push({s:instance, p:con.predicate.iri , o:o});
 						}
 					}
-					else if(otype ===' literal'){
+					else if(otype === 'literal'){
 						if(ostr){
 							var objvar = '?obj'+i;
 							tripples.push({s0:instance, p0:con.predicate.iri , o0:'\"'+o+'\"', s1:instance, p1:con.predicate.iri, o1:objvar});
@@ -1493,9 +1524,10 @@
 								odatatype = 'str';
 								ostr = '\''+ostr+'\'';
 							}
-
-							tripples.push({s:instance, p:con.predicate.iri , o:'?o_comp'+i});
-							filters.push('FILTER ( '+odatatype+'(?o_comp'+i+') > '+ostr+' )');
+							var o_comp = '?o_comp_'+ con.predicate.iri.replace(/^\w+:/, '') + '_' + i;
+							variables.push(o_comp);
+							tripples.push({s:instance, p:con.predicate.iri , o:o_comp});
+							filters.push('FILTER ( '+odatatype+'('+o_comp+') > '+ostr+' )');
 						}
 						else if(con.object.comparator && con.object.comparator.match(/(smaller|less)/)){
 							
@@ -1519,9 +1551,10 @@
 								odatatype = 'str';
 								ostr = '\''+ostr+'\'';
 							}
-
+							var o_comp = '?o_comp_'+ con.predicate.iri.replace(/^\w+:/, '') + '_' + i;
+							variables.push(o_comp);
 							tripples.push({s:instance, p:con.predicate.iri , o:'?o_comp'+i});
-							filters.push('FILTER ( '+odatatype+'(?o_comp'+i+') < '+ostr+' )');
+							filters.push('FILTER ( '+odatatype+'('+o_comp+') < '+ostr+' )');
 						}
 						else{
 							if(ostr){
@@ -1537,8 +1570,7 @@
 								o = '\"'+o+'\"';
 								tripples.push({s:instance, p:con.predicate.iri , o:o});
 							}
-						}
-						
+						}	
 					}
 					else{
 						if(ostr){
@@ -1610,57 +1642,15 @@
 			};
 			me.getCardFromWikipedia = function(instance, idx){
 				var title = self.getWikipediaTitle(instance.iri);
-				var action_id = 'gotCardFromWikipedia~'+instance.iri;
+				var action_id = 'explore_gotCardFromWikipedia~'+instance.iri;
 				self.onlineSearchQuery.getWikipediaMobileView(title, action_id);
 				self.sendUiFrameHint('getting card about '+ title);
 			}
 			me.gotCardFromWikipedia = function(htmltext, action_id){
-				var title = self.getTitleFromPrefixed(action_id.split('~')[1]);
-				var titletext = title;// title will be modified later
-				os = tripplestore.getValues(action_id.split('~')[1], 'scards:termDescription');
-				var desc = os.length ? os[0] : null;
-					
-
-				$('#result').html(htmltext);
-				$('table.metadata').remove();
-				$('metadata').remove();
-				$('sup').remove();
-				$('.hatnote').remove();
-
-				$('#result').find('*').each(function(i, el){
-					var jel = $(el);
-					jel.removeAttr('style');
-					jel.removeAttr('href');
-
-					// if(jel.attr('href') && jel.attr('href').match(/#cite/)) jel.remove();
-				});
-
-				$('#result').find('tr').each(function(i, el){
-					var jel = $(el);
-					var text = jel.text();
-					if(text.indexOf(title)>-1){
-						if(jel.nodeName != 'IMG'){
-							jel.remove();
-							//if(_debug)console.log(jel);
-						}
-					}
-				});
-
-				//Additional
-				$('img').css("borderRadius", "3px");
-
-
-				var infoboxhtml = $('#result').html();	
-				
-				infoboxhtml = infoboxhtml.replace(/[^:]\/\/upload\.wikimedia\.org/g, '\"https://upload.wikimedia.org');
-				infoboxhtml = infoboxhtml.replace(/[^:]\/wiki\//g, '\"https://en.wikipedia.org/wiki/');
-
-
-				title = '<div style=\" font-weight: 700; color: rgb(100, 67, 112);  font-size: 22px; letter-spacing: initial;\">'+title+'</div>';				
-				if(desc) title = title + '<div style=\"color: rgb(152, 89, 101); font-family: Allerta, sans-serif; font-size: 18px; letter-spacing: initial; \">'+desc+'</div>';
-				self.sendInstanceCards([{title:title, desc:desc, htmltext:infoboxhtml}], 'dbo:Person');
-
-				self.sendUiFrameHint(titletext);
+				var iri = action_id.split('~')[1];
+				var forwardingFunction = self.sendDotInstanceCards
+				var additionalData = {dbo_class:'dbo:Person'};
+				self.processAndSendWikipediaCard(htmltext, iri,  forwardingFunction, additionalData);
 			}
 
 			return me;
@@ -1700,7 +1690,54 @@
 				tripplestore.remove();
 			}
 		};
-	
+		
+		this.processAndSendWikipediaCard = function(htmltext, iri,  forwardingFunction, additionalData){
+			var title = self.getTitleFromPrefixed(iri);
+			var titletext = title;// title will be modified later
+			os = tripplestore.getValues(iri, 'scards:termDescription');
+			var desc = os.length ? os[0] : null;
+				
+
+			$('#result').html(htmltext);
+			$('table.metadata').remove();
+			$('metadata').remove();
+			$('sup').remove();
+			$('.hatnote').remove();
+
+			$('#result').find('*').each(function(i, el){
+				var jel = $(el);
+				jel.removeAttr('style');
+				// jel.removeAttr('href');
+
+				// if(jel.attr('href') && jel.attr('href').match(/#cite/)) jel.remove();
+			});
+
+			$('#result').find('tr').each(function(i, el){
+				var jel = $(el);
+				var text = jel.text();
+				if(text.indexOf(title)>-1){
+					if(jel.nodeName != 'IMG'){
+						jel.remove();
+						//if(_debug)console.log(jel);
+					}
+				}
+			});
+
+			//Additional
+			$('img').css("borderRadius", "3px");
+
+
+			var infoboxhtml = $('#result').html();	
+			
+			infoboxhtml = infoboxhtml.replace(/[^:]\/\/upload\.wikimedia\.org/g, '\"https://upload.wikimedia.org');
+			infoboxhtml = infoboxhtml.replace(/[^:]\/wiki\//g, '\"https://en.wikipedia.org/wiki/');
+
+
+			title = '<div style=\" font-weight: 700; color: rgb(100, 67, 112);  font-size: 22px; letter-spacing: initial;\">'+title+'</div>';				
+			if(desc) title = title + '<div style=\"color: rgb(152, 89, 101); font-family: Allerta, sans-serif; font-size: 18px; letter-spacing: initial; \">'+desc+'</div>';
+			forwardingFunction([{title:title, htmltext:infoboxhtml}], additionalData);
+			self.sendUiFrameHint(titletext);
+		}
 
 		this.processAndSendAnswers = function(){
 
@@ -1819,8 +1856,20 @@
 			
 
 			self.sendAnswers(answers);
-
 		};
+
+		this.getWikipediaCard = function(iri){
+			var title = self.getWikipediaTitle(iri);
+			var action_id = 'gotWikipediaCard~'+iri;
+			self.onlineSearchQuery.getWikipediaMobileView(title, action_id);
+			self.sendUiFrameHint('getting card about '+ title);
+		};
+		this.gotWikipediaCard = function(htmltext, action_id){
+			var iri = action_id.split('~')[1];
+			var forwardingFunction = self.sendWikipediaCards;
+			var additionalData = {};
+			self.processAndSendWikipediaCard(htmltext, iri,  forwardingFunction, additionalData);
+		}
 
 		this.onlineSearchReply = {
 			gotGoogleSuggestions: function(json, term_id){
@@ -1909,10 +1958,15 @@
 				}
 			},
 			gotWikipediaMobileView: function(json, action_id){
-				if(json.mobileview && json.mobileview.sections && json.mobileview.sections.length)
-				if(action_id.split('~')[0] === 'gotCardFromWikipedia'){
+				if(json.mobileview && json.mobileview.sections && json.mobileview.sections.length);
+				var func = action_id.split('~')[0];
+				if(func === 'explore_gotCardFromWikipedia'){
 					explore.gotCardFromWikipedia(json.mobileview.sections[0].text, action_id);
 				}
+				else if(func === 'gotWikipediaCard'){
+					self.gotWikipediaCard(json.mobileview.sections[0].text, action_id);
+				}
+				
 			},
 
 			gotUmbelConcept: function(json, term_id){
@@ -2909,9 +2963,10 @@
 					if(typeof(s) === 'string'){
 						if(s.length > 250) continue;
 						var match = s.match(/.+[\/](.+)$/);
+						if(!match) match = s.match(/dbr:(.*)/);
 						if(match){
-							self.explore.getCardFromWikipedia({ iri: 'dbr:'+match[1] }, null);// null here is idx for the explore context , i am just using this function here so idx should not be used inside this function as of now							
-							break;
+							self.explore.getCardFromWikipedia({ iri:match[1]}, null);// null here is idx for the explore context , i am just using this function here so idx should not be used inside this function as of now							
+							return idxx;
 						}
 					}
 				}
@@ -3054,9 +3109,37 @@
 							return;
 						}
 					}
-
 				}
 
+				//**************************************************************
+				//**************************************************************
+				//**************************************************************
+				
+				//To get cards from wikipedia
+				var lastdotm = question.match(/[^\.]*\w\.(\.+)$/);
+				if(lastdotm){
+					console.log(lastdotm[1]);
+					self.PCSaddtionaldotcount = self.CSaddtionaldotcount;
+					self.CSaddtionaldotcount = lastdotm[1].length;
+				}
+				else{
+					self.CSaddtionaldotcount = 0;
+				}
+
+				self.getIndividualCardForContext();// this will check if additional dots are there and act accordingly
+				// returns stack id from where the card was sent 
+				// which can be 0, but if undefined than no card was sent
+				// if it returns something rather than  undefined in that case prepare context stact shouldnot be called 
+				//OR
+				//any data in the stack must not be changed , or else the subject will change in that process, which can be different than that is shown in the UI
+				// here if the no of additional dots are greater than zero that is no of dots are greater than 1
+				// then no need to go further
+				if(self.CSaddtionaldotcount) return;
+				// no need to go further because the request was to get cards rather than explore
+
+				//**************************************************************
+				//**************************************************************
+				//**************************************************************
 
 				// note that this will only match for last sentence
 				if(termended) tokenStrings.push('shdkhskdhsk');// this will search for all matches for the next possible predicates
@@ -3070,18 +3153,6 @@
 				}
 
 
-				//**************************************************************
-				//To get cards from wikipedia
-				var lastdotm = question.match(/[^\.]*\w\.(\.+)$/);
-				if(lastdotm){
-					console.log(lastdotm[1]);
-					self.PCSaddtionaldotcount = self.CSaddtionaldotcount;
-					self.CSaddtionaldotcount = lastdotm[1].length;
-				}
-				else{
-					self.CSaddtionaldotcount = 0;
-				}
-				//**************************************************************
 				
 				
 
@@ -3102,7 +3173,6 @@
 				// if(_debug)console.log(self.lastContextStack);	
 
 
-				self.getIndividualCardForContext();// this will check if additional dots are there and act accordingly
 
 				if(_debug)console.log('\n ------------------INDIVIDUAL SEARCH END---------------------------')
 			}
@@ -3167,6 +3237,15 @@
 			}
 		}
 
+		this.getCardContentFromWikiUrl = function(url){
+			if( typeof(url) != 'string' ) return;
+			var match = url.match(/https?:\/\/\w\w\.wikipedia\.org\/wiki\/(.*)/);
+			if(match){
+				var title = match[1];
+				self.getWikipediaCard(title);
+			}
+		}
+
 	//***********************************************************************************************************************************
 	//                        CHROME COMMUNICATION
 	//***********************************************************************************************************************************
@@ -3202,8 +3281,12 @@
 
 		};
 
-		this.sendInstanceCards = function(instanceCards, dbo_class){
-			sendMSG_to_tab_byId({type:'SW:INSTANCE_CARDS',  msg:{instanceCards:instanceCards, dbo_class: dbo_class}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
+		this.sendDotInstanceCards = function(instanceCards, additionalData){
+			sendMSG_to_tab_byId({type:'SW:DOT_INSTANCE_CARDS',  msg:{instanceCards:instanceCards, dbo_class: additionalData.dbo_class}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
+		};
+
+		this.sendWikipediaCards = function(wikipediaCards, additionalData){
+			sendMSG_to_tab_byId({type:'SW:WIKIPEDIA_CARDS',  msg:{wikipediaCards:wikipediaCards}}, self.tab_id);//(msg, tab_id) => msg: {type:'TYPE', msg:{data:data}}
 		};
 
 		this.sendUiContextLabels = function(uiContextLabels){

@@ -100,7 +100,6 @@ define(['lodash'],  function (_) {
         primary_selected_card:null,
         now_selected_cards:[],
 
-        cut_or_copied_card_ids:null,
         copied_card: null,
         // {from_fv_key:key, ids[id1, id2...]}
         
@@ -138,15 +137,7 @@ define(['lodash'],  function (_) {
                 }
                 
             },
-            get_cut_or_copied_card_id: function(_state){
-                return _state.cut_or_copied_card_ids
-            },
-            set_copy_card_ids: function(obj, _state){
-                _state.cut_or_copied_card_ids = obj;
-            },
-            set_cut_card_ids: function(obj, _state){
-                _state.cut_or_copied_card_ids = obj;
-            }
+            
             
 
 

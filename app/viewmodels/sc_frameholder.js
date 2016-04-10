@@ -472,7 +472,9 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
 
                 card_ = FM.actions.add_new_card(_card_data);
                 state.actions.select_this_card(state, card_);
-                // return card_;
+                
+                return card_;
+                // this return is used to add this card to the dot group in case of ;fact command
             },
 
             add_sw_instance_card: function(instance, dbo_class){
@@ -498,6 +500,20 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 // return card_;
             },
 
+            add_wikipedia_card: function(wikipediacard){
+                FM = self.currentFrame.frameModel;
+                
+                wikipediacard.text = wikipediacard.htmltext;
+                delete wikipediacard.htmltext;// delete this or both htmltext and text will 
+                var _card_data = self.frameActions.generate_card_data(4, 5, wikipediacard, 'views/cards/infobox.html' , FM.default_sctype);                  
+                
+                _card_data.volatile = true;
+                _card_data.non_editable = true;
+
+                card_ = FM.actions.add_new_card(_card_data);
+                state.actions.select_this_card(state, card_);            
+            },
+
             add_volatile_card: function(FM, cmd){
                 var _card_data = self.frameActions.generate_card_data(2, 2, {title:'Volatile', text:'This card will not be saved to store'},  FM.defaultView , FM.default_sctype);
                 _card_data.volatile = true;
@@ -517,17 +533,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 FM.actions.remove_all_cards();
 
             },
-            copy_card: function(FM, sel_card){
-                // if(sel_card && sel_card.id){
-                //     var from_fv_key = FM.getCurrentFrameviewKeyAndTitle().fv_key;
-                //     state.actions.set_copy_card_ids({from_fv_key:from_fv_key, ids:[sel_card.id]}, state);
-                //     console.log('copied', from_fv_key);
-                // }
-                // 
-                // above is id transfer version
-                
+            copy_card: function(FM, sel_card){                
                 state.copied_card = sel_card;
-
             },
             save_card: function(FM, sel_card){
                 if(sel_card){
@@ -538,20 +545,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 }
             },
             paste_card: function(FM){
-                // var obj = state.actions.get_cut_or_copied_card_id(state);
-                //     console.log(obj);
-                // if(obj && obj.ids.length && obj.from_fv_key){
-                //     var to_fv_key = FM.getCurrentFrameviewKeyAndTitle().fv_key;
-                //     if(to_fv_key != obj.from_fv_key){
-                //         FM.actions.transfer_cards_between_frameview( obj.ids, obj.from_fv_key, to_fv_key);
-                //         FM.actions.load_cards_from_store_to_frameview(obj.ids);
-                //         state.actions.set_copy_card_ids(null, _state);
-                //         // removed the copied element or its possible to paste it every where
-                //         // 
-                //     }
-                // }
-                // // above is id transfer version
-                // 
                 if(state.copied_card) FM.actions.clone_card_and_save(state.copied_card);
             },
                     
@@ -1306,13 +1299,23 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     }
                 }
 
-                else if(request.type === 'SW:INSTANCE_CARDS'){
+                else if(request.type === 'SW:DOT_INSTANCE_CARDS'){
                     if(request.msg.instanceCards.length){
                         var icards = request.msg.instanceCards;
                         var dbo_class = request.msg.dbo_class;
-                        console.log(icards);
+                        // console.log(icards);
                         for (var i = 0; i < icards.length; i++) {
                             self.frameActions.add_sw_instance_card(icards[i], dbo_class);
+                        }
+                    }
+                }
+
+                else if(request.type === 'SW:WIKIPEDIA_CARDS'){
+                    if(request.msg.wikipediaCards.length){
+                        var wcards = request.msg.wikipediaCards;
+                        // console.log(wcards);
+                        for (var i = 0; i < wcards.length; i++) {
+                            self.frameActions.add_wikipedia_card(wcards[i]);
                         }
                     }
                 }
@@ -1336,7 +1339,8 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
 
                         var answers = request.msg.answers;
                         for (var i = 0; i < answers.length; i++) {
-                            self.frameActions.add_card_with_title_and_text(null , 'Factbites', answers[i].html);
+                            var card = self.frameActions.add_card_with_title_and_text(null , 'Factbites', answers[i].html);
+                            state.dotcards.push(card);
                         }
                     }
                         
@@ -1554,6 +1558,12 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
             },
             setCommandInputString: function(str){
                 $commandInput.val(str);
+            },
+            triggerSemanticWebAction: function(target){
+                var href = $(target).attr('href');
+                if(href.match(/https?:\/\/\w\w\.wikipedia\.org\/wiki\/.*/)){
+                    interpreter.getCardContentFromWikiUrl(href);
+                }
             },
 
             
@@ -1787,6 +1797,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         if(diffdotcount < 0 && state.dotcards.length){
                             var FM = self.currentFrame.frameModel;
                             var oldcards = state.dotcards.splice(0, state.dotcards.length - addtionaldotcount);
+                            console.log(oldcards);
                             for (var i = 0; i < oldcards.length; i++) {
                                 self.frameActions.remove_card(FM, oldcards[i]);
                             }
@@ -1805,6 +1816,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         state.dotcards = [];
                         state.addtionaldotcount = 0;
                     }
+                    console.log(state.dotcards);
                 //****************************************************************************
 
 

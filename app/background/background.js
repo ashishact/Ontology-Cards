@@ -114,10 +114,12 @@ chrome.runtime.onMessage.addListener(
 				SW.questionFromTab(request.msg.question, tab_id);
 			}
 		}
+		else if(request.type == 'SW:GET_CARD_CONTENT_FROM_WIKI_URL'){
+			SW.getCardContentFromWikiUrl(request.msg.url, tab_id);
+		}
 		else if(request.type == 'SW:CHANGE_CONTEXT_INDEX'){
 			SW.changeContextIndex(request.msg.uiid, tab_id);
 		}
-
 		else if(request.type == 'SW:VALUE_ASKED_FROM_TAB'){
 			SW.valueAskedFromTab(request.msg.values, tab_id);
 		}

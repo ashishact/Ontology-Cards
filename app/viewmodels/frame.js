@@ -946,8 +946,19 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 };
                 this.remove_card= function(card, status){
                     state.actions.removingThisCard(card, state);
-                    if(status === 'PERMANENT') me._remove_card_from_frameview_and_store(card);
-                    else if(status === 'TEMPORARY') me._remove_card_from_frameview_only(card);
+                    //check if it exist in this frameview
+                    // possibly it doesn't exit but only a link to it exist so grid engine can't remove it
+                    var allcards = self.cards();
+                    var card_exist_in_frame = false;
+                    for (var i = 0; i < allcards.length; i++) {
+                        if(card.id === allcards[i].id) card_exist_in_frame = true;
+                    }
+                    
+                    if(card_exist_in_frame){
+                        if(status === 'PERMANENT') me._remove_card_from_frameview_and_store(card);
+                        else if(status === 'TEMPORARY') me._remove_card_from_frameview_only(card);
+                    }
+
                 };
                 this.remove_all_cards = function(){
                     // var all_cards = self.cards();
@@ -1200,24 +1211,15 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     else if($(target).hasClass('cardMenuTrashIcon')){
                         self.actions.remove_card(card, 'PERMANENT');
                     }
-                    else if($(target).hasClass('cardMenuCutIcon')){
-                        // self.actions.remove_card(card, 'TEMPORARY');
-                        state.cut_or_copied_cards = [card];
+                    else if($(target).hasClass('cardMenuCopyIcon')){
+                        state.copied_card = card;
                         self.show_additional_card_menu(false);
                     }
-                    else if($(target).hasClass('cardMenuPasteIcon')){
-                        self.show_additional_card_menu(false);
-                        var _cd = state.actions.get_cut_or_copied_card(state);
-                        if(_cd){
-                            var _fv_key = self.frameviewkey_prefix + card.id;
-                            self.actions.add_cardid_to_frameview_and_save(_fv_key, _cd.id);
-                            // the above func is not implemented yet
-                            //TODO
-                        }
-                    }
+                    // else if($(target).hasClass('cardMenuPasteIcon')){
+                    // }
                 }
                 else if(target.nodeName === 'A' && state.keyboard.ctrl_down){
-                    // link to somewhere
+                    self.ctrl_clicked_on_link(target, card);
                 }
                 else{
                     if(card.TYPE.PARENT && !card.STATE.EDITING){// don't go to child if editing
@@ -1673,6 +1675,11 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             this.close_frame = function(data, event){
                 // called in UI
             };
+
+        //Semantic Web actions
+            this.ctrl_clicked_on_link = function(target, card){
+               self.appActions.triggerSemanticWebAction(target);
+            }
         
        //Keyboard
             

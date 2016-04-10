@@ -446,6 +446,9 @@ define(['durandal/app', 'lodash', 'state', 'searchapi'],  function (app, _, stat
 		}
 		this.setValueRequest = function(values){
 			self.send_msg_to_background("SW:SET_VALUE_REQUEST_FROM_TAB", {values:values});
+		};
+		this.getCardContentFromWikiUrl = function(url){
+			self.send_msg_to_background("SW:GET_CARD_CONTENT_FROM_WIKI_URL", {url:url});
 		}
 
 
