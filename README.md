@@ -40,15 +40,15 @@ Enable developer mode
 click on load unpack extension and select the cloned folder
 
 ## How to use
-1. go to any site or a open a new tab and
-1. click on the browser extension icon (or)
-2. Hit the CTRL key (don't keep it pressed, just hit and release)
+- go to any site or a open a new tab and
+- click on the browser extension icon (or)
+- Hit the CTRL key (don't keep it pressed, just hit and release)
 
 
 
 Ontology cards can be used in two ways:
-1. [Explorartory Search over DBpedia dataset](#Explore)
-2. [Creating and viewing notes](#Notes)
+- [Explorartory Search over DBpedia dataset](#Explore)
+- [Creating and viewing notes](#Notes)
 
 ## Explore
 
