@@ -35,11 +35,22 @@ clone it
 ```bash
 git clone https://github.com/ashishact/Ontology-Cards.git
 ```
-go to [chrome://extensions/](chrome://extensions/)
+go to chrome://extensions/
+Enable developer mode
 click on load unpack extension and select the cloned folder
 
 ## How to use
 1. go to any site or a open a new tab and
 1. click on the browser extension icon (or)
 2. Hit the CTRL key (don't keep it pressed, just hit and release)
+
+
+
+Ontology cards can be used in two ways:
+1. [Explorartory Search over DBpedia dataset](#Explore)
+2. [Creating and viewing notes](#Notes)
+
+## Explore
+
+## Notes
 
