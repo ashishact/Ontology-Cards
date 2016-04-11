@@ -26,14 +26,12 @@ Thus it becomes important to develop intutive ways of accessing this data while 
 what it means is, you can ask a query like this:
 ![all river with country india and length greater than 2000](https://cloud.githubusercontent.com/assets/1690108/14444862/2f86f20e-0066-11e6-9252-33d2bb3b4c14.PNG)
 
+The DBpedia ontology currently covers 685 classes which form a subsumption hierarchy and are described by 2,795 different properties. With Ontology cards you can get access to all thse classes, their properties and instances with controlled natular language query. Its a faceted query builder; at each query stage you will be provided with suggestions to refine your query until you have reached your final query string or you reach a dead end because of unavailable data.
 
-The DBpedia ontology currently covers 685 classes which form a subsumption hierarchy and are described by 2,795 different properties.
-
+See bellow to find what kind of queries are possible.
 
 ## Installation
-
 clone it
-
 ```bash
 git clone https://github.com/ashishact/Ontology-Cards.git
 ```
