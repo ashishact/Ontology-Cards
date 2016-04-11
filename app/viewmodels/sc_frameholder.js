@@ -937,19 +937,19 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                                 else self.frameActions.add_frame();
                             }
                             else if('li'.indexOf(c1) === 0 && ctx.islist){// a list item
-                                if(!commit) self.frameActions.add_command({title:'add list item', desc:'add a non editable list'});
+                                if(!commit) self.frameActions.add_command({title:'add list item', desc:'add a list item to this list <div>cmd: add li</div>'});
                                 else self.frameActions.add_list_item(FM, ctx.sel_card, cmd.slice(2,cmd.length).join(' '));
                             }
                             else if('list'.indexOf(c1) === 0){// a list
-                                if(!commit) self.frameActions.add_command({title:'add list', desc:'add a non editable list'});
+                                if(!commit) self.frameActions.add_command({title:'add list', desc:'add a non editable list <div>cmd: add list</div>'});
                                 else self.frameActions.add_list(FM, cmd.slice(2,cmd.length).join(' '));
                             }
                             else if('leaf'.indexOf(c1) === 0){// a leaf_editor
-                                if(!commit) self.frameActions.add_command({title:'add leaf', desc:'add the leaf edtor'});
+                                if(!commit) self.frameActions.add_command({title:'add leaf', desc:'add the leaf edtor <div>cmd: add leaf</div>'});
                                 else self.frameActions.add_leaf(FM, cmd);
                             }
                             else if('volatile'.indexOf(c1) === 0){
-                                if(!commit) self.frameActions.add_command({title:'add volatile', desc:'add a volatile card, It will not persist'});
+                                if(!commit) self.frameActions.add_command({title:'add volatile', desc:'add a volatile card, It will not persist <div>cmd: add volatile</div>'});
                                 else self.frameActions.add_volatile_card(FM, cmd); // cmd not used
                             }
                             else{//card with given title
@@ -981,52 +981,52 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         }
                     }
                     else if('save'.indexOf(c0) === 0){
-                        if(!commit) self.frameActions.add_command({title:'save', desc:'Will save this card  (even if it is volatile)'});
+                        if(!commit) self.frameActions.add_command({title:'save', desc:'Will save this card  (even if it is volatile) <div>cmd: save</div>'});
                         else self.frameActions.save_card(FM, ctx.sel_card);
                     }
                     else if('remove'.indexOf(c0) === 0){
                         if(cmd.length > 1){
                             if(c1.length && 'li'.indexOf(c1) === 0 && ctx.islist){// a list item
-                                if(!commit) self.frameActions.add_command({title:'remove list item', desc:'remove List item'});
+                                if(!commit) self.frameActions.add_command({title:'remove list item (not implemented yet)', desc:'remove List item  <div>cmd: remove li</div>'});
                                 // else self.frameActions.remove_list_item(FM, ctx.sel_card, cmd.slice(2,cmd.length).join(' '));
                             }
                         }
                         else{
-                            if(!commit) self.frameActions.add_command({title:'remove', desc:'Remove selected card'});
+                            if(!commit) self.frameActions.add_command({title:'remove', desc:'Remove selected card <div>cmd: remove</div>'});
                             else self.frameActions.remove_card(FM, ctx.sel_card);
                         }
                             
                     }
                     else if('copy'.indexOf(c0) === 0){
-                        if(!commit) self.frameActions.add_command({title:'copy', desc:'Copy selected card'});
+                        if(!commit) self.frameActions.add_command({title:'copy', desc:'Copy selected card <div>cmd: copy</div>'});
                         else self.frameActions.copy_card(FM, ctx.sel_card);
                     }
                     else if('clear'.indexOf(c0) === 0){
-                        if(!commit) self.frameActions.add_command({title:'remove all cards', desc:'Volatile cards will be removed for ever- cmd:clear'});
+                        if(!commit) self.frameActions.add_command({title:'remove all cards', desc:'Volatile cards will be removed for ever- <div>cmd: clear</div>'});
                         else self.frameActions.remove_all_cards(FM);
                     }
                     else if('paste'.indexOf(c0) === 0){
-                        if(!commit) self.frameActions.add_command({title:'paste', desc:'Paste copied card into frameview'});
+                        if(!commit) self.frameActions.add_command({title:'paste', desc:'Paste copied card into frameview  <div>cmd: paste</div>'});
                         else self.frameActions.paste_card(FM);
                     }
                     else if('delete'.indexOf(c0) === 0){
-                        if(!commit) self.frameActions.add_command({title:'delete', desc:'Delete selected card, You can\'t undo this action. Write full command'});
+                        if(!commit) self.frameActions.add_command({title:'delete', desc:'Delete selected card, You can\'t undo this action. Write full command  <div>cmd: delete</div>'});
                         else if(c0.length === 6) self.frameActions.delete_card(FM, ctx.sel_card);
                     }
                     else if('go'.indexOf(c0) === 0){
-                        if(!commit) self.frameActions.add_command({title:'go', desc:'Enter inside this card'});
+                        if(!commit) self.frameActions.add_command({title:'go', desc:'Enter inside this card <div>cmd: go</div>'});
                         else self.frameActions.trigger_selected_parent(FM, ctx.sel_card);
                     } 
                     else if('image'.indexOf(c0) === 0){
-                        if(!commit) self.frameActions.add_command({title:'image ', desc:'add an image card'});
+                        if(!commit) self.frameActions.add_command({title:'image ', desc:'add an image card <div>cmd: image [link]</div>'});
                         else if(c1 && c1.length < 100) self.frameActions.add_image_card(FM, c1);
                     }
                     else if('setimage'.indexOf(c0) === 0){
-                        if(!commit) self.frameActions.add_command({title:'setimage ', desc:'Set background image of this card'});
+                        if(!commit) self.frameActions.add_command({title:'setimage ', desc:'Set background image of this card  <div>cmd: setimage [link]</div>'});
                         else if(c1 && c1.length < 100) self.frameActions.set_image_of_selected_card(FM, ctx.sel_card, c1);
                     }
                     else if('settext'.indexOf(c0) === 0){
-                        if(!commit) self.frameActions.add_command({title:'settext ' + "\"" + cmd.slice(1, cmd.length).join(" ") + "\"", desc:'set text '});
+                        if(!commit) self.frameActions.add_command({title:'settext ' + "\"" + cmd.slice(1, cmd.length).join(" ") + "\"", desc:'set text <div>cmd: settext</div>'});
                         else if(c1) self.frameActions.set_text_of_selected_card(FM, ctx.sel_card, cmd.slice(1, cmd.length).join(" "));
                     }
                     else if('setview'.indexOf(c0) === 0){
@@ -1048,7 +1048,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         }
                     }
                     else if('addtext'.indexOf(c0) === 0){
-                        if(!commit) self.frameActions.add_command({title:'addtext ' + "\"" + cmd.slice(1, cmd.length).join(" ") + "\"", desc:'add text '});
+                        if(!commit) self.frameActions.add_command({title:'addtext ' + "\"" + cmd.slice(1, cmd.length).join(" ") + "\"", desc:'add text <div>cmd: addtext</div>'});
                         else if(c1) self.frameActions.add_text_to_selected_card(FM, ctx.sel_card, cmd.slice(1, cmd.length).join(" "));
                     }
                     else if('addjson'.indexOf(c0) === 0){
@@ -1060,23 +1060,23 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         else if(c1) self.frameActions.direct_sparql_query(FM, ctx.sel_card, cmd.slice(1, cmd.length).join(" "));
                     }
                     else if('setpassword'.indexOf(c0) === 0){
-                        if(!commit) self.frameActions.add_command({title:'setpassword', desc:'Setpassword'});
+                        if(!commit) self.frameActions.add_command({title:'set a password for this card', desc:'Set password if it is a parent card, <div>cmd: setpassword ****</div>'});
                         else if(c1) self.frameActions.set_password_for_selected_card(FM, ctx.sel_card, c1);
                     }
                     else if("isnonremovable".indexOf(c0) === 0){
                         if(!commit) self.frameActions.check_value('isnonremovable', ctx.sel_card.card_data.non_removable);
                     }                        
                     else if("settitle".indexOf(c0) === 0){
-                        if(!commit) self.frameActions.add_command({title:'settitle ' + "\"" + cmd.slice(1, cmd.length).join(" ") + "\"", desc:'Set this card\'s title to:'});
+                        if(!commit) self.frameActions.add_command({title:'settitle ' + "\"" + cmd.slice(1, cmd.length).join(" ") + "\"", desc:'Set this card\'s <div>cmd: settitle</div>'});
                        else if(c1) self.frameActions.set_title(FM, ctx.sel_card, cmd.slice(1, cmd.length).join(" "));
                         
                     }
                     else if('settings'.indexOf(c0) === 0){
-                        if(!commit) self.frameActions.add_command({title:'settings', desc:'Update your settings'});
+                        if(!commit) self.frameActions.add_command({title:'settings (Not implemented yet)', desc:'Update your settings'});
                         else self.frameActions.show_settings(FM);
                     }
                     else if('seeallcards'.indexOf(c0) === 0){
-                        if(!commit) self.frameActions.add_command({title:'seeallcards', desc:'load alll cards in a new frameview. It will load all the cards'});
+                        if(!commit) self.frameActions.add_command({title:'see all cards stored', desc:'load alll cards in a new frameview, it might be slow, and not wise to use this command often, instead add the card with (add cardtitle) command.  <div>cmd: seeallcards</div>'});
                         else self.frameActions.show_all_cards();
                     }
                     else if("iframe".indexOf(c0) === 0){
@@ -1084,7 +1084,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         else if(c1) self.frameActions.add_iframe_from_src(FM, c1);
                     }
                     else if("makenonremovable".indexOf(c0) === 0){
-                        if(!commit) self.frameActions.add_command({title:'makenonremovable', desc:"Make this a non removable card, useful for most important tcards , so that you don\'t remove them by mistake"});
+                        if(!commit) self.frameActions.add_command({title:'makenonremovable', desc:"Make this a non removable card, useful for most important cards , so that you don\'t remove them by mistake"});
                         else self.frameActions.make_selected_card_nonremovable(FM, ctx.sel_card);
                     }
                     else if("deletenonremovable".indexOf(c0) === 0){
@@ -1797,7 +1797,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                         if(diffdotcount < 0 && state.dotcards.length){
                             var FM = self.currentFrame.frameModel;
                             var oldcards = state.dotcards.splice(0, state.dotcards.length - addtionaldotcount);
-                            console.log(oldcards);
                             for (var i = 0; i < oldcards.length; i++) {
                                 self.frameActions.remove_card(FM, oldcards[i]);
                             }

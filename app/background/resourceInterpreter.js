@@ -316,7 +316,8 @@
 					optTrippleStr = 'OPTIONAL { '+ optTrippleStr +' }'
 				}
 
-				var orderByStr = ' ORDER BY '+ variables[0] + ' ';
+				// var orderByStr = ' ORDER BY '+ variables[0] + ' ';
+				var orderByStr = '';
 
 				var filterStr = (filters && filters.length ) ? filters.join(' . ') : '';
 
