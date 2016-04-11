@@ -22,7 +22,9 @@ And this data is accessible through SPARQL endpoints. Although different endpoin
 Thus it becomes important to develop intutive ways of accessing this data while hiding complexity of the SPARQL query language.
 
 > Ontology-Cards is an exploratory search application to perform semantic query over the DBpedia graph. Currently it supports property conjunction and object comparision (if data type is 'typed-literal')
-> what it means is you can ask a query like this-
+
+what it means is, you can ask a query like this:
+![all river with country india and length greater than 2000](https://cloud.githubusercontent.com/assets/1690108/14444862/2f86f20e-0066-11e6-9252-33d2bb3b4c14.PNG)
 
 
 The DBpedia ontology currently covers 685 classes which form a subsumption hierarchy and are described by 2,795 different properties.
