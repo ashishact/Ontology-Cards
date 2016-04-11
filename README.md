@@ -35,7 +35,7 @@ clone it
 ```bash
 git clone https://github.com/ashishact/Ontology-Cards.git
 ```
-go to ![chrome://extensions/](chrome://extensions/)
+go to [chrome://extensions/](chrome://extensions/)
 click on load unpack extension and select the cloned folder
 
 ## How to use
