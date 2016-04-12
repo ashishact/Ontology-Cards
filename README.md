@@ -132,6 +132,23 @@ All scientist with birthPlace London
 
 <a name="Cards"></a>
 ### Cards
+Add more than one dots at the end of query to get a card. A card has a set of facts from wikipedia about the current entity. For example (Note the no of trailing dots)
+```bash
+  all species with phylum Cyanobacteria.......
+```
+Results will look like
+
+  ![all species with phylum cyanobacteria](https://cloud.githubusercontent.com/assets/1690108/14451454/e49855b4-00a4-11e6-8fe4-59bff42345ef.png)
+  
+Or with the query
+```bash
+  all Film with director Tim Burton and starring Johnny Depp.......
+```
+
+  ![all film with director tim burton and starring johnny depp cards](https://cloud.githubusercontent.com/assets/1690108/14451531/7b8540ea-00a5-11e6-8bec-1d4e3cd27021.png)
+
+Cards are generated from the Wikipedia page title and all links are preserved. So Holding CTRL and clicking on any bold green link will generate another card with the title linked with the text clicked on.
+
 
 <a name="Notes"></a>
 ## Notes
