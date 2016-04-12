@@ -83,7 +83,7 @@ Here there are two ways you can do a search
 ```
   ![queen victoria father](https://cloud.githubusercontent.com/assets/1690108/14446403/6f9a4762-0073-11e6-8c4e-815756e7dfa6.PNG)
   
-- And thus you have another entitity, you can repeat the whole thing again with adding dots between context. For example you you want to find how Queen victoria's paternal grandfather looked like you can type in the command like this:
+- And thus you have another entitity, you can repeat the whole thing again with adding dots between context. For example if you want to find how Queen victoria's paternal grandfather looked like you can type in the command like this:
 ```bash
   queen victoria. father. father. depiction
 ```
