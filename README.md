@@ -98,7 +98,7 @@ To start with
 ```
   ![queen victoria father father depiction](https://cloud.githubusercontent.com/assets/1690108/14446777/304ab598-0077-11e6-930f-5418bd63a40d.PNG)
 
-### Class Search {#Class-Search}
+### Class Search <a name="Class-Search"></a>
 - Use the "All" key word to do a class search
 - Class based search follows a template like this
 ```bash
@@ -129,5 +129,5 @@ All scientist with birthPlace London
 
 ### Cards
 
-## Notes {#Notes}
+## Notes <a name="Notes"></a>
 
