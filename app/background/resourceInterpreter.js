@@ -608,6 +608,19 @@
 						}
 					}
 
+					if(tokens.length>3){
+						if(tokens[3].match(/before/)){
+							me.uiContextLabels[i].preobject = tokens[3];
+							me.contextStack[i].object.comparator = 'less';
+							tokens.splice(3,1);
+						}
+						else if(tokens[3].match(/after/)){
+							me.uiContextLabels[i].preobject = tokens[3];
+							me.contextStack[i].object.comparator = 'more';
+							tokens.splice(3,1);
+						}
+					}
+
 					if(tokens.length>4){
 						if(tokens[3].match(/(greater|more|less|smaller)/)){
 							if(tokens[4] === 'than'){
@@ -994,6 +1007,7 @@
 							}
 
 							if(odatatype && odatatype.match(/xsd:/)){
+								ostr = odatatype+ '(\''+ostr+'\')';
 							}
 							else{
 								odatatype = 'str';
@@ -1026,6 +1040,7 @@
 							}
 
 							if(odatatype && odatatype.match(/xsd:/)){
+								ostr = odatatype+ '(\''+ostr+'\')';
 							}
 							else{
 								odatatype = 'str';
@@ -1520,6 +1535,7 @@
 							}
 
 							if(odatatype && odatatype.match(/xsd:/)){
+								ostr = odatatype+ '(\''+ostr+'\')';
 							}
 							else{
 								odatatype = 'str';
@@ -1547,6 +1563,7 @@
 							}
 
 							if(odatatype && odatatype.match(/xsd:/)){
+								ostr = odatatype+ '(\''+ostr+'\')';
 							}
 							else{
 								odatatype = 'str';
@@ -1554,7 +1571,7 @@
 							}
 							var o_comp = '?o_comp_'+ con.predicate.iri.replace(/^\w+:/, '') + '_' + i;
 							variables.push(o_comp);
-							tripples.push({s:instance, p:con.predicate.iri , o:'?o_comp'+i});
+							tripples.push({s:instance, p:con.predicate.iri , o:o_comp});
 							filters.push('FILTER ( '+odatatype+'('+o_comp+') < '+ostr+' )');
 						}
 						else{

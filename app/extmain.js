@@ -6,10 +6,10 @@
 
         
         if(document.title.length){
-            app.title = "@Semanticcards " + document.title;
+            app.title = "@OntologyCards " + document.title;
         }
         else{
-            app.title = 'Semanticcards';
+            app.title = '@OntologyCards';
         }
             // document.getElementById('SEMANTICCARDS-05041993').style.backgroundColor='#1b1b1b';
         

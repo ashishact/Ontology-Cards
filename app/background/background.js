@@ -681,29 +681,29 @@ function mixed_content_callback(msg, tab_id){
 //***********************************
 //***********************************
 
-function save_all_data_to_firebase(){
-	var firebase = new Firebase('https://semanticcards.firebaseio.com');
-	var firebase_whole_store = firebase.child('whole_store');
+// function save_all_data_to_firebase(){
+// 	var firebase = new Firebase('https://semanticcards.firebaseio.com');
+// 	var firebase_whole_store = firebase.child('whole_store');
 
-	framepouch.allDocs(
-		{
-			include_docs: true,
-		},
-		function(err, res){
-		    if(!err){
-		    	if(res.rows.length){
-		    		firebase_whole_store.set(res.rows, function(err){
-		    			if(!err)if(_debug)console.log("Saved to ffirebase");
-		    			else if(_debug)console.log('Couldn\'t save to firebase');
-		    		});
-		    	}		    	
-		    }
-		    else{
-		    	if(_debug)console.log(err);
-		    }
-		}
-	);
-}
+// 	framepouch.allDocs(
+// 		{
+// 			include_docs: true,
+// 		},
+// 		function(err, res){
+// 		    if(!err){
+// 		    	if(res.rows.length){
+// 		    		firebase_whole_store.set(res.rows, function(err){
+// 		    			if(!err)if(_debug)console.log("Saved to ffirebase");
+// 		    			else if(_debug)console.log('Couldn\'t save to firebase');
+// 		    		});
+// 		    	}		    	
+// 		    }
+// 		    else{
+// 		    	if(_debug)console.log(err);
+// 		    }
+// 		}
+// 	);
+// }
 
 //*****************************************************************
 //*****************************************************************
