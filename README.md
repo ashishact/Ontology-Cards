@@ -88,7 +88,23 @@ Here there are two ways you can do a search
   queen victoria. father. father. depiction
 ```
   ![queen victoria father father depiction](https://cloud.githubusercontent.com/assets/1690108/14446777/304ab598-0077-11e6-930f-5418bd63a40d.PNG)
-  
+
+### Class Search
+- Use the all key word to do a class search
+- Class based search follows a template like this
+```bash
+  Class predicate1 object1
+    and predicate2 object2
+    and predicate3 object3
+    ...
+```
+- For example:
+```bash
+All Scientist with birthplace England and almaMater Cambridge and knownFor Math
+```
+will give the following result
+
+  ![all scientist birthplace london almamater cambridge knownfor math](https://cloud.githubusercontent.com/assets/1690108/14447172/bc431196-007a-11e6-9c39-2a0c9e7d49c2.PNG)
 
 
 ## Notes
