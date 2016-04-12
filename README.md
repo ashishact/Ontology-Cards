@@ -106,6 +106,17 @@ will give the following result
 
   ![all scientist birthplace london almamater cambridge knownfor math](https://cloud.githubusercontent.com/assets/1690108/14447172/bc431196-007a-11e6-9c39-2a0c9e7d49c2.PNG)
 
+- Caveat: You shouldn't write down all the tripples at once (Althought it will give some answer, it will not be precise)
+- At each step you have to select the objects that are suggested before you can enter the next query. For example in the prevoius query you first have to write
+```bash
+All scientist with birthPlace London
+```
+- And wait for it to suggest what it understood by the term 'London'. After it has given some suggestions , you have to select one among them and then write 
+```bast
+  and almaMater Cambridge
+```
+-And then wait for suggestions for the term 'Cambridge' and when available select one of them. and so on...
+- In case you have no idea what objects (e.g. Cambridge) to write; leave it blank and there will be some suggestions for it.
 
 ## Notes
 
