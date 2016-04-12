@@ -61,6 +61,15 @@ Here there are two ways you can do a search
 2. [Class Search](#Class-Search)
 
 ### Instance search
+
+Instance Search follows a template like this:
+```bash
+  Subject0. Predicate0. Object0(Subject1). Predicate1. Object1(Subject2)
+```
+Object at each stage becomes Subject for the next stage.
+
+To start with
+
 - Type in any keyword you want to find, you will be given a list of suggestions (by default the first in the list will be selected as context)
 ```bash
   queen victoria
