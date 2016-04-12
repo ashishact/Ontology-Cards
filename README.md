@@ -77,7 +77,7 @@ Here there are two ways you can do a search
   ![queen victoria properties](https://cloud.githubusercontent.com/assets/1690108/14446287/d4392e60-0071-11e6-8f75-1d9fa60c554d.PNG)
   
 
-- Type in a property name to get to the next context context
+- Type in a property name to get to the next context
 ```bash
   queen victoria. father
 ```
