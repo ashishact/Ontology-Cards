@@ -59,15 +59,31 @@ Here there are two ways you can do a search
 
 ### Instance search
 - Type in any keyword you want to find, you will be given a list of suggestions (by default the first in the list will be selected as context)
-  
+```bash
+  queen victoria.
+```
   ![queen victoria](https://cloud.githubusercontent.com/assets/1690108/14445940/d31d6670-006e-11e6-956d-e01bf5c43898.PNG)
 
 - If you want to change the context use the (up/down) arrow keys.
   
 - Add a . (dot or fullstop) at the end of the query to view all its properties
+```bash
+  queen victoria.
+```
 
   ![queen victoria properties](https://cloud.githubusercontent.com/assets/1690108/14446287/d4392e60-0071-11e6-8f75-1d9fa60c554d.PNG)
   
+
+- Type in a property name to get to the next context context
+```bash
+  queen victoria. father
+```
+  ![queen victoria father](https://cloud.githubusercontent.com/assets/1690108/14446403/6f9a4762-0073-11e6-8c4e-815756e7dfa6.PNG)
+  
+- And thus you have another entitity, you can repeat the whole thing again with adding dots between context. For example you you want to find how Queen victoria's paternal grandfather looked like you can type in the command like this:
+```bash
+  queen victoria. father. father. depiction
+```
 
 ## Notes
 
