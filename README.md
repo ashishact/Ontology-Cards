@@ -50,7 +50,7 @@ Ontology cards can be used in two ways:
 - [Explorartory Search over DBpedia graph](#Explore)
 - [Creating and viewing notes](#Notes)
 
-## Explore
+## Explore <a name="Explore"></a>
 Once you are inside the UI type 'explore' in the commandline and press enter. The view will change to to explore view.
 ```bash
   explore (press enter)
@@ -60,7 +60,7 @@ Here there are two ways you can do a search
 1. [Instance Search](#Instance-Search)
 2. [Class Search](#Class-Search)
 
-### Instance search
+### Instance search <a name="Instance-Search"></a>
 
 Instance Search follows a template like this:
 ```bash
@@ -127,7 +127,7 @@ All scientist with birthPlace London
 - And then wait for suggestions for the term 'Cambridge' and when available select one of them. and so on...
 - In case you have no idea what objects (e.g. Cambridge) to write; leave it blank and there will be some suggestions for it.
 
-### Cards
+### Cards <a name="Cards"></a>
 
 ## Notes <a name="Notes"></a>
 
