@@ -53,6 +53,9 @@ Ontology cards can be used in two ways:
 ## Explore
 Once you are inside the UI type 'explore' in the commandline and press enter. The view will change to to explore view.
 Here there are two ways you can do a search
+```bash
+  explore (press enter)
+```
 
 1. [Instance Search](#Instance-Search)
 2. [Class Search](#Class-Search)
