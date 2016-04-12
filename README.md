@@ -17,16 +17,16 @@ Here is a breakdown of instances in DBpedia.
 | Species	            | 251,000             |
 | Organisation	      | 241,000             |
 
-And this data is accessible through SPARQL endpoints. Although different endpoints may use different vocabularies and ontologies, they all share a common interface to access and retrieve semantic data: the SPARQL query language. In addition to being a widely-adopted W3C standard, the advantages of SPARQL are its expressivity, and its scalability for large RDF stores thanks to highly optimized SPARQL engines (e.g., Virtuoso, Jena TDB). Its main drawback is that writing SPARQL queries is a tedious and error-prone task, and is largely unaccessible to most potential users of semantic data.
+And this data is accessible through SPARQL endpoints through the [SPARQL](https://www.w3.org/TR/rdf-sparql-query/) query language. In addition to being a widely-adopted W3C standard, the advantages of SPARQL are its expressivity, and its scalability for large RDF stores thanks to highly optimized SPARQL engines (e.g., Virtuoso, Jena TDB). Its main drawback is that writing SPARQL queries is a tedious and error-prone task, and is largely unaccessible to most potential users of semantic data.
 
-Thus it becomes important to develop intutive ways of accessing this data while hiding complexity of the SPARQL query language.
+And so it becomes important to develop intutive ways of accessing this data while hiding complexity of the SPARQL query language.
 
-> Ontology-Cards is an exploratory search application to perform semantic query over the DBpedia graph. Currently it supports property conjunction and object comparision (if data type is 'typed-literal')
+> Ontology-Cards is an exploratory search application to perform semantic query over the DBpedia graph. Currently it supports property conjunction and object comparision (only if data type is 'typed-literal')
 
 what it means is, you can ask a query like this:
 ![all river with country india and length greater than 2000](https://cloud.githubusercontent.com/assets/1690108/14444862/2f86f20e-0066-11e6-9252-33d2bb3b4c14.PNG)
 
-The DBpedia ontology currently covers 685 classes which form a subsumption hierarchy and are described by 2,795 different properties. With Ontology cards you can get access to all thse classes, their properties and instances with controlled natular language query. Its a faceted query builder; at each query stage you will be provided with suggestions to refine your query until you have reached your final query string or you reach a dead end because of unavailable data.
+The DBpedia ontology currently covers 685 classes and are described by 2,795 different properties. Ontology-Cards tries to access all these classes, their properties and instances with controlled natural language query. Its a faceted query builder; at each query stage it provides suggestions to refine the next terms of query until it reaches the final query string or it meets a deadend because of unavailable data.
 
 See bellow to find what kind of queries are possible.
 
