@@ -1,7 +1,7 @@
 # Ontology-Cards
 Ontological Semantic Query in web browser (Chrome only)
 
-Uses dbpedia owl specification to query the dbpedia graph
+Uses DBpedia Ontology to query the dbpedia graph
 
 ## Abstract
 A wealth of semantic linked data is available a RDF . DBpedia alone contains several billions of triples. 
