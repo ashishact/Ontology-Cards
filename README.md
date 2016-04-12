@@ -90,7 +90,7 @@ Here there are two ways you can do a search
   ![queen victoria father father depiction](https://cloud.githubusercontent.com/assets/1690108/14446777/304ab598-0077-11e6-930f-5418bd63a40d.PNG)
 
 ### Class Search
-- Use the all key word to do a class search
+- Use the "All" key word to do a class search
 - Class based search follows a template like this
 ```bash
   Class predicate1 object1
@@ -115,7 +115,7 @@ All scientist with birthPlace London
 ```bast
   and almaMater Cambridge
 ```
--And then wait for suggestions for the term 'Cambridge' and when available select one of them. and so on...
+- And then wait for suggestions for the term 'Cambridge' and when available select one of them. and so on...
 - In case you have no idea what objects (e.g. Cambridge) to write; leave it blank and there will be some suggestions for it.
 
 ## Notes
