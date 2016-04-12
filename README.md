@@ -98,7 +98,7 @@ To start with
 ```
   ![queen victoria father father depiction](https://cloud.githubusercontent.com/assets/1690108/14446777/304ab598-0077-11e6-930f-5418bd63a40d.PNG)
 
-### Class Search
+### Class Search {#Class-Search}
 - Use the "All" key word to do a class search
 - Class based search follows a template like this
 ```bash
@@ -127,5 +127,7 @@ All scientist with birthPlace London
 - And then wait for suggestions for the term 'Cambridge' and when available select one of them. and so on...
 - In case you have no idea what objects (e.g. Cambridge) to write; leave it blank and there will be some suggestions for it.
 
-## Notes
+### Cards
+
+## Notes {#Notes}
 
