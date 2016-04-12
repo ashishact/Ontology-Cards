@@ -54,8 +54,7 @@ Ontology cards can be used in two ways:
 Once you are inside the UI type 'explore' in the commandline and press enter. The view will change to to explore view.
 Here there are two ways you can do a search
 
-1. Instance search:
-
+### Instance search
   Type in any keyword you want to find, you will be given a list of suggestions (by default the first in the list will be selected as context)
   
   ![queen victoria](https://cloud.githubusercontent.com/assets/1690108/14445940/d31d6670-006e-11e6-956d-e01bf5c43898.PNG)
