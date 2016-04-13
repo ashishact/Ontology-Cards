@@ -62,7 +62,16 @@ chrome.runtime.onMessage.addListener(
 			frameview_has_changed(request.msg.frameview_key, sender.tab);//let other tab know that this frameview has changed
 		}
 		else if(request.type == 'LOAD_CARDS_FROM_STORE'){
-			load_cards_from_pouchdb(request.msg.ids, request.msg.frameview_key, tab_id);			
+			if(request.msg.ids.length && request.msg.ids[0].match(/tutorial_/)){
+				// tutorial_ was attached to ids when sent
+				// tutorials are not stored in db
+				// they are stored in js files 
+				// so they won't be available in PouchDB
+				load_tutorial_cards(request.msg.ids, request.msg.frameview_key, tab_id);
+			}
+			else{
+				load_cards_from_pouchdb(request.msg.ids, request.msg.frameview_key, tab_id);			
+			}
 		}
 		else if(request.type == 'LOAD_ALL_CARDS_FROM_STORE'){
 			load_all_cards_from_pouchdb(request.msg.frameview_key, tab_id);
@@ -186,6 +195,13 @@ var chromeReply = {
 		sendMSG_to_tab_byId({type:id, msg:{data:data}}, tab_id);
 	},
 	get_frameview_full: function(_cs, frameview_key, tab_id){
+		if(frameview_key === 'home' && Object.keys(_cs).length<2){
+			// no data yet	
+			// may be it was just installed 
+			// isert tutorials
+			setup_tutorial_cards(frameview_key, tab_id);
+		}
+
 		sendMSG_to_tab_byId({type:'REPLYOF_LOAD_ALL_FROM_STORE_TO_FV', msg:{_cards:_cs, _fv_key:frameview_key}}, tab_id);
 	},
 	load_frame_config_from_store: function(frame_config, tab_id){
@@ -198,6 +214,8 @@ var chromeReply = {
 		sendMSG_to_tab_byId({type:'REPLYOF_MIXED_CONTENT_CALLBACK', msg:{json: json}}, tab_id);
 	},
 	get_allcard_and_frameview_titles: function(data, tab_id){
+		var tut_titles = tutorial.get_tutorial_card_titles();
+		data.card_titles = data.card_titles.concat(tut_titles);// add the tutorial card title because they are not stored in db
 		sendMSG_to_tab_byId({type:'REPLYOF_GET_ALL_CARD_AND_FRAMEVIEW_TITLES', msg:{data: data}}, tab_id);
 	},
 	load_cards_from_pouchdb: function(cards, frameview_key, tab_id){
@@ -434,8 +452,77 @@ function save_new_card_from_frameview_to_store(frameview_key, _card, tab_id){
 		  			
 		// 	}
 		// );
-
 };
+
+function save_frameview_from_serialized_cards(json){
+	if(json.cards && json.frameview_key){
+		for (var i = 0; i < json.cards.length; i++) {
+			var c = json.cards[i];
+			save_new_card_from_frameview_to_store(json.frameview_key, c, -1);
+		}
+	}
+}
+
+
+function serialize_frameview_cards(frameview_key, serialized_data){
+	//ex 
+	//serialize_frameview_cards('home');
+
+	if(serialized_data){// the same function called this with the data asked for
+		// came to this func twice
+		var json = {cards:serialized_data, frameview_key: frameview_key};
+		console.log(json);
+		// this iis json
+	}
+	else{
+		framepouch.get(frameview_key, function(err, doc){
+			if(err){
+				if(_debug)console.log('frameview with key:', frameview_key + 'doesn\'t exists');
+			}
+			else{
+				if(doc.fvids){
+					var ids = doc.fvids;
+					var cards = [];
+					framepouch.allDocs(
+						{
+							include_docs: true,
+							keys: ids
+						},
+						function(err, res){
+						    if(!err){
+						    	res.rows.forEach(function(el){
+						    		if(el.doc){
+							    		cards.push(el.doc.card);
+						    		}
+						    			
+						    	});
+								serialize_frameview_cards(frameview_key, cards)
+						    }
+						}
+					);
+
+				}
+			}
+		});
+		
+	}
+}
+
+function setup_tutorial_cards(frameview_key, tab_id){
+	var cards = tutorial.cards;// cards is array of card here
+	// the first one has to be the root tutorial card
+	chromeReply.load_cards_from_pouchdb(cards, frameview_key, tab_id);
+}
+function load_tutorial_cards(ids, frameview_key, tab_id){
+	var cards = [];
+	for (var i = 0; i < tutorial.cards.length; i++) {
+		var c = tutorial.cards[i];
+		if(ids.indexOf('tutorial_'+c.id)>-1){
+			cards.push(c);
+		}
+	}
+	chromeReply.load_cards_from_pouchdb(cards, frameview_key, tab_id);
+}
 
 function search_store(msg, tab_id){
 	if(!msg.query)return;

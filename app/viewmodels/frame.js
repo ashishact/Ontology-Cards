@@ -1458,7 +1458,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 
                 // var dw = Math.ceil( (content_size.w/card_px) - card.width);
                 
-                // console.log('h', h, 'dh',dh);
+                console.log('h', h, 'dh',dh);
                 if(dh > 0){// only expand, don't contract
                     // var area = (h+dh) * w;
                     // h = Math.round( Math.sqrt(area/1.5));

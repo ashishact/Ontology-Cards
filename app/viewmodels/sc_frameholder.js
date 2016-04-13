@@ -868,7 +868,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     interpreter.askForValue({id:'endpoint'});
                 }
                 self.frameActions.add_command({title:'set sparql endpoint to: ' + "\"" + c1 + "\"", desc:'current endpoint at: '+ curr_endpoint +' <div>All possible: </div>'+ all_possible +' <div>cmd: setsparqlendpoint<div>'});
-            }
+            },
 
 
         };

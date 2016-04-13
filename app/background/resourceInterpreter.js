@@ -92,7 +92,7 @@
 	//***********************************************************************************************************************************
 
 		this.endpoints = ['http://dbpedia.org/sparql', 'http://live.dbpedia.org/sparql'];
-		this.endpoint = 'http://live.dbpedia.org/sparql';
+		this.endpoint = 'http://dbpedia.org/sparql';
 
 		this.createSparql = function(){
 			var me = this;
@@ -1752,7 +1752,7 @@
 			infoboxhtml = infoboxhtml.replace(/[^:]\/wiki\//g, '\"https://en.wikipedia.org/wiki/');
 
 
-			title = '<div style=\" font-weight: 700; color: rgb(100, 67, 112);  font-size: 22px; letter-spacing: initial;\">'+title+'</div>';				
+			title = '<div style=\" font-weight: 700; color: rgb(100, 67, 112);  font-size: 22px; letter-spacing: initial;\">'+title+'</div>';
 			if(desc) title = title + '<div style=\"color: rgb(152, 89, 101); font-family: Allerta, sans-serif; font-size: 18px; letter-spacing: initial; \">'+desc+'</div>';
 			forwardingFunction([{title:title, htmltext:infoboxhtml}], additionalData);
 			self.sendUiFrameHint(titletext);

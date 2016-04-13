@@ -1,0 +1,19 @@
+var tutorial = {};
+
+tutorial.cards = [
+	{"id":"c-imyo4w8p-knjmzt7tdhyn0mteegp1wz5mi","x":0,"y":0,"width":4,"height":6,"card_data":{"default_size":{"w":2,"h":2},"default_pos":{"x":0,"y":0},"card_content":{"title":"<div>Basics Commands</div><div>Try out thse commands in the command input</div>","text":"<div><i>Note that you don't have to write full command</i></div>1. add My New Card (press enter)<div>2. add parent A parent Card&nbsp;<span style=\"line-height: 28.9px;\">(press enter)</span></div><div><span style=\"line-height: 28.9px;\">3. settext Adding some contents&nbsp;</span><span style=\"line-height: 28.9px;\">(press enter)</span></div><div><span style=\"line-height: 28.9px;\">4. add Minions&nbsp;</span><span style=\"line-height: 28.9px;\">(press enter)</span></div><div><span style=\"line-height: 28.9px;\">5. setimage&nbsp;</span>http://tny.im/4cz (press enter)</div><div><span style=\"line-height: 28.9px;\">6. add frame (press enter)</span></div>"},"model":"viewmodels/card","view":"views/cards/infobox.html","sctype":6},"TYPE":{"PARENT":false,"EDITABLE":false,"RESIZABLE":true,"MOVABLE":true,"DRAGGABLE":true,"EXPANDABLE":true,"VOLATILE":false,"TAB_SESSION_ONLY":false,"WINDOW_SESSION_ONLY":false}},
+	{"id":"c-imyoetmb-vxt0u2gm28etp8yd3ep2jra4i","x":4,"y":0,"width":6,"height":6,"card_data":{"default_size":{"w":2,"h":2},"default_pos":{"x":2,"y":0},"card_content":{"title":"Basic Interaction","text":"<div><b>Editing Cards</b></div>1. Click on any card to edit &nbsp;[but not a parent card]<div>2. A parent card has an arrow sign at bottom of the card<br><div>3. For Parent card click on the ellipses Icon (the one with three dots) at top right and click on \"Edit\" Icon</div></div><div><b>Remove a card</b></div><div>1. Click on the ( X ) Icon at top left to remove (but it will not delete it from database, It will appear again next time you come to this frameview )</div><div>2. If the Card is Selected Enter the command <i>remove </i>in the commandinput</div><div>3. To delete completely click on the ( X ) Icon with CTRL pressed &nbsp;or</div><div>4. enter the command <i>delete </i>&nbsp;and the selected card will be removed completely</div><div><b>Drag and resize</b></div><div>1. Click and drag any card to change its position</div><div>2. Click and drag at Bottom-left (or) Bottom-right corner to resize the card</div>"},"model":"viewmodels/card","view":"views/cards/infobox.html","sctype":6},"TYPE":{"PARENT":false,"EDITABLE":false,"RESIZABLE":true,"MOVABLE":true,"DRAGGABLE":true,"EXPANDABLE":true,"VOLATILE":false,"TAB_SESSION_ONLY":false,"WINDOW_SESSION_ONLY":false}},
+	{"id":"c-imyoidgx-nej355jggosce1n6w0s51xlxr","x":10,"y":0,"width":2,"height":2,"card_data":{"default_size":{"w":2,"h":2},"default_pos":{"x":4,"y":0},"card_content":{"title":"Normal Card","text":"Click on me to edit"},"model":"viewmodels/card","view":"views/cards/infobox.html","sctype":6},"TYPE":{"PARENT":false,"EDITABLE":false,"RESIZABLE":true,"MOVABLE":true,"DRAGGABLE":true,"EXPANDABLE":true,"VOLATILE":false,"TAB_SESSION_ONLY":false,"WINDOW_SESSION_ONLY":false}},
+	{"id":"c-imyoiq9d-k76sf0xtyhsgzgpl6gii9t3xr","x":10,"y":0,"width":2,"height":3,"card_data":{"parent":true,"default_size":{"w":2,"h":2},"default_pos":{"x":6,"y":0},"card_content":{"title":"Parent Card","text":"Click on me to enter a child view<div>press ESC to return to previous view</div>"},"model":"viewmodels/card","view":"views/cards/infobox.html","sctype":6},"TYPE":{"PARENT":true,"EDITABLE":false,"RESIZABLE":false,"MOVABLE":true,"DRAGGABLE":true,"EXPANDABLE":false,"VOLATILE":false,"TAB_SESSION_ONLY":false,"WINDOW_SESSION_ONLY":false}}
+]
+
+tutorial.get_tutorial_card_titles = function(){
+	var titles = [];
+	for (var i = 0; i < tutorial.cards.length; i++) {
+		var c = tutorial.cards[i];
+		if(c.id && c.card_data && c.card_data.card_content){
+			titles.push({id:'tutorial_'+ c.id, title:'Tutorial: ' + c.card_data.card_content.title});
+		}
+	}
+	return titles;
+}
