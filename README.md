@@ -24,6 +24,17 @@ And so it becomes important to develop intutive ways of accessing this data whil
 > Ontology-Cards is an exploratory search application to perform semantic query over the DBpedia graph. Currently it supports property conjunction and object comparision (only if data type is 'typed-literal')
 
 what it means is, you can ask a query like this:
+```bash
+All Scientist with birthplace England and almaMater Cambridge and knownFor Math
+```
+
+  ![all scientist birthplace london almamater cambridge knownfor math](https://cloud.githubusercontent.com/assets/1690108/14447172/bc431196-007a-11e6-9c39-2a0c9e7d49c2.PNG)
+
+or
+
+```bash
+  All River with country India and length greater than 2000
+```
 ![all river with country india and length greater than 2000](https://cloud.githubusercontent.com/assets/1690108/14444862/2f86f20e-0066-11e6-9252-33d2bb3b4c14.PNG)
 
 The DBpedia ontology currently covers 685 classes and are described by 2,795 different properties. Ontology-Cards tries to access all these classes, their properties and instances with controlled natural language query. Its a faceted query builder; at each query stage it provides suggestions to refine the next terms of query until it reaches the final query string or it meets a deadend because of unavailable data.
