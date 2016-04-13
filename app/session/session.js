@@ -2,7 +2,7 @@
 // Session runs before Durandal app starts
 // it loads the iframe and starts the knockout app
 // 
-define(['durandal/app', 'jquery', 'detect', 'state'],  function (app, $, detect, state) {
+define(['durandal/app', 'jquery',  'state'],  function (app, $, state) {
 	var session = function(){
 		self = this;
 		
@@ -26,7 +26,7 @@ define(['durandal/app', 'jquery', 'detect', 'state'],  function (app, $, detect,
 			
 			self.visibleElement = $("body > :visible");
 
-	        self.detect_init();// get text from html
+	        // self.detect_init();// get text from html
 
         	self.sc_ui = document.createElement('div');
         	self.sc_ui.innerHTML = "<div style='width: 100%; height: 100%;' id='applicationHost'></div>";
@@ -106,31 +106,31 @@ define(['durandal/app', 'jquery', 'detect', 'state'],  function (app, $, detect,
 		// 	$(self.sc_ui).fadeOut(100);
 		// };
 
-		this.detect_init = function(){
-			var $detect = {
-				'callbacks': {
-					'finished': function (_result){
-						self.parsedHTMLRESULT = _result;
-						console.log("results of parsing", _result);
-		                //  result to send
-			                // var _result_to_send = {
-			                // 	'_html':        _result._html,
-			                // 	'_title':       _result._title,
-			                // 	'_language':    _result._language,
-			                // 	'_rtl':         _result._rtl,
-			                // 	'_rtl_maybe':   _result._rtl_maybe
-			                // };
-			        }
-			    },
-		        'debug': false,
-		        'window': window,
-		        'jQuery': $
-			};
-		    //  create
-		    $detect = htmlscrape_detect($detect);
-		    $detect.start();
+		// this.detect_init = function(){
+		// 	var $detect = {
+		// 		'callbacks': {
+		// 			'finished': function (_result){
+		// 				self.parsedHTMLRESULT = _result;
+		// 				console.log("results of parsing", _result);
+		//                 //  result to send
+		// 	                // var _result_to_send = {
+		// 	                // 	'_html':        _result._html,
+		// 	                // 	'_title':       _result._title,
+		// 	                // 	'_language':    _result._language,
+		// 	                // 	'_rtl':         _result._rtl,
+		// 	                // 	'_rtl_maybe':   _result._rtl_maybe
+		// 	                // };
+		// 	        }
+		// 	    },
+		//         'debug': false,
+		//         'window': window,
+		//         'jQuery': $
+		// 	};
+		//     //  create
+		//     $detect = htmlscrape_detect($detect);
+		//     $detect.start();
 
-		}
+		// }
 		
 		
 		return self;

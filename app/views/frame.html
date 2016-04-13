@@ -49,7 +49,7 @@
 
 	<!-- ******************** -->
 
-	<div  style="padding-top: 10px; padding-bottom: 10px;" >
+	<div  style="padding-top: 10px; padding-bottom: 100px;" >
 		<div  class="grid-stack" data-bind="foreach: {data: cards, afterRender: afterAddWidget},event:{mouseup:onPointerUp_background, mousedown:onPointerDown_background}, attr:{id:'gstack_'+frameID}">
 			<div class="grid-stack-item" data-bind="attr: {'data-gs-x': $data.x, 'data-gs-y': $data.y, 'data-gs-width': $data.width, 'data-gs-height': $data.height, 'data-gs-auto-position': $root.auto_position},  event:{mousedown:$root.onMouseDown, mouseup:$root.onMouseUp, mouseenter:$root.onMouseEnterCard, mouseleave:$root.onMouseLeaveCard}">
 				<div style="border-radius: 5px;" class="grid-stack-item-content" >

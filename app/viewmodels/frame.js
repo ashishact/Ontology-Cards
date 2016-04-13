@@ -2,8 +2,8 @@
 1. add card.isSelected and card.isMouseHovered to card.STATE instead
 */
 
-define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'state', 'panzoom', 'card_props'],
-    function (http, app, ko, gridstack, _ , state, panzoom, card_props) {
+define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'state', 'card_props'],
+    function (http, app, ko, gridstack, _ , state, card_props) {
 
     var frame = function(){
         var self=this;
@@ -19,7 +19,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             //Non - Observable
                     // @cbc //both are same
             //this.searchbar = null; // complete searchbar element to blur and show when nessary
-            $panzoom = null;
             this.all_cards_in_frame_loaded = false;
             this.show_additional_card_menu = ko.observable(false);
             this.show_all_card_label = ko.observable(false);
@@ -196,21 +195,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     }
 
                     $grid_stack = $('#'+'gstack_'+self.frameID);
-                    // $panzoom = $grid_stack.panzoom();
-                    // $grid_stack.panzoom('disable');
-
-                    // $panzoom.parent().on('mousewheel.focal', function( e ) {
-                    //     e.preventDefault();
-                    //     var delta = e.delta || e.originalEvent.wheelDelta;
-                    //     var zoomOut = delta ? delta < 0 : e.originalEvent.deltaY > 0;
-                    //     $panzoom.panzoom('zoom', zoomOut, {
-                    //     increment: 0.1,
-                    //     animate: true,
-                    //     maxScale:3,
-                    //     focal: e
-                    //   });
-                    //     return true;
-                    // });
                             
                 }
 
@@ -270,10 +254,13 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                             if(fv_key === self.frameview.key() && self.all_cards_in_frame_loaded===false){// this message is only for one specific frameview
                                 var _cards = request.msg._cards;
                                 var atleastonecardexist = false;
-                                _.forIn(_cards, function(value, key) {
-                                    me._add_card_from_store_to_frameview(value);
+                                _cards = _.sortByOrder(_cards, ['y'], ['desc']);// sort by y position 
+                                // because cards at to should be loaded first to maintain correct possitions
+                                for (var i = 0; i < _cards.length; i++) {
+                                    var c = _cards[i];
+                                    me._add_card_from_store_to_frameview(c);
                                     atleastonecardexist = true;
-                                });
+                                }
                                 if(atleastonecardexist){
                                     //me.frame_animateIn(500);
                                 }
@@ -613,6 +600,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     for (var i = allcards_.length - 1; i >= 0; i--) {
                         var c = allcards_[i];
                         me._update_card_in_frameview(c, c.x, c.y, c.width, c.height);
+                        // this function in important , it repositions all cards
                         
                         if(i === allcards_.length-1){
                             state.actions.select_this_card(state, allcards_[i]);// select lastly added card
@@ -1096,7 +1084,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 state.pointer.mouse.last_x = event.screenX;
                 state.pointer.mouse.last_y = event.screenY;
 
-                // $grid_stack.panzoom('disable');
                 return true // bubble
 
                 //remove //************************************************
@@ -1145,7 +1132,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 }
                 state.pointer.mouse.isdown_on_background = false;
 
-                // $grid_stack.panzoom('enable');
 
                 return true; // bubble
             };
@@ -1160,7 +1146,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
             };
             this.onPointerDown_background = function(i, e){
                 if($(e.target).hasClass('grid-stack')){
-                    //$grid_stack.panzoom('enable');
                 }
                 return true;
             };
@@ -1174,7 +1159,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 if($(e.target).hasClass('grid-stack')){
                     self.stop_editing_all('EDITING_FINISHED');
                 }
-                //$grid_stack.panzoom('dissable');
                 return true;
             };
             

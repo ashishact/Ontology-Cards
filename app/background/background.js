@@ -195,7 +195,7 @@ var chromeReply = {
 		sendMSG_to_tab_byId({type:id, msg:{data:data}}, tab_id);
 	},
 	get_frameview_full: function(_cs, frameview_key, tab_id){
-		if(frameview_key === 'home' && Object.keys(_cs).length<2){
+		if(frameview_key === 'home' && _cs.length<2){
 			// no data yet	
 			// may be it was just installed 
 			// isert tutorials
@@ -271,7 +271,7 @@ function get_frameview_full(frameview_key, tab_id){
 		else{
 			if(doc.fvids){
 				var ids = doc.fvids;
-				var _cs = {};//{'fg903hshjhsiaj-658HGH': _card1, 'hshduuey-HJJJHK:_card2'}
+				var _cs = [];//{'fg903hshjhsiaj-658HGH': _card1, 'hshduuey-HJJJHK:_card2'}
 				if(_debug)console.log("no of card in this frameview should be"+ ids.length);
 				framepouch.allDocs(
 					{
@@ -283,7 +283,7 @@ function get_frameview_full(frameview_key, tab_id){
 					    	res.rows.forEach(function(el){
 					    		if(el.doc){
 						    		var _card = el.doc.card;
-						    		_cs[_card.id] = _card;
+						    		_cs.push(_card);
 					    		}
 					    			
 					    	});
