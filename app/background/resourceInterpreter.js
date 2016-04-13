@@ -1790,8 +1790,8 @@
 					if(s){
 						var isuri = (s.match(/^https?:\/\//));
 						var isdbr = (s.match(/http:\/\/dbpedia\.org\/resource\//));
-						var isimg = (s.match(/\.(jpg|png|gif|svg|JPG)$/));
-						var isdbpthumb = (s.match(/\.(jpg|png|gif|svg|JPG)\?width=/));
+						var isimg = (s.match(/\.(jpg|png|gif|svg|JPG)$/i));
+						var isdbpthumb = (s.match(/\.(jpg|png|gif|svg|JPG)\?width=/i));
 						
 						if(isuri){
 							if(isdbpthumb){

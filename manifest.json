@@ -35,7 +35,7 @@
         "<all_urls>"
       ],
       "css":[
-      "lib/font-awesome4.5.0/css/font-awesome.css",
+      "lib/font-awesome4.5.0/css/font-awesome.min.css",
       "css/skeleton/normalize.css",
       "css/skeleton/skeleton.css",
       "lib/gridstack/dist/gridstack.css",
