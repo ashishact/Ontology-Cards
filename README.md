@@ -3,6 +3,11 @@ Ontological Semantic Query in web browser (Chrome only)
 
 Uses DBpedia Ontology to query the dbpedia graph
 
+Demo videos
+- [Class Search](https://www.youtube.com/watch?v=nhB9rJ1hFo0)
+- [Instance Search](https://www.youtube.com/watch?v=JXPvDilPoCI)
+
+
 ## Abstract
 A wealth of semantic linked data is available a RDF . DBpedia alone contains several billions of triples. 
 
