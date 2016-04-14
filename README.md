@@ -7,6 +7,8 @@ Demo videos
 - [Class Search](https://www.youtube.com/watch?v=nhB9rJ1hFo0)
 - [Instance Search](https://www.youtube.com/watch?v=JXPvDilPoCI)
 
+This is user documentation. For technical documentation visit [wiki](https://github.com/ashishact/Ontology-Cards/wiki)
+
 
 ## Abstract
 A wealth of semantic linked data is available a RDF . DBpedia alone contains several billions of triples. 
