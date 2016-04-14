@@ -165,6 +165,15 @@ Or with the query
 
   ![all film with director tim burton and starring johnny depp cards](https://cloud.githubusercontent.com/assets/1690108/14451531/7b8540ea-00a5-11e6-8bec-1d4e3cd27021.png)
 
+
+And for query
+```bash
+  All Scientist with birthplace London and almaMater Cambridge.......
+```
+  ![scientist with birthplace london and almamater cambridge](https://cloud.githubusercontent.com/assets/1690108/14534012/fe4a454e-0284-11e6-8883-a7316979b0d3.png)
+
+
+
 Cards are generated from the Wikipedia page title and all links are preserved. So Holding CTRL and clicking on any bold green link will generate another card with the title linked with the text clicked on.
 
 
