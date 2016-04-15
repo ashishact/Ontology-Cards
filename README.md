@@ -1,5 +1,5 @@
 # Ontology-Cards
-Ontological Semantic Query in web browser (Chrome only)
+Ontological Semantic Query in web browser (Chrome Extension)
 
 Uses DBpedia Ontology to query the dbpedia graph
 
