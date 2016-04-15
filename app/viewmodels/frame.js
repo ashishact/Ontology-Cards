@@ -529,7 +529,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     me.any_data_changed = false;//below line may toggle this
                     var _do_not_compare = false; if(do_not_compare)_do_not_compare = true;
                     me.update_card_content_from_bind_data(card.bind_data, card.card_data.card_content, _do_not_compare);
-                    console.log('check');
                     if(me.any_data_changed){
                         console.log('changed');
                         me._update_card_from_frameview_to_store(card);
@@ -843,6 +842,17 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                         new_card_data.cloned_from_id = card.id;
                     }
                     me.add_new_card(new_card_data);
+                };
+
+                this.save_and_pin_card_to_frameview = function(card){
+                    card.TYPE.VOLATILE = false;
+                    // remove volatileness completely
+                    me.save_card_content(card, true);// donot compare
+                    // saving card_content also saves card completely
+                    
+                    var _type = 'PIN_CARD_TO_FRAMEVIEW';
+                    var _msg = {id:card.id, frameview_key:self.frameview.key()};
+                    me._send_msg_to_background(_type, _msg);
                 }
 
                 this.card_set_draggable= function(card, opt){
@@ -852,7 +862,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                     me._card_set_resizable(card, opt);
                 };
 
-                this.save_card_content=function(_card, do_not_compare){
+                this.save_card_content = function(_card, do_not_compare){
                     // do_not compare when data is added or removed 
                     if(self.frameview.type === 'volatile'){
                         me.show_frame_hint("This is a volatile frameview. Cards won\'t be saved here", 2000);

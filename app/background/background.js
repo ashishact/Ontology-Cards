@@ -77,6 +77,9 @@ chrome.runtime.onMessage.addListener(
 			load_all_cards_from_pouchdb(request.msg.frameview_key, tab_id);
 			
 		}
+		else if(request.type == 'PIN_CARD_TO_FRAMEVIEW'){
+			pin_card_to_frameview(request.msg.id, request.msg.frameview_key, tab_id);
+		}
 		else if(request.type == 'TRANSFER_CARDS_BETWEEN_FRAMEVIEW'){
 			transfer_cards_between_frameview(request.msg,  tab_id);
 			
@@ -464,6 +467,25 @@ function save_frameview_from_serialized_cards(json){
 }
 
 
+function pin_card_to_frameview(id, frameview_key, tab_id){
+	framepouch.get(frameview_key, function(err, doc){
+		if(err){// this frameview never existed
+			// probably because there were no children
+			framepouch.put({_id:frameview_key, fvids:[id] });
+		}
+		else{
+			var exist = doc.fvids.indexOf(id);
+			if(exist<0){// id doesn't exist
+				//add the cards id to current frameview's id list
+				doc.fvids.push(id);
+				//and then save
+				framepouch.put(doc);
+			}
+		}
+	});
+}
+
+
 function serialize_frameview_cards(frameview_key, serialized_data){
 	//ex 
 	//serialize_frameview_cards('home');
@@ -698,7 +720,12 @@ function send_frameview_to_orphan(frameview_key){
 					doc.fvids = doc.fvids.concat(lostids);
 					framepouch.put(doc);
 				}
+
+				
 			});
+			//delete this frameview_key from db
+			framepouch.remove(doc);
+			if(_debug)console.log('removed fvids');
 		}
 	});
 

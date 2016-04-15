@@ -644,6 +644,7 @@
 							var lc = me.lastContextStack[i];
 							if(lc.class.iri){
 								me.contextStack[i].class.iri = lc.class.iri;
+								me.contextStack[i].class.key = lc.class.key;
 								me.contextStack[i].class.built = true;
 								me.contextStack[i].class.raw = cstr.toLowerCase();
 								go = false;

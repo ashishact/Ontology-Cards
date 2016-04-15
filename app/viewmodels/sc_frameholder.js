@@ -544,6 +544,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     sel_card.TYPE.VOLATILE = volatile;// restore its original value
                 }
             },
+
+            save_and_pin_card_to_frameview: function(FM, sel_card){
+                if(sel_card) FM.actions.save_and_pin_card_to_frameview(sel_card);
+            },
             paste_card: function(FM){
                 if(state.copied_card) FM.actions.clone_card_and_save(state.copied_card);
             },
@@ -983,6 +987,10 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     else if('save'.indexOf(c0) === 0){
                         if(!commit) self.frameActions.add_command({title:'save', desc:'Will save this card  (even if it is volatile) <div>cmd: save</div>'});
                         else self.frameActions.save_card(FM, ctx.sel_card);
+                    }
+                    else if('pin'.indexOf(c0) === 0){
+                        if(!commit) self.frameActions.add_command({title:'pin card to this frameview', desc:'Will save this card (will remove volatile property, will persist in the next session) <div>cmd: pin</div>'});
+                        else self.frameActions.save_and_pin_card_to_frameview(FM, ctx.sel_card);
                     }
                     else if('remove'.indexOf(c0) === 0){
                         if(cmd.length > 1){

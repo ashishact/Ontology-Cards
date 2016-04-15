@@ -119,6 +119,15 @@ var SEARCH_API = function(){
 			else console.log($.xml2json(data));
 		});
 	}
+	this.wiki_data_entity_search = function(query, q_id, callback){
+		var url = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&search='+query;
+		$.getJSON(url, function(json){
+				if(typeof(callback) == 'function'){
+					callback(json, q_id);
+				}
+				else console.log(json);
+		});
+	}
 
 
 	return this;
