@@ -39,6 +39,7 @@ var tab_id = null;
 
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
+		if(_debug) console.log('msg to back');
 		// if(_debug)console.log(sender.tab ?
 		// 	"from a content script:" + sender.tab.url :
 		// 	"from the extension");
@@ -204,6 +205,7 @@ var chromeReply = {
 			// isert tutorials
 			setup_tutorial_cards(frameview_key, tab_id);
 		}
+		console.log('frameview_key', frameview_key, _cs);
 
 		sendMSG_to_tab_byId({type:'REPLYOF_LOAD_ALL_FROM_STORE_TO_FV', msg:{_cards:_cs, _fv_key:frameview_key}}, tab_id);
 	},
@@ -269,7 +271,12 @@ function get_frameview_full(frameview_key, tab_id){
 
 	framepouch.get(frameview_key, function(err, doc){
 		if(err){//may be the doc never existed
-			if(_debug)console.log('frameview with key:', frameview_key + 'doesn\'t exists');
+			if(_debug)console.log('frameview with key:', frameview_key + ' doesn\'t exists');
+			if(frameview_key === 'home'){
+				// loading for the first time
+				chromeReply.get_frameview_full([], frameview_key,  tab_id);
+				// just send it so that tutorials will be searved
+			}
 		}
 		else{
 			if(doc.fvids){

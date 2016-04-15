@@ -56,6 +56,10 @@ require(['sc-oninject'], function(oninject){
 });
 
 
+// //Personal work
+// console.warn('Remove youtube deleter');
+// var _elm = document.getElementById('feed-main-what_to_watch');
+// if(_elm)_elm.parentNode.removeChild(_elm);
 
 
 
