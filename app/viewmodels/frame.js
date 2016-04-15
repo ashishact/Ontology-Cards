@@ -1217,7 +1217,14 @@ define(['plugins/http', 'durandal/app', 'knockout', 'gridstack', 'lodash', 'stat
                 }
                 else{
                     if(card.TYPE.PARENT && !card.STATE.EDITING){// don't go to child if editing
-                        self.trigger_parent(card, target, dt, dx, dy);
+                        if(state.keyboard.ctrl_down){
+                            var _fv_key = self.frameviewkey_prefix + card.id;
+                            self.open_in_new_frame(_fv_key, card);
+                            // this behaviour was there at first , and then removed , I don't know why. So now I am again putting it
+                        }
+                        else{
+                            self.trigger_parent(card, target, dt, dx, dy);
+                        }
                     }
                     else{
                         if(card.TYPE.EDITABLE){
