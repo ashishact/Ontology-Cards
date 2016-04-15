@@ -4,7 +4,7 @@ Ontological Semantic Query in web browser (Chrome only)
 Uses DBpedia Ontology to query the dbpedia graph
 
 Demo videos
-- [Class Search](https://www.youtube.com/watch?v=nhB9rJ1hFo0)
+- [Class Search](https://www.youtube.com/playlist?list=PLq5JctMvBxongdOiFyXRARcB9iesiVsGm)
 - [Instance Search](https://www.youtube.com/watch?v=JXPvDilPoCI)
 
 This is user documentation. For technical documentation visit [wiki](https://github.com/ashishact/Ontology-Cards/wiki)
@@ -49,6 +49,10 @@ The DBpedia ontology currently covers 685 classes and are described by 2,795 dif
 See bellow to find what kind of queries are possible.
 
 ## Installation
+
+download as zip
+or
+
 clone it
 ```bash
 git clone https://github.com/ashishact/Ontology-Cards.git
@@ -58,7 +62,7 @@ Enable developer mode
 click on load unpack extension and select the cloned folder
 
 ## How to use
-- go to any site or a open a new tab and
+- go to any site or a open a new tab or go to [OC](http://ashishact.github.io/Ontology-Cards/) and
 - click on the browser extension icon (or)
 - Hit the CTRL key (don't keep it pressed, just hit and release)
 
@@ -71,6 +75,9 @@ Ontology cards can be used in two ways:
 <a name="Explore"></a>
 ## Explore
 Once you are inside the UI type 'explore' in the commandline and press enter. The view will change to to explore view.
+
+Watch the demo vide on [Youtube](https://www.youtube.com/playlist?list=PLq5JctMvBxongdOiFyXRARcB9iesiVsGm)
+
 ```bash
   explore (press enter)
 ```
