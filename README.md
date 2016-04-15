@@ -3,7 +3,7 @@ Ontological Semantic Query in web browser (Chrome only)
 
 Uses DBpedia Ontology to query the dbpedia graph
 
-Demo videos
+### Demo videos
 - [Class Search](https://www.youtube.com/watch?v=nhB9rJ1hFo0&list=PLq5JctMvBxongdOiFyXRARcB9iesiVsGm)
 - [Instance Search](https://www.youtube.com/watch?v=JXPvDilPoCI&index=2&list=PLq5JctMvBxongdOiFyXRARcB9iesiVsGm)
 
