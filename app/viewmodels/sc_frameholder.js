@@ -1,4 +1,5 @@
 define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'state',  'searchapi', 'interpreter'], function (http, app, ko, $, card_props, state, searchapi, interpreter) {
+    // each sc_frame_holder contains a sc_frame with its own frame model
     var sc_frameholder = function(){
         var self = this;
         this.name = "Semanticcards";
