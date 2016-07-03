@@ -753,7 +753,6 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                 var lnk = link.split('v=');
                 if(lnk.length>1){
                     var embed_url = "<iframe width=\"600\" height=\"300\" src=\"https://www.youtube.com/embed/"+ lnk[1].replace('&', '?') +"\" frameborder=\"0\" allowfullscreen></iframe>";
-                    
                     var d_size = {w:6, h:5};//size of this card
                     var d_pos = self.getPrefferedPosToDisplayCard(d_size);//size will set position for next one in future
 
@@ -1129,7 +1128,7 @@ define(['plugins/http', 'durandal/app', 'knockout', 'jquery', 'card_props', 'sta
                     else if(c0.indexOf('http') === 0){// some url is given
                         if(c0.indexOf('youtube.com') > 1){// an youtube url
                             if(!commit) self.frameActions.add_command({title:'embed youtube video', desc:'Embed a youtube video with url: ' + "\"" + c0 + "\""});
-                            else self.frameActions.embed_youtube_link(FM, c0);
+                            else self.frameActions.embed_youtube_link(FM, cmd[0]);//use cmd[0] instead of c0 as it is in lowercase of the ULR, but youtube url is case dependent
                         }//youtube
 
                         else if(c0.match(/\.(jpg|png|gif|JPG)$/)) {
